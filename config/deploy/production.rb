@@ -31,7 +31,8 @@
 # http://capistranorb.com/documentation/getting-started/configuration/
 # Feel free to add new variables to customise your setup.
 
-
+# run "cap production puma:config" to update puma conf
+set :puma_bind, %w(tcp://0.0.0.0:9292)
 
 # Custom SSH Options
 # ==================
@@ -53,9 +54,8 @@ server "i-qoom.com",
   user: "admin",
   roles: %w{web app db},
   ssh_options: {
-    user: "admin", # overrides user setting above
     keys: %w(~/.ssh/id_rsa),
-#     forward_agent: false,
+    # forward_agent: false,
     auth_methods: %w(publickey password)
-#     # password: "please use keys"
+    # password: "please use keys"
   }
