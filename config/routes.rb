@@ -3,4 +3,7 @@ Rails.application.routes.draw do
   controller :pages do
     root action: :home
   end
+
+  resources :contacts, only: [:create]
+
 end
