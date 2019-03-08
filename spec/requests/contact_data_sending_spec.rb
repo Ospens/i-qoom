@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Contact data sending", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
 
-  it 'should get a status "errors"' do
+  it 'should get a status "error"' do
     post "/contacts",
       params: { contact: { email: Faker::Internet.email } }.to_json,
       headers: headers
