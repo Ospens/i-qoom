@@ -3,15 +3,9 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: { status: "success",
-                     message: t(".success_message") },
-             status: :ok  
+      success
     else
-      render json: { status: "error",
-                     message: t(".error_message"),
-                     error_messages: @user.errors.full_messages,
-                     fields_with_errors: @user.errors.messages.keys },
-             status: :ok
+      error(@user)
     end
   end
 

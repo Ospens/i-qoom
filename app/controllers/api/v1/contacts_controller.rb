@@ -4,15 +4,9 @@ class Api::V1::ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
     if @contact.valid?
       ApplicationMailer.send_contact_form(@contact).deliver_now
-      render json: { status: "success",
-                     message: t(".success_message") },
-             status: :ok
+      success
     else
-      render json: { status: "error",
-                     message: t(".error_message"),
-                     error_messages: @contact.errors.full_messages,
-                     fields_with_errors: @contact.errors.messages.keys },
-             status: :ok
+      error(@contact)
     end
   end
 
