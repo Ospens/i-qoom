@@ -1,11 +1,11 @@
 class Api::V1::UsersController < ApplicationController
 
   def create
-    @user = User.new(user_params)
-    if @user.save
+    user = User.new(user_params)
+    if user.save
       success(:created)
     else
-      error(@user)
+      error(user)
     end
   end
 

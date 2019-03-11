@@ -1,12 +1,12 @@
 class Api::V1::ContactsController < ApplicationController
 
   def create
-    @contact = Contact.new(contact_params)
-    if @contact.valid?
-      ApplicationMailer.send_contact_form(@contact).deliver_now
+    contact = Contact.new(contact_params)
+    if contact.valid?
+      ApplicationMailer.send_contact_form(contact).deliver_now
       success(:created)
     else
-      error(@contact)
+      error(contact)
     end
   end
 
