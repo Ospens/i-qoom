@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
-  def success
+  def success(status)
     render json: { status: "success",
                    message: t(".success_message") },
-           status: :ok
+           status: status
   end
 
   def error(record)
