@@ -1,4 +1,5 @@
 class Api::V1::UsersController < ApplicationController
+  skip_authorization_check
 
   def create
     user = User.new(user_params)
