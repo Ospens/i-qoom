@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   end
   namespace :api do
     namespace :v1 do
-      resources :contacts, only: [:create]
-      resources :sessions, only: [:create, :destroy]
+      resources :contacts, only: :create
+      resources :sessions, only: :create
       resources :users, only: [:create, :update, :destroy]
     end
   end
