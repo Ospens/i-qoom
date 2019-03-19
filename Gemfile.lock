@@ -101,6 +101,10 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     connection_pool (2.2.2)
+    countries (3.0.0)
+      i18n_data (~> 0.8.0)
+      sixarm_ruby_unaccent (~> 1.1)
+      unicode_utils (~> 1.4)
     crass (1.0.4)
     devise (4.6.1)
       bcrypt (~> 3.0)
@@ -118,6 +122,7 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
+    i18n_data (0.8.0)
     io-like (0.3.0)
     jbuilder (2.8.0)
       activesupport (>= 4.2.0)
@@ -227,6 +232,7 @@ GEM
       rubyzip (~> 1.2, >= 1.2.2)
     shoulda-matchers (4.0.1)
       activesupport (>= 4.2.0)
+    sixarm_ruby_unaccent (1.2.0)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -256,6 +262,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (4.1.20)
       execjs (>= 0.3.0, < 3)
+    unicode_utils (1.4.0)
     valid_email (0.1.2)
       activemodel
       mail (>= 2.6.1)
@@ -291,6 +298,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   chromedriver-helper
   coffee-rails (~> 4.2)
+  countries
   devise
   faker
   jbuilder (~> 2.5)
