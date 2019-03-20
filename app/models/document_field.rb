@@ -1,4 +1,4 @@
-class ConventionField < ApplicationRecord
+class DocumentField < ApplicationRecord
   enum kind: [ :text_field,
                :select_field,
                :textarea_field,
@@ -13,12 +13,12 @@ class ConventionField < ApplicationRecord
                             :document_type,
                             :document_number ]
 
-  belongs_to :convention
+  belongs_to :parent, polymorphic: true
 
   serialize :value
 
   before_validation :assign_column_and_row,
-                    if: :codification_field?,
+                    if: -> { codification_field? && parent.class.name == 'Convention' },
                     on: :create
 
   before_validation :set_required,
@@ -77,7 +77,7 @@ class ConventionField < ApplicationRecord
       self.column = 1
       self.row = 4
     when 'discipline'
-      case convention.number
+      case parent.number
       when 1
         self.column = 1
         self.row = 4

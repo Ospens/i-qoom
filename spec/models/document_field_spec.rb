@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe ConventionField, type: :model do
+RSpec.describe DocumentField, type: :model do
   context 'validate :value_by_kind' do
-    subject { FactoryBot.build(:convention_field) }
+    subject { FactoryBot.build(:document_field) }
 
     it { should be_valid }
 
@@ -71,7 +71,7 @@ RSpec.describe ConventionField, type: :model do
 
       it do
         subject.codification_kind = :discipline
-        subject.convention.update(number: 2)
+        subject.parent.update(number: 2)
         subject.valid?
         expect(subject.column).to eql(1)
         expect(subject.row).to eql(5)

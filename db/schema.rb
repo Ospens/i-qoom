@@ -15,8 +15,15 @@ ActiveRecord::Schema.define(version: 2019_03_13_020439) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "convention_fields", force: :cascade do |t|
-    t.bigint "convention_id"
+  create_table "conventions", force: :cascade do |t|
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "document_fields", force: :cascade do |t|
+    t.string "parent_type"
+    t.bigint "parent_id"
     t.integer "kind"
     t.integer "codification_kind"
     t.integer "column"
@@ -28,14 +35,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_020439) do
     t.text "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["convention_id"], name: "index_convention_fields_on_convention_id"
+    t.index ["parent_type", "parent_id"], name: "index_document_fields_on_parent_type_and_parent_id"
   end
 
-  create_table "conventions", force: :cascade do |t|
-    t.integer "number"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_foreign_key "convention_fields", "conventions"
 end

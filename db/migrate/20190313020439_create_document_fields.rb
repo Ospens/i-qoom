@@ -1,7 +1,7 @@
-class CreateConventionFields < ActiveRecord::Migration[5.2]
+class CreateDocumentFields < ActiveRecord::Migration[5.2]
   def change
-    create_table :convention_fields do |t|
-      t.references :convention, foreign_key: true
+    create_table :document_fields do |t|
+      t.references :parent, polymorphic: true
       t.integer :kind
       t.integer :codification_kind
       t.integer :column
