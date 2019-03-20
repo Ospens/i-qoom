@@ -10,9 +10,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2019_03_13_020439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "convention_fields", force: :cascade do |t|
+    t.bigint "convention_id"
+    t.integer "kind"
+    t.integer "codification_kind"
+    t.integer "column"
+    t.integer "row"
+    t.boolean "required", default: false
+    t.boolean "multiselect", default: false
+    t.string "title"
+    t.string "command"
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["convention_id"], name: "index_convention_fields_on_convention_id"
+  end
+
+  create_table "conventions", force: :cascade do |t|
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "convention_fields", "conventions"
 end
