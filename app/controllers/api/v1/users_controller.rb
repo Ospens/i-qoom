@@ -11,11 +11,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def update
-    render json: {}, status: :not_implemented
+    head 501
   end
 
   def destroy
-    render json: {}, status: :not_implemented
+    head 501
   end
 
   private
