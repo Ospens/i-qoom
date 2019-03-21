@@ -10,7 +10,8 @@ class Session
     attributes.each do |name, value|
       send("#{name}=", value)
     end
-    self.user = User.find_by(email: login)
+    self.user =
+      User.find_by(email: login) || User.find_by(username: login)
     if signed_up_successfully?
       self.auth_token = JsonWebToken.encode(user_id: user.id)
     end
