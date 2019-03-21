@@ -18,8 +18,7 @@ class User < ApplicationRecord
     allow_nil: false
 
   validates_inclusion_of :country,
-    in: ISO3166::Country.codes,
-    allow_blank: true
+    in: ISO3166::Country.codes
 
   validates :username,
             format: { with: /^[a-zA-Z0-9_\.\-]*$/,
