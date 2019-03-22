@@ -26,7 +26,7 @@ describe User, type: :model do
 
   it { is_expected.to validate_length_of(:username).is_at_most(18) }
 
-  it { is_expected.to allow_value(Faker::Name.first_name)
+  it { is_expected.to allow_value(Faker::Internet.unique.user_name[0..17])
                         .for(:username) }
   it { is_expected.not_to allow_value(Faker::Name.name)
                         .for(:username) }
