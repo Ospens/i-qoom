@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       resources :contacts, only: [:create]
 
       resources :conventions, only: [:edit, :update]
+
+      resources :documents
     end
   end
 end

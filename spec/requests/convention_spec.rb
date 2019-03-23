@@ -15,7 +15,7 @@ describe Convention, type: :request do
   it '#update' do
     convention = FactoryBot.create(:convention)
     convention_field = convention.document_fields.find_by(codification_kind: DocumentField.codification_kinds[:originating_company])
-    title = Faker::Internet.email
+    title = Faker::Lorem.sentence
     expect(convention_field.title).to_not eql(title)
     patch "/api/v1/conventions/#{convention.id}", params: { convention: { document_fields_attributes: { id: convention_field.id, title: title } } }
     expect(convention.document_fields.count).to eql(4)
