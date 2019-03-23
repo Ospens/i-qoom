@@ -1,0 +1,9 @@
+en:
+  api:
+    v1:
+      sessions:
+        create:
+          success_message:
+            Successfully signed in
+          error_message:
+            Something went wrong

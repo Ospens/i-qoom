@@ -1,5 +1,9 @@
 class PagesController < ApplicationController
+  skip_authorization_check
   def home
-    render json: { hello: :world }, status: :ok
+    user_email = 
+      signed_in_user.present? ? { hello: signed_in_user.email } : {}
+    render json: { status: "success" }.merge(user_email),
+           status: :ok
   end
 end

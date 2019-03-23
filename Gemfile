@@ -40,6 +40,10 @@ gem 'react-rails'
 gem 'slim'
 
 gem 'valid_email'
+gem 'devise'
+gem 'jwt'
+gem 'cancancan', '~> 2.0'
+gem 'countries'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -57,7 +61,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   # Use Capistrano for deployment
-  gem "capistrano", "~> 3.10", require: false
+  gem 'capistrano', '~> 3.10', require: false
   gem 'capistrano-rvm'
   gem "capistrano-rails", "~> 1.4", require: false
   gem 'capistrano-webpacker-precompile', require: false
