@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def signed_in_user
-    data = JsonWebToken.decode(request.headers["Authorization"])
+    data = ::JsonWebToken.decode(request.headers["Authorization"])
     if data.present? && Time.now < Time.at(data["exp"])
       User.find_by(id: data["user_id"])
     end
