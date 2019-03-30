@@ -1,4 +1,4 @@
-class Api::V1::ContactsController < ApplicationController
+class ContactsController < ApplicationController
   skip_authorization_check
   def create
     contact = Contact.new(contact_params)

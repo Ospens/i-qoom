@@ -4,7 +4,7 @@ describe "Contact data sending", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
 
   it 'should get a status "error"' do
-    post "/api/v1/contacts",
+    post "/contacts",
       params: { contact: { email: Faker::Internet.email } }.to_json,
       headers: headers
     expect(response).to have_http_status(:success)
@@ -12,7 +12,7 @@ describe "Contact data sending", type: :request do
   end
 
   it 'should get a status "success"' do
-    post "/api/v1/contacts",
+    post "/contacts",
       params: { contact: { email: Faker::Internet.email,
                            phone_number: Faker::PhoneNumber.phone_number,
                            text: Faker::Lorem.paragraphs.join(" ") } }.to_json,

@@ -6,7 +6,7 @@ describe "User", type: :request do
 
   context "registration" do
     it 'should get a status "error"' do
-      post "/api/v1/users",
+      post "/users",
         params: { user: user.slice(:email) }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
@@ -14,7 +14,7 @@ describe "User", type: :request do
     end
 
     it 'should get a status "success"' do
-      post "/api/v1/users",
+      post "/users",
         params: { user: user }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
