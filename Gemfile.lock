@@ -77,7 +77,7 @@ GEM
       capistrano (~> 3.7)
       capistrano-bundler
       puma (~> 3.4)
-    capybara (3.16.0)
+    capybara (3.16.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -189,7 +189,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    react-rails (2.4.7)
+    react-rails (2.5.0)
       babel-transpiler (>= 0.7.0)
       connection_pool
       execjs
@@ -273,7 +273,7 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (3.7.1)
+    webdrivers (3.7.2)
       net_http_ssl_fix
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
