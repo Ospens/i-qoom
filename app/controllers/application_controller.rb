@@ -22,7 +22,15 @@ class ApplicationController < ActionController::Base
                    message: t(".error_message"),
                    error_messages: record.errors.full_messages,
                    fields_with_errors: record.errors.messages.keys },
-           status: :ok
+           status: :unprocessable_entity
+  end
+
+  def created_or_update(record)
+    if record
+      success(:created)
+    else
+      error(record)
+    end
   end
 
   def signed_in_user
