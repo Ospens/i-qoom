@@ -6,7 +6,7 @@ describe "Session", type: :request do
 
   context "sign in" do
     it 'should get a status "error"' do
-      post "/sessions",
+      post "/api/v1/sessions",
         params: { session: { login: [ "z" + user.email,
                                       user.username + "1" ].sample,
                              password: "password1" } }.to_json,
@@ -16,7 +16,7 @@ describe "Session", type: :request do
     end
 
     it 'should get a status "success"' do
-      post "/sessions",
+      post "/api/v1/sessions",
         params: { session: { login: [ user.email,
                                       user.username ].sample,
                              password: "password1" } }.to_json,

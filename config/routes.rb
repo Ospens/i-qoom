@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   controller :pages do
     root action: :home
   end
-  resources :contacts, only: :create
-  resources :sessions, only: :create
-  resources :users, only: [:create, :update, :destroy]
+  namespace :api do
+    namespace :v1 do
+      resources :contacts, only: :create
+      resources :sessions, only: :create
+      resources :users, only: [:create, :update, :destroy]
+    end
+  end
 end
