@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       resources :contacts, only: :create
       resources :sessions, only: :create
       resources :users, only: [:create, :update, :destroy]
+      resources :projects
     end
   end
 end
