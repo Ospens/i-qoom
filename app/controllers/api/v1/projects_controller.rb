@@ -10,11 +10,11 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     @project = signed_in_user.projects.new(project_params)
-    created_or_update(@project.save)
+    create_or_update(@project.save)
   end
 
   def update
-    created_or_update(@project.update(project_params))
+    create_or_update(@project.update(project_params))
   end
 
   def destroy

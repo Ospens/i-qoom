@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
            status: :unprocessable_entity
   end
 
-  def created_or_update(record)
+  def create_or_update(record)
     if record
       success(:created)
     else
