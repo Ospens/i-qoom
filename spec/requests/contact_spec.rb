@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "Contact data sending", type: :request do
+describe "Contact", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
 
   it 'should get a status "error"' do
