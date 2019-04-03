@@ -2,14 +2,14 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @projects = Project.all
+    @projects = signed_in_user.projects
   end
 
   def show
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = signed_in_user.projects.new(project_params)
     created_or_update(@project.save)
   end
 
