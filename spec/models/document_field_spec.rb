@@ -6,39 +6,23 @@ RSpec.describe DocumentField, type: :model do
 
     it { should be_valid }
 
-    [:text_field, :textarea_field, :upload_field, :date_field].each do |kind|
-      it kind do
-        subject.kind = kind
-        subject.value = 1
-        should_not be_valid
-        subject.value = ''
-        should be_valid
-      end
-    end
-
     [:select_field, :project_phase_field].each do |kind|
       it kind do
         subject.kind = kind
-        subject.value = 1
-        should_not be_valid
-        subject.value = []
-        should_not be_valid
-        subject.value = ['1']
         should be_valid
+        subject.document_field_values.delete_all
+        should_not be_valid
       end
     end
 
     it 'codification_field' do
       subject.kind = :codification_field
       subject.codification_kind = :originating_company
-      subject.value = [{code: '1'}]
-      should_not be_valid
-      subject.value = [{position: '1'}]
-      should_not be_valid
-      subject.value = [{code: '1', position: '1'}]
       should be_valid
-      subject.value = nil
+      subject.document_field_values.delete_all
       should be_valid
+      subject.save
+      should_not be_valid
     end
 
     context 'should set column and row' do

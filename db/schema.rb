@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_22_071606) do
+ActiveRecord::Schema.define(version: 2019_04_03_145751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,16 @@ ActiveRecord::Schema.define(version: 2019_03_22_071606) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "document_field_values", force: :cascade do |t|
+    t.bigint "document_field_id"
+    t.string "value"
+    t.string "title"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_field_id"], name: "index_document_field_values_on_document_field_id"
+  end
+
   create_table "document_fields", force: :cascade do |t|
     t.string "parent_type"
     t.bigint "parent_id"
@@ -59,6 +69,18 @@ ActiveRecord::Schema.define(version: 2019_03_22_071606) do
     t.index ["parent_type", "parent_id"], name: "index_document_fields_on_parent_type_and_parent_id"
   end
 
+  create_table "document_rights", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "document_field_id"
+    t.integer "limit_for"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "document_field_value_id"
+    t.index ["document_field_id"], name: "index_document_rights_on_document_field_id"
+    t.index ["document_field_value_id"], name: "index_document_rights_on_document_field_value_id"
+    t.index ["user_id"], name: "index_document_rights_on_user_id"
+  end
+
   create_table "documents", force: :cascade do |t|
     t.integer "issued_for"
     t.string "email_title"
@@ -66,6 +88,8 @@ ActiveRecord::Schema.define(version: 2019_03_22_071606) do
     t.text "email_text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -87,4 +111,9 @@ ActiveRecord::Schema.define(version: 2019_03_22_071606) do
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "document_field_values", "document_fields"
+  add_foreign_key "document_rights", "document_field_values"
+  add_foreign_key "document_rights", "document_fields"
+  add_foreign_key "document_rights", "users"
+  add_foreign_key "documents", "users"
 end

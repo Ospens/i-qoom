@@ -1,7 +1,10 @@
 class Api::V1::ConventionsController < ApplicationController
-  before_action :set_convention
+  load_and_authorize_resource
 
   def edit
+    if !@convention.document_fields.any?
+      @convention.build_default_fields
+    end
     render json: @convention, include: :document_fields
   end
 
@@ -14,10 +17,6 @@ class Api::V1::ConventionsController < ApplicationController
   end
 
   private
-
-  def set_convention
-    @convention = Convention.find(params[:id])
-  end
 
   def convention_params
     params.require(:convention).permit(document_fields_attributes:

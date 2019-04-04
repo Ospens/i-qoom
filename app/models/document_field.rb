@@ -15,7 +15,13 @@ class DocumentField < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  serialize :value
+  has_many :document_rights
+
+  has_many :document_field_values
+
+  accepts_nested_attributes_for :document_field_values
+
+  has_many_attached :files
 
   before_validation :assign_column_and_row,
                     if: -> { codification_field? && parent.class.name == 'Convention' },
@@ -31,40 +37,62 @@ class DocumentField < ApplicationRecord
             presence: true,
             if: :codification_field?
 
-  validates :required,
-            inclusion: { in: [true] },
-            if: :codification_field?
-
   validates :column,
             inclusion: { in: [1, 2] }
 
-  validate :value_is_string,
-           if: -> { text_field? || textarea_field? || upload_field? || date_field? }
+  validate :has_field_values,
+           if: -> { (codification_field? && !(parent.class.name == 'Convention' && new_record?)) || select_field? || project_phase_field? }
 
-  validate :validate_value_is_array_of_strings,
-           if: -> { select_field? || project_phase_field? }
+  def build_for_new_document(user)
+    return if !can_build?(user)
+    original_attributes =
+      attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
+    if codification_field?
+      original_attributes['document_field_values_attributes'] = []
+      document_field_values.each do |field_value|
+        next unless document_rights.any? && document_rights.find_by(user: user, document_field_value: field_value).present?
+        original_attributes['document_field_values_attributes'] << field_value.build_for_new_document
+      end
+    end
+    original_attributes
+  end
 
-  validate :value_valid_for_codification,
-           if: :codification_field?
+  def build_for_edit_document
+    attributes
+    if codification_field?
+      original_attributes['document_field_values_attributes'] = []
+      document_field_values.each do |field_value|
+        original_attributes['document_field_values_attributes'] << field_value.attributes
+      end
+    end
+    attributes
+  end
+
+  def can_build?(user)
+    return false if parent.class.name != 'Convention'
+    can_manage?(user)
+  end
+
+  def can_create?(user)
+    return false if parent.class.name != 'Document'
+    can_manage?(user)
+  end
+
+  def can_manage?(user)
+    rights = document_rights
+    limit_for = DocumentRight.limit_fors
+    (codification_field? &&
+      (!rights.any? ||
+       (rights.any? && rights.where(user: user, limit_for: limit_for[:value]).any?))
+    ) ||
+    (!codification_field? && rights.where(user: user, limit_for: limit_for[:field]).any?)
+  end
 
   private
 
-  def value_is_string
-    errors.add(:value, :not_string) unless value.is_a?(String)
-  end
-
-  def value_is_array_of_strings
-    value.is_a?(Array) && value.any? && !value.any? { |i| i.blank? }
-  end
-
-  def validate_value_is_array_of_strings
-    errors.add(:value, :not_array_of_strings) unless value_is_array_of_strings
-  end
-
-  def value_valid_for_codification
-    if value_is_array_of_strings &&
-        value.any? { |i| !i.is_a?(Hash) || i[:code].blank? || i[:position].blank? }
-      errors.add(:value, :not_valid_for_codification)
+  def has_field_values
+    if document_field_values.length == 0
+      errors.add(:document_field_values, :empty)
     end
   end
 

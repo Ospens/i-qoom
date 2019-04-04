@@ -4,6 +4,11 @@ describe Convention, type: :request do
   let(:headers) { { 'CONTENT_TYPE' => 'application/json' } }
   let(:json) { JSON(response.body) }
 
+  def credentials(user)
+    session = Session.new(login: user.email, password: user.password)
+    { 'Authorization' => session.auth_token }
+  end
+
   it '#edit' do
     convention = FactoryBot.create(:convention)
     get "/api/v1/conventions/#{convention.id}/edit", headers: headers
