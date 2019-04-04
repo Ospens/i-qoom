@@ -9,7 +9,7 @@ describe "User", type: :request do
       post "/api/v1/users",
         params: { user: user.slice(:email) }.to_json,
         headers: headers
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
       expect(JSON(response.body)["status"]).to eq("error")
     end
 

@@ -12,6 +12,8 @@ Rails.application.routes.draw do
 
       resources :conventions, only: [:edit, :update]
       resources :documents
+
+      resources :projects, except: [:new, :edit]
     end
   end
 end

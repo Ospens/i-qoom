@@ -11,7 +11,7 @@ describe "Session", type: :request do
                                       user.username + "1" ].sample,
                              password: "password1" } }.to_json,
         headers: headers
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
       expect(JSON(response.body)["status"]).to eq("error")
     end
 

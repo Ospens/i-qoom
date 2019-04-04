@@ -29,4 +29,6 @@ class User < ApplicationRecord
             length: { maximum: 18 },
             uniqueness: true
 
+  has_many :projects
+
 end

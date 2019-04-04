@@ -13,7 +13,7 @@ class Session
     self.user =
       User.find_by(email: login) || User.find_by(username: login)
     if signed_up_successfully?
-      self.auth_token = JsonWebToken.encode(user_id: user.id)
+      self.auth_token = ::JsonWebToken.encode(user_id: user.id)
     end
   end
 

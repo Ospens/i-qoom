@@ -22,11 +22,11 @@ class ApplicationController < ActionController::Base
                    message: t(".error_message"),
                    error_messages: record.errors.full_messages,
                    fields_with_errors: record.errors.messages.keys },
-           status: :ok
+           status: :unprocessable_entity
   end
 
   def signed_in_user
-    data = JsonWebToken.decode(request.headers["Authorization"])
+    data = ::JsonWebToken.decode(request.headers["Authorization"])
     if data.present? && Time.now < Time.at(data["exp"])
       User.find_by(id: data["user_id"])
     end
