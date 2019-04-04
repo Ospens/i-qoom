@@ -44,6 +44,7 @@ gem 'devise'
 gem 'jwt'
 gem 'cancancan', '~> 2.0'
 gem 'countries'
+gem 'figaro', '~> 1.1', '>= 1.1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -72,7 +73,7 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
-  
+
   gem "webdrivers"
 
   gem 'rspec-rails', '~> 3.8'
