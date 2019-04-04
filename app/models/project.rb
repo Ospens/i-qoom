@@ -1,6 +1,10 @@
 class Project < ApplicationRecord
 
-  validates_presence_of :name
+  validates :name,
+            presence: true,
+            length: { minimum: 3,
+                      maximum: 255 }
+
 
   belongs_to :user
   

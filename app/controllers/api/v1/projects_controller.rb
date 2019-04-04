@@ -1,20 +1,32 @@
 class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
-
+  
   def index
     @projects = signed_in_user.projects
+    render json: { location: @projects },
+           status: :ok
   end
 
   def show
+    render json: { location: @project },
+           status: :ok
   end
 
   def create
     @project = signed_in_user.projects.new(project_params)
-    create_or_update(@project.save)
+    if @project.save
+      success(:created)
+    else
+      error(@project)
+    end
   end
 
   def update
-    create_or_update(@project.update(project_params))
+    if @project.update(project_params)
+      success(:created)
+    else
+      error(@project)
+    end
   end
 
   def destroy
@@ -29,6 +41,6 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def project_params
-    params.fetch(:project, {})
+    params.fetch(:project, { }).permit(:name)
   end
 end

@@ -25,14 +25,6 @@ class ApplicationController < ActionController::Base
            status: :unprocessable_entity
   end
 
-  def create_or_update(record)
-    if record
-      success(:created)
-    else
-      error(record)
-    end
-  end
-
   def signed_in_user
     data = ::JsonWebToken.decode(request.headers["Authorization"])
     if data.present? && Time.now < Time.at(data["exp"])
