@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import LandingPageHeader from './LandingPageHeader'
 import FirstCard from './FirstCard'
+import SecondCard from './SecondCard'
+import ThirdCard from './ThirdCard'
+import FourthCard from './FourthCard'
 
 class LandingPage extends Component {
 
   state = {
-    showSignInSlider: false
+    showSignInSlidSecondCarder: false
   }
 
   toggleSignInSlider = () => {
@@ -22,7 +25,9 @@ class LandingPage extends Component {
           toggleSignInForm={this.toggleSignInSlider}
         />
         <FirstCard showSignInSlider={showSignInSlider} toggleSignInForm={this.toggleSignInSlider}/>
-      <section id='secondCard'></section>
+        <SecondCard/>
+        <ThirdCard/>
+        <FourthCard/>
     </div>
     )
   }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="97.516" height="97.516" viewBox="0 0 97.516 97.516">
+  <g id="conversation-chat-bubble" transform="translate(2.25 2.25)">
+    <circle id="Ellipse_32" data-name="Ellipse 32" cx="12.202" cy="12.202" r="12.202" transform="translate(6.851 43.458)" stroke-width="6" stroke="#475759" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path id="Pfad_214" data-name="Pfad 214" d="M.75,37.053a18.3,18.3,0,1,1,36.607,0" transform="translate(0 55.213)" fill="none" stroke="#475759" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+    <path id="Pfad_215" data-name="Pfad 215" d="M38.526,12.75a12.2,12.2,0,1,1-22.777,6.1" transform="translate(46.008 36.809)" fill="none" stroke="#475759" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+    <path id="Pfad_216" data-name="Pfad 216" d="M14.25,37.053a18.3,18.3,0,1,1,36.607,0" transform="translate(41.41 55.213)" fill="none" stroke="#475759" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+    <path id="Pfad_217" data-name="Pfad 217" d="M8.25,37.357h12.2v18.3l18.3-18.3h18.3V.75H8.25Z" transform="translate(23.005)" fill="none" stroke="#475759" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+    <line id="Linie_61" data-name="Linie 61" x2="24.404" transform="translate(43.458 12.952)" fill="none" stroke="#ff2826" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+    <line id="Linie_62" data-name="Linie 62" x2="24.404" transform="translate(43.458 25.154)" fill="none" stroke="#ff2826" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+  </g>
+</svg>
