@@ -24,56 +24,31 @@ RSpec.describe DocumentField, type: :model do
       subject.save
       should_not be_valid
     end
+  end
 
-    context 'should set column and row' do
-      before do
-        subject.kind = :codification_field
-        subject.column = nil
-        subject.row = nil
-      end
+  context '#can_build?' do
+    subject { FactoryBot.create(:document_field) }
+    let(:user) { FactoryBot.create(:user) }
 
-      it do
-        subject.codification_kind = :originating_company
-        subject.valid?
-        expect(subject.column).to eql(1)
-        expect(subject.row).to eql(3)
-      end
+    it 'non codification' do
+      expect(subject).to_not be_codification_field
+      expect(subject.parent.class.name).to eql('Convention')
+      subject.document_rights.create(document_field: subject, limit_for: :field, user: user)
+      expect(subject.can_build?(user)).to eql(true)
+      subject.parent = FactoryBot.create(:document)
+      expect(subject.can_build?(user)).to eql(false)
+    end
 
-      it do
-        subject.codification_kind = :receiving_company
-        subject.valid?
-        expect(subject.column).to eql(1)
-        expect(subject.row).to eql(4)
-      end
-
-      it do
-        subject.codification_kind = :discipline
-        subject.valid?
-        expect(subject.column).to eql(1)
-        expect(subject.row).to eql(4)
-      end
-
-      it do
-        subject.codification_kind = :discipline
-        subject.parent.update(number: 2)
-        subject.valid?
-        expect(subject.column).to eql(1)
-        expect(subject.row).to eql(5)
-      end
-
-      it do
-        subject.codification_kind = :document_type
-        subject.valid?
-        expect(subject.column).to eql(2)
-        expect(subject.row).to eql(1)
-      end
-
-      it do
-        subject.codification_kind = :document_number
-        subject.valid?
-        expect(subject.column).to eql(2)
-        expect(subject.row).to eql(2)
-      end
+    it 'codification' do
+      subject.kind = :codification_field
+      expect(subject).to be_codification_field
+      expect(subject.document_rights).to_not be_any
+      expect(subject.can_build?(user)).to eql(true)
+      expect(subject.document_field_values).to be_any
+      right = subject.document_rights.create(document_field: subject, limit_for: :field, user: user)
+      expect(subject.can_build?(user)).to eql(false)
+      right.update(limit_for: :value, document_field_value: subject.document_field_values.first)
+      expect(subject.can_build?(user)).to eql(true)
     end
   end
 end

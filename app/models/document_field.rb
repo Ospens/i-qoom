@@ -23,10 +23,6 @@ class DocumentField < ApplicationRecord
 
   has_many_attached :files
 
-  before_validation :assign_column_and_row,
-                    if: -> { codification_field? && parent.class.name == 'Convention' },
-                    on: :create
-
   before_validation :set_required,
                     if: :codification_field?
 
@@ -70,15 +66,6 @@ class DocumentField < ApplicationRecord
 
   def can_build?(user)
     return false if parent.class.name != 'Convention'
-    can_manage?(user)
-  end
-
-  def can_create?(user)
-    return false if parent.class.name != 'Document'
-    can_manage?(user)
-  end
-
-  def can_manage?(user)
     rights = document_rights
     limit_for = DocumentRight.limit_fors
     (codification_field? &&
@@ -93,32 +80,6 @@ class DocumentField < ApplicationRecord
   def has_field_values
     if document_field_values.length == 0
       errors.add(:document_field_values, :empty)
-    end
-  end
-
-  def assign_column_and_row
-    case codification_kind
-    when 'originating_company'
-      self.column = 1
-      self.row = 3
-    when 'receiving_company'
-      self.column = 1
-      self.row = 4
-    when 'discipline'
-      case parent.number
-      when 1
-        self.column = 1
-        self.row = 4
-      when 2
-        self.column = 1
-        self.row = 5
-      end
-    when 'document_type'
-      self.column = 2
-      self.row = 1
-    when 'document_number'
-      self.column = 2
-      self.row = 2
     end
   end
 

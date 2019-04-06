@@ -12,9 +12,10 @@ RSpec.describe Document, type: :model do
     expect(document['document_fields_attributes'].first['document_field_values_attributes'].length).to eql(1)
   end
 
-  it 'attach files' do
+  it 'upload field' do
     doc = FactoryBot.create(:document)
-    doc.native_file.attach(io: File.new(fixture('test.txt')), filename: 'test.txt')
-    expect(doc.native_file.download.strip).to eql('111')
+    field = doc.document_fields.create(kind: :upload_field)
+    field.files.attach(io: File.new(fixture('test.txt')), filename: 'test.txt')
+    expect(field.files.first.download.strip).to eql('111')
   end
 end

@@ -3,7 +3,7 @@ class DocumentRight < ApplicationRecord
 
   belongs_to :user
   belongs_to :document_field
-  belongs_to :document_field_value
+  belongs_to :document_field_value, optional: true
 
   validates :user,
             :document_field,

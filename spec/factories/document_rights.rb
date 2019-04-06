@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :document_right do
-    document { nil }
-    document_field { nil }
-    can_edit { false }
+    limit_for { :field }
+    user
+    document_field
+    document_field_value
   end
 end
