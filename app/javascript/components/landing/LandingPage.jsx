@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import LandingPageHeader from './LandingPageHeader'
 import FirstCard from './FirstCard'
-import SecondCard from './SecondCard'
-import ThirdCard from './ThirdCard'
-import FourthCard from './FourthCard'
+import WhatIsIQoom from './WhatIsIQoom'
+import SamplesContents from './SamplesContents'
+import Pricing from './Pricing'
+import Reviews from './Reviews'
+import GetStarted from './GetStarted'
+import Footer from './Footer'
 
 class LandingPage extends Component {
 
@@ -25,9 +28,12 @@ class LandingPage extends Component {
           toggleSignInForm={this.toggleSignInSlider}
         />
         <FirstCard showSignInSlider={showSignInSlider} toggleSignInForm={this.toggleSignInSlider}/>
-        <SecondCard/>
-        <ThirdCard/>
-        <FourthCard/>
+        <WhatIsIQoom />
+        <SamplesContents />
+        <Pricing />
+        <Reviews />
+        <GetStarted />
+        <Footer />
     </div>
     )
   }

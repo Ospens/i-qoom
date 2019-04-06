@@ -1,8 +1,7 @@
 import axios from 'axios'
 import jwtDecode from 'jwt-decode'
 import {
-  SIGN_IN_USER,
-  SIGN_OUT_USER
+  SIGN_IN_USER
 } from './types'
 
 const signIn = (token, headers, expiry) => ({
@@ -14,10 +13,6 @@ const signIn = (token, headers, expiry) => ({
   }
 })
 
-const signOut = () => ({
-  type: SIGN_OUT_USER
-})
-
 export const signInUser = (login, password, history) => dispatch => {
   const request = {
     session: {
@@ -26,16 +21,13 @@ export const signInUser = (login, password, history) => dispatch => {
     }
   }
   axios.post('/api/v1/sessions', request)
-    .then((response) => dispatch(
+    .then(response => dispatch(
       signIn(
         response.data.auth_token,
         response.headers,
         jwtDecode(response.data.auth_token)
       )
     ))
-    .then(() => history.push('/home'))
-    .catch(function (error) {
-      console.log('Errors: ', error.message)
-    })
-    
+    .then(() => history.push('/dashboard'))
+    .catch(error => console.error('Errors: ', error.message))
 }

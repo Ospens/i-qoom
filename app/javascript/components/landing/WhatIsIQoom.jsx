@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class SecondCard extends Component {
+class WhatIsIQoom extends Component {
 
   render() {
     return (
@@ -25,4 +25,4 @@ class SecondCard extends Component {
   }
 }
 
-export default SecondCard
+export default WhatIsIQoom

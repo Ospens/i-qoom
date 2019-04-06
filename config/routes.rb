@@ -15,4 +15,6 @@ Rails.application.routes.draw do
       resources :projects, except: [:new, :edit]
     end
   end
+
+  match '*path', to: 'pages#index', via: :all
 end

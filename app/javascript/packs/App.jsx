@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter , Route } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import mainStore from '../stores/mainStore'
@@ -12,8 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Provider store={mainStore} >
       <BrowserRouter>
-        <Route exact path='/' component={LandingPage}/>
-        <Route path='/home' component={Dashboard}/>
+        <Switch>
+          <Route exact path='/' component={LandingPage}/>
+          <Route path='/dashboard' component={Dashboard}/>
+        </Switch>
       </BrowserRouter>
     </Provider>,
     document.getElementById('app'),

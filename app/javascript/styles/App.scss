@@ -1,11 +1,10 @@
-*,
-*:after,
-*:before {
+@import "../../../node_modules/slick-carousel/slick/slick.css";
+
+*, *:after, *:before {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   transition: .5s ease-in-out;
-  /* добавим плавность переходов для всех элементов страницы*/
 }
 
 ul {
@@ -218,6 +217,7 @@ li {
 #second-card {
   padding-top: 5em;
   padding-bottom: 5em;
+  border-bottom: 1px solid #eaebeb;
   p {
     line-height: 2;
   }
@@ -227,6 +227,7 @@ li {
   padding-top: 5em;
   padding-bottom: 5em;
   background: #f8f8f8;
+  border-bottom: 1px solid #eaebeb;
   .managment-buttons {
     button {
       font-weight: 600;
@@ -242,6 +243,19 @@ li {
 
   .card-deck {
     margin-top: 4em;
+    .card {
+      max-width: 90%;
+    }
+    .nextBtn {
+      position: absolute;
+      right: 0;
+      bottom: -30px;
+    }
+    .prevBtn {
+      position: absolute;
+      right: 2.2em;
+      bottom: -30px;
+    }
   }
 
   .managment-description {
@@ -266,4 +280,137 @@ li {
 #fourth-card {
   padding-top: 5em;
   padding-bottom: 5em;
+  border-bottom: 1px solid #eaebeb;
+  .btn {
+    margin-top: 1.5em;
+    width: 30%;
+  }
+  .pricing-project {
+    margin-top: 3.5em;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 50%;
+    .first-row {
+      border-bottom: 4px solid #7a3df0;
+      padding-top: 1.5em;
+      padding-bottom: 0.8em;
+    }
+    .second-row {
+      padding-top: 0.8em;
+    }
+  }
+}
+
+#fifth-card {
+  padding-top: 5em;
+  padding-bottom: 5em;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eaebeb;
+  .card-deck {
+    margin-top: 4em;
+
+    .card {
+      max-width: 80%;
+      height: 280px;
+    }
+
+    .nextBtn {
+      position: absolute;
+      right: 0;
+      bottom: -30px;
+    }
+
+    .prevBtn {
+      position: absolute;
+      right: 2.2em;
+      bottom: -30px;
+    }
+  }
+  .review-title {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .user-info {
+    margin-top: 1.5em;
+  }
+  .block-header {
+    padding-bottom: 0;
+  }
+  .block-description {
+    max-width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .user-name-block {
+    display: inline-block;
+    .user-stars {
+      margin-top: 0.5em;
+    }
+    .user-name {
+      display: inline-block;
+    }
+    .blue-check {
+      display: inline-block;
+      margin-left: 5px;
+    }
+    .vote-stars {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .user-country {
+      font-size: 10px;
+    }
+  }
+  .card {
+    .card-text {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+#get-started-card {
+  padding-top: 5em;
+  padding-bottom: 5em;
+  border-bottom: 1px solid #eaebeb;
+  .form-number-group {
+    padding-top: 2.7rem !important;
+  }
+  label {
+    color: #c8d8d9;
+  }
+  textarea {
+    border-color: #c8d8d9;
+    &::placeholder {
+      color: #c8d8d9;
+    }
+  }
+
+  input::placeholder {
+    color: #c8d8d9;
+  }
+}
+
+#footer-card {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid #eaebeb;
+  background-color: #221e6d;
+  color: #fff;
+  .info-row {
+    max-width: 40%;
+    font-size: 0.8em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .rights-reserved {
+    max-width: 40%;
+    margin-top: 10px;
+    color: #636198;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
