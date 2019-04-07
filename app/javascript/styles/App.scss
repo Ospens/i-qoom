@@ -21,6 +21,10 @@ img {
   width: 100%;
 }
 
+input::placeholder {
+  color: #c8d8d9 !important;
+}
+
 h1,
 h2,
 h3,
@@ -67,6 +71,7 @@ header {
 
 .nav-link {
   color: white !important;
+  line-height: 40px !important;
 }
 
 li {
@@ -83,8 +88,11 @@ li {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  padding-top: 200px;
   overflow: hidden;
+
+  .container {
+    padding-top: 200px;
+  }
 }
 
 #secondCard {
@@ -93,19 +101,31 @@ li {
 
 .sign-in-form {
   left: 110%;
+  width: 100%;
   position: absolute;
   display: inline-block;
   min-width: 400px;
   color: #fff;
 
+  form {
+    width: 50%;
+    margin-left: auto; 
+    margin-right: auto;
+  }
   &.show-slider {
-    left: 31%;
+    left: 0;
   }
 
   .btn-group {
     width: 50%;
     color: #fff;
+    .btn-back {
+      display: flex;
 
+      path {
+        fill: white;
+      }
+    }
     .btn {
       color: #fff;
     }
@@ -165,6 +185,7 @@ li {
 }
 
 .welocme-text {
+  width: 100%;
   position: relative;
   color: #fff;
   right: 0;
@@ -195,14 +216,21 @@ li {
   position: absolute;
   left: 110%;
   font-weight: 600;
-  min-width: 300px;
+  width: 85%;
+  button {
+    display: flex;
 
+    path {
+      fill: white;
+    }
+  }
   &.show-slider {
-    left: 40%;
+    left: 0;
   }
 }
 
 .welcome-and-signin {
+  display: flex;
   min-height: 500px;
   position: relative;
 }
@@ -388,10 +416,6 @@ li {
       color: #c8d8d9;
     }
   }
-
-  input::placeholder {
-    color: #c8d8d9;
-  }
 }
 
 #footer-card {
@@ -413,4 +437,107 @@ li {
     margin-left: auto;
     margin-right: auto;
   }
+}
+
+.sign-up-form {
+  background-color: white;
+  margin-top: 80px;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  padding-left: 5em;
+  padding-right: 5em;
+  border-bottom: 1px solid #eaebeb;
+  
+  .next-row {
+    margin-top: 3em;
+  }
+
+  label {
+    color: #c8d8d9;
+  }
+
+  .steps {
+    .step {
+      padding-bottom: 15px;
+      font-weight: 600;
+      color: #f2f5f5;
+      border-bottom: 5px solid #f2f5f5;
+      &.active {
+        color: #793DF1;
+        border-bottom: 5px solid #793DF1;
+      }
+    }
+  }
+  .sign-up-form__header {
+    margin-top: 2em;
+    color: #26276a;
+    font-weight: 600;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .form-row {
+    display: none;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5em;
+    &.active {
+      display: flex;
+    }
+    height: 300px;
+  }
+  .form-check {
+    margin-bottom: 2em;
+  }
+  .form-buttons {
+    display: flex;
+    align-items: center;
+    align-items: flex-end;
+    justify-content: center;
+    .btn-primary {
+      path {
+        fill: white;
+      }
+    }
+    .btn-back {
+      color: #a5adad;
+      path {
+        fill: #a5adad;
+      }
+    }
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+input[type=checkbox] {
+  display: none;
+}
+
+input[type=checkbox] + label {
+  background: url('../images/unchecked_checkbox.svg') no-repeat;
+  background-size: 100%;
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  padding: 0;
+  margin-right: 1em;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+input[type=checkbox]:checked + label {
+  background: url('../images/checked_checkbox.svg') no-repeat;
+  background-size: 100%;
+  height: 20px;
+  width: 20px;
+  display: inline-block;
+  padding: 0;
+  margin-right: 1em;
+  cursor: pointer;
+  vertical-align: middle;
 }

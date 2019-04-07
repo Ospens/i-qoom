@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 import SignIn from './SignIn'
+import SignUp from './SignUp'
 
 class FirstCard extends Component {
 
   render() {
-    const { showSignInSlider, toggleSignInForm } = this.props
-    const welcomeClass = `${showSignInSlider ? 'show-slider' : ''}`
+    const { showSignInSlider, toggleSignInForm, showSignUp } = this.props
+    const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
     return (
       <section id='first-card'>
-        <div className='container'>
-          <div className='welcome-and-signin'>
-            <div className={`welocme-text ${welcomeClass}`}>
+        {showSignUp && <SignUp />}
+        {!showSignUp &&
+          <div className='container'>
+          <div className='welcome-and-signin justify-content-center'>
+            <div className={welcomeClass}>
               <div className='first-line'>We get your project</div>
               <div className='second-line'>Started & Managed</div>
               <button type='button' className='btn btn-light contact-us'>Contact Us</button>
@@ -20,7 +24,7 @@ class FirstCard extends Component {
               toggleSignInForm={toggleSignInForm}
             />
           </div>
-        </div>
+        </div>}
       </section>
     )
   }

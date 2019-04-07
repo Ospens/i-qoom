@@ -1,5 +1,6 @@
 import {
   SIGN_IN_USER,
+  SIGN_UP_USER,
   SIGN_OUT_USER
 } from '../actions/types'
 
@@ -18,6 +19,10 @@ const authReducer = (state = initialState, action) => {
       ...action.payload.expiry,
       token: action.payload.token,
       authStatus: true
+    }
+  case SIGN_UP_USER:
+    return {
+      ...state
     }
   case SIGN_OUT_USER:
     return initialState

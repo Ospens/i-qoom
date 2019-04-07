@@ -11,23 +11,49 @@ import Footer from './Footer'
 class LandingPage extends Component {
 
   state = {
-    showSignInSlidSecondCarder: false
+    showSignInSlider: false,
+    showSignUp: true
   }
 
   toggleSignInSlider = () => {
-    const { showSignInSlider } = this.state
-    this.setState({ showSignInSlider: !showSignInSlider })
+    const { showSignInSlider, showSignUp } = this.state
+    this.setState({
+      showSignInSlider: !showSignInSlider,
+      showSignUp: false
+    })
+  }
+
+  toggleSignUp = () => {
+    const { showSignInSlider, showSignUp } = this.state
+    this.setState({
+      showSignUp: !showSignUp,
+      showSignInSlider: false
+    })
+  }
+
+  showMainPage = () => {
+    this.setState({
+      showSignUp: false,
+      showSignInSlider: false
+    })
   }
 
   render() {
-    const { showSignInSlider } = this.state
+    const { showSignInSlider, showSignUp } = this.state
     return (
     <div className='landing-page'>
         <LandingPageHeader
           showSignInSlider={showSignInSlider}
+          showSignUp={showSignUp}
+          showMainPage={this.showMainPage}
+          toggleSignInForm={this.toggleSignInSlider}
+          toggleSignUp={this.toggleSignUp}
+        />
+        <FirstCard
+          showSignInSlider={showSignInSlider}
+          showSignUp={showSignUp}
           toggleSignInForm={this.toggleSignInSlider}
         />
-        <FirstCard showSignInSlider={showSignInSlider} toggleSignInForm={this.toggleSignInSlider}/>
         <WhatIsIQoom />
         <SamplesContents />
         <Pricing />

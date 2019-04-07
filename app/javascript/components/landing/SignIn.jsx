@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
+import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
 import { signInUser } from '../../actions/userActions'
-import { withRouter } from 'react-router-dom';
-
-const defaultState = {
-  login: null,
-  password: null
-}
+import { withRouter } from 'react-router-dom'
+import Left from '../../images/arrow-button-left'
 
 class SignIn extends Component {
-  state = defaultState
+  state = {
+    login: null,
+    password: null
+  }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       [e.target.id]: e.target.value
     })
@@ -60,7 +60,13 @@ class SignIn extends Component {
           </div>
           <div className='btn-toolbar pt-4'>
             <div className='btn-group justify-content-center'>
-              <button type='button' className='col-6 btn btn btn-transparent' onClick={toggleSignInForm}>Back</button>
+              <button type='button' className='col-6 btn btn btn-back' onClick={toggleSignInForm}>
+                <ReactSVG
+                  svgStyle={{ height: 15, width: 15, marginRight: 10 }}
+                  src={Left}
+                />
+                Back
+              </button>
             </div>
             <div className='btn-group justify-content-center'>
               <button type='submit' className='col-12 btn btn-primary'>Login</button>
