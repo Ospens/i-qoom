@@ -4,7 +4,7 @@ class Footer extends Component {
 
   render() {
     return (
-      <section id='footer-card'>
+      <footer id='footer-card'>
         <div className='container text-center'>
           <h3>i-Qoom</h3>
           <div className='row justify-content-center info-row'>
@@ -19,7 +19,7 @@ class Footer extends Component {
             @ 2018 Shamin yassar. All rights reserved.
           </div>
         </div>
-      </section>
+      </footer>
     )
   }
 }

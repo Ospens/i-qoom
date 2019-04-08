@@ -7,6 +7,7 @@ import robotHead from '../../images/robot-head-1.svg'
 import cogBrowser from '../../images/cog-browser.svg'
 import conversationImg from '../../images/conversation-chat-bubble-1.svg'
 import Arrows from '../../elements/Arrows'
+import Right from '../../images/arrow-button-right'
 
 class SamplesContents extends Component {
 
@@ -47,6 +48,7 @@ class SamplesContents extends Component {
     ]
 
     const { showDescription } = this.state
+    const { toggleExamples } = this.props
     const header = showDescription === 'comercial'
       ? 'Comercial Managment'
       : 'Project Managment'
@@ -105,12 +107,17 @@ class SamplesContents extends Component {
                   src={el.image}
                   svgStyle={{ height: 100, marginTop: 20 }}
                   className='card-img-top text-center'
-                  alt='...'
                 />
                 <div className='card-body text-center'>
                   <h5 className='card-title'>{el.title}</h5>
                   <p className='card-text'>Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>
-                  <a href='#' className='card-link'>Show example ></a>
+                  <button className='show-example' onClick={toggleExamples}>
+                    Show example 
+                    <ReactSVG
+                        src={Right}
+                        svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
+                      />
+                    </button>
                 </div>
               </div>
             )

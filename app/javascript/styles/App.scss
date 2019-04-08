@@ -308,6 +308,19 @@ li {
   .card-title {
     font-weight: bold;
   }
+  .show-example {
+    display: flex;
+    text-decoration: none;
+    margin-right: auto;
+    margin-left: auto;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #48b2fb;
+    path {
+      fill: #48b2fb;
+    }
+  }
 }
 
 #pricing-card {
@@ -545,4 +558,60 @@ input[type=checkbox]:checked + label {
   margin-right: 1em;
   cursor: pointer;
   vertical-align: middle;
+}
+
+#example-card {
+  background-color: #475759;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  border-bottom: 1px solid #eaebeb;
+  overflow: hidden;
+  h2 {
+    color: white;
+    margin-left: 100px;
+    margin-right: 450px;
+    text-align: center;
+  }
+  .slick-list {
+    margin-left: 100px;
+    margin-right: 450px;
+  }
+  .slick-dots {
+    position: absolute;
+    display: block;
+    right: 50px;
+    top: -130px;
+    max-width: 300px;
+    li {
+      width: 300px;
+      margin-bottom: 10px;
+    }
+  }
+  .nextBtn {
+    position: absolute;
+    right: 460px;
+    bottom: -40px;
+  }
+
+  .prevBtn {
+    position: absolute;
+    right: 500px;
+    bottom: -40px;
+  }
+  path {
+    fill: white;
+  }
+
+  .btn-back {
+    background-color: white;
+    display: flex;
+    color: #a5adad;
+    margin-left: 200px;
+    width: 100px;
+    text-align: center;
+    margin-top: 10px;
+    path {
+      fill: #a5adad;
+    }
+  }
 }

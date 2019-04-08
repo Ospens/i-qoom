@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
+import { Field, reduxForm } from 'redux-form'
 import { signInUser } from '../../actions/userActions'
-import { withRouter } from 'react-router-dom'
 import Left from '../../images/arrow-button-left'
 
 class SignIn extends Component {
@@ -26,7 +26,6 @@ class SignIn extends Component {
   }
 
   render() {
-    const { login, password } = this.state
     const { showSignInSlider, toggleSignInForm } = this.props
 
     const openClass = `${showSignInSlider ? 'show-slider' : ''}`
@@ -37,30 +36,31 @@ class SignIn extends Component {
           <h2 className='sign-in-form__header text-center'>Log into yout accont</h2>
           <div className='form-group'>
             <label htmlFor='login'>Type in e-mail adress or I-qoom ID</label>
-            <input
-              type='login'
+            <Field
+              type='text'
+              name='login'
+              component='input'
               id='login'
               onChange={this.handleChange}
-              defaultValue={login}
               className='form-control'
-              aria-describedby='loginHelp'
               placeholder='Company name'
             />
           </div>
           <div className='form-group pt-4'>
             <label htmlFor='password'>Type in password</label>
-            <input
+            <Field
               type='password'
+              name='password'
+              component='input'
               id='password'
               onChange={this.handleChange}
-              defaultValue={password}
               className='form-control'
               placeholder='Password'
             />
           </div>
           <div className='btn-toolbar pt-4'>
             <div className='btn-group justify-content-center'>
-              <button type='button' className='col-6 btn btn btn-back' onClick={toggleSignInForm}>
+              <button type='button' className='col-6 btn btn-back' onClick={toggleSignInForm}>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                   src={Left}
@@ -82,4 +82,4 @@ const mapDispatchToProps = dispatch => ({
   signInUser: (login, password, history) => dispatch(signInUser(login, password, history))
 })
 
-export default connect(null, mapDispatchToProps)(withRouter(SignIn))
+export default connect(null, mapDispatchToProps)(reduxForm({ form: 'sign_in' })(SignIn))

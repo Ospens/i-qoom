@@ -7,12 +7,14 @@ import Pricing from './Pricing'
 import Reviews from './Reviews'
 import GetStarted from './GetStarted'
 import Footer from './Footer'
+import ExampleCard from './ExampleCard'
 
 class LandingPage extends Component {
 
   state = {
     showSignInSlider: false,
-    showSignUp: false
+    showSignUp: false,
+    showExamples: false
   }
 
   toggleSignInSlider = () => {
@@ -24,7 +26,7 @@ class LandingPage extends Component {
   }
 
   toggleSignUp = () => {
-    const { showSignUp } = this.state
+    const { showSignUp, showExamples } = this.state
     this.setState({
       showSignUp: !showSignUp,
       showSignInSlider: false
@@ -38,8 +40,15 @@ class LandingPage extends Component {
     })
   }
 
+  toggleExamples = () => {
+    const { showExamples } = this.state
+    this.setState({
+      showExamples: !showExamples,
+    })
+  }
+
   render() {
-    const { showSignInSlider, showSignUp } = this.state
+    const { showSignInSlider, showSignUp, showExamples } = this.state
     return (
     <div className='landing-page'>
         <LandingPageHeader
@@ -56,7 +65,8 @@ class LandingPage extends Component {
           showMainPage={this.showMainPage}
         />
         <WhatIsIQoom />
-        <SamplesContents />
+        {!showExamples && <SamplesContents toggleExamples={this.toggleExamples} />}
+        {showExamples && <ExampleCard toggleExamples={this.toggleExamples} />}
         <Pricing />
         <Reviews />
         <GetStarted />

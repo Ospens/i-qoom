@@ -153,7 +153,7 @@ class SignUp extends Component {
               </div>
             </div>
             <div className='form-buttons col-12 text-center'>
-              <button type='button' className='col-3 btn btn btn-back' onClick={showMainPage}>
+              <button type='button' className='col-3 btn btn-back' onClick={showMainPage}>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                   src={Left}
@@ -240,7 +240,7 @@ class SignUp extends Component {
               />
             </div>
             <div className='form-buttons col-12 text-center'>
-              <button type='button' className='col-3 btn btn btn-back' onClick={this.prevStep}>
+              <button type='button' className='col-3 btn btn-back' onClick={this.prevStep}>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                   src={Left}
