@@ -61,7 +61,7 @@ class SamplesContents extends Component {
       prevArrow: <Arrows type='prevBtn' />
     }
     return (
-      <section id='third-card'>
+      <section id='samples-card'>
         <div className='container'>
           <h2 className='text-center block-header'>Samples & Contents</h2>
           <div className='managment row'>
@@ -103,10 +103,9 @@ class SamplesContents extends Component {
               <div className='card' key={i}>
                 <ReactSVG
                   src={el.image}
-                  svgStyle={{ width: 100 }}
+                  svgStyle={{ height: 100, marginTop: 20 }}
                   className='card-img-top text-center'
                   alt='...'
-                  svgClassName='mt-2'
                 />
                 <div className='card-body text-center'>
                   <h5 className='card-title'>{el.title}</h5>

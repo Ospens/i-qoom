@@ -4,7 +4,7 @@ class WhatIsIQoom extends Component {
 
   render() {
     return (
-      <section id='second-card'>
+      <section id='what-is-card'>
         <div className='container'>
           <h2 className='text-center block-header'>What is i-Qoom?</h2>
           <p className='text-center'>

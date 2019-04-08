@@ -242,7 +242,7 @@ li {
   padding-bottom: 1em;
 }
 
-#second-card {
+#what-is-card {
   padding-top: 5em;
   padding-bottom: 5em;
   border-bottom: 1px solid #eaebeb;
@@ -251,7 +251,7 @@ li {
   }
 }
 
-#third-card {
+#samples-card {
   padding-top: 5em;
   padding-bottom: 5em;
   background: #f8f8f8;
@@ -260,6 +260,7 @@ li {
     button {
       font-weight: 600;
       border-left: 3px solid #c9d8d9;
+      border-radius: unset;
       color: #c9d8d9;
 
       &.active {
@@ -272,16 +273,16 @@ li {
   .card-deck {
     margin-top: 4em;
     .card {
-      max-width: 90%;
+      max-width: 80%;
     }
     .nextBtn {
       position: absolute;
-      right: 0;
+      right: 4em;
       bottom: -30px;
     }
     .prevBtn {
       position: absolute;
-      right: 2.2em;
+      right: 6em;
       bottom: -30px;
     }
   }
@@ -298,6 +299,10 @@ li {
 
   .card-img-top {
     min-height: 120px;
+    svg {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
   }
 
   .card-title {
@@ -305,7 +310,7 @@ li {
   }
 }
 
-#fourth-card {
+#pricing-card {
   padding-top: 5em;
   padding-bottom: 5em;
   border-bottom: 1px solid #eaebeb;
@@ -329,7 +334,7 @@ li {
   }
 }
 
-#fifth-card {
+#reviews-card {
   padding-top: 5em;
   padding-bottom: 5em;
   background: #f8f8f8;
@@ -344,13 +349,13 @@ li {
 
     .nextBtn {
       position: absolute;
-      right: 0;
+      right: 4em;
       bottom: -30px;
     }
 
     .prevBtn {
       position: absolute;
-      right: 2.2em;
+      right: 6em;
       bottom: -30px;
     }
   }

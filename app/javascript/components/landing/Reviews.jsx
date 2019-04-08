@@ -78,7 +78,7 @@ class Reviews extends Component {
     }
 
     return (
-      <section id='fifth-card'>
+      <section id='reviews-card'>
         <div className='text-center container'>
           <h2 className='block-header'>i-Qoom Reviews</h2>
           <p className='block-description'>Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>
@@ -91,11 +91,11 @@ class Reviews extends Component {
                   <ReactSVG
                     src={el.image}
                     svgStyle={{ width: '100%', height: '100%' }}
-                    className='col-4'
+                    className='col-3'
                     svgClassName='mt-2'
                   />
                   <div className='clearfix' />
-                  <div className='user-name-block col-8'>
+                  <div className='user-name-block col-9'>
                     <h6 className='user-name'>{el.name}</h6>
                     <ReactSVG
                       src={blueCheck}

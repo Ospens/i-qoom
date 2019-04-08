@@ -12,11 +12,11 @@ class LandingPage extends Component {
 
   state = {
     showSignInSlider: false,
-    showSignUp: true
+    showSignUp: false
   }
 
   toggleSignInSlider = () => {
-    const { showSignInSlider, showSignUp } = this.state
+    const { showSignInSlider } = this.state
     this.setState({
       showSignInSlider: !showSignInSlider,
       showSignUp: false
@@ -24,7 +24,7 @@ class LandingPage extends Component {
   }
 
   toggleSignUp = () => {
-    const { showSignInSlider, showSignUp } = this.state
+    const { showSignUp } = this.state
     this.setState({
       showSignUp: !showSignUp,
       showSignInSlider: false

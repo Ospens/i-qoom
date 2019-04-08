@@ -4,7 +4,7 @@ class Pricing extends Component {
 
   render() {
     return (
-      <section id='fourth-card'>
+      <section id='pricing-card'>
         <div className='text-center container'>
           <h2 className='text-center block-header'>Pricing</h2>
           <h3 className='text-center'>Become an i-Qoom member and register for free</h3>
