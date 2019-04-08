@@ -6,11 +6,13 @@ import SignUp from './SignUp'
 class FirstCard extends Component {
 
   render() {
-    const { showSignInSlider, toggleSignInForm, showSignUp } = this.props
+    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage } = this.props
     const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
     return (
       <section id='first-card'>
-        {showSignUp && <SignUp />}
+        {showSignUp && <SignUp
+          showMainPage={showMainPage}
+        />}
         {!showSignUp &&
           <div className='container'>
           <div className='welcome-and-signin justify-content-center'>

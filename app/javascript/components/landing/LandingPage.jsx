@@ -53,6 +53,7 @@ class LandingPage extends Component {
           showSignInSlider={showSignInSlider}
           showSignUp={showSignUp}
           toggleSignInForm={this.toggleSignInSlider}
+          showMainPage={this.showMainPage}
         />
         <WhatIsIQoom />
         <SamplesContents />

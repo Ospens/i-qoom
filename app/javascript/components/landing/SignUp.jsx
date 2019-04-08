@@ -4,8 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
-import { withRouter } from 'react-router-dom'
-import Select from 'react-select'
+import SelectField from '../../elements/SelectField'
 import Checkbox from '../../elements/Checkbox'
 import Left from '../../images/arrow-button-left'
 import Right from '../../images/arrow-button-right'
@@ -26,22 +25,22 @@ class SignUp extends Component {
     }
   }
 
-  handleChange = (e, a = {}) => {
-    if (a.name) {
-      this.setState({
-        userFields: {
-          ...this.state.userFields,
-          [a.name]: e.value
-        }
-      })
-    } else {
-      this.setState({
-        userFields: {
-          ...this.state.userFields,
-          [e.target.id]: e.target.checked || e.target.value
-        }
-      })
-    }
+  handleChange = e => {
+    this.setState({
+      userFields: {
+        ...this.state.userFields,
+        [e.target.id]: e.target.checked || e.target.value
+      }
+    })
+  }
+
+  handleChangeSelect = (e, name) => {
+    this.setState({
+      userFields: {
+        ...this.state.userFields,
+        [name]: e
+      }
+    })
   }
 
   handleSubmit = e => {
@@ -67,7 +66,7 @@ class SignUp extends Component {
       city,
       email
     } = this.state
-    const { toggleSignUpForm } = this.props
+    const { showMainPage } = this.props
 
     const countries = [
       { value: 'GF', label: 'GF' },
@@ -103,15 +102,15 @@ class SignUp extends Component {
                 />
               </div>
               <div className='form-group next-row'>
-                <label>Select your country</label>
-                <Select
-                  name='country'
-                  onChange={(e, a) => this.handleChange(e, a)}
-                  defaultValue={country}
-                  autoFocus={false}
-                  options={countries}
-                  styles={{color: '#26276a'}}
-              />
+                <label htmlFor='country'>Select your country</label>
+                  <Field
+                    name='country'
+                    id='country'
+                    options={countries}
+                    value={country}
+                    onChange={(e) => this.handleChangeSelect(e, 'country')}
+                    component={SelectField}
+                  />
               </div>
             </div>
             <div className='form-group col-6'>
@@ -131,28 +130,30 @@ class SignUp extends Component {
               <div className='row next-row'>
                 <div className='form-group col-6'>
                   <label>Select state</label>
-                  <Select
-                    name='state'
-                    onChange={this.handleChange}
-                    defaultValue={state}
-                    autoFocus={false}
-                    options={countries}
-                  />
+                    <Field
+                      name='state'
+                      id='state'
+                      options={countries}
+                      value={state}
+                      onChange={(e) => this.handleChangeSelect(e, 'state')}
+                      component={SelectField}
+                    />
                 </div>
                 <div className='form-group col-6'>
                   <label>Select city</label>
-                  <Select
-                    name='city'
-                    onChange={this.handleChange}
-                    defaultValue={city}
-                    autoFocus={false}
-                    options={countries}
-                  />
+                    <Field
+                      name='city'
+                      id='city'
+                      options={countries}
+                      value={city}
+                      onChange={(e) => this.handleChangeSelect(e, 'city')}
+                      component={SelectField}
+                    />
                 </div>
               </div>
             </div>
             <div className='form-buttons col-12 text-center'>
-              <button type='button' className='col-3 btn btn btn-back'>
+              <button type='button' className='col-3 btn btn btn-back' onClick={showMainPage}>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                   src={Left}
