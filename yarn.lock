@@ -6340,10 +6340,10 @@ react-svg-loader@^2.1.0:
     loader-utils "^1.1.0"
     react-svg-core "^2.1.0"
 
-react-svg@^8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-8.0.2.tgz#63b983d77f2dd69694401c25cfc0842de809387f"
-  integrity sha512-qvlzmHATcW1yhK+u750IlYXY4BVm/puhCgktD5rDyXm1ZfneFuZYx/v1yE2/NdMFlpdi2eQiml1o+o6aGNV4/Q==
+react-svg@^8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/react-svg/-/react-svg-8.0.3.tgz#3a51c0d8d184aeb737e9638578cda7916cbf3048"
+  integrity sha512-TRIWll3fbgfqhV6cwG8vkUMuk0osdHnXmBozjgc7u8lb4UoQ2UD33WiUTn0/icbvkrD8ZYootVdNJY8MnZOh3w==
   dependencies:
     "@babel/runtime" "^7.4.2"
     "@tanem/svg-injector" "^7.0.8"
