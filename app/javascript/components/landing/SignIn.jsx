@@ -20,9 +20,9 @@ class SignIn extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     const { login, password } = this.state
-    const { signInUser, history } = this.props
+    const { signInUser, history, toggleSignInForm } = this.props
 
-    signInUser(login, password, history)
+    signInUser(login, password, history).then(() => toggleSignInForm())
   }
 
   render() {

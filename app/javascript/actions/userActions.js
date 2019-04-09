@@ -1,18 +1,28 @@
 import axios from 'axios'
-import jwtDecode from 'jwt-decode'
 import {
   SIGN_IN_USER,
-  SIGN_UP_USER
+  SIGN_UP_USER,
+  SIGN_OUT_USER
 } from './types'
 
-const signIn = (token, headers, expiry) => ({
-  type: SIGN_IN_USER,
-  payload: {
-    token,
-    headers,
-    expiry
-  }
-})
+const signIn = (token, headers, expiry) => {
+  sessionStorage.setItem('jwtToken', token)
+  return ({
+    type: SIGN_IN_USER,
+    payload: {
+      token,
+      headers,
+      expiry
+    }
+  })
+}
+
+export const signOutUser = () => {
+  sessionStorage.removeItem('jwtToken')
+  return ({
+    type: SIGN_OUT_USER
+  })
+}
 
 const signUp = (token, headers) => ({
   type: SIGN_UP_USER,
@@ -22,23 +32,23 @@ const signUp = (token, headers) => ({
   }
 })
 
-export const signInUser = (login, password, history) => dispatch => {
+export const signInUser = (login, password) => dispatch => {
   const request = {
     session: {
       login,
       password
     }
   }
-  axios.post('/api/v1/sessions', request)
-    .then(response => dispatch(
-      signIn(
-        response.data.auth_token,
-        response.headers,
-        jwtDecode(response.data.auth_token)
-      )
-    ))
-    .then(() => history.push('/dashboard'))
-    .catch(error => console.error('Errors: ', error.message))
+  return (
+    axios.post('/api/v1/sessions', request)
+      .then(response => dispatch(
+        signIn(
+          response.data.auth_token,
+          response.headers
+        )
+      ))
+      .catch(error => console.error('Errors: ', error.message))
+  )
 }
 
 export const signUpUser = userFields => dispatch => {

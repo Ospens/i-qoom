@@ -4,9 +4,10 @@ import {
   SIGN_OUT_USER
 } from '../actions/types'
 
+const localToken = sessionStorage.getItem('jwtToken')
 const initialState = {
-  authStatus: false,
-  token: null,
+  authStatus: localToken !== null,
+  token: localToken,
   exp: null,
   user_id: null
 }
@@ -25,7 +26,11 @@ const authReducer = (state = initialState, action) => {
       ...state
     }
   case SIGN_OUT_USER:
-    return initialState
+    return {
+      ...initialState,
+      authStatus: false,
+      token: null
+    }
   default:
     return state
   }

@@ -72,6 +72,10 @@ header {
 .nav-link {
   color: white !important;
   line-height: 40px !important;
+
+  path {
+    fill: white;
+  }
 }
 
 li {
