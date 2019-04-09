@@ -42,6 +42,9 @@ body {
   line-height: 1;
   color: #373737;
 }
+.prevBtn, .nextBtn {
+  cursor: pointer;
+}
 
 header:after,
 .container:after,

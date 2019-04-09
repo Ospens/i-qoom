@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, getFormSubmitErrors } from 'redux-form'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
@@ -43,13 +43,12 @@ class SignUp extends Component {
     })
   }
 
-  handleSubmit = e => {
-    e.preventDefault()
-    const { SignUpUser } = this.props
+  handleSubmit = () => {
+    const { signUpUser } = this.props
     const { userFields } = this.state
-
-    SignUpUser(userFields)
+    return signUpUser(userFields)
   }
+
   nextStep = () => this.setState({step: 2})
   prevStep = () => this.setState({step: 1})
 
@@ -66,7 +65,9 @@ class SignUp extends Component {
       city,
       email
     } = this.state
-    const { showMainPage } = this.props
+
+    const { showMainPage, submitErrors } = this.props
+    const errorField = Object.keys(submitErrors)
 
     const countries = [
       { value: 'GF', label: 'GF' },
@@ -78,7 +79,7 @@ class SignUp extends Component {
  
     return (
       <div className='sign-up-form'>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className='steps row text-center'>
             <div className='step active col-6'>Step 1</div>
             <div className={classnames('step', 'col-6', { active: step === 2 })}>Step 2</div>
@@ -97,7 +98,7 @@ class SignUp extends Component {
                   id='first_name'
                   onChange={this.handleChange}
                   defaultValue={first_name}
-                  className='form-control'
+                  className={`form-control ${errorField.includes('first_name') ? ' is-invalid' : ''}`}
                   placeholder='First name'
                 />
               </div>
@@ -256,8 +257,11 @@ class SignUp extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('sign_up')(state)
+})
 const mapDispatchToProps = dispatch => ({
-  SignUpUser: (userFields) => dispatch(signUpUser(userFields))
+  signUpUser: (userFields) => dispatch(signUpUser(userFields))
 })
 
-export default connect(null, mapDispatchToProps)(reduxForm({ form: 'sign_up'})(SignUp))
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'sign_up' })(SignUp))
