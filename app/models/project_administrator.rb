@@ -4,4 +4,8 @@ class ProjectAdministrator < ApplicationRecord
 
   belongs_to :user, required: false
 
+  validates :email,
+            email: true,
+            presence: true
+
 end
