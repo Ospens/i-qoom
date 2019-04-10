@@ -112,7 +112,7 @@ class SamplesContents extends Component {
                   <h5 className='card-title'>{el.title}</h5>
                   <p className='card-text'>Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>
                   <button className='show-example' onClick={toggleExamples}>
-                    Show example 
+                    Show Examples
                     <ReactSVG
                         src={Right}
                         svgStyle={{ height: 10, width: 10, marginLeft: 10 }}

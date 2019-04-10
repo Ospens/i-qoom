@@ -54,17 +54,17 @@ class LandingPageHeader extends Component {
                 </button>
               </div>
 
-              {!authenticated && 
+              {!authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
                   <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignUp}>Register</button></li>
-                  <li className='nav-item'><button type='button' className='btn nav-link btn-transparent' onClick={toggleSignInForm}>Login</button></li>
+                  <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignInForm}>Login</button></li>
                 </ul>
               }
-              {authenticated && 
+              {authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
                 <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={signOutUser}>Logout</button></li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 15, marginRight: 10 }}
                         src={bell}
@@ -72,7 +72,7 @@ class LandingPageHeader extends Component {
                     </button>
                   </li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 15, marginRight: 10 }}
                         src={messages}
@@ -80,7 +80,7 @@ class LandingPageHeader extends Component {
                     </button>
                   </li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 30, width: 30 }}
                         src={tmpAvatar}
