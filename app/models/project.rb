@@ -7,5 +7,6 @@ class Project < ApplicationRecord
 
 
   belongs_to :user
+  has_many :admins, class_name: "ProjectAdministrator"
   
 end
