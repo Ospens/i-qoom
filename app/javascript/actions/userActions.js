@@ -16,7 +16,7 @@ const signIn = (token, headers, expiry) => ({
 })
 
 export const signOutUser = () => {
-  sessionStorage.removeItem('jwtToken')
+  sessionStorage.removeItem('jwt-iqoom-token')
   return ({
     type: SIGN_OUT_USER
   })
@@ -40,10 +40,13 @@ export const signInUser = (login, password) => dispatch => {
   return (
     axios.post('/api/v1/sessions', request)
       .then(response => {
-        sessionStorage.setItem('jwtToken', token)
-        dispatch(signIn(response.data.auth_token,response.headers))
+        sessionStorage.setItem('jwt-iqoom-token', response.data.auth_token)
+        dispatch(signIn(response.data.auth_token, response.headers))
       })
-      .catch(error => console.error('Errors: ', error.message))
+      .catch(({ response }) => {
+        alert('Error')
+        throw new SubmissionError(response.data.error_messages)
+      })
   )
 }
 
@@ -54,13 +57,12 @@ export const signUpUser = userFields => dispatch => {
     }
   }
   return axios.post('/api/v1/users', request)
-    .then(response => dispatch(signUp(response.data,response.headers)))
-    .catch(({response}) => {
-      const errors = {}
-      response.data.fields_with_errors.map((el, i) => {
-        errors[el] = response.data.error_messages[i]
-      })
-      alert(response.data.error_messages)
-      throw new SubmissionError(errors)
+    .then(response => {
+      dispatch(signUp(response.data, response.headers))
+      alert('Registration completed successfully!')
+    })
+    .catch(({ response }) => {
+      alert('Error')
+      throw new SubmissionError(response.data.error_messages)
     })
 }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
+import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
 import { signInUser } from '../../actions/userActions'
+import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
 
 class SignIn extends Component {
@@ -17,44 +18,40 @@ class SignIn extends Component {
     })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
+  handleSubmit = () => {
     const { login, password } = this.state
     const { signInUser, history, toggleSignInForm } = this.props
-
-    signInUser(login, password, history).then(() => toggleSignInForm())
+    return signInUser(login, password, history).then(() => toggleSignInForm())
   }
 
   render() {
-    const { showSignInSlider, toggleSignInForm } = this.props
+    const { showSignInSlider, toggleSignInForm, submitErrors } = this.props
 
     const openClass = `${showSignInSlider ? 'show-slider' : ''}`
-    
+
     return (
       <div className={`sign-in-form ${openClass}`}>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <h2 className='sign-in-form__header text-center'>Log into yout accont</h2>
           <div className='form-group'>
-            <label htmlFor='login'>Type in e-mail adress or I-qoom ID</label>
-            <Field
+            <InputField
               type='text'
               name='login'
-              component='input'
               id='login'
+              label='Type in e-mail adress or I-qoom ID'
               onChange={this.handleChange}
-              className='form-control'
+              errorField={submitErrors}
               placeholder='Company name'
             />
           </div>
           <div className='form-group pt-4'>
-            <label htmlFor='password'>Type in password</label>
-            <Field
+            <InputField
               type='password'
               name='password'
-              component='input'
               id='password'
+              label='Type in password'
               onChange={this.handleChange}
-              className='form-control'
+              errorField={submitErrors}
               placeholder='Password'
             />
           </div>
@@ -82,4 +79,8 @@ const mapDispatchToProps = dispatch => ({
   signInUser: (login, password, history) => dispatch(signInUser(login, password, history))
 })
 
-export default connect(null, mapDispatchToProps)(reduxForm({ form: 'sign_in' })(SignIn))
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('sign_in')(state)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'sign_in' })(SignIn))

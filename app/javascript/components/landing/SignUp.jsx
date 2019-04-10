@@ -6,8 +6,10 @@ import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
 import SelectField from '../../elements/SelectField'
 import Checkbox from '../../elements/Checkbox'
+import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
 import Right from '../../images/arrow-button-right'
+import countryList from './countiesCodes'
 
 class SignUp extends Component {
   state = {
@@ -67,16 +69,9 @@ class SignUp extends Component {
     } = this.state
 
     const { showMainPage, submitErrors } = this.props
-    const errorField = Object.keys(submitErrors)
-
-    const countries = [
-      { value: 'GF', label: 'GF' },
-      { value: 'PL', label: 'PL' },
-      { value: 'GE', label: 'GE' }
-    ]
     const firstFormClass = classnames('form-row', { active: step === 1 })
     const secondFormClass = classnames('form-row', { active: step === 2 })
- 
+
     return (
       <div className='sign-up-form'>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -90,15 +85,14 @@ class SignUp extends Component {
           <div className={firstFormClass} id='first-step-form'>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <label htmlFor='first_name'>Type in first name</label>
-                <Field
+                <InputField
                   type='text'
                   name='first_name'
-                  component='input'
                   id='first_name'
+                  label='Type in first name'
                   onChange={this.handleChange}
                   defaultValue={first_name}
-                  className={`form-control ${errorField.includes('first_name') ? ' is-invalid' : ''}`}
+                  errorField={submitErrors}
                   placeholder='First name'
                 />
               </div>
@@ -107,24 +101,24 @@ class SignUp extends Component {
                   <Field
                     name='country'
                     id='country'
-                    options={countries}
+                    options={countryList}
                     value={country}
                     onChange={(e) => this.handleChangeSelect(e, 'country')}
+                    errorField={submitErrors}
                     component={SelectField}
                   />
               </div>
             </div>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <label htmlFor='last_name'>Type in last name</label>
-                <Field
+                <InputField
                   type='text'
                   name='last_name'
-                  component='input'
                   id='last_name'
+                  label='Type in last name'
                   onChange={this.handleChange}
                   defaultValue={last_name}
-                  className='form-control'
+                  errorField={submitErrors}
                   placeholder='Last name'
                 />
               </div>
@@ -134,9 +128,10 @@ class SignUp extends Component {
                     <Field
                       name='state'
                       id='state'
-                      options={countries}
+                      options={countryList}
                       value={state}
                       onChange={(e) => this.handleChangeSelect(e, 'state')}
+                      errorField={submitErrors}
                       component={SelectField}
                     />
                 </div>
@@ -145,9 +140,10 @@ class SignUp extends Component {
                     <Field
                       name='city'
                       id='city'
-                      options={countries}
+                      options={countryList}
                       value={city}
                       onChange={(e) => this.handleChangeSelect(e, 'city')}
+                      errorField={submitErrors}
                       component={SelectField}
                     />
                 </div>
@@ -174,58 +170,52 @@ class SignUp extends Component {
           <div className={secondFormClass} id='second-step-form'>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <label htmlFor='e-mail-sign-up'>Type in e-mail address</label>
-                <Field
-                  type='email'
+                <InputField
+                  type='text'
                   name='email'
-                  component='input'
                   id='email'
+                  label='Type in e-mail address'
                   onChange={this.handleChange}
                   defaultValue={email}
-                  className='form-control'
-                  aria-describedby='EMailHelp'
+                  errorField={submitErrors}
                   placeholder='E-mail'
                 />
               </div>
               <div className='form-group next-row'>
-                <label htmlFor='password'>Type in password</label>
-                <Field
+                <InputField
                   type='password'
                   name='password'
-                  component='input'
                   id='password'
+                  label='Type in password'
                   onChange={this.handleChange}
                   defaultValue={password}
-                  className='form-control'
+                  errorField={submitErrors}
                   placeholder='Password'
                 />
               </div>
             </div>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <label htmlFor='username'>Define your user ID</label>
-                <Field
+                <InputField
                   type='text'
                   name='username'
-                  component='input'
                   id='username'
+                  label='Define your user ID'
                   onChange={this.handleChange}
                   defaultValue={username}
-                  className='form-control'
-                  aria-describedby='usernameHelp'
+                  errorField={submitErrors}
                   placeholder='Username'
                 />
               </div>
               <div className='form-group next-row'>
-                <label htmlFor='password_confirmation'>Confirm password</label>
-                <Field
+                <InputField
                   type='password'
-                  component='input'
-                  id='password_confirmation'
                   name='password_confirmation'
+                  id='password_confirmation'
+                  label='Confirm password'
                   onChange={this.handleChange}
                   defaultValue={password_confirmation}
-                  className='form-control'
+                  errorField={submitErrors}
                   placeholder='Password'
                 />
               </div>
@@ -235,9 +225,9 @@ class SignUp extends Component {
                 onChange={this.handleChange}
                 name='accept_terms_and_conditions'
                 labelClass='form-check-label'
-                inputClass='form-check-input'
                 checkBoxId='accept_terms_and_conditions'
                 text='I accept terms and Conditions'
+                errorField={submitErrors}
               />
             </div>
             <div className='form-buttons col-12 text-center'>
