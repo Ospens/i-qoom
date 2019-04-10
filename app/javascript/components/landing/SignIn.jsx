@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
+import { getFormSubmitErrors, reduxForm } from 'redux-form'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
