@@ -8,6 +8,7 @@ RSpec.describe DocumentRight, type: :model do
   context '#limit_for_based_on_field_kind' do
     it 'codification_field' do
       subject.document_field.kind = :codification_field
+      subject.document_field.codification_kind = :originating_company
       expect(subject).to_not be_valid
       subject.document_field_value = FactoryBot.build(:document_field_value)
       expect(subject).to_not be_valid

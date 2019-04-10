@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Session", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
-  user = FactoryBot.create(:user)
+  let(:user) { FactoryBot.create(:user) }
 
   context "sign in" do
     it 'should get a status "error"' do

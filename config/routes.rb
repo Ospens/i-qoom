@@ -11,9 +11,11 @@ Rails.application.routes.draw do
       resources :users, only: [:create, :update, :destroy]
 
       resources :conventions, only: [:edit, :update]
-      resources :documents
+      resources :documents, except: [:new, :create, :index]
 
-      resources :projects, except: [:new, :edit]
+      resources :projects, except: [:new, :edit] do
+        resources :documents, only: [:new, :create, :index]
+      end
     end
   end
 end

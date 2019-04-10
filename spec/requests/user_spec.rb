@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "User", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
-  user = FactoryBot.attributes_for(:user)
+  let(:user) { FactoryBot.attributes_for(:user) }
 
   context "registration" do
     it 'should get a status "error"' do

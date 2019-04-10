@@ -3,6 +3,8 @@ class Document < ApplicationRecord
 
   belongs_to :user
 
+  belongs_to :project
+
   has_many :document_fields, as: :parent
 
   accepts_nested_attributes_for :document_fields

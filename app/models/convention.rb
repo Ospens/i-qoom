@@ -4,6 +4,8 @@ class Convention < ApplicationRecord
 
   accepts_nested_attributes_for :document_fields
 
+  belongs_to :project
+
   validates_associated :document_fields
 
   # only first and second Convention on layouts, third is not implemented
@@ -32,6 +34,10 @@ class Convention < ApplicationRecord
                         command: 'Select a discipline',
                         column: 1,
                         row: number == 2 ? 5 : 4)
+    document_fields.new(kind: :upload_field,
+                        command: 'Add native file here',
+                        column: 1,
+                        row: number == 2 ? 6 : 5)
     document_fields.new(kind: :codification_field,
                         codification_kind: :document_type,
                         title: 'Document type',
@@ -44,9 +50,17 @@ class Convention < ApplicationRecord
                         command: 'Select a document number',
                         column: 2,
                         row: 2)
-    document_fields.new(kind: :upload_field,
-                        command: 'Add native file here',
-                        column: 1,
-                        row: number == 2 ? 6 : 5)
+    document_fields.new(kind: :codification_field,
+                        codification_kind: :revision_number,
+                        title: 'Revision number',
+                        command: 'Select a revision number',
+                        column: 2,
+                        row: 3)
+    document_fields.new(kind: :codification_field,
+                        codification_kind: :revision_date,
+                        title: 'Revision date',
+                        command: 'Select a revision date',
+                        column: 2,
+                        row: 3)
   end
 end

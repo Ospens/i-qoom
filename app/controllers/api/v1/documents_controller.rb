@@ -1,18 +1,16 @@
 class Api::V1::DocumentsController < ApplicationController
   load_and_authorize_resource
 
+  before_action :set_project, only: [:new, :create, :index]
+
   def new
-    convention = Convention.first_or_create(number: 1)
-    convention.build_default_fields
-    convention.document_fields.each do |field|
-      field.document_field_values.new(value: Faker::Name.initials(3), position: 1)
-    end
+    convention = @project.conventions.find_by(number: 1)
     document = Document.build_from_convention(convention, signed_in_user)
     render json: document
   end
 
   def create
-    document = signed_in_user.documents.new(document_params)
+    document = @project.documents.new(document_params.merge(user: signed_in_user))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -33,15 +31,17 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def index
-    render json: Document.all, include: :document_fields
+    render json: @project.documents, include: :document_fields
   end
 
   private
 
+  def set_project
+    @project = Project.find(params[:project_id])
+  end
+
   def document_params
     params.require(:document).permit(:issued_for,
-                                     :native_file,
-                                     :other_files,
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,

@@ -11,7 +11,10 @@ class DocumentField < ApplicationRecord
                             :receiving_company,
                             :discipline,
                             :document_type,
-                            :document_number ]
+                            :document_number,
+                            :revision_number,
+                            :revision_date,
+                            :revision_version ]
 
   belongs_to :parent, polymorphic: true
 
@@ -37,7 +40,7 @@ class DocumentField < ApplicationRecord
             inclusion: { in: [1, 2] }
 
   validate :has_field_values,
-           if: -> { (codification_field? && !(parent.class.name == 'Convention' && new_record?)) || select_field? || project_phase_field? }
+           if: :should_have_document_field_values?
 
   def build_for_new_document(user)
     return if !can_build?(user)
@@ -66,13 +69,18 @@ class DocumentField < ApplicationRecord
 
   def can_build?(user)
     return false if parent.class.name != 'Convention'
-    rights = document_rights
-    limit_for = DocumentRight.limit_fors
-    (codification_field? &&
-      (!rights.any? ||
-       (rights.any? && rights.where(user: user, limit_for: limit_for[:value]).any?))
-    ) ||
-    (!codification_field? && rights.where(user: user, limit_for: limit_for[:field]).any?)
+    can_build_codification_field?(user) ||
+    (!codification_field? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field]).any?)
+  end
+
+  def should_have_document_field_values?
+    (codification_field? && (originating_company? || receiving_company? || discipline? || document_type?)) ||
+      select_field? ||
+      project_phase_field?
+  end
+
+  def can_limit_by_value?
+    codification_field? && (originating_company? || discipline? || document_type?)
   end
 
   private
@@ -85,5 +93,15 @@ class DocumentField < ApplicationRecord
 
   def set_required
     self.required = true
+  end
+
+  def can_build_codification_field?(user)
+    rights = document_rights
+    limit_for = DocumentRight.limit_fors
+    codification_field? &&
+      (!rights.any? ||
+       (rights.any? &&
+          ((should_have_document_field_values? && rights.where(user: user, limit_for: limit_for[:value]).any?) ||
+           (!should_have_document_field_values? && rights.where(user: user, limit_for: limit_for[:field]).any?))))
   end
 end
