@@ -4,7 +4,7 @@ import {
   SIGN_OUT_USER
 } from '../actions/types'
 
-const localToken = sessionStorage.getItem('jwtToken')
+const localToken = sessionStorage.getItem('jwt-iqoom-token')
 const initialState = {
   authStatus: localToken !== null,
   token: localToken,
