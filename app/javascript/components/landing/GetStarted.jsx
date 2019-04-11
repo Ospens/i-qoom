@@ -12,9 +12,6 @@ const emailValid = value =>
 const minValue = min => value =>
   value && value < min ? [`Must be at least ${min}`] : undefined
 
-const number = value =>
-  value && isNaN(Number(value)) ? ['Must be a number'] : undefined
-
 class GetStarted extends Component {
   state = {
     email: null,
@@ -23,20 +20,25 @@ class GetStarted extends Component {
   }
   sendMessage = (e) => {
     e.preventDefault()
-    const phone = e.target.phone.value
-    const text = e.target.text.value
-    const email = e.target.email.value
+    const { phone, text, email} = e.target
 
     const request = {
       contact: {
-        email,
-        text,
-        phone_number: phone
+        email: email.value,
+        text: text.value,
+        phone_number: phone.value,
       }
     }
+    const { reset } = this.props
     axios.post('/api/v1/contacts', request)
       .then(() => {
         alert('Successful')
+        this.setState({
+          email: null,
+          phone: null,
+          text: null
+        })
+        reset()
       })
       .catch(({ response }) => {
         alert('Error')
@@ -79,7 +81,6 @@ class GetStarted extends Component {
                     type='text'
                     name='phone'
                     id='phone'
-                    validate={number}
                     errorField={synchronousError}
                     onChange={this.handleChange}
                     label='Enter your Phone number'

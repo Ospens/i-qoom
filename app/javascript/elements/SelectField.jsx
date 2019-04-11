@@ -17,6 +17,7 @@ function SelectField({input, options, value, errorField, id}) {
          autoFocus={false}
          styles={colourStyles}
          onChange={value => input.onChange(value.value)}
+         maxMenuHeight='180'
          onBlur={value => input.onBlur(value.value)}
          className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
       />
