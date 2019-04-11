@@ -63,7 +63,10 @@ footer:after,
   padding: 0 15px;
   overflow: hidden;
 }
-
+button:focus, button:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
 header {
   position: absolute;
   width: 100%;
