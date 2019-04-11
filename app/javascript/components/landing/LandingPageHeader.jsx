@@ -35,6 +35,7 @@ class LandingPageHeader extends Component {
             <div className='collapse navbar-collapse offset'>
               <ul className={`nav navbar-nav menu_nav justify-content-center ${navClass}`}>
                 <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>
+                <li className='nav-item'><a href='#samples-card' className='nav-link'>Examples</a></li>
                 <li className='nav-item'><a href='#what-is-card' className='nav-link'>i-Qoom</a></li>
                 <li className='nav-item'><a href='#pricing-card' className='nav-link'>Pricing</a></li>
                 <li className='nav-item'><a href='#reviews-card' className='nav-link'>Reviews</a></li>
@@ -54,17 +55,17 @@ class LandingPageHeader extends Component {
                 </button>
               </div>
 
-              {!authenticated && 
+              {!authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
                   <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignUp}>Register</button></li>
-                  <li className='nav-item'><button type='button' className='btn nav-link btn-transparent' onClick={toggleSignInForm}>Login</button></li>
+                  <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignInForm}>Login</button></li>
                 </ul>
               }
-              {authenticated && 
+              {authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
                 <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={signOutUser}>Logout</button></li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 15, marginRight: 10 }}
                         src={bell}
@@ -72,7 +73,7 @@ class LandingPageHeader extends Component {
                     </button>
                   </li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 15, marginRight: 10 }}
                         src={messages}
@@ -80,7 +81,7 @@ class LandingPageHeader extends Component {
                     </button>
                   </li>
                   <li className='nav-item'>
-                    <button type='button' className='btn nav-link btn-transparent'>
+                    <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
                         svgStyle={{ height: 30, width: 30 }}
                         src={tmpAvatar}

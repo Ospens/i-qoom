@@ -19,7 +19,7 @@ class FirstCard extends Component {
             <div className={welcomeClass}>
               <div className='first-line'>We get your project</div>
               <div className='second-line'>Started & Managed</div>
-              <button type='button' className='btn btn-light contact-us'>Contact Us</button>
+              <button type='button' className='btn btn-light contact-us'>Contact us</button>
             </div>
             <SignIn
               showSignInSlider={showSignInSlider}
