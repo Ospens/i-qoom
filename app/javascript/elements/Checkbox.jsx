@@ -1,7 +1,6 @@
 import React from 'react'
-import { Field } from 'redux-form'
 
-function Checkbox({ text, checkBoxId, inputClass, labelClass, onChange, name, errorField }) {
+function Checkbox({ text, checkBoxId, labelClass, onChange, name, errorField }) {
   const errorInfo = errorField[checkBoxId]
   return (
     <div>

@@ -55,8 +55,16 @@
     cursor: pointer;
     label {
       margin-top: 10px;
-      color: #0096FA;
+      color: grey;
+      font-weight: 600;
       cursor: pointer;
+    }
+    &:hover {
+      label {
+        margin-top: 10px;
+        color: #0096FA;
+        cursor: pointer;
+      }
     }
   }
   .row-projects {
@@ -99,11 +107,12 @@
 
 .modal-dialog {
   margin-top: 25vh !important;
+  line-height: 1.5;
   h4 {
     font-family: 'aktiv-grotesk', sans-serif;
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
   .modal-body {
     display: flex;
@@ -112,5 +121,44 @@
     align-items: center;
     text-align: center;
     min-height: 300px;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+  .modal-footer {
+    background-color: #efefef;
+    border: none;
+    button {
+      padding: 0.2em 2em;
+    }
+  }
+  .btn-purple {
+    color: #fff;
+    background-color:#0095f9;
+    border-color:#0095f9;
+
+    &:hover {
+      color: #fff;
+      background-color: #221f6d;
+      border-color: #221f6d;
+      text-decoration: none;
+    }
+  }
+  .btn-white {
+    color: lightgrey;
+    background-color:#fff;
+    border-color:lightgrey;
+
+    &:hover {
+      color: grey;
+      background-color: #fff;
+      border-color: grey;
+      text-decoration: none;
+    }
+  }
+
+  .checkbox-terms {
+    label {
+      margin-bottom: 0;
+    }
   }
 }

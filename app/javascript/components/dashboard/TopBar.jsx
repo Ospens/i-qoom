@@ -1,0 +1,44 @@
+import React, { Component } from 'react'
+import ReactSVG from 'react-svg'
+import bell from '../../images/alarm-bell'
+import messages from '../../images/email-action-unread'
+import tmpAvatar from '../../images/colors'
+import './Dashboard.scss'
+
+class TopBar extends Component {
+
+  render() {
+    return (
+      <div className='user-info'>
+        <ul>
+          <li className='nav-item'>
+            <button type='button' className='nav-link btn-transparent'>
+              <ReactSVG
+                svgStyle={{ height: 15, marginRight: 10 }}
+                src={messages}
+              />
+            </button>
+          </li>
+          <li className='nav-item'>
+            <button type='button' className='nav-link btn-transparent'>
+              <ReactSVG
+                svgStyle={{ height: 20, marginRight: 10 }}
+                src={bell}
+              />
+            </button>
+          </li>
+          <li className='nav-item'>
+            <button type='button' className='nav-link btn-transparent'>
+              <ReactSVG
+                svgStyle={{ height: 30, width: 30 }}
+                src={tmpAvatar}
+              />
+            </button>
+          </li>
+        </ul>
+      </div>
+    )
+  }
+}
+
+export default TopBar
