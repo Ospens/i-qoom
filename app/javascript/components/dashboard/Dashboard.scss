@@ -1,0 +1,116 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: 20px 0 0;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+  background-color: #221f6d;
+  .nav-link {
+    text-transform: inherit;
+    font-size: 17px;
+  }
+  .navbar-brand {
+    padding-bottom: 30px;
+  }
+  .sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 20px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+.user-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
+  .nav-link {
+    path {
+      fill: grey;
+    }
+  }
+}
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100% - 100px);
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 40px;
+  }
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fbffff;
+    border: 2px solid #f2f8f9;
+    height: 150px;
+    border-radius: 5px;
+    text-align: center !important;
+    cursor: pointer;
+    label {
+      margin-top: 10px;
+      color: #0096FA;
+      cursor: pointer;
+    }
+  }
+  .row-projects {
+    margin-bottom: 3em;
+  }
+  .statuses {
+    label {
+      font-size: 16px;
+      color: grey;
+    }
+    ul {
+      border-top: 1px solid #f9f9f9;
+      border-bottom: 1px solid#f9f9f9;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .green-dot {
+      height: 7px;
+      width: 7px;
+      margin-right: 15px;
+      background-color: #26bd5d;
+      margin-bottom: 1px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .yellow-dot {
+      height: 7px;
+      width: 7px;
+      margin-right: 15px;
+      margin-bottom: 1px;
+      background-color: #ff9b01;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  }
+  .show {
+    display: block;
+  }
+}
+
+.modal-dialog {
+  margin-top: 25vh !important;
+  h4 {
+    font-family: 'aktiv-grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 300px;
+  }
+}
