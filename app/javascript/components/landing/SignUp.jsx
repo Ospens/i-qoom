@@ -46,9 +46,9 @@ class SignUp extends Component {
   }
 
   handleSubmit = () => {
-    const { signUpUser } = this.props
+    const { showMainPage, signUpUser } = this.props
     const { userFields } = this.state
-    return signUpUser(userFields)
+    return signUpUser(userFields).then(() => showMainPage())
   }
 
   nextStep = () => this.setState({step: 2})
@@ -73,7 +73,7 @@ class SignUp extends Component {
     const secondFormClass = classnames('form-row', { active: step === 2 })
 
     return (
-      <div className='sign-up-form'>
+      <div id='sign-up-form'>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className='steps row text-center'>
             <div className='step active col-6'>Step 1</div>

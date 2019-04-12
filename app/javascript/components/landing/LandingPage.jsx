@@ -26,7 +26,7 @@ class LandingPage extends Component {
   }
 
   toggleSignUp = () => {
-    const { showSignUp, showExamples } = this.state
+    const { showSignUp } = this.state
     this.setState({
       showSignUp: !showSignUp,
       showSignInSlider: false
@@ -67,7 +67,7 @@ class LandingPage extends Component {
         <WhatIsIQoom />
         {!showExamples && <SamplesContents toggleExamples={this.toggleExamples} />}
         {showExamples && <ExampleCard toggleExamples={this.toggleExamples} />}
-        <Pricing />
+        <Pricing toggleSignUp={this.toggleSignUp}/>
         <Reviews />
         <GetStarted />
         <Footer />

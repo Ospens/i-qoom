@@ -225,7 +225,6 @@ li {
 }
 
 .contact-us {
-  height: 45px;
   width: 30%;
   color: #221F6D;
   margin-top: 2em;
@@ -262,8 +261,8 @@ li {
 }
 
 #what-is-card {
-  padding-top: 5em;
-  padding-bottom: 5em;
+  padding-top: 8em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
   p {
     color: #475859;
@@ -356,8 +355,8 @@ li {
 }
 
 #pricing-card {
-  padding-top: 5em;
-  padding-bottom: 5em;
+  padding-top: 8em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
   color: #475859;
   h3 {
@@ -458,7 +457,7 @@ li {
 
 #get-started-card {
   padding-top: 5em;
-  padding-bottom: 5em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
   .block-header {
     padding-bottom: 3em;
@@ -499,7 +498,7 @@ li {
   }
 }
 
-.sign-up-form {
+#sign-up-form {
   background-color: white;
   margin-top: 80px;
   padding-top: 5em;
@@ -617,6 +616,18 @@ input[type=checkbox]:checked + label {
   .slick-list {
     margin-left: 100px;
     margin-right: 450px;
+  }
+
+  .slick-slide {
+    width: auto;
+    height: 630px;
+  }
+
+  .slick-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
   }
   .slick-dots {
     position: absolute;
