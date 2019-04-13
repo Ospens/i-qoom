@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import plus from '../../../images/add_1'
+import cogs from '../../../images/cog-double'
 import WelcomeModal from './ModalWelcome'
 import ModalCreateProject from './ModalCreateProject'
 
 class ProjectOverview extends Component {
 
   state = {
-    projectModal: true
+    projectModal: false
   }
 
   openCreateProjectModal = () => {
@@ -27,26 +28,40 @@ class ProjectOverview extends Component {
 
         <div className='row row-projects'>
           <div className='col-sm-4'>
-            <div className='project-card'>
+            <div className='project-card in-preparation'>
+              <ReactSVG
+                svgStyle={{ height: 30, width: 30 }}
+                src={cogs}
+                className='cogs'
+              />
+              <label>Project title</label>
+              <div className='row project-card__bottom'>
+                <div className='col-3'>
+                  Planning
+                </div>
+                <div className='col-3'>
+                  Development
+                </div>
+                <div className='col-3'>
+                  Execution
+                </div>
+                <div className='col-3'>
+                  Operation
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='col-sm-4'>
+            <div className='project-card blank' onClick={this.openCreateProjectModal}>
               <ReactSVG
                 svgStyle={{ height: 20, width: 20 }}
-                className='plus-icon'
                 src={plus}
               />
               <label>Create a new project</label>
             </div>
           </div>
           <div className='col-sm-4'>
-            <div className='project-card' onClick={this.openCreateProjectModal}>
-              <ReactSVG
-                svgStyle={{ height: 20, width: 20 }}
-                src={plus}
-              />
-              <label>Create a new project</label>
-            </div>
-          </div>
-          <div className='col-sm-4'>
-            <div className='project-card'>
+            <div className='project-card blank'>
               <ReactSVG
                 svgStyle={{ height: 20, width: 20 }}
                 src={plus}

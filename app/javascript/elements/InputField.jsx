@@ -5,7 +5,7 @@ function InputField({ errorField = {}, label, ...input }) {
   const errorInfo = errorField[input.id]
   return (
     <div>
-      {label && <label htmlFor='first_name'>{label}</label>}
+      {label && <label htmlFor={input.name}>{label}</label>}
       <Field
         {...input}
         component='input'

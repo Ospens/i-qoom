@@ -25,15 +25,12 @@ input::placeholder {
   color: #c8d8d9 !important;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'aktiv-grotesk-extended', sans-serif;
-  font-weight: bold;
-  letter-spacing: 1px;
+.landing-page {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'aktiv-grotesk-extended', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
 }
 
 body {
