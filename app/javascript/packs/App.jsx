@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <Provider store={mainStore} >
       <BrowserRouter>
         <Switch>
-          <Route exact path='/' component={LandingPage}/>
-          <Route path='/dashboard' component={Dashboard}/>
+          <Route path='/dashboard' component={Dashboard} />
+          <Route path='/' component={LandingPage} />
         </Switch>
       </BrowserRouter>
     </Provider>,

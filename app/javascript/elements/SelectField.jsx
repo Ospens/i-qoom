@@ -3,9 +3,10 @@ import Select from 'react-select'
 
 function SelectField({input, options, value, errorField, id}) {
   const errorInfo = errorField[id]
-  const borderColor = errorInfo ? ' red' : '#ced4da'
+  const borderColor = errorInfo ? '#fd0944' : '#ced4da'
+  const borderWidth = errorInfo ? '2px' : '1px'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor })
+    control: styles => ({ ...styles, borderColor, borderWidth })
   }
   return (
     <div>

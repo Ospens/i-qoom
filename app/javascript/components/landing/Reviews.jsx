@@ -8,6 +8,10 @@ import star from '../../images/gold_star.svg'
 
 class Reviews extends Component {
 
+  state = {
+    readMore: false
+  }
+
   starsRender = (count) => {
     let stars = []
     for (let i = 0; i < count; ++i) {
@@ -23,7 +27,78 @@ class Reviews extends Component {
     return stars
   }
 
+  renderReviewsSlider = (reviews, newClassName = '') => {
+
+    const settings = {
+      infinite: true,
+      speed: 1000,
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      nextArrow: <Arrows type='nextBtn' />,
+      prevArrow: <Arrows type='prevBtn' />
+    }
+
+    return (
+      <Slider className={`card-deck mx-4 mb-4 ${newClassName}`} {...settings}>
+        {reviews.map((el, i) => {
+          return (
+            <div className='card text-left' key={i}>
+              <div className='user-info row'>
+                <ReactSVG
+                  src={el.image}
+                  svgStyle={{ width: '100%', height: '100%' }}
+                  className='col-3'
+                  svgClassName='mt-2'
+                />
+                <div className='clearfix' />
+                <div className='user-name-block col-9'>
+                  <h6 className='user-name'>{el.name}</h6>
+                  <ReactSVG
+                    src={blueCheck}
+                    svgStyle={{ width: 15, height: 15 }}
+                    className='blue-check'
+                  />
+                  <div className='user-country text-muted'>{el.country}</div>
+                  <div className='user-stars'>{this.starsRender(el.stars)}
+                  </div>
+                </div>
+              </div>
+              <div className='card-body'>
+                <div className='review-title'>{el.title}</div>
+                <p className='card-text'>{el.desription}</p>
+              </div>
+            </div>
+          )
+        })}
+      </Slider>)
+  }
+
+  renderToggleButton = () => {
+    const { readMore } = this.state
+    if (readMore) {
+      return (
+        <button
+        type='button'
+        className='btn btn-primary mt-5'
+        onClick={() => this.setState({ readMore: false })}>
+          Hide
+        </button>
+        )
+    } else {
+      return (
+        <button
+          type='button'
+          className='btn btn-primary mt-5'
+          onClick={() => this.setState({ readMore: true })}>
+            Read more
+        </button>
+      )
+
+    }
+  }
+
   render() {
+    const { readMore } = this.state
     const reviews = [
       {
         name: 'Humayra Samiha',
@@ -67,56 +142,17 @@ class Reviews extends Component {
       }
     ]
 
-    const settings = {
-      infinite: true,
-      speed: 1000,
-      slidesToShow: 3,
-      centerMode: true,
-      slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
-    }
-
     return (
       <section id='reviews-card'>
         <div className='text-center container'>
           <h2 className='block-header'>i-Qoom Reviews</h2>
           <p className='block-description'>Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>
         </div>
-        <Slider className='card-deck mx-4 mb-4' {...settings}>
-          {reviews.map((el, i) => {
-            return (
-              <div className='card text-left' key={i}>
-                <div className='user-info row'>
-                  <ReactSVG
-                    src={el.image}
-                    svgStyle={{ width: '100%', height: '100%' }}
-                    className='col-3'
-                    svgClassName='mt-2'
-                  />
-                  <div className='clearfix' />
-                  <div className='user-name-block col-9'>
-                    <h6 className='user-name'>{el.name}</h6>
-                    <ReactSVG
-                      src={blueCheck}
-                      svgStyle={{ width: 15, height: 15 }}
-                      className='blue-check'
-                    />
-                    <div className='user-country text-muted'>{el.country}</div>
-                    <div className='user-stars'>{this.starsRender(el.stars)}
-                    </div>
-                  </div>
-                </div>
-                <div className='card-body'>
-                  <div className='review-title'>{el.title}</div>
-                  <p className='card-text'>{el.desription}</p>
-                </div>
-              </div>
-            )
-          })}
-        </Slider>
+        {this.renderReviewsSlider(reviews)}
+        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
+        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
         <div className='text-center container'>
-          <button type='button' className='btn btn-primary mt-5'>Read more</button>
+          {this.renderToggleButton()}
         </div>
       </section>
     )

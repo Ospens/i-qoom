@@ -44,7 +44,6 @@ export const signInUser = (login, password) => dispatch => {
         dispatch(signIn(response.data.auth_token, response.headers))
       })
       .catch(({ response }) => {
-        alert('Error')
         throw new SubmissionError(response.data.error_messages)
       })
   )
@@ -59,10 +58,8 @@ export const signUpUser = userFields => dispatch => {
   return axios.post('/api/v1/users', request)
     .then(response => {
       dispatch(signUp(response.data, response.headers))
-      alert('Registration completed successfully!')
     })
     .catch(({ response }) => {
-      alert('Error')
       throw new SubmissionError(response.data.error_messages)
     })
 }
