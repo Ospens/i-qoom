@@ -30,10 +30,16 @@ describe "Project", type: :request do
         expect(JSON(response.body)["location"].values).to include(project.name)
       end
     end
-    context  "create" do
+    context  "create (creation_step 'admins')" do
       it 'should get a status "success"' do
         post "/api/v1/projects",
-          params: { project: { name: "some name" } }.to_json,
+          params: { project:
+                    { admins_attributes:
+                      { id: "",
+                        email: Faker::Internet.email
+                      }
+                    }
+                  }.to_json,
           headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:success)
         expect(JSON(response.body)["status"]).to eq("success")
@@ -46,25 +52,95 @@ describe "Project", type: :request do
         expect(JSON(response.body)["status"]).to eq("error")
       end
     end
-    context "update" do
-      it 'should get a status "success" and change the name of the project' do
+    context "update (creation_step 'admins')" do
+      it 'should get a status "success" and add a new admin to the project' do
         patch "/api/v1/projects/#{project.id}",
-              params: { project: { name: "some name" } }.to_json,
-              headers: headers.merge("Authorization" => auth_token)
+          params: { project:
+                    { admins_attributes:
+                      { id: "",
+                        email: "someemail@gmail.com"
+                      }
+                    }
+                  }.to_json,
+          headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:success)
-        expect(Project.find_by(id: project.id).name).to eq("some name")
+        expect(Project.find_by(id: project.id).admins.count).to eq(2)
+        expect(Project.find_by(id: project.id).admins.last.email).to\
+          eq("someemail@gmail.com")
         expect(JSON(response.body)["status"]).to eq("success")
       end
       it 'should get a status "error" and don\'t
-          change the name of the project' do
-        patch "/api/v1/projects/#{second_project.id}",
-              params: { project: { name: "12" } }.to_json,
-              headers: headers.merge("Authorization" => auth_token)
+          add an admin' do
+        patch "/api/v1/projects/#{project.id}",
+          params: { project:
+                    { admins_attributes:
+                      { id: "",
+                        email: "ail.com"
+                      }
+                    }
+                  }.to_json,
+          headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:unprocessable_entity)
         expect(Project.find_by(id: second_project.id).name).not_to eq("12")
         expect(JSON(response.body)["status"]).to eq("error")
       end
     end
+    context "update" do
+      context "creation_step 'admins'" do
+        it 'should get a status "success" and add new admin to the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: { project:
+                      { admins_attributes:
+                        { id: "",
+                          email: "someemail@gmail.com" } } }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:success)
+          expect(Project.find_by(id: project.id).admins.count).to eq(2)
+          expect(Project.find_by(id: project.id).admins.last.email).to\
+            eq("someemail@gmail.com")
+          expect(JSON(response.body)["status"]).to eq("success")
+        end
+        it 'should get a status "error" and don\'t
+            add an admin' do
+          patch "/api/v1/projects/#{project.id}",
+            params: { project:
+                      { admins_attributes:
+                        { id: "",
+                          email: "notemail" } } }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
+          expect(Project.find_by(id: project.id).admins.last.email).not_to\
+            eq("notemail")
+          expect(JSON(response.body)["status"]).to eq("error")
+        end
+      end
+
+      context "creation_step 'name'" do
+        it 'should get a status "success" and change the name of the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: { project:
+                      { name: "some name",
+                        creation_step: "name" } }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:success)
+          expect(Project.find_by(id: project.id).name).to eq("some name")
+          expect(JSON(response.body)["status"]).to eq("success")
+        end
+        it 'should get a status "error" and don\'t
+            change the name of the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: { project:
+                      { name: "12",
+                        creation_step: "name" } }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(Project.find_by(id: project.id).name).not_to eq("12")
+          expect(JSON(response.body)["status"]).to eq("error")
+        end
+      end
+    end
+
     context "destroy" do
       it "should be destroyed" do
         third_project = FactoryBot.create(:project, user_id: user.id)
