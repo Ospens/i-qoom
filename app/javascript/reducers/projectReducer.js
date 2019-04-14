@@ -1,17 +1,24 @@
 import {
-  PROJECT_CREATED
+  PROJECT_CREATE_SUCCESS,
+  PROJECTS_FETCH_SUCCESS
 } from '../actions/types'
 
 const initialState = {
-  project_name: null
+  allProjects: [],
+  currentProject: null
 }
 
 const projectReducer = (state = initialState, action) => {
   switch (action.type) {
-  case PROJECT_CREATED:
+  case PROJECT_CREATE_SUCCESS:
     return {
       ...state,
       ...action.payload
+    }
+  case PROJECTS_FETCH_SUCCESS:
+    return {
+      ...state,
+      allProjects: action.payload
     }
   default:
     return state

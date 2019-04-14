@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { signOutUser } from '../../actions/userActions'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
@@ -81,12 +82,12 @@ class LandingPageHeader extends Component {
                     </button>
                   </li>
                   <li className='nav-item'>
-                    <button type='button' className='nav-link btn-transparent'>
-                      <ReactSVG
-                        svgStyle={{ height: 30, width: 30 }}
-                        src={tmpAvatar}
-                      />
-                    </button>
+                    <Link className='nav-link btn-transparent' to='/dashboard'>
+                        <ReactSVG
+                          svgStyle={{ height: 30, width: 30 }}
+                          src={tmpAvatar}
+                        />
+                    </Link>
                   </li>
                 </ul>
               }

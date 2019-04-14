@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CreateProjectStepFifth({ closeModal }) {
+function ModalSuccessfull({ closeModal }) {
   return (
     <div>
       <div className='modal-body terms-modal'>
@@ -16,4 +16,4 @@ function CreateProjectStepFifth({ closeModal }) {
   )
 }
 
-export default CreateProjectStepFifth
+export default ModalSuccessfull

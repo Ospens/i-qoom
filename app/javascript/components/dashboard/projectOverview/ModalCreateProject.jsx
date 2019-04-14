@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-import CreateProjectStepFirst from './CreateProjectStepFirst'
-import CreateProjectStepSecond from './CreateProjectStepSecond'
-import CreateProjectStepThird from './CreateProjectStepThird'
-import CreateProjectStepFourth from './CreateProjectStepFourth'
-import CreateProjectStepFifth from './CreateProjectStepFifth'
+import { connect } from 'react-redux'
+import { reset } from 'redux-form'
+import ModalTerms from './ModalTerms'
+import ModalFirstAdmin from './ModalFirstAdmin'
+import ModalSecondAdmin from './ModalSecondAdmin'
+import ModalProjectName from './ModalProjectName'
+import ModalCompanyData from './ModalCompanyData'
+import ModalSuccessfull from './ModalSuccessfull'
 
 class ModalCreateProject extends Component {
 
   state = {
-    step: 4,
+    step: 1,
     termsAccepted: false,
   }
 
@@ -23,8 +26,11 @@ class ModalCreateProject extends Component {
   }
 
   closeModalAndDiscardSteps = () => {
+    const { resetForm } = this.props
     const { closeModal } = this.props
-    this.setState({ step: 1 })
+    this.setState({ step: 1, termsAccepted: false })
+    resetForm('create_project')
+    resetForm('create_administrator')
     closeModal()
   }
 
@@ -43,33 +49,38 @@ class ModalCreateProject extends Component {
           <div className='modal-dialog' role='document'>
             <div className='modal-content'>
               {step === 1 &&
-                <CreateProjectStepFirst
+                <ModalTerms
                   toogleTerms={this.toogleTerms}
                   closeModal={this.closeModalAndDiscardSteps}
                   termsAccepted={termsAccepted}
                   nextStep={() => this.changeStep(1)}
                 />
               }
-              {step === 5 &&
-                <CreateProjectStepFifth
+              {step === 6 &&
+                <ModalSuccessfull
                   closeModal={this.closeModalAndDiscardSteps}
                   changeStep={(increase) => this.changeStep(increase)}
                 />}
-              {step > 1 && step < 5 &&
+              {step > 1 && step < 6 &&
                 <div className='new-project-modal'>
                   <h4>New project</h4>
                 {step === 2  &&
-                  <CreateProjectStepSecond
+                  <ModalFirstAdmin
                     closeModal={this.closeModalAndDiscardSteps}
                     changeStep={(increase) => this.changeStep(increase)}
                   />}
                 {step === 3  &&
-                  <CreateProjectStepThird
+                  <ModalSecondAdmin
                     closeModal={this.closeModalAndDiscardSteps}
                     changeStep={(increase) => this.changeStep(increase)}
                   />}
                 {step === 4  &&
-                  <CreateProjectStepFourth
+                  <ModalProjectName
+                    closeModal={this.closeModalAndDiscardSteps}
+                    changeStep={(increase) => this.changeStep(increase)}
+                  />}
+                {step === 5  &&
+                  <ModalCompanyData
                     closeModal={this.closeModalAndDiscardSteps}
                     changeStep={(increase) => this.changeStep(increase)}
                   />}
@@ -84,4 +95,8 @@ class ModalCreateProject extends Component {
   }
 }
 
-export default ModalCreateProject
+const mapDispatchToProps = dispatch => ({
+  resetForm: (formName) => dispatch(reset(formName))
+})
+
+export default connect(null, mapDispatchToProps)(ModalCreateProject)

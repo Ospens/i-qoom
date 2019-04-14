@@ -9,7 +9,7 @@ import projectReducer from '../reducers/projectReducer'
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  project: projectReducer,
+  projects: projectReducer,
   form: reduxFormReducer
 })
 

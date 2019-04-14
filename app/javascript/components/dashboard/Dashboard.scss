@@ -23,6 +23,11 @@
     overflow-y: auto;
   }
 }
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .user-info {
   display: flex;
   flex-direction: row;
@@ -169,8 +174,9 @@
       padding-left: 60px;
       padding-right: 60px;
     }
-    &.project-name {
-      form {
+    &.project-name,
+    &.company-data {
+      .form-group {
         width: 100%;
 
         label {
@@ -179,6 +185,25 @@
           align-self: flex-start;
         }
       }
+    }
+    &.company-data {
+      .col-55per {
+        -webkit-box-flex: 0;
+        flex: 0 0 55%;
+        max-width: 55%;
+      }
+      .col-45per {
+        -webkit-box-flex: 0;
+        flex: 0 0 45%;
+        max-width: 45%;
+      }
+      img {
+        min-width: 100%;
+        min-height: 100%;
+      }
+    }
+    .custom_row {
+      width: 100%;
     }
   }
   .modal-footer {
@@ -221,6 +246,7 @@
   .project-admin {
     display: flex;
     color: lightgrey;
+    align-self: baseline;
   }
 
   .new-project-modal {
@@ -292,5 +318,8 @@
   }
   .form-check-label {
     display: inline-block !important;
+  }
+  .second-admin {
+    width: 100%;
   }
 }

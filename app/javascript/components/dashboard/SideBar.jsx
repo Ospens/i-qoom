@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import './Dashboard.scss'
 import logo from '../../images/Logo_header'
 
@@ -10,16 +10,15 @@ class SideBar extends Component {
     return (
       <nav className='col-md-2 d-none d-md-block sidebar'>
         <div className='sidebar-sticky'>
-          <a className='navbar-brand logo_h' href='#'>
+          <Link className='navbar-brand logo_h' to="/">
             <ReactSVG
               svgStyle={{ height: 30, width: 100 }}
               src={logo}
             />
-          </a>
+          </Link>
           <ul className='nav flex-column'>
             <li className='nav-item'>
-              <a className='nav-link active'>Project ovreview</a>
-              <Link to="/dashboard/test">Home</Link>
+              <Link className='nav-link active' to="/dashboard/">Project ovreview</Link>
             </li>
           </ul>
         </div>

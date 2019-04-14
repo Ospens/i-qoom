@@ -1,11 +1,11 @@
 import React from 'react'
 
-function CreateProjectStepFirst({ toogleTerms, closeModal, termsAccepted, nextStep}) {
+function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
   return (
     <div>
       <div className='modal-body terms-modal'>
-        <p>Please read our <a href='#'>Terms and Conditions</a></p>
-        <p>and check the box below</p>
+        <h6>Please read our <a href='#'>Terms and Conditions</a></h6>
+        <h6>and check the box below</h6>
 
         <div className='checkbox-terms'>
           <input
@@ -25,4 +25,4 @@ function CreateProjectStepFirst({ toogleTerms, closeModal, termsAccepted, nextSt
   )
 }
 
-export default CreateProjectStepFirst
+export default ModalTerms

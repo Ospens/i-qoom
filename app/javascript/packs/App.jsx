@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import React from 'react'
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import PrivateRoute from '../elements/PrivateRoute'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import mainStore from '../stores/mainStore'
@@ -14,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <BrowserRouter>
         <Switch>
           <Route exact path='/' component={LandingPage}/>
-          <Route path='/dashboard' component={Dashboard}/>
+          <PrivateRoute authed={mainStore.getState().auth.authStatus} path='/dashboard' component={Dashboard} />
         </Switch>
       </BrowserRouter>
     </Provider>,
