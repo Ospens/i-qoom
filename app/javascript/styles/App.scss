@@ -156,13 +156,22 @@ li {
   color: white;
   font-size: 12px;
   margin-bottom: -32px;
+  text-transform: uppercase;
 }
-.form-control-select.is-invalid~.invalid-feedback,
+
 .form-control.is-invalid {
   display: block;
   border: 2px solid #fd0845;
   background-image: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.form-control-select.is-invalid~.invalid-feedback {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .sign-in-form__header {
  font-weight: 600;

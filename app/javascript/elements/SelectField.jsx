@@ -5,8 +5,9 @@ function SelectField({input, options, value, errorField, id}) {
   const errorInfo = errorField[id]
   const borderColor = errorInfo ? '#fd0944' : '#ced4da'
   const borderWidth = errorInfo ? '2px' : '1px'
+  const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor, borderWidth })
+    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow })
   }
   return (
     <div>

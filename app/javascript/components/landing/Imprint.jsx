@@ -2,9 +2,13 @@ import React, { Component } from 'react'
 
 class Imprint extends Component {
 
+  componentDidMount() {
+    window.scrollTo(0, 0)
+  }
+
   render() {
     return (
-      <section className='container info-container'>
+      <section className='container info-container' id='imprint'>
         <div className='container text-center'>
           <h2 className='text-center block-header'>Imprint</h2>
           <p>Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless</p>
