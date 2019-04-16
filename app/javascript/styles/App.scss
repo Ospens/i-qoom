@@ -513,6 +513,59 @@ li {
   padding-top: 5em;
   padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
+  .form-container {
+    display: flex;
+    position: relative;
+
+    &.show-slider {
+      .contact-us-form {
+        left: 1000px !important;
+      }
+
+      .send-card {
+        left: 0px !important;
+      }
+    }
+  }
+  .contact-us-form {
+    left: 0;
+    width: 100%;
+    position: relative;
+    color: #fff;
+    right: 0;
+    display: inline-block;
+  }
+  .send-card {
+    left: -1000px;
+    width: 100%;
+    position: absolute;
+    display: inline-block;
+    min-width: 400px;
+    color: #fff;
+    .text-center {
+      font-size: 17px;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      color: #475859;
+    }
+    .pictures-container {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .svg-line {
+      position: relative;
+      top: 54px;
+      right: 45px;
+    }
+    .svg-plan {
+      position: relative;
+      top: -95px;
+      left: 433px;
+    }
+  }
   .block-header {
     padding-bottom: 3em;
     font-size: 2em;

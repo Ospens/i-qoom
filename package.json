@@ -16,6 +16,7 @@
     "react-slick": "^0.23.2",
     "react-svg": "^8.0.3",
     "react-svg-loader": "^2.1.0",
+    "react-toastify": "^5.0.1",
     "react_ujs": "^2.4.4",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
