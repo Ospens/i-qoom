@@ -30,7 +30,7 @@ class ModalSecondAdmin extends Component {
               className='btn btn-purple second-admin'
               onClick={() => this.setState({ secondAdmin: true })}
             >
-              Add second administrator
+              Add a second administrator
             </button>
             </div>
             <div className='modal-footer'>

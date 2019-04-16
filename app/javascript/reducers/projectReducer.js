@@ -1,11 +1,12 @@
 import {
   PROJECT_CREATE_SUCCESS,
-  PROJECTS_FETCH_SUCCESS
+  PROJECTS_FETCH_SUCCESS,
+  PROJECT_FETCH_SUCCESS
 } from '../actions/types'
 
 const initialState = {
   allProjects: [],
-  currentProject: null
+  current: null
 }
 
 const projectReducer = (state = initialState, action) => {
@@ -19,6 +20,11 @@ const projectReducer = (state = initialState, action) => {
     return {
       ...state,
       allProjects: action.payload
+    }
+  case PROJECT_FETCH_SUCCESS:
+    return {
+      ...state,
+      current: action.payload
     }
   default:
     return state

@@ -7,6 +7,7 @@ import ModalSecondAdmin from './ModalSecondAdmin'
 import ModalProjectName from './ModalProjectName'
 import ModalCompanyData from './ModalCompanyData'
 import ModalSuccessfull from './ModalSuccessfull'
+import ModalBillingAddress from './ModalBillingAddress'
 
 class ModalCreateProject extends Component {
 
@@ -56,12 +57,12 @@ class ModalCreateProject extends Component {
                   nextStep={() => this.changeStep(1)}
                 />
               }
-              {step === 6 &&
+              {step === 7 &&
                 <ModalSuccessfull
                   closeModal={this.closeModalAndDiscardSteps}
                   changeStep={(increase) => this.changeStep(increase)}
                 />}
-              {step > 1 && step < 6 &&
+              {step > 1 && step < 7 &&
                 <div className='new-project-modal'>
                   <h4>New project</h4>
                 {step === 2  &&
@@ -81,6 +82,11 @@ class ModalCreateProject extends Component {
                   />}
                 {step === 5  &&
                   <ModalCompanyData
+                    closeModal={this.closeModalAndDiscardSteps}
+                    changeStep={(increase) => this.changeStep(increase)}
+                  />}
+                {step === 6  &&
+                  <ModalBillingAddress
                     closeModal={this.closeModalAndDiscardSteps}
                     changeStep={(increase) => this.changeStep(increase)}
                   />}

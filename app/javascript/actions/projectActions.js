@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {
   PROJECT_CREATE_SUCCESS,
-  PROJECTS_FETCH_SUCCESS
+  PROJECTS_FETCH_SUCCESS,
+  PROJECT_FETCH_SUCCESS
 } from './types'
 
 const projectCreated = payload => ({
@@ -11,6 +12,11 @@ const projectCreated = payload => ({
 
 const projectsFetched = payload => ({
   type: PROJECTS_FETCH_SUCCESS,
+  payload
+})
+
+const projectFetched = payload => ({
+  type: PROJECT_FETCH_SUCCESS,
   payload
 })
 
@@ -43,6 +49,23 @@ export const startFetchProjects = () => (dispatch, getState) => {
       })
       .catch(e => {
         console.log(e)
+      })
+  )
+}
+
+export const startFetchProject = (id) => (dispatch, getState) => {
+  const { token } = getState().auth
+  const headers = {
+    Authorization: token
+  }
+
+  return (
+    axios.get(`/api/v1/projects/${id}`, { headers })
+      .then(response => {
+        dispatch(projectFetched(response.data.location))
+      })
+      .catch(e => {
+        console.error(e)
       })
   )
 }

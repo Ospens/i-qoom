@@ -10,13 +10,14 @@ import {
 import InputField from '../../../elements/InputField'
 import FileField from '../../../elements/FileField'
 import Left from '../../../images/arrow-button-left'
-import Checkbox from '../../../elements/Checkbox'
+import CheckboxField from '../../../elements/CheckboxField'
 
 class ModalCompanyData extends Component {
 
   handleSubmit = (values) => {
     const { changeStep } = this.props
-    changeStep(1)
+    const step = values.billing_address ? 2 : 1
+    changeStep(step)
   }
 
   handleImageChange = e => {
@@ -160,10 +161,8 @@ class ModalCompanyData extends Component {
                 </div>
               </div>
               <div className='form-group text-left'>
-                <Checkbox
-                  onChange={this.handleChange}
+                <CheckboxField
                   name='billing_address'
-                  defaultValue={true}
                   checkBoxId='billing_address'
                   labelClass='form-check-label'
                   text='This is also the billing address'

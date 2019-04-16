@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'
 import plus from '../../../images/add_1'
 import cogs from '../../../images/cog-double'
@@ -37,11 +38,13 @@ class ProjectOverview extends Component {
           {allProjects.map(project => (
             <div className='col-sm-4' key={project.id}>
               <div className='project-card in-preparation'>
-                <ReactSVG
-                  svgStyle={{ height: 30, width: 30 }}
-                  src={cogs}
-                  className='cogs'
-                />
+                <Link to={`/dashboard/projects/${project.id}`}>
+                  <ReactSVG
+                    svgStyle={{ height: 30, width: 30 }}
+                    src={cogs}
+                    className='cogs'
+                  />
+                </Link>
                 <label>{project.name}</label>
                 <div className='row project-card__bottom'>
                   <div className='col-3'>

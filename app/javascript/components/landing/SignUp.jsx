@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
 import SelectField from '../../elements/SelectField'
-import Checkbox from '../../elements/Checkbox'
+import CheckboxField from '../../elements/CheckboxField'
 import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
 import Right from '../../images/arrow-button-right'
@@ -221,7 +221,7 @@ class SignUp extends Component {
               </div>
             </div>
             <div className='form-check col-12 text-center'>
-              <Checkbox
+              <CheckboxField
                 onChange={this.handleChange}
                 name='accept_terms_and_conditions'
                 labelClass='form-check-label'

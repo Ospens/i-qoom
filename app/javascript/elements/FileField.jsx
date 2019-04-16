@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import plus from '../images/add_1'
 
@@ -32,8 +33,10 @@ class FileField extends Component {
       reader.readAsDataURL(file)
       input.onChange(file)
     }
+    const mainClass = classnames({'image-preview': imagePreview})
+
     return (
-      <div>
+      <div className={mainClass}>
         {imagePreview}
         {!imagePreview &&
           <div>
@@ -53,6 +56,7 @@ class FileField extends Component {
               <strong>Add a logo</strong>
             </label>
           </div>}
+          <div>test</div>
       </div>
     )
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import PrivateRoute from '../elements/PrivateRoute'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
