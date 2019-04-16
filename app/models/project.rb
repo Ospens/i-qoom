@@ -12,6 +12,7 @@ class Project < ApplicationRecord
 
   belongs_to :user
   has_many :admins, class_name: "ProjectAdministrator"
+  has_one :company_datum, class_name: "ProjectCompanyDatum"
 
   accepts_nested_attributes_for :admins
 
