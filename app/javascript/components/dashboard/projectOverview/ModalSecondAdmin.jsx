@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import CreateAdministratorForm from './forms/CreateAdministratorForm'
+import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
 
@@ -15,11 +15,12 @@ class ModalSecondAdmin extends Component {
     return (
       <div>
         {secondAdmin &&
-          <CreateAdministratorForm
+          <AdministratorForm
             {...this.props}
             titleModal='Who is the second project administrator?'
             label='Project second administrator'
             nameForm='create_second_administrator'
+            mainClass='modal-body'
           />}
           {!secondAdmin &&
           <div>
@@ -27,7 +28,7 @@ class ModalSecondAdmin extends Component {
             <h6>Would you like to add a second administrator now?</h6>
             <button
               type='button'
-              className='btn btn-purple second-admin'
+              className='btn btn-purple wide-button'
               onClick={() => this.setState({ secondAdmin: true })}
             >
               Add a second administrator

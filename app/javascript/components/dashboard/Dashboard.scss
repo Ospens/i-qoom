@@ -217,18 +217,6 @@ button:disabled {
       padding: 0.2em 2em;
     }
   }
-  .btn-purple {
-    color: #fff;
-    background-color:#0095f9;
-    border-color:#0095f9;
-
-    &:hover {
-      color: #fff;
-      background-color: #221f6d;
-      border-color: #221f6d;
-      text-decoration: none;
-    }
-  }
   .btn-white {
     color: lightgrey;
     background-color:#fff;
@@ -279,57 +267,144 @@ button:disabled {
       }
     }
   }
-  .logo-uploader {
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    height: 92px;
-    width: 92px;
-    border-radius: 5px;
-    text-align: center !important;
-    .image-preview {
-      width: 100%;
-      height: 100%;
-    }
-    cursor: pointer;
-    input {
-      width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      position: absolute;
-      z-index: -1;
-    }
-    img {
-      cursor: auto;
-      min-height: 100%;
-      min-width: 100%;
-      object-fit: cover;
-    }
-    label {
-      transition: 0s !important;
-      cursor: pointer;
-      flex-direction: column;
-      align-self: auto !important;
-    }
-
-    &:hover, &:focus {
-      label {
-        color: #0096FA !important;
-      }
-    }
-  }
   .form-check-label {
     display: inline-block !important;
   }
-  .second-admin {
+  .wide-button {
     width: 100%;
   }
+}
+
+.nav-bar {
+  margin-bottom: 30px;
+  margin-top: 30px;
+  border-bottom: 2px solid lightgrey;
+  display: flex;
+  .nav-bar-item {
+    margin-bottom: 2px;
+    .nav-bar-element {
+      text-decoration: none;
+      border: none;
+      background-color: transparent;
+      color: lightgrey;
+      display: flex;
+      padding: 10px;
+      padding-bottom: 15px;
+      padding-top: 15px;
+
+      &.active {
+        color: black;
+        border-bottom: 2px solid black;
+      }
+    }
+  }
+}
+.project-settings {
+  height: 100%;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  justify-content: center;
+  flex-direction: column;
+  .block-title {
+    color: #ced4da;
+  }
+}
+
+.logo-uploader {
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  height: 92px;
+  width: 92px;
+  border-radius: 5px;
+  text-align: center !important;
+  strong {
+   color: #ced4da;
+  }
+  .image-preview {
+    width: 100%;
+    height: 100%;
+  }
+
+  cursor: pointer;
+
+  input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+
+  img {
+    cursor: auto;
+    min-height: 100%;
+    min-width: 100%;
+    object-fit: cover;
+  }
+
+  label {
+    transition: 0s !important;
+    cursor: pointer;
+    flex-direction: column;
+    align-self: auto !important;
+  }
+
+  &:hover,
+  &:focus {
+    label {
+      color: #0096FA !important;
+    }
+  }
+}
+
+.tab-title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.btn-white-blue {
+  background-color: #fff !important;
+  border: 1px solid #ced4da !important;
+  color: #0096FA !important;
+  font-weight: 600 !important;
+  width: 100%;
+}
+
+.btn-purple {
+  color: #fff !important;
+  background-color: #0095f9 !important;
+  border-color: #0095f9 !important;
+  &.wide-button {
+    width: 100%;
+  }
+
+  &:hover {
+    color: #fff !important;
+    background-color: #221f6d !important;
+    border-color: #221f6d !important;
+    text-decoration: none !important;
+  }
+}
+.second-admin {
+  margin-top: 8px;
+}
+.wait-confirm-admin {
+  padding-left: 1em;
+  color: #ff9b00;
+}
+.active-admin {
+  padding-left: 1em;
+  color: #26bd5d;
 }

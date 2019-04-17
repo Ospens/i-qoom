@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
-import CreateAdministratorForm from './forms/CreateAdministratorForm'
+import AdministratorForm from '../../../elements/forms/AdministratorForm'
 
 class ModalFirstAdmin extends Component {
 
   render() {
     return (
-      <CreateAdministratorForm
+      <AdministratorForm
         {...this.props}
         titleModal='Who is the project administrator?'
         label='Project administrator'
         nameForm='create_administrator'
+        mainClass='modal-body'
       />
     )
   }

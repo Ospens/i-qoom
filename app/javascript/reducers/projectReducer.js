@@ -6,7 +6,11 @@ import {
 
 const initialState = {
   allProjects: [],
-  current: null
+  current: {
+    id: null,
+    name: null,
+    user_id: null
+  }
 }
 
 const projectReducer = (state = initialState, action) => {

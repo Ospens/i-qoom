@@ -1,24 +1,40 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getFormSubmitErrors, reduxForm, formValueSelector } from 'redux-form'
-import InputField from '../../../../elements/InputField'
+import InputField from '../InputField'
 
-class CreateAdministratorForm extends Component {
+class AdministratorForm extends Component {
 
   handleSubmit = (values) => {
     const { changeStep } = this.props
     changeStep(1)
   }
 
-  render() {
-    const { submitErrors, closeModal, title, surname, first_name, email, titleModal, label } = this.props
+  renderSubmitButtons = () => {
+    const { closeModal, title, surname, first_name, email } = this.props
     const hasEmptyFields = !title || !surname || !first_name || !email
+    return (
+      <div className='modal-footer'>
+        <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
+        <button
+          type='submit'
+          className='btn btn-purple'
+          disabled={hasEmptyFields}
+        >
+          Next
+        </button>
+      </div>
+    )
+  }
+
+  render() {
+    const { submitErrors, customButtons, titleModal, label, mainClass } = this.props
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-          <div className='modal-body'>
+          <div className={mainClass}>
             <h6>{titleModal}</h6>
-            <label className='project-admin'>{label}</label>
+            {label && <label className='project-admin'>{label}</label>}
             <div className='row'>
               <div className='form-group col-3'>
                 <InputField
@@ -82,16 +98,7 @@ class CreateAdministratorForm extends Component {
               </div>
             </div>
           </div>
-          <div className='modal-footer'>
-            <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
-            <button
-              type='submit'
-              className='btn btn-purple'
-              disabled={hasEmptyFields}
-            >
-              Next
-            </button>
-          </div>
+          {customButtons ? customButtons() : this.renderSubmitButtons()}
         </form>
       </div>
     )
@@ -109,11 +116,4 @@ const mapStateToProps = (state, ownProps) => ({
   email: selector(state, 'email')
 })
 
-export default connect(
-  mapStateToProps,
-  null
-)(reduxForm(
-  {
-    destroyOnUnmount: false
-  })
-  (CreateAdministratorForm))
+export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))

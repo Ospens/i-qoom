@@ -56,7 +56,6 @@ class FileField extends Component {
               <strong>Add a logo</strong>
             </label>
           </div>}
-          <div>test</div>
       </div>
     )
   }
