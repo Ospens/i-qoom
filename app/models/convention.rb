@@ -12,6 +12,8 @@ class Convention < ApplicationRecord
   validates :number,
             presence: true,
             inclusion: { in: [1, 2] }
+  # there should be way to detect active convention
+  scope :active, -> { find_by(number: 1) }
 
   def build_default_fields
     document_fields.new(kind: :codification_field,

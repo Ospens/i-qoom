@@ -6,8 +6,6 @@ class User < ApplicationRecord
 
   attr_accessor :accept_terms_and_conditions
 
-  has_many :documents
-
   validates_presence_of :password_confirmation,
     on: [:create, :password_changed?]
 
@@ -31,4 +29,5 @@ class User < ApplicationRecord
 
   has_many :projects
 
+  has_many :documents
 end

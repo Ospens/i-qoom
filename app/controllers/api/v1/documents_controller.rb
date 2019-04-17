@@ -1,7 +1,8 @@
 class Api::V1::DocumentsController < ApplicationController
-  load_and_authorize_resource
-
-  before_action :set_project, only: [:new, :create, :index]
+  load_resource :project
+  load_resource :document, through: :project, except: [:edit, :update]
+  load_resource :document, only: [:edit, :update]
+  authorize_resource :document
 
   def new
     convention = @project.conventions.find_by(number: 1)
@@ -35,10 +36,6 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   private
-
-  def set_project
-    @project = Project.find(params[:project_id])
-  end
 
   def document_params
     params.require(:document).permit(:issued_for,

@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
     t.string "value"
     t.string "title"
     t.integer "position"
+    t.boolean "selected"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["document_field_id"], name: "index_document_field_values_on_document_field_id"
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
     t.string "email_title"
     t.boolean "email_title_like_document", default: true
     t.text "email_text"
+    t.string "revision_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"

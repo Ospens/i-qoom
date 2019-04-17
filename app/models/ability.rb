@@ -28,11 +28,19 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
-    can :manage, Convention
     if user.present?
       # Project
       can :manage, Project, user_id: user.id
-      can [:new, :create, :index], Document
+      # Convention
+      can :manage, Convention do |convention|
+        convention.project.user == user
+      end
+      # Document
+      can [:new, :create], Document do |document|
+        document.project.user == user ||
+          document.can_create?(user)
+      end
+      can :index, Document
       can [:edit, :update], Document, user_id: user.id
     end
   end

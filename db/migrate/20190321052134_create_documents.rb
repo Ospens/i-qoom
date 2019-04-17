@@ -5,6 +5,7 @@ class CreateDocuments < ActiveRecord::Migration[5.2]
       t.string :email_title
       t.boolean :email_title_like_document, default: true
       t.text :email_text
+      t.string :revision_number
       t.timestamps
     end
   end

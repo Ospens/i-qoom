@@ -29,6 +29,9 @@ class DocumentField < ApplicationRecord
   before_validation :set_required,
                     if: :codification_field?
 
+  after_save :update_revision_number,
+             if: -> { parent.class.name == 'Document' && revision_number? }
+
   validates :kind,
             presence: true
 
@@ -42,6 +45,15 @@ class DocumentField < ApplicationRecord
   validate :has_field_values,
            if: :should_have_document_field_values?
 
+  validate :revision_number_valid,
+           if: -> { parent.class.name == 'Document' && revision_number? },
+           on: :create
+
+  scope :limit_by_value, -> {
+    where(kind: :codification_field,
+          codification_kind: [:originating_company, :discipline, :document_type])
+  }
+
   def build_for_new_document(user)
     return if !can_build?(user)
     original_attributes =
@@ -49,7 +61,7 @@ class DocumentField < ApplicationRecord
     if codification_field?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
-        next unless document_rights.any? && document_rights.find_by(user: user, document_field_value: field_value).present?
+        next if document_rights.find_by(user: user, document_field_value: field_value).blank?
         original_attributes['document_field_values_attributes'] << field_value.build_for_new_document
       end
     end
@@ -98,10 +110,24 @@ class DocumentField < ApplicationRecord
   def can_build_codification_field?(user)
     rights = document_rights
     limit_for = DocumentRight.limit_fors
-    codification_field? &&
-      (!rights.any? ||
-       (rights.any? &&
-          ((should_have_document_field_values? && rights.where(user: user, limit_for: limit_for[:value]).any?) ||
-           (!should_have_document_field_values? && rights.where(user: user, limit_for: limit_for[:field]).any?))))
+    if can_limit_by_value?
+      rights.where(user: user, limit_for: limit_for[:value]).any?
+    else
+      codification_field? &&
+        (!rights.any? || rights.where(user: user, limit_for: limit_for[:field]).any?)
+    end
+  end
+
+  def revision_number_valid
+    document = parent.revisions.order_by_revision_number.last
+    if document.present? && value.to_i <= document.revision_number.to_i
+      errors.add(:value, :revision_number_must_be_greater_last_reveision_number)
+    elsif value.to_i == 0 && value != '0' && value != '00'
+      errors.add(:value, :revision_number_must_be_zero_or_greater)
+    end
+  end
+
+  def update_revision_number
+    parent.update(revision_number: value)
   end
 end

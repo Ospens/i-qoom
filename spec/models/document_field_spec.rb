@@ -68,18 +68,17 @@ RSpec.describe DocumentField, type: :model do
       it do
         expect(subject).to be_codification_field
         expect(subject.document_rights).to_not be_any
-        expect(subject.can_build?(user)).to eql(true)
-      end
-
-      it do
-        expect(subject.document_field_values).to be_any
-        subject.document_rights.create(document_field: subject, limit_for: :field, user: user)
         expect(subject.can_build?(user)).to eql(false)
       end
 
       it do
-        subject.document_rights.create(document_field: subject,
-                                       limit_for: :value,
+        expect(subject.document_field_values).to be_any
+        subject.document_rights.create(limit_for: :field, user: user)
+        expect(subject.can_build?(user)).to eql(false)
+      end
+
+      it do
+        subject.document_rights.create(limit_for: :value,
                                        user: user,
                                        document_field_value: subject.document_field_values.first)
         expect(subject.can_build?(user)).to eql(true)
