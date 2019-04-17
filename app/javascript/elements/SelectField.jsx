@@ -3,9 +3,11 @@ import Select from 'react-select'
 
 function SelectField({input, options, value, errorField, id}) {
   const errorInfo = errorField[id]
-  const borderColor = errorInfo ? ' red' : '#ced4da'
+  const borderColor = errorInfo ? '#fd0944' : '#ced4da'
+  const borderWidth = errorInfo ? '2px' : '1px'
+  const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor })
+    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow })
   }
   return (
     <div>
@@ -17,6 +19,7 @@ function SelectField({input, options, value, errorField, id}) {
          autoFocus={false}
          styles={colourStyles}
          onChange={value => input.onChange(value.value)}
+         maxMenuHeight='180'
          onBlur={value => input.onBlur(value.value)}
          className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
       />

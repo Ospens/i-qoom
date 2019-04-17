@@ -46,9 +46,9 @@ class SignUp extends Component {
   }
 
   handleSubmit = () => {
-    const { signUpUser } = this.props
+    const { showMainPage, signUpUser } = this.props
     const { userFields } = this.state
-    return signUpUser(userFields)
+    return signUpUser(userFields).then(() => showMainPage())
   }
 
   nextStep = () => this.setState({step: 2})
@@ -73,7 +73,7 @@ class SignUp extends Component {
     const secondFormClass = classnames('form-row', { active: step === 2 })
 
     return (
-      <div className='sign-up-form'>
+      <div id='sign-up-form'>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className='steps row text-center'>
             <div className='step active col-6'>Step 1</div>
@@ -124,28 +124,28 @@ class SignUp extends Component {
               </div>
               <div className='row next-row'>
                 <div className='form-group col-6'>
-                  <label>Select state</label>
-                    <Field
-                      name='state'
-                      id='state'
-                      options={countryList}
-                      value={state}
-                      onChange={(e) => this.handleChangeSelect(e, 'state')}
-                      errorField={submitErrors}
-                      component={SelectField}
-                    />
+                  <InputField
+                    type='text'
+                    name='state'
+                    id='state'
+                    label='State'
+                    onChange={this.handleChange}
+                    defaultValue={state}
+                    errorField={submitErrors}
+                    placeholder='State'
+                  />
                 </div>
                 <div className='form-group col-6'>
-                  <label>Select city</label>
-                    <Field
-                      name='city'
-                      id='city'
-                      options={countryList}
-                      value={city}
-                      onChange={(e) => this.handleChangeSelect(e, 'city')}
-                      errorField={submitErrors}
-                      component={SelectField}
-                    />
+                  <InputField
+                    type='text'
+                    name='city'
+                    id='city'
+                    label='City'
+                    onChange={this.handleChange}
+                    defaultValue={city}
+                    errorField={submitErrors}
+                    placeholder='City'
+                  />
                 </div>
               </div>
             </div>
