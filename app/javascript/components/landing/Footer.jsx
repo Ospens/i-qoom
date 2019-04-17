@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 class Footer extends Component {
 
@@ -9,10 +10,10 @@ class Footer extends Component {
           <h3>i-Qoom</h3>
           <div className='row justify-content-center info-row'>
             <div className='col-md-auto'>
-              IMPRINT
+              <Link to='/imprint'>IMPRINT</Link>
             </div>
             <div className='col-md-auto'>
-              TERMS AND CONDITIONS
+              <Link to='/terms'>TERMS AND CONDITIONS</Link>
             </div>
           </div>
           <div className='rights-reserved'>
