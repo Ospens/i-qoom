@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { signOutUser } from '../../actions/userActions'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
@@ -18,20 +19,22 @@ class LandingPageHeader extends Component {
       showSignUp,
       showMainPage,
       authenticated,
-      signOutUser
+      signOutUser,
+      nonMain
     } = this.props
-    const navClass = classnames({ 'show-slider': showSignInSlider || showSignUp })
+    const navClass = classnames({ 'show-slider': showSignInSlider || showSignUp || nonMain })
+    const headerClass = classnames({ 'colorful': nonMain })
 
     return (
-      <header>
+      <header className={headerClass}>
         <nav className='navbar navbar-expand-sm'>
           <div className='container'>
-            <a className='navbar-brand logo_h' href='#'>
+            <Link className='navbar-brand logo_h' to='/'>
               <ReactSVG
                 svgStyle={{ height: 40 }}
                 src={Logo}
               />
-            </a>
+            </Link>
             <div className='collapse navbar-collapse offset'>
               <ul className={`nav navbar-nav menu_nav justify-content-center ${navClass}`}>
                 <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>
@@ -43,8 +46,7 @@ class LandingPageHeader extends Component {
               </ul>
 
               <div className={`nav justify-content-center back-button ${navClass}`}>
-                <button
-                  type='button'
+                <Link to='/'
                   className='btn nav-link back-to-start'
                   onClick={showMainPage}>
                   <ReactSVG
@@ -52,13 +54,13 @@ class LandingPageHeader extends Component {
                     src={Left}
                   />
                     BACK TO START PAGE
-                </button>
+                </Link>
               </div>
 
               {!authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
-                  <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignUp}>Register</button></li>
-                  <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={toggleSignInForm}>Login</button></li>
+                  <li className='nav-item'><Link to='/' className='nav-link btn-transparent' onClick={toggleSignUp}>Register</Link></li>
+                  <li className='nav-item'><Link to='/' className='nav-link btn-transparent' onClick={toggleSignInForm}>Login</Link></li>
                 </ul>
               }
               {authenticated &&
