@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
+import { errorNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
@@ -44,7 +45,7 @@ export const signInUser = (login, password) => dispatch => {
         dispatch(signIn(response.data.auth_token, response.headers))
       })
       .catch(({ response }) => {
-        alert('Error')
+        errorNotify(response.data.message)
         throw new SubmissionError(response.data.error_messages)
       })
   )
@@ -59,10 +60,9 @@ export const signUpUser = userFields => dispatch => {
   return axios.post('/api/v1/users', request)
     .then(response => {
       dispatch(signUp(response.data, response.headers))
-      alert('Registration completed successfully!')
     })
     .catch(({ response }) => {
-      alert('Error')
+      errorNotify(response.data.message)
       throw new SubmissionError(response.data.error_messages)
     })
 }

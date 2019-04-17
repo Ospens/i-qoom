@@ -62,6 +62,10 @@ footer:after,
   max-width: 960px;
   padding: 0 15px;
   overflow: hidden;
+  &.info-container {
+    padding-top: 100px;
+    height: 100vh;
+  }
 }
 button:focus, button:active {
   outline: none !important;
@@ -73,6 +77,12 @@ header {
   top: 0;
   left: 0;
   z-index: 9999;
+  &.colorful {
+    background-color: #221e6d;
+  }
+  .back-to-start {
+    display: flex;
+  }
 }
 
 li {
@@ -134,9 +144,34 @@ li {
 }
 .invalid-feedback {
   margin-bottom: -16px;
+  width: max-content;
+  margin-top: 0px;
+  background-color: #fd0944;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0 0 10px 10px;
+  color: white;
+  font-size: 12px;
+  margin-bottom: -32px;
+  text-transform: uppercase;
+}
+
+.form-control.is-invalid {
+  display: block;
+  border: 2px solid #fd0845;
+  background-image: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .form-control-select.is-invalid~.invalid-feedback {
   display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .sign-in-form__header {
  font-weight: 600;
@@ -225,7 +260,6 @@ li {
 }
 
 .contact-us {
-  height: 45px;
   width: 30%;
   color: #221F6D;
   margin-top: 2em;
@@ -235,7 +269,7 @@ li {
   position: absolute;
   left: 110%;
   font-weight: 600;
-  width: 85%;
+  width: 74%;
   button {
     display: flex;
 
@@ -262,8 +296,8 @@ li {
 }
 
 #what-is-card {
-  padding-top: 5em;
-  padding-bottom: 5em;
+  padding-top: 8em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
   p {
     color: #475859;
@@ -356,8 +390,8 @@ li {
 }
 
 #pricing-card {
-  padding-top: 5em;
-  padding-bottom: 5em;
+  padding-top: 8em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
   color: #475859;
   h3 {
@@ -384,17 +418,36 @@ li {
   }
 }
 
+@keyframes new_slider_anim {
+  from {
+    height: 0;
+    overflow: hidden;
+  }
+
+  to {
+    overflow: visible;
+    height: 280px;
+  }
+}
 #reviews-card {
   padding-top: 5em;
   padding-bottom: 5em;
   background: #f8f8f8;
   border-bottom: 1px solid #eaebeb;
+  .new-slider {
+    overflow: visible;
+    animation-name: new_slider_anim;
+    animation-duration: 0.5s !important;
+  }
   .card-deck {
     margin-top: 4em;
 
     .card {
       max-width: 80%;
       height: 280px;
+      p.card-text {
+        line-height: 1.5;
+      }
     }
 
     .nextBtn {
@@ -458,8 +511,61 @@ li {
 
 #get-started-card {
   padding-top: 5em;
-  padding-bottom: 5em;
+  padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
+  .form-container {
+    display: flex;
+    position: relative;
+
+    &.show-slider {
+      .contact-us-form {
+        left: 1000px !important;
+      }
+
+      .send-card {
+        left: 0px !important;
+      }
+    }
+  }
+  .contact-us-form {
+    left: 0;
+    width: 100%;
+    position: relative;
+    color: #fff;
+    right: 0;
+    display: inline-block;
+  }
+  .send-card {
+    left: -1000px;
+    width: 100%;
+    position: absolute;
+    display: inline-block;
+    min-width: 400px;
+    color: #fff;
+    .text-center {
+      font-size: 17px;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      color: #475859;
+    }
+    .pictures-container {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .svg-line {
+      position: relative;
+      top: 54px;
+      right: 45px;
+    }
+    .svg-plan {
+      position: relative;
+      top: -95px;
+      left: 433px;
+    }
+  }
   .block-header {
     padding-bottom: 3em;
     font-size: 2em;
@@ -484,6 +590,10 @@ li {
   border-bottom: 1px solid #eaebeb;
   background-color: #221e6d;
   color: #fff;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
   .info-row {
     max-width: 40%;
     font-size: 0.8em;
@@ -499,7 +609,7 @@ li {
   }
 }
 
-.sign-up-form {
+#sign-up-form {
   background-color: white;
   margin-top: 80px;
   padding-top: 5em;
@@ -617,6 +727,18 @@ input[type=checkbox]:checked + label {
   .slick-list {
     margin-left: 100px;
     margin-right: 450px;
+  }
+
+  .slick-slide {
+    width: auto;
+    height: 630px;
+  }
+
+  .slick-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
   }
   .slick-dots {
     position: absolute;
