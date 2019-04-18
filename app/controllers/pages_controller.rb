@@ -6,4 +6,6 @@ class PagesController < ApplicationController
     render json: { status: "success" }.merge(user_email),
            status: :ok
   end
+
+  def index; end
 end

@@ -4,7 +4,7 @@ class ApplicationMailer < ActionMailer::Base
 
   def send_contact_form(contact)
     @contact = contact
-    mail to: 'shamardin.k@gmail.com',
+    mail to: 'yasserchehade@gmx.de',
         subject: "New message by contact form from I-Qoom"
   end
 end

@@ -20,8 +20,7 @@ class ApplicationController < ActionController::Base
   def error(record)
     render json: { status: "error",
                    message: t(".error_message"),
-                   error_messages: record.errors.full_messages,
-                   fields_with_errors: record.errors.messages.keys },
+                   error_messages: record.errors },
            status: :unprocessable_entity
   end
 

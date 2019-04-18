@@ -2,8 +2,11 @@ Rails.application.routes.draw do
   # devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   controller :pages do
-    root action: :home
+    root action: :index
   end
+
+  get 'home', to: 'pages#home'
+
   namespace :api do
     namespace :v1 do
       resources :contacts, only: :create
@@ -12,4 +15,6 @@ Rails.application.routes.draw do
       resources :projects, except: [:new, :edit]
     end
   end
+
+  match '*path', to: 'pages#index', via: :all
 end
