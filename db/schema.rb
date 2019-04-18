@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2019_04_17_061440) do
 
   create_table "addresses", force: :cascade do |t|
     t.string "company_name"
-    t.string "street_number"
+    t.string "street"
     t.string "house_number"
     t.string "city"
     t.string "postcode"

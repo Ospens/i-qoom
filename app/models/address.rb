@@ -11,7 +11,7 @@ class Address < ApplicationRecord
       allow_blank: true
 
   validates_presence_of :company_name,
-                        :street_number,
+                        :street,
                         :house_number,
                         :city,
                         :postcode,

@@ -13,7 +13,7 @@ RSpec.describe Address, type: :model do
 
   context "without project_company_datum" do
     [ :company_name,
-      :street_number,
+      :street,
       :house_number,
       :city,
       :postcode,
@@ -25,7 +25,7 @@ RSpec.describe Address, type: :model do
   context "with project_company_datum" do
     subject { FactoryBot.build(:address_with_project_company_datum) }
     [ :company_name,
-      :street_number,
+      :street,
       :house_number,
       :city,
       :postcode,
