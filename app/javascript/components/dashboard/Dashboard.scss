@@ -281,7 +281,8 @@ button:disabled {
   border-bottom: 2px solid lightgrey;
   display: flex;
   .nav-bar-item {
-    margin-bottom: 2px;
+    display: inline-flex;
+    margin-bottom: -2px;
     .nav-bar-element {
       text-decoration: none;
       border: none;

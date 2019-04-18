@@ -16,7 +16,7 @@ const signIn = (token, headers, expiry) => ({
 })
 
 export const signOutUser = () => {
-  sessionStorage.removeItem('jwt-iqoom-token')
+  localStorage.removeItem('jwt-iqoom-token')
   return ({
     type: SIGN_OUT_USER
   })
@@ -40,7 +40,7 @@ export const signInUser = (login, password) => dispatch => {
   return (
     axios.post('/api/v1/sessions', request)
       .then(response => {
-        sessionStorage.setItem('jwt-iqoom-token', response.data.auth_token)
+        localStorage.setItem('jwt-iqoom-token', response.data.auth_token)
         dispatch(signIn(response.data.auth_token, response.headers))
       })
       .catch(({ response }) => {

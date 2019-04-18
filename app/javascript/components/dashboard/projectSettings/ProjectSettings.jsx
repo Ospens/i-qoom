@@ -4,8 +4,13 @@ import './ProjectSettings.scss'
 import { startFetchProject } from '../../../actions/projectActions'
 import CompanyForm from '../../../elements/forms/CompanyForm'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
+import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
 
 class ProjectSettings extends Component {
+
+  state = {
+    billingForm: false
+  }
 
   componentWillMount() {
     const { startFetchProject } = this.props
@@ -14,20 +19,27 @@ class ProjectSettings extends Component {
   }
 
   renderSubmitButtons = (pristine) => {
-    console.log(pristine)
+    const { billingForm } = this.state
     return (
       <div>
         {!pristine && 
           <button type='button' className='btn btn-purple wide-button mb-2' >
             Save changes
           </button>}
-        <button type='submit' className='btn btn-white-blue'>Billing address</button>
+        <button
+          type='submit'
+          className='btn btn-white-blue'
+          onClick={() => { this.setState({ billingForm: !billingForm }) }}
+        >
+          Billing address
+        </button>
       </div>
     )
   }
 
   render() {
     const { name } = this.props.project
+    const { billingForm } = this.state
     return (
       <div className='project-settings'>
         <h2>Project settings</h2>
@@ -85,6 +97,29 @@ class ProjectSettings extends Component {
             </div>
           </div>
         </React.Fragment>
+        {billingForm &&
+        <div>
+          <div
+            className='modal fade show'
+            id='exampleModalLong'
+            tabIndex='-1'
+            role='dialog'
+            aria-modal='true'
+          >
+            <div className='modal-dialog' role='document'>
+              <div className='modal-content'>
+                <div className='new-project-modal'>
+                  <h4>Billing address</h4>
+                  <ModalBillingAddress
+                    closeModal={(this.closeModalAndDiscardSteps)}
+                    changeStep={(increase) => this.changeStep(increase)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='modal-backdrop fade show'></div>
+        </div>}
       </div>
     )
   }
