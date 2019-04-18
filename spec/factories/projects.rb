@@ -6,5 +6,8 @@ FactoryBot.define do
     after(:build) do |instance|
       instance.admins << FactoryBot.build(:project_administrator)
     end
+    factory :project_company_datum_step do
+      creation_step { "company_datum" }
+    end
   end
 end
