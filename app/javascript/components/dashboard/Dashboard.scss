@@ -270,9 +270,6 @@ button:disabled {
   .form-check-label {
     display: inline-block !important;
   }
-  .wide-button {
-    width: 100%;
-  }
 }
 
 .nav-bar {
@@ -302,7 +299,7 @@ button:disabled {
 }
 .project-settings {
   height: 100%;
-  display: flex;
+  display: block;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   flex-direction: column;
@@ -311,6 +308,13 @@ button:disabled {
   flex-direction: column;
   .block-title {
     color: #ced4da;
+    display: flex;
+    .dropdown {
+      margin-left: auto;
+    }
+  }
+  .col-lg-4 {
+    margin-bottom: 5em;
   }
 }
 
@@ -380,16 +384,17 @@ button:disabled {
   border: 1px solid #ced4da !important;
   color: #0096FA !important;
   font-weight: 600 !important;
-  width: 100%;
+
+  &.clear-form {
+    position: absolute;
+    left: 30px;
+  }
 }
 
 .btn-purple {
   color: #fff !important;
   background-color: #0095f9 !important;
   border-color: #0095f9 !important;
-  &.wide-button {
-    width: 100%;
-  }
 
   &:hover {
     color: #fff !important;
@@ -408,4 +413,12 @@ button:disabled {
 .active-admin {
   padding-left: 1em;
   color: #26bd5d;
+}
+
+.wide-button {
+  width: 100%;
+}
+
+.project-title-editable {
+  margin-top: 5em;
 }

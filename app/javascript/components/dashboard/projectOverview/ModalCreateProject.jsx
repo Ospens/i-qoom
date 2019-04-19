@@ -38,64 +38,56 @@ class ModalCreateProject extends Component {
   render() {
     const { termsAccepted, step } = this.state
     const { isOpen } = this.props
+    if (!isOpen) {
+      return false
+    }
+
     return (
       <div>
-        <div
-          className={`modal fade ${isOpen ? 'show' : ''}`}
-          id='exampleModalLong'
-          tabIndex='-1'
-          role='dialog'
-          aria-modal='true'
-        >
-          <div className='modal-dialog' role='document'>
-            <div className='modal-content'>
-              {step === 1 &&
-                <ModalTerms
-                  toogleTerms={this.toogleTerms}
-                  closeModal={this.closeModalAndDiscardSteps}
-                  termsAccepted={termsAccepted}
-                  nextStep={() => this.changeStep(1)}
-                />
-              }
-              {step === 7 &&
-                <ModalSuccessfull
-                  closeModal={this.closeModalAndDiscardSteps}
-                  changeStep={(increase) => this.changeStep(increase)}
-                />}
-              {step > 1 && step < 7 &&
-                <div className='new-project-modal'>
-                  <h4>New project</h4>
-                {step === 2  &&
-                  <ModalFirstAdmin
-                    closeModal={this.closeModalAndDiscardSteps}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />}
-                {step === 3  &&
-                  <ModalSecondAdmin
-                    closeModal={this.closeModalAndDiscardSteps}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />}
-                {step === 4  &&
-                  <ModalProjectName
-                    closeModal={this.closeModalAndDiscardSteps}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />}
-                {step === 5  &&
-                  <ModalCompanyData
-                    closeModal={this.closeModalAndDiscardSteps}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />}
-                {step === 6  &&
-                  <ModalBillingAddress
-                    closeModal={this.closeModalAndDiscardSteps}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />}
-              </div>
-              }
-            </div>
-          </div>
-        </div>
-        {isOpen && <div className='modal-backdrop fade show'></div>}
+        {step === 1 &&
+          <ModalTerms
+            toogleTerms={this.toogleTerms}
+            closeModal={this.closeModalAndDiscardSteps}
+            termsAccepted={termsAccepted}
+            nextStep={() => this.changeStep(1)}
+          />
+        }
+        {step === 2 &&
+          <ModalFirstAdmin
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={() => this.changeStep(1)}
+          />
+        }
+        {step === 3 &&
+          <ModalSecondAdmin
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={() => this.changeStep(1)}
+          />
+        }
+        {step === 4 &&
+          <ModalProjectName
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={(increase) => this.changeStep(increase)}
+          />
+        }
+        {step === 5 &&
+          <ModalCompanyData
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={(increase) => this.changeStep(increase)}
+          />
+        }
+        {step === 6 &&
+          <ModalBillingAddress
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={() => this.changeStep(1)}
+          />
+        }
+        {step === 7 &&
+          <ModalSuccessfull
+            closeModal={this.closeModalAndDiscardSteps}
+            customSubmit={(increase) => this.changeStep(increase)}
+          />
+        }
       </div>
     )
   }

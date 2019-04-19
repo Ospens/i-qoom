@@ -1,23 +1,16 @@
 import React from 'react'
 import ModalComponent from '../../../elements/ModalComponent'
 
-function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
+function ModalExcellent({ closeModal, termsAccepted, nextStep}) {
   return (
     <ModalComponent>
       <div>
         <div className='modal-body terms-modal'>
-          <h6>Please read our <a href='#'>Terms and Conditions</a></h6>
-          <h6>and check the box below</h6>
-
-          <div className='checkbox-terms'>
-            <input
-              type='checkbox'
-              id='terms'
-              onClick={toogleTerms}
-            />
-            <label htmlFor='terms'></label>
-            <span>I have read and agree to the Terms</span>
-          </div>
+          <h4>Excellent!</h4>
+          <p>An email has benn sent to the second project</p>
+          <p>administrator. Please note that the email address</p>
+          <p>must be confirmed, before the status of the</p>
+          <p>new administrator is set to "active"</p>
         </div>
         <div className='modal-footer'>
           <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
@@ -28,4 +21,4 @@ function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
   )
 }
 
-export default ModalTerms
+export default ModalExcellent

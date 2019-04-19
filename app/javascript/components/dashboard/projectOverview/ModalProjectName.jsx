@@ -5,6 +5,7 @@ import { getFormSubmitErrors, reduxForm } from 'redux-form'
 import InputField from '../../../elements/InputField'
 import Left from '../../../images/arrow-button-left'
 import { startCreateProject } from '../../../actions/projectActions'
+import ModalComponent from '../../../elements/ModalComponent'
 
 class ModalProjectName extends Component {
 
@@ -14,9 +15,11 @@ class ModalProjectName extends Component {
   }
 
   render() {
-    const { submitErrors, closeModal, changeStep, pristine } = this.props
+    const { submitErrors, closeModal, changeStep, pristine, modalTitle } = this.props
     return (
-      <div>
+      <ModalComponent>
+        <div className='new-project-modal'>
+          <h4>{modalTitle || 'New project'}</h4>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className='modal-body project-name'>
             <h6>What would you like to call this project?</h6>
@@ -48,8 +51,9 @@ class ModalProjectName extends Component {
               Next
             </button>
           </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </ModalComponent>
     )
   }
 }

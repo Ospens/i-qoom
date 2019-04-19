@@ -141,7 +141,7 @@ class BillingAddressForm extends Component {
               </div>
             </div>
           </div>
-          {customButtons ? customButtons() : this.renderSubmitButtons()}
+          {customButtons ? customButtons(this.props) : this.renderSubmitButtons()}
         </form>
       </div>
     )

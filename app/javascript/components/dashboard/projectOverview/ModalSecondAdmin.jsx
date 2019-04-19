@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
+import ModalComponent from '../../../elements/ModalComponent'
 
 class ModalSecondAdmin extends Component {
 
@@ -10,10 +11,12 @@ class ModalSecondAdmin extends Component {
   }
 
   render() {
-    const { closeModal, changeStep } = this.props
+    const { closeModal, changeStep, modalTitle } = this.props
     const { secondAdmin } = this.state
     return (
-      <div>
+      <ModalComponent>
+        <div className='new-project-modal'>
+          <h4>{modalTitle || 'New project'}</h4>
         {secondAdmin &&
           <AdministratorForm
             {...this.props}
@@ -54,7 +57,8 @@ class ModalSecondAdmin extends Component {
           </div>
 
           }
-      </div>
+        </div>
+      </ModalComponent>
     )
   }
 }

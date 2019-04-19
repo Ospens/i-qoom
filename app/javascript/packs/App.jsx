@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import PrivateRoute from '../elements/PrivateRoute'
 import LandingPage from '../components/landing/LandingPage'
 import Dashboard from '../components/dashboard/Dashboard'
+import 'semantic-ui-css/semantic.min.css'
 
 const App = ({ authed }) => (
   <BrowserRouter>

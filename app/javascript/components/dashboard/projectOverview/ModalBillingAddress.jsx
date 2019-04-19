@@ -1,24 +1,22 @@
 import React, { Component } from 'react'
 import BillingAddressForm from '../../../elements/forms/BillingAddressForm'
+import ModalComponent from '../../../elements/ModalComponent'
 
 class ModalBillingAddress extends Component {
 
-  handleSubmit = () => {
-    const { changeStep } = this.props
-    changeStep(1)
-  }
-
   render() {
+    const { modalTitle } = this.props 
     return (
-      <div>
-        <BillingAddressForm
-          {...this.props}
-          mainClassName='modal-body company-data'
-          customSubmit={(values) => this.handleSubmit(values)}
-          titleModal='Please enter the billing address'
-          customSubmit={this.handleSubmit}
-        />
-      </div>
+      <ModalComponent>
+        <div className='new-project-modal'>
+          <h4>{modalTitle || 'New project'}</h4>
+          <BillingAddressForm
+            {...this.props}
+            mainClassName='modal-body company-data'
+            titleModal='Please enter the billing address'
+          />
+        </div>
+      </ModalComponent>
     )
   }
 }

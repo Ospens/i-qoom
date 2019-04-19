@@ -6,8 +6,8 @@ import InputField from '../InputField'
 class AdministratorForm extends Component {
 
   handleSubmit = (values) => {
-    const { changeStep } = this.props
-    changeStep(1)
+    const { customSubmit } = this.props
+    customSubmit()
   }
 
   renderSubmitButtons = () => {
@@ -28,7 +28,7 @@ class AdministratorForm extends Component {
   }
 
   render() {
-    const { submitErrors, customButtons, titleModal, label, mainClass } = this.props
+    const { submitErrors, customButtons, titleModal, label, mainClass, pristine } = this.props
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -98,7 +98,7 @@ class AdministratorForm extends Component {
               </div>
             </div>
           </div>
-          {customButtons ? customButtons() : this.renderSubmitButtons()}
+          {customButtons ? customButtons(pristine) : this.renderSubmitButtons()}
         </form>
       </div>
     )

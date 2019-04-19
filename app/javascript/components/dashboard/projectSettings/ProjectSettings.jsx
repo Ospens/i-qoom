@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import './ProjectSettings.scss'
 import { startFetchProject } from '../../../actions/projectActions'
-import CompanyForm from '../../../elements/forms/CompanyForm'
-import AdministratorForm from '../../../elements/forms/AdministratorForm'
-import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
+import ProjectDetails from './ProjectDetails'
 
 class ProjectSettings extends Component {
 
   state = {
-    billingForm: false
+    tab: 1
+  }
+
+  changeTab = (val) => {
+    this.setState({tab: val})
   }
 
   componentWillMount() {
@@ -18,108 +20,31 @@ class ProjectSettings extends Component {
     startFetchProject(project_id)
   }
 
-  renderSubmitButtons = (pristine) => {
-    const { billingForm } = this.state
-    return (
-      <div>
-        {!pristine && 
-          <button type='button' className='btn btn-purple wide-button mb-2' >
-            Save changes
-          </button>}
-        <button
-          type='submit'
-          className='btn btn-white-blue'
-          onClick={() => { this.setState({ billingForm: !billingForm }) }}
-        >
-          Billing address
-        </button>
-      </div>
-    )
-  }
-
   render() {
     const { name } = this.props.project
-    const { billingForm } = this.state
+    const { tab } = this.state
     return (
       <div className='project-settings'>
         <h2>Project settings</h2>
-        <div>{name}</div>
+        <div className='project-title-editable'>{name}</div>
         <div className='nav-bar'>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element active'>
+            <button className='nav-bar-element active' onClick={() => this.changeTab(1)}>
               Project details
             </button>
           </div>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element'>
+            <button className='nav-bar-element' onClick={() => this.changeTab(2)}>
               Member managment
             </button>
           </div>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element'>
+            <button className='nav-bar-element' onClick={() => this.changeTab(3)}>
               Project status
             </button>
           </div>
         </div>
-        <React.Fragment>
-          <h5 className='tab-title'>Project details</h5>
-          <div className='row'>
-            <div className='col-lg-4'>
-              <span className='block-title'>Company data</span>
-              <CompanyForm
-                {...this.props}
-                customSubmit={(values) => this.handleSubmit(values)}
-                customButtons={this.renderSubmitButtons}
-              />
-            </div>
-            <div className='col-lg-4'>
-              <span className='block-title'>
-                Project administrator 1
-                <span className='active-admin'>Active</span>
-              </span>
-              <AdministratorForm
-                {...this.props}
-                nameForm='edit_administrator'
-                customButtons={() => null}
-              />
-            </div>
-            <div className='col-lg-4'>
-              <span className='block-title'>
-                Project administrator 2
-                <span className='wait-confirm-admin'>Awaiting confirmation</span>
-              </span>
-              <button
-                type='button'
-                className='btn btn-purple wide-button second-admin'
-              >
-                Add project administrator
-              </button>
-            </div>
-          </div>
-        </React.Fragment>
-        {billingForm &&
-        <div>
-          <div
-            className='modal fade show'
-            id='exampleModalLong'
-            tabIndex='-1'
-            role='dialog'
-            aria-modal='true'
-          >
-            <div className='modal-dialog' role='document'>
-              <div className='modal-content'>
-                <div className='new-project-modal'>
-                  <h4>Billing address</h4>
-                  <ModalBillingAddress
-                    closeModal={(this.closeModalAndDiscardSteps)}
-                    changeStep={(increase) => this.changeStep(increase)}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='modal-backdrop fade show'></div>
-        </div>}
+        {tab === 1 &&<ProjectDetails />}
       </div>
     )
   }

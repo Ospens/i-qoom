@@ -1,8 +1,9 @@
 import React from 'react'
+import ModalComponent from '../../../elements/ModalComponent'
 
 function ModalSuccessfull({ closeModal }) {
   return (
-    <div>
+    <ModalComponent>
       <div className='modal-body terms-modal'>
         <h4>Well Done!</h4>
         <p>You have successfully created your first project.
@@ -12,7 +13,7 @@ function ModalSuccessfull({ closeModal }) {
       <div className='modal-footer'>
         <button type='button' className='btn btn-purple' onClick={closeModal}>Done</button>
       </div>
-    </div>
+    </ModalComponent>
   )
 }
 
