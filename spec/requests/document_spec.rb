@@ -57,7 +57,7 @@ describe Document, type: :request do
         field.document_rights.create(user: user, limit_for: :field)
       end
     end
-    project.documents.create!(Document.build_from_convention(convention, user).merge(user: user))
+    project.documents.create!(DocumentMain.build_from_convention(convention, user).merge(user: user))
     get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
     expect(json[0]['document_fields'].length).to eql(7)
   end

@@ -29,5 +29,5 @@ class User < ApplicationRecord
 
   has_many :projects
 
-  has_many :documents
+  has_many :documents, class_name: 'DocumentMain'
 end

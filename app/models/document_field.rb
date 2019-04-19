@@ -30,7 +30,10 @@ class DocumentField < ApplicationRecord
                     if: :codification_field?
 
   after_save :update_revision_number,
-             if: -> { parent.class.name == 'Document' && revision_number? }
+             if: -> { parent.class.name == 'DocumentRevision' && revision_number? }
+
+  after_save :update_revision_version,
+             if: -> { parent.class.name == 'DocumentVersion' && revision_version? }
 
   validates :kind,
             presence: true
@@ -129,5 +132,9 @@ class DocumentField < ApplicationRecord
 
   def update_revision_number
     parent.update(revision_number: value)
+  end
+
+  def update_revision_version
+    parent.update(revision_version: value)
   end
 end

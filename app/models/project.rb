@@ -9,5 +9,5 @@ class Project < ApplicationRecord
 
   has_many :conventions
 
-  has_many :documents
+  has_many :documents, class_name: 'DocumentMain'
 end

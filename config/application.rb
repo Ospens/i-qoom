@@ -17,6 +17,7 @@ module IQoom
     # the framework and any gems in your application.
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
     config.eager_load_paths << Rails.root.join('lib')
+    config.autoload_paths += %W(#{Rails.root}/app/models/document)
     config.generators do |g|
       g.template_engine  false
       g.jbuilder         false

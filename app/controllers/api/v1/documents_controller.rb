@@ -6,7 +6,7 @@ class Api::V1::DocumentsController < ApplicationController
 
   def new
     convention = @project.conventions.find_by(number: 1)
-    document = Document.build_from_convention(convention, signed_in_user)
+    document = DocumentMain.build_from_convention(convention, signed_in_user)
     render json: document
   end
 

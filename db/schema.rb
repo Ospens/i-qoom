@@ -85,16 +85,22 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
   end
 
   create_table "documents", force: :cascade do |t|
+    t.string "type"
+    t.bigint "main_id"
+    t.bigint "revision_id"
     t.integer "issued_for"
     t.string "email_title"
     t.boolean "email_title_like_document", default: true
     t.text "email_text"
     t.string "revision_number"
+    t.string "revision_version"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "project_id"
+    t.index ["main_id"], name: "index_documents_on_main_id"
     t.index ["project_id"], name: "index_documents_on_project_id"
+    t.index ["revision_id"], name: "index_documents_on_revision_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
@@ -129,6 +135,8 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"
   add_foreign_key "document_rights", "users"
+  add_foreign_key "documents", "documents", column: "main_id"
+  add_foreign_key "documents", "documents", column: "revision_id"
   add_foreign_key "documents", "projects"
   add_foreign_key "documents", "users"
 end
