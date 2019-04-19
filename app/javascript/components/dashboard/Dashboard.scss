@@ -289,7 +289,7 @@ button:disabled {
       padding: 10px;
       padding-bottom: 15px;
       padding-top: 15px;
-
+      border-bottom: 2px solid transparent;
       &.active {
         color: black;
         border-bottom: 2px solid black;
@@ -307,10 +307,23 @@ button:disabled {
   justify-content: center;
   flex-direction: column;
   .block-title {
+    font-size: 12px;
     color: #ced4da;
     display: flex;
     .dropdown {
       margin-left: auto;
+    }
+    .item {
+      .text {
+        display: flex !important;
+        .item-text {
+          align-self: flex-end;
+          margin-left: 5px;
+        }
+      }
+    }
+    .active-admin {
+      padding-left: 1em;
     }
   }
   .col-lg-4 {
@@ -403,15 +416,17 @@ button:disabled {
     text-decoration: none !important;
   }
 }
+
 .second-admin {
   margin-top: 8px;
 }
+
 .wait-confirm-admin {
   padding-left: 1em;
   color: #ff9b00;
 }
+
 .active-admin {
-  padding-left: 1em;
   color: #26bd5d;
 }
 
@@ -421,4 +436,12 @@ button:disabled {
 
 .project-title-editable {
   margin-top: 5em;
+}
+
+#member-managment {
+  min-height: 200px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding-left: 30px;
+  padding-right: 30px;
 }

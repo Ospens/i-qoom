@@ -7,7 +7,7 @@ function ModalExcellent({ closeModal, termsAccepted, nextStep}) {
       <div>
         <div className='modal-body terms-modal'>
           <h4>Excellent!</h4>
-          <p>An email has benn sent to the second project</p>
+          <p>An email has been sent to the second project</p>
           <p>administrator. Please note that the email address</p>
           <p>must be confirmed, before the status of the</p>
           <p>new administrator is set to "active"</p>

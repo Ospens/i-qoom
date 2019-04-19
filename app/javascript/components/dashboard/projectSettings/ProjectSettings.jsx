@@ -3,11 +3,13 @@ import { connect } from 'react-redux'
 import './ProjectSettings.scss'
 import { startFetchProject } from '../../../actions/projectActions'
 import ProjectDetails from './ProjectDetails'
+import MemberManagment from './MemberManagment'
+import classnames from 'classnames'
 
 class ProjectSettings extends Component {
 
   state = {
-    tab: 1
+    tab: 2
   }
 
   changeTab = (val) => {
@@ -29,22 +31,23 @@ class ProjectSettings extends Component {
         <div className='project-title-editable'>{name}</div>
         <div className='nav-bar'>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element active' onClick={() => this.changeTab(1)}>
+            <button className={classnames('nav-bar-element', { 'active': tab === 1 })} onClick={() => this.changeTab(1)}>
               Project details
             </button>
           </div>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element' onClick={() => this.changeTab(2)}>
+            <button className={classnames('nav-bar-element', { 'active': tab === 2 })} onClick={() => this.changeTab(2)}>
               Member managment
             </button>
           </div>
           <div className='nav-bar-item'>
-            <button className='nav-bar-element' onClick={() => this.changeTab(3)}>
+            <button className={classnames('nav-bar-element', { 'active': tab === 3 })} onClick={() => this.changeTab(3)}>
               Project status
             </button>
           </div>
         </div>
         {tab === 1 &&<ProjectDetails />}
+        {tab === 2 && <MemberManagment />}
       </div>
     )
   }

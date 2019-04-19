@@ -8,13 +8,16 @@ import { Dropdown } from 'semantic-ui-react'
 import dots from '../../../images/dots-horizontal'
 import trash_bucket from '../../../images/trash_bucket'
 import pencil from '../../../images/pencil-write'
+import ModalComponent from '../../../elements/ModalComponent'
 
 
 class ProjectDetails extends Component {
 
   state = {
     billingForm: false,
-    adminForm: false
+    adminForm: false,
+    adminErrorModal: false,
+    adminInspectModal: false
   }
 
   toggleModals = (key, val) => {
@@ -82,24 +85,83 @@ class ProjectDetails extends Component {
       </div>
     )
   }
+
   trigger = () => (
-    <span>
+    <ReactSVG
+      svgStyle={{ height: 15, width: 15 }}
+      src={dots}
+    />
+  )
+
+  openAdminErrorModal = () => (
+    <ModalComponent>
+      <div className='modal-body terms-modal'>
+        <h4>Sorry, you can't do that yet</h4>
+        <p>
+          Please note that you need two
+          <span className='active-admin'>active</span> administrators before you can change your
+          information or delete yourself as administrator
+        </p>
+      </div>
+      <div className='modal-footer'>
+        <button
+          type='button'
+          className='btn btn-purple'
+          onClick={() => this.toggleModals('adminErrorModal', false)}
+        >
+          Done
+        </button>
+      </div>
+    </ModalComponent>
+  )
+
+  openAdminInspectModal = () => (
+    <ModalComponent>
+      <div className='modal-body terms-modal'>
+        <h4>Awaiting confirmation</h4>
+        <p>
+          An email was successfully sent to <a href='#'>email.address@gmail.com</a>
+          January 22, 2019, 8.14 pm.
+        </p>
+        <p>The email was resent January 22, 2019, 9.32 pm.</p>
+      </div>
+      <div className='modal-footer'>
+        <button
+          type='button'
+          className='btn btn-purple'
+          onClick={() => this.toggleModals('adminInspectModal', false)}
+        >
+          Done
+        </button>
+      </div>
+    </ModalComponent>
+  )
+
+  renderItem = (pic, title, action) => (
+    <span onClick={action}>
       <ReactSVG
         svgStyle={{ height: 15, width: 15 }}
-        src={dots}
+        src={pic}
       />
+      <span className='item-text'>
+        {title}
+      </span>
     </span>
   )
 
   render() {
-    const { billingForm, adminForm } = this.state
+    const { billingForm, adminForm, adminErrorModal, adminInspectModal } = this.state
     const options = [
       {
-        key: 'user', content: <span><ReactSVG
-          svgStyle={{ height: 15, width: 15 }}
-          src={dots}
-        />Edit details</span> },
-      { key: 'settings', text: 'Delete' }
+        key: 'user',
+        content: this.renderItem(pencil, 'Edit details'),
+        onClick: () => this.toggleModals('adminErrorModal', true)
+      },
+      {
+        key: 'settings',
+        text: this.renderItem(trash_bucket, 'Delete'),
+        onClick: () => this.toggleModals('adminInspectModal', true)
+      }
     ]
     return (
       <React.Fragment>
@@ -116,10 +178,7 @@ class ProjectDetails extends Component {
             <div className='block-title'>
               <span>Project administrator 1</span>
               <span className='active-admin'>Active</span>
-              <Dropdown trigger={<ReactSVG
-                svgStyle={{ height: 15, width: 15 }}
-                src={dots}
-              />} options={options} pointing='top right' icon={null} />
+              <Dropdown trigger={this.trigger()} options={options} pointing='top right' icon={null} />
             </div>
             <AdministratorForm
               {...this.props}
@@ -128,10 +187,11 @@ class ProjectDetails extends Component {
             />
           </div>
           <div className='col-lg-4'>
-            <span className='block-title'>
-              Project administrator 2
-                <span className='wait-confirm-admin'>Awaiting confirmation</span>
-            </span>
+            <div className='block-title'>
+              <span>Project administrator 2</span>
+              <span className='wait-confirm-admin'>Awaiting confirmation</span>
+              <Dropdown trigger={this.trigger()} options={options} pointing='top right' icon={null} />
+            </div>
             <button
               type='button'
               className='btn btn-purple wide-button second-admin'
@@ -141,6 +201,8 @@ class ProjectDetails extends Component {
             </button>
           </div>
         </div>
+        {adminErrorModal && this.openAdminErrorModal()}
+        {adminInspectModal && this.openAdminInspectModal()}
         {billingForm &&
           <ModalBillingAddress
             closeModal={() => this.toggleModals('billingForm', false)}
@@ -161,4 +223,4 @@ class ProjectDetails extends Component {
   }
 }
  
-export default ProjectDetails;
+export default ProjectDetails
