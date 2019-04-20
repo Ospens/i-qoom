@@ -32,7 +32,7 @@ describe Document, type: :request do
 
   it '#edit' do
     title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document, email_title: title)
+    document = FactoryBot.create(:document_main, email_title: title)
     get "/api/v1/documents/#{document.id}/edit", headers: credentials(document.user)
     expect(response).to have_http_status(:success)
     expect(json['email_title']).to eql(title)
@@ -40,7 +40,7 @@ describe Document, type: :request do
 
   it '#update' do
     title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document, email_title: title)
+    document = FactoryBot.create(:document_main, email_title: title)
     patch "/api/v1/documents/#{document.id}", params: { document: { email_title: title } }, headers: credentials(document.user)
     expect(response).to have_http_status(:success)
     expect(json['email_title']).to eql(title)

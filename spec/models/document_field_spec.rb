@@ -54,7 +54,7 @@ RSpec.describe DocumentField, type: :model do
       end
 
       it do
-        subject.parent = FactoryBot.create(:document)
+        subject.parent = FactoryBot.create(:document_main)
         expect(subject.can_build?(user)).to eql(false)
       end
     end
@@ -140,5 +140,41 @@ RSpec.describe DocumentField, type: :model do
         expect(subject).to_not be_should_have_document_field_values
       end
     end
+  end
+
+  it 'revision_number_valid' do
+    rev1 = FactoryBot.create(:document_revision)
+    main = rev1.document_main
+    field = FactoryBot.create(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1)
+    rev1.document_fields << field
+    rev2 = FactoryBot.build(:document_revision, document_main: main)
+    rev2.document_fields.new(FactoryBot.attributes_for(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1))
+    expect(rev2).to_not be_valid
+    expect(rev2.errors.count).to eql(2)
+    rev2.document_fields.first.value = 2
+    expect(rev2).to be_valid
+    rev2.document_fields.first.value = 100
+    expect(rev2).to_not be_valid
+    rev2.document_fields.first.value = 99
+    expect(rev2).to be_valid
+  end
+
+  it 'revision_version_valid' do
+    ver1 = FactoryBot.build(:document_version)
+    rev = ver1.revision
+    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
+    ver1.document_fields << field
+    ver1.save!
+    expect(ver1.document_fields.first.value).to eql('0')
+    expect(ver1.revision_version).to eql('0')
+    ver2 = FactoryBot.build(:document_version, revision: rev)
+    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
+    ver2.document_fields << field
+    ver2.save!
+    expect(ver2.document_fields.first.value).to eql('1')
+    expect(ver2.revision_version).to eql('1')
+    ver1.save!
+    expect(ver1.document_fields.first.value).to eql('0')
+    expect(ver1.revision_version).to eql('0')
   end
 end
