@@ -402,6 +402,10 @@ button:disabled {
     position: absolute;
     left: 30px;
   }
+  &:hover {
+    background-color: rgba(0, 150, 250, 0.685) !important;
+    color: #fff !important;
+  }
 }
 
 .btn-purple {
@@ -444,4 +448,110 @@ button:disabled {
   border: 1px solid #ced4da;
   padding-left: 30px;
   padding-right: 30px;
+}
+
+.member-managment-buttons {
+  display: flex;
+  margin-left: auto;
+  align-self: center;
+  .btn {
+    margin-left: 10px;
+    min-width: 100px;
+  }
+}
+
+.mamber-managment-table {
+  border: none !important;
+  font-size: 12px !important;
+
+  th {
+    border-radius: 0 !important;
+    background: #fff !important;
+    border: none !important;
+    border-bottom: 1px solid grey !important;
+    padding: 5px !important;
+    color: lightgrey !important;
+    font-weight: 500 !important;
+  }
+
+  td {
+    max-width: 120px !important;
+    min-width: 180px;
+    align-content: center;
+    text-align: center;
+    &.member-id {
+      padding-top: 15px !important;
+      color:#0095f9;
+    }
+  }
+
+  .name-column {
+    display: inline-block;
+    .UserAvatar {
+      display: inline-block;
+      color: #fff;
+      margin-right: 5px;
+    }
+  }
+}
+
+span.divider {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 15px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  margin-right: 10px;
+  top: 3px;
+}
+
+.dropdown-menu {
+  min-width: 160px !important;
+  .dropdown-item {
+    color: grey;
+    path {
+      fill: grey;
+    }
+    display: flex;
+    align-items: flex-end;
+    span {
+      margin-left: 5px;
+    }
+  }
+}
+
+.dropdown-toggle {
+  min-width: 160px !important;
+  line-height: 1 !important;
+}
+
+.btn-group {
+  display: block !important;
+}
+
+.table-block {
+  min-height: 300px;
+  overflow: auto;
+  margin-top: 10px;
+}
+
+.with-icon {
+  display: flex !important;
+  span {
+    color: #0095f9;
+    height: 19px;
+    align-items: flex-end;
+    align-self: flex-end;
+    text-align: left;
+  }
+  &:hover {
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+span.tab-description {
+  color:#ced4da;
 }

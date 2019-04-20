@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import MemberTable from './MemberTable'
 
-class ActiveMembers extends Component {
+class PendingMembers extends Component {
 
   render() {
     return (
       <div>
-        <MemberTable/>
+        <MemberTable />
       </div>
     )
   }
 }
-
-export default ActiveMembers
+ 
+export default PendingMembers

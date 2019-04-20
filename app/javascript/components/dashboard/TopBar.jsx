@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import bell from '../../images/alarm-bell'
 import messages from '../../images/email-action-unread'
-import tmpAvatar from '../../images/colors'
 import './Dashboard.scss'
+import UserAvatar from 'react-user-avatar'
 
 class TopBar extends Component {
 
@@ -29,10 +29,7 @@ class TopBar extends Component {
           </li>
           <li className='nav-item'>
             <button type='button' className='nav-link btn-transparent'>
-              <ReactSVG
-                svgStyle={{ height: 30, width: 30 }}
-                src={tmpAvatar}
-              />
+              <UserAvatar size='32' name='Anna Danielsson' />
             </button>
           </li>
         </ul>

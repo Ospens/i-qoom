@@ -1,6 +1,15 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
+import ReactSVG from 'react-svg'
 import ActiveMembers from './memberManagment/ActiveMembers'
+import PendingMembers from './memberManagment/PendingMembers'
+import roleList from '../../../images/task-list-edit'
+import disciplineList from '../../../images/common-file-text'
+import blueCcheck from '../../../images/add_1'
+import DropDown from '../../../elements/DropDown'
+import pencil from '../../../images/pencil-write'
+import emailSend from '../../../images/email-action-send-2'
+import trash_bucket from '../../../images/trash_bucket'
 
 
 class MemberManagment extends Component {
@@ -12,6 +21,18 @@ class MemberManagment extends Component {
   changeTab = (val) => {
     this.setState({ tab: val })
   }
+
+  renderDropDownItems = (pic, name) => (
+    <a className='dropdown-item' href='#'>
+      <ReactSVG
+        svgStyle={{ height: 13, width: 13 }}
+        src={pic}
+      />
+      <span className='item-text'>
+        {name}
+      </span>
+    </a>
+  )
 
   render() {
     const { tab } = this.state
@@ -28,8 +49,49 @@ class MemberManagment extends Component {
               Pending members
             </button>
           </div>
+          <div className='member-managment-buttons'>
+            <div>
+              <button type='button' className='btn with-icon'>
+                <ReactSVG
+                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
+                  src={roleList}
+                />
+                <span>Role list</span>
+              </button>
+            </div>
+            <div>
+              <button type='button' className='btn with-icon'>
+                <ReactSVG
+                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
+                  src={disciplineList}
+                />
+                <span>Discipline list</span>
+              </button>
+            </div>
+            <div>
+              <button type='button' className='btn with-icon'>
+                <ReactSVG
+                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
+                  src={blueCcheck}
+                />
+                <span>Add member</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <span className='tab-description'>Manage members and grant access</span>
+          <DropDown
+            btnName='Action'
+            className='mt-4'
+          >
+            {this.renderDropDownItems(emailSend, 'Send invite')}
+            {this.renderDropDownItems(pencil, 'Edit member')}
+            {this.renderDropDownItems(trash_bucket, 'Delete')}
+          </DropDown>
         </div>
         {tab === 1 && <ActiveMembers/>}
+        {tab === 2 && <PendingMembers/>}
       </div>
     )
   }

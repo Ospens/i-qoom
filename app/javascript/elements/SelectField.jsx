@@ -13,7 +13,6 @@ function SelectField({input, options, value, errorField, id}) {
          {...input}
          options={options}
          value={value}
-         styles={{color: '#26276a'}}
          autoFocus={false}
          styles={colourStyles}
          onChange={value => input.onChange(value.value)}
