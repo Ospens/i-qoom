@@ -5,7 +5,11 @@ RSpec.describe Project, type: :model do
   context "creation_step" do
     subject { FactoryBot.build(:project) }
     it { is_expected.to define_enum_for(:creation_step)
-            .with_values([:admins, :name, :company_datum, :done])
+            .with_values([ :admins,
+                           :name,
+                           :company_datum,
+                           :billing_address,
+                           :done ])
             .with_prefix(:creation_step) }
   end
   
@@ -18,7 +22,10 @@ RSpec.describe Project, type: :model do
 
   context "creation step is not admins" do
     subject { FactoryBot.build(:project,
-                               creation_step: [:name, :company_datum, :done].sample) }
+                               creation_step: [ :name,
+                                                :company_datum,
+                                                :billing_address,
+                                                :done ].sample) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_length_of(:name).is_at_least(3)
                                                  .is_at_most(255) }

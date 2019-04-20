@@ -28,6 +28,9 @@ class Api::V1::ProjectsController < ApplicationController
   # it is mandatory to send :creation_step with a value,
   # to apply the correspondent validations
 
+  # "same_for_billing_address" checkbox case
+  # if this checkbox is checked company address will be copied
+  # to billing address
 
   def create
     @project = signed_in_user.projects.new(project_params)
@@ -58,16 +61,24 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def project_params
-    params.fetch(:project, { }).permit(:name,
-                                       :creation_step,
-                                       admins_attributes: [
-                                         :id,
-                                         :username,
-                                         :first_name,
-                                         :last_name,
-                                         :email,
-                                         :phone_code,
-                                         :phone_number
-                                          ])
+    params.fetch(:project,
+                 { }).permit(:name,
+                             :creation_step,
+                             admins_attributes: [
+                               :id,
+                               :username,
+                               :first_name,
+                               :last_name,
+                               :email,
+                               :phone_code,
+                               :phone_number
+                             ],
+                             company_datum_attributes: [
+                               :registration_number,
+                               :vat_id,
+                               :same_for_billing_address,
+                               company_address_attributes: Address.column_names,
+                               billing_address_attributes: Address.column_names
+                             ])
   end
 end

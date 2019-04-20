@@ -22,15 +22,18 @@ RSpec.describe Address, type: :model do
     end
   end
 
-  context "with project_company_datum" do
-    subject { FactoryBot.build(:address_with_project_company_datum) }
-    [ :company_name,
-      :street,
-      :house_number,
-      :city,
-      :postcode,
-      :country ].each do |column| 
-      it { is_expected.to validate_presence_of(column) }
+  [ "project_company_datum",
+    "project_company_billing_datum" ].each do |company_datum|
+    context "with #{company_datum}" do
+      subject { FactoryBot.build("address_with_#{company_datum}") }
+      [ :company_name,
+        :street,
+        :house_number,
+        :city,
+        :postcode,
+        :country ].each do |column| 
+        it { is_expected.to validate_presence_of(column) }
+      end
     end
   end
 end

@@ -139,6 +139,45 @@ describe "Project", type: :request do
           expect(JSON(response.body)["status"]).to eq("error")
         end
       end
+      context "creation_step 'company_datum'" do
+        it 'should get a status "success" and add a company datum to the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: {
+              project: FactoryBot.attributes_for(:project_company_datum_step,
+                company_datum_attributes: FactoryBot.attributes_for(:project_company_datum,
+                  company_address_attributes: FactoryBot.attributes_for(:address)))
+            }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:success)
+          expect(Project.find_by(id: project.id).company_datum).to be_present
+          expect(Project.find_by(id: project.id).company_datum.billing_address).not_to be_present
+          expect(JSON(response.body)["status"]).to eq("success")
+        end
+        it 'should get a status "success" and add billing address to the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: {
+              project: FactoryBot.attributes_for(:project_company_datum_step,
+                company_datum_attributes: FactoryBot.attributes_for(:project_company_datum,
+                  same_for_billing_address: "1",
+                  company_address_attributes: FactoryBot.attributes_for(:address)))
+            }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:success)
+          expect(Project.find_by(id: project.id).company_datum.billing_address).to be_present
+          expect(JSON(response.body)["status"]).to eq("success")
+        end
+        it 'should get a status "error" and don\'t
+            add a company datum to the project' do
+          patch "/api/v1/projects/#{project.id}",
+            params: {
+              project: FactoryBot.attributes_for(:project_company_datum_step)
+            }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(Project.find_by(id: project.id).company_datum).not_to be_present
+          expect(JSON(response.body)["status"]).to eq("error")
+        end
+      end
     end
 
     context "destroy" do
@@ -153,7 +192,7 @@ describe "Project", type: :request do
 
   end
 
-  context '"not logged in and should get a status "forbidden"' do
+  context 'not logged in and should get a status "forbidden"' do
     it 'index' do
       get "/api/v1/projects",
            headers: headers

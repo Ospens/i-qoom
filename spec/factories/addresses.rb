@@ -9,5 +9,8 @@ FactoryBot.define do
     factory :address_with_project_company_datum do
       association :project_company_datum
     end
+    factory :address_with_project_company_billing_datum do
+      association :project_company_datum
+    end
   end
 end
