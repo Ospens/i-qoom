@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_10_201837) do
+ActiveRecord::Schema.define(version: 2019_04_20_215333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,17 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
     t.index ["parent_type", "parent_id"], name: "index_document_fields_on_parent_type_and_parent_id"
   end
 
+  create_table "document_mains", force: :cascade do |t|
+    t.bigint "project_id"
+    t.index ["project_id"], name: "index_document_mains_on_project_id"
+  end
+
+  create_table "document_revisions", force: :cascade do |t|
+    t.bigint "document_main_id"
+    t.string "revision_number"
+    t.index ["document_main_id"], name: "index_document_revisions_on_document_main_id"
+  end
+
   create_table "document_rights", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "document_field_id"
@@ -85,22 +96,18 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string "type"
-    t.bigint "main_id"
-    t.bigint "revision_id"
     t.integer "issued_for"
     t.string "email_title"
     t.boolean "email_title_like_document", default: true
     t.text "email_text"
-    t.string "revision_number"
     t.string "revision_version"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "project_id"
-    t.index ["main_id"], name: "index_documents_on_main_id"
+    t.bigint "document_revision_id"
+    t.index ["document_revision_id"], name: "index_documents_on_document_revision_id"
     t.index ["project_id"], name: "index_documents_on_project_id"
-    t.index ["revision_id"], name: "index_documents_on_revision_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
@@ -132,11 +139,12 @@ ActiveRecord::Schema.define(version: 2019_04_10_201837) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conventions", "projects"
   add_foreign_key "document_field_values", "document_fields"
+  add_foreign_key "document_mains", "projects"
+  add_foreign_key "document_revisions", "document_mains"
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"
   add_foreign_key "document_rights", "users"
-  add_foreign_key "documents", "documents", column: "main_id"
-  add_foreign_key "documents", "documents", column: "revision_id"
+  add_foreign_key "documents", "document_revisions"
   add_foreign_key "documents", "projects"
   add_foreign_key "documents", "users"
 end

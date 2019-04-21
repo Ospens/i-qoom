@@ -144,30 +144,32 @@ RSpec.describe DocumentField, type: :model do
 
   it 'revision_number_valid' do
     rev1 = FactoryBot.create(:document_revision)
+    doc1 = FactoryBot.create(:document, revision: rev1)
     main = rev1.document_main
     field = FactoryBot.create(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1)
-    rev1.document_fields << field
+    doc1.document_fields << field
     rev2 = FactoryBot.build(:document_revision, document_main: main)
-    rev2.document_fields.new(FactoryBot.attributes_for(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1))
-    expect(rev2).to_not be_valid
-    expect(rev2.errors.count).to eql(2)
-    rev2.document_fields.first.value = 2
-    expect(rev2).to be_valid
-    rev2.document_fields.first.value = 100
-    expect(rev2).to_not be_valid
-    rev2.document_fields.first.value = 99
-    expect(rev2).to be_valid
+    doc2 = FactoryBot.build(:document, revision: rev2)
+    doc2.document_fields.new(FactoryBot.attributes_for(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1))
+    expect(doc2).to_not be_valid
+    expect(doc2.errors.count).to eql(2)
+    doc2.document_fields.first.value = 2
+    expect(doc2).to be_valid
+    doc2.document_fields.first.value = 100
+    expect(doc2).to_not be_valid
+    doc2.document_fields.first.value = 99
+    expect(doc2).to be_valid
   end
 
   it 'revision_version_valid' do
-    ver1 = FactoryBot.build(:document_version)
+    ver1 = FactoryBot.build(:document)
     rev = ver1.revision
     field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
     ver1.document_fields << field
     ver1.save!
     expect(ver1.document_fields.first.value).to eql('0')
     expect(ver1.revision_version).to eql('0')
-    ver2 = FactoryBot.build(:document_version, revision: rev)
+    ver2 = FactoryBot.build(:document, revision: rev)
     field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
     ver2.document_fields << field
     ver2.save!

@@ -5,13 +5,15 @@ class Api::V1::DocumentsController < ApplicationController
   authorize_resource :document
 
   def new
-    convention = @project.conventions.find_by(number: 1)
-    document = DocumentMain.build_from_convention(convention, signed_in_user)
+    convention = @project.conventions.active
+    document = Document.build_from_convention(convention, signed_in_user)
     render json: document
   end
 
   def create
-    document = @project.documents.new(document_params.merge(user: signed_in_user))
+    main = @project.document_mains.create
+    rev = main.revisions.create
+    document = rev.versions.new(document_params.merge(user: signed_in_user, project: @project))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -24,7 +26,9 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def update
-    if @document.update(document_params)
+    project = @document.revision.document_main.project
+    document = @document.revision.versions.new(document_params.merge(user: signed_in_user, project: project))
+    if document.save
       render json: @document.attributes_for_edit
     else
       render json: @document.errors, status: :unprocessable_entity

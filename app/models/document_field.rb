@@ -30,14 +30,14 @@ class DocumentField < ApplicationRecord
                     if: :codification_field?
 
   before_validation :set_revision_version,
-                    if: -> { parent.class.name == 'DocumentVersion' && revision_version? },
+                    if: -> { parent.class.name == 'Document' && revision_version? },
                     on: :create
 
   after_save :update_revision_number,
-             if: -> { parent.class.name == 'DocumentRevision' && revision_number? }
+             if: -> { parent.class.name == 'Document' && revision_number? }
 
   after_save :update_revision_version,
-             if: -> { parent.class.name == 'DocumentVersion' && revision_version? }
+             if: -> { parent.class.name == 'Document' && revision_version? }
 
   validates :kind,
             presence: true
@@ -53,7 +53,7 @@ class DocumentField < ApplicationRecord
            if: :should_have_document_field_values?
 
   validate :revision_number_valid,
-           if: -> { parent.class.name == 'DocumentRevision' && revision_number? },
+           if: -> { parent.class.name == 'Document' && revision_number? },
            on: :create
 
   scope :limit_by_value, -> {
@@ -126,9 +126,9 @@ class DocumentField < ApplicationRecord
   end
 
   def revision_number_valid
-    document = parent.document_main.revisions.last_revision
+    document = parent.revision.document_main.revisions.last_revision
     if document.present? && value.to_i <= document.revision_number.to_i
-      errors.add(:value, :revision_number_must_be_greater_last_reveision_number)
+      errors.add(:value, :revision_number_must_be_greater_last_revision_number)
     elsif value.to_i == 0 && value != '0' && value != '00'
       errors.add(:value, :revision_number_must_be_zero_or_greater)
     elsif value.to_i >= 100
@@ -137,7 +137,7 @@ class DocumentField < ApplicationRecord
   end
 
   def update_revision_number
-    parent.update(revision_number: value)
+    parent.revision.update(revision_number: value)
   end
 
   def update_revision_version

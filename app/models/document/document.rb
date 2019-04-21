@@ -1,4 +1,3 @@
-# Don't use this model. Use instead DocumentMain.
 class Document < ApplicationRecord
   enum issued_for: [ :information, :review ], _prefix: true
 
@@ -6,11 +5,15 @@ class Document < ApplicationRecord
 
   belongs_to :project
 
+  belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
+
   has_many :document_fields, as: :parent
 
   accepts_nested_attributes_for :document_fields
 
   validates_associated :document_fields
+
+  scope :last_version, -> { order(revision_version: :asc).last }
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')

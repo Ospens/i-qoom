@@ -32,7 +32,7 @@ describe Document, type: :request do
 
   it '#edit' do
     title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document_main, email_title: title)
+    document = FactoryBot.create(:document, email_title: title)
     get "/api/v1/documents/#{document.id}/edit", headers: credentials(document.user)
     expect(response).to have_http_status(:success)
     expect(json['email_title']).to eql(title)
@@ -40,7 +40,7 @@ describe Document, type: :request do
 
   it '#update' do
     title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document_main, email_title: title)
+    document = FactoryBot.create(:document, email_title: title)
     patch "/api/v1/documents/#{document.id}", params: { document: { email_title: title } }, headers: credentials(document.user)
     expect(response).to have_http_status(:success)
     expect(json['email_title']).to eql(title)
@@ -49,7 +49,7 @@ describe Document, type: :request do
   it '#index' do
     convention = FactoryBot.create(:convention, project: project)
     convention.document_fields.each do |field|
-      field.update(value: '0') if field.revision_number?
+      field.update!(value: '1') if field.revision_number?
       field.document_field_values.first.update(selected: true)
       if field.can_limit_by_value?
         field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
@@ -57,8 +57,9 @@ describe Document, type: :request do
         field.document_rights.create(user: user, limit_for: :field)
       end
     end
-    project.documents.create!(DocumentMain.build_from_convention(convention, user).merge(user: user))
-    get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
+    rev = FactoryBot.create(:document_revision)
+    rev.versions.create!(Document.build_from_convention(convention, user).merge(user: user, project: rev.document_main.project))
+    get "/api/v1/projects/#{rev.document_main.project.id}/documents", headers: credentials(user)
     expect(json[0]['document_fields'].length).to eql(7)
   end
 end

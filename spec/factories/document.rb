@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :document_version do
+  factory :document do
     user
     project
     revision { create(:document_revision) }
