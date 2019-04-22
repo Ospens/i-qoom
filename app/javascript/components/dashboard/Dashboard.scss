@@ -31,7 +31,10 @@ button:disabled {
 .user-info {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  margin-top: 10px;
+  ul {
+    margin-left: auto;
+  }
 
   .nav-link {
     path {
@@ -171,7 +174,7 @@ button:disabled {
     justify-content: center;
     align-items: center;
     text-align: center;
-    min-height: 300px;
+    min-height: 250px;
     padding-left: 30px;
     padding-right: 30px;
     &.terms-modal {
@@ -268,7 +271,7 @@ button:disabled {
   }
   .btn-back {
     display: flex;
-    padding-right: 150px !important;
+    margin-right: auto !important;
     text-transform: uppercase;
     font-size: 11px;
     color: grey;
@@ -458,7 +461,7 @@ button:disabled {
   margin-top: 5em;
 }
 
-#member-managment {
+#member-managment, #project-status {
   min-height: 200px;
   border-radius: 5px;
   border: 1px solid #ced4da;
@@ -578,11 +581,23 @@ span.tab-description {
 
 .btn-back-to-project {
   width: max-content;
-  margin-top: 10px;
+  margin-top: 20px;
   display: flex !important;
   align-items: center;
-  font-size: 12px !important;
+  font-size: 11px !important;
   color: rgb(143, 176, 179) !important;
+  &:hover,
+  &:active {
+    svg {
+      g {
+        fill: #7fc9fb;
+      }
+
+      path {
+        fill: white;
+      }
+    }
+  }
 }
 
 .confirm-msg {
@@ -619,4 +634,97 @@ span.tab-description {
   background-color: #f46b70 !important;
   border: none;
   color: #fff !important;
+}
+
+.statuses-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 10em;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  text-align: center !important;
+
+  &.blocked {
+    background-color: #fbffff;
+    border: 2px solid #f2f8f9;
+    cursor: pointer;
+
+    label {
+      margin-top: 10px;
+      color: #ccc;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+
+  &.active {
+    background-color: #fbffff;
+    border-right: 2px solid #f2f8f9;
+    border-left: 2px solid #f2f8f9;
+    border-bottom: 4px solid #03b342;
+    border-top: 4px solid #03b342;
+    cursor: pointer;
+
+    label {
+      margin-top: 10px;
+      color: grey;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    &:hover {
+      label {
+        margin-top: 10px;
+        color: #0096FA;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.available {
+    background-color: #fbffff;
+    border: 2px solid #f2f8f9;
+    cursor: pointer;
+
+    label {
+      margin-top: 10px;
+      color: #0096FA;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    &:hover {
+      background-color: #7fc9fb;
+      border-radius: 5px;
+      label {
+        margin-top: 10px;
+        color: white;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.btn-move-to-archive {
+  display: flex !important;
+  border: 1px solid #ccc !important;
+  &:hover, &:active {
+    background-color: #daf0ff;
+    color: #2fa7f9 !important;
+    path {
+      fill: #2fa7f9 !important;
+    }
+  }
+}
+
+.date-input {
+  text-align: center;
+}
+
+.react-datepicker-wrapper,
+.react-datepicker__input-container {
+  width: 100%;
 }

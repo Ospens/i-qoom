@@ -62,30 +62,35 @@ class ModalCreateProject extends Component {
           <ModalSecondAdmin
             closeModal={this.closeModalAndDiscardSteps}
             customSubmit={() => this.changeStep(1)}
+            changeStep={(val) => this.changeStep(val)}
           />
         }
         {step === 4 &&
           <ModalProjectName
             closeModal={this.closeModalAndDiscardSteps}
             customSubmit={(increase) => this.changeStep(increase)}
+            changeStep={(val) => this.changeStep(val)}
           />
         }
         {step === 5 &&
           <ModalCompanyData
             closeModal={this.closeModalAndDiscardSteps}
             customSubmit={(increase) => this.changeStep(increase)}
+            changeStep={(val) => this.changeStep(val)}
           />
         }
         {step === 6 &&
           <ModalBillingAddress
             closeModal={this.closeModalAndDiscardSteps}
             customSubmit={() => this.changeStep(1)}
+            changeStep={(val) => this.changeStep(val)}
           />
         }
         {step === 7 &&
           <ModalSuccessfull
             closeModal={this.closeModalAndDiscardSteps}
             customSubmit={(increase) => this.changeStep(increase)}
+            changeStep={(val) => this.changeStep(val)}
           />
         }
       </div>

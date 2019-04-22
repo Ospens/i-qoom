@@ -9,7 +9,7 @@ import ModalComponent from '../../../elements/ModalComponent'
 
 class ModalProjectName extends Component {
 
-  handleSubmit = (values) => {
+  handleSubmit = () => {
     const { changeStep } = this.props
     changeStep(1)
   }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'
 import { startFetchProject } from '../../../actions/projectActions'
 import ProjectDetails from './ProjectDetails'
+import ProjectStatus from './ProjectStatus'
 import MemberManagment from './MemberManagment'
 import arrowLeft from '../../../images/Arrow_2_left'
 import classnames from 'classnames'
@@ -11,10 +12,10 @@ import classnames from 'classnames'
 class ProjectSettings extends Component {
 
   state = {
-    tab: 2
+    tab: 1
   }
 
-  changeTab = (val) => {
+  changeTab = val => {
     this.setState({tab: val})
   }
 
@@ -29,7 +30,6 @@ class ProjectSettings extends Component {
     const { tab } = this.state
     return (
       <div className='project-settings'>
-        <h2>Project settings</h2>
         <div className='project-title-editable'>{name}</div>
 
         <div className='nav-bar'>
@@ -52,6 +52,7 @@ class ProjectSettings extends Component {
 
         {tab === 1 &&<ProjectDetails />}
         {tab === 2 && <MemberManagment />}
+        {tab === 3 && <ProjectStatus />}
 
         <Link to='/dashboard' className='btn btn-back-to-project'>
           <ReactSVG

@@ -4,8 +4,7 @@ import ReactSVG from 'react-svg'
 import {
   getFormSubmitErrors,
   reduxForm,
-  Field,
-  formValueSelector
+  Field
 } from 'redux-form'
 import InputField from '../InputField'
 import SelectField from '../SelectField'
@@ -24,7 +23,6 @@ class MemberDetailsForm extends Component {
     if (customSubmit) {
       customSubmit(values)
     }
-    console.log(values)
   }
 
   renderSubmitButtons = () => {

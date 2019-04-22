@@ -10,7 +10,8 @@ class TopBar extends Component {
   render() {
     return (
       <div className='user-info'>
-        <ul>
+        <h3>Project ovreview </h3>
+        <ul className=''>
           <li className='nav-item'>
             <button type='button' className='nav-link btn-transparent'>
               <ReactSVG

@@ -19,7 +19,6 @@ class CompanyForm extends Component {
     if (customSubmit) {
       customSubmit(values)
     }
-    console.log(values)
   }
 
   renderSubmitButtons = () => {

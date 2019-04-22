@@ -33,7 +33,6 @@ class ProjectOverview extends Component {
 
     return (
       <div>
-        <h2 className='page-title'>Project ovreview</h2>
         <div className='row row-projects'>
           {allProjects.map(project => (
             <div className='col-sm-4' key={project.id}>
