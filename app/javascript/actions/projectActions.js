@@ -53,7 +53,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
   )
 }
 
-export const startFetchProject = (id) => (dispatch, getState) => {
+export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().auth
   const headers = {
     Authorization: token

@@ -9,7 +9,7 @@ import CheckboxField from '../../elements/CheckboxField'
 import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
 import Right from '../../images/arrow-button-right'
-import countryList from './countiesCodes'
+import countryList from './countriesCodes'
 
 class SignUp extends Component {
   state = {

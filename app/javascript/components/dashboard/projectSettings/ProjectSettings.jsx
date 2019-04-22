@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import './ProjectSettings.scss'
+import { Link } from 'react-router-dom'
+import ReactSVG from 'react-svg'
 import { startFetchProject } from '../../../actions/projectActions'
 import ProjectDetails from './ProjectDetails'
 import MemberManagment from './MemberManagment'
+import arrowLeft from '../../../images/Arrow_2_left'
 import classnames from 'classnames'
 
 class ProjectSettings extends Component {
@@ -29,6 +31,7 @@ class ProjectSettings extends Component {
       <div className='project-settings'>
         <h2>Project settings</h2>
         <div className='project-title-editable'>{name}</div>
+
         <div className='nav-bar'>
           <div className='nav-bar-item'>
             <button className={classnames('nav-bar-element', { 'active': tab === 1 })} onClick={() => this.changeTab(1)}>
@@ -46,8 +49,17 @@ class ProjectSettings extends Component {
             </button>
           </div>
         </div>
+
         {tab === 1 &&<ProjectDetails />}
         {tab === 2 && <MemberManagment />}
+
+        <Link to='/dashboard' className='btn btn-back-to-project'>
+          <ReactSVG
+            svgStyle={{ height: 25, width: 25, marginRight: 15 }}
+            src={arrowLeft}
+          />
+          BACK TO THE PROJECT OVERVIEW
+        </Link>
       </div>
     )
   }

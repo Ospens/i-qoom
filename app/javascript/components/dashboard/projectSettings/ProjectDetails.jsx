@@ -4,10 +4,12 @@ import ReactSVG from 'react-svg'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
 import ModalFirstAdmin from '../projectOverview/ModalFirstAdmin'
-import { Dropdown } from 'semantic-ui-react'
+import { Dropdown, Ref } from 'semantic-ui-react'
 import dots from '../../../images/dots-horizontal'
-import trash_bucket from '../../../images/trash_bucket'
+import trashBucket from '../../../images/trash_bucket'
 import pencil from '../../../images/pencil-write'
+import searchIcon from '../../../images/search-alternate'
+import emailSend from '../../../images/email-action-send-2'
 import ModalComponent from '../../../elements/ModalComponent'
 
 
@@ -17,7 +19,8 @@ class ProjectDetails extends Component {
     billingForm: false,
     adminForm: false,
     adminErrorModal: false,
-    adminInspectModal: false
+    adminInspectModal: false,
+    confirm: false
   }
 
   toggleModals = (key, val) => {
@@ -42,13 +45,13 @@ class ProjectDetails extends Component {
     )
   }
 
-  modalButtonsAdmin = props => {
+  modalButtonsAdmin = () => {
     return (
       <div className='modal-footer'>
         <button
           type='button'
           className='btn btn-white'
-          onClick={() => this.toggleModals('billingForm', false)}
+          onClick={() => this.toggleModals('adminForm', false)}
         >
           Cancel
         </button>
@@ -72,6 +75,98 @@ class ProjectDetails extends Component {
           Billing address
         </button>
       </div>
+    )
+  }
+
+  renderNewSecondAdminColumn = () => {
+    return (
+      <React.Fragment>
+        <div className='block-title'>
+          <span>Project administrator 2</span>
+        </div>
+        <button
+          type='button'
+          className='btn btn-purple wide-button second-admin'
+          onClick={() => this.toggleModals('adminForm', true)}
+        >
+          Add project administrator
+        </button>
+      </React.Fragment>
+    )
+  }
+
+  renderFormSecondAdminColumn = () => {
+    const { confirm } = this.state
+    const options = [
+      {
+        key: 'resend_email',
+        text: this.renderItem(emailSend, 'Resend email')
+      },
+      {
+        key: 'check_status',
+        text: this.renderItem(searchIcon, 'Check status'),
+        onClick: () => this.toggleModals('adminInspectModal', true)
+      },
+      {
+        key: 'delete',
+        text: this.renderItem(trashBucket, 'Delete'),
+        onClick: () => this.toggleModals('adminInspectModal', true)
+      }
+    ]
+    const confirmMsg = (
+      <div className='msg-card'>
+        Do you really want to resend this invitation?
+        <button className='btn btn-white-grey'>
+          Cancel
+        </button>
+        <button className='btn btn-white-red'>
+          Resend
+        </button>
+      </div>
+    )
+
+    const confirmMsgDel = (
+      <div className='msg-card'>
+        Do you really want to delete the administrator?
+        <button className='btn btn-white-grey'>
+          Cancel
+        </button>
+        <button className='btn btn-white-red'>
+          Delete
+        </button>
+      </div>
+    )
+    return (
+      <React.Fragment>
+        <div className='block-title'>
+          <span>Project administrator 2</span>
+          <span className='wait-confirm-admin'>Awaiting confirmation</span>
+          <Dropdown trigger={this.trigger()} pointing='top right' icon={null}>
+            <Dropdown.Menu>
+              <Dropdown.Item >
+                <Dropdown trigger={this.renderItem(emailSend, 'Resend email')} pointing='right' icon={null}>
+                  <Dropdown.Menu className='confirm-msg'>
+                    <Dropdown.Item>{confirmMsg}</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Dropdown.Item>
+              <Dropdown.Item {...options[1]}/>
+              <Dropdown.Item >
+                <Dropdown trigger={this.renderItem(trashBucket, 'Delete')} pointing='right' icon={null}>
+                  <Dropdown.Menu className='confirm-msg'>
+                    <Dropdown.Item>{confirmMsgDel}</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
+        <AdministratorForm
+          {...this.props}
+          nameForm='edit_administrator_2'
+          customButtons={this.renderAdminButtons}
+        />
+      </React.Fragment>
     )
   }
 
@@ -138,7 +233,7 @@ class ProjectDetails extends Component {
   )
 
   renderItem = (pic, title, action) => (
-    <span onClick={action}>
+    <span onClick={action} className='text'>
       <ReactSVG
         svgStyle={{ height: 15, width: 15 }}
         src={pic}
@@ -159,10 +254,11 @@ class ProjectDetails extends Component {
       },
       {
         key: 'settings',
-        text: this.renderItem(trash_bucket, 'Delete'),
+        text: this.renderItem(trashBucket, 'Delete'),
         onClick: () => this.toggleModals('adminInspectModal', true)
       }
     ]
+
     return (
       <React.Fragment>
         <h5 className='tab-title'>Project details</h5>
@@ -187,18 +283,7 @@ class ProjectDetails extends Component {
             />
           </div>
           <div className='col-lg-4'>
-            <div className='block-title'>
-              <span>Project administrator 2</span>
-              <span className='wait-confirm-admin'>Awaiting confirmation</span>
-              <Dropdown trigger={this.trigger()} options={options} pointing='top right' icon={null} />
-            </div>
-            <button
-              type='button'
-              className='btn btn-purple wide-button second-admin'
-              onClick={() => this.toggleModals('adminForm', true)}
-            >
-              Add project administrator
-            </button>
+            {this.renderFormSecondAdminColumn()}
           </div>
         </div>
         {adminErrorModal && this.openAdminErrorModal()}

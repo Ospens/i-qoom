@@ -178,8 +178,10 @@ button:disabled {
       padding-left: 60px;
       padding-right: 60px;
     }
+
     &.project-name,
-    &.company-data {
+    &.company-data,
+    &.member-details {
       .form-group {
         width: 100%;
 
@@ -187,6 +189,16 @@ button:disabled {
           color: #c8d8d9;
           display: flex;
           align-self: flex-start;
+        }
+      }
+
+      .select-row {
+        .col-6:first-of-type {
+          padding-left: 0;
+        }
+
+        .col-6:last-of-type {
+          padding-right: 0;
         }
       }
     }
@@ -265,6 +277,10 @@ button:disabled {
       path {
         fill: grey;
       }
+    }
+
+    &.back-member-details {
+      padding-right: 100px !important;
     }
   }
   .form-check-label {
@@ -554,4 +570,53 @@ span.divider {
 
 span.tab-description {
   color:#ced4da;
+}
+
+.plus-icon {
+  margin-bottom: 5px;
+}
+
+.btn-back-to-project {
+  width: max-content;
+  margin-top: 10px;
+  display: flex !important;
+  align-items: center;
+  font-size: 12px !important;
+  color: rgb(143, 176, 179) !important;
+}
+
+.confirm-msg {
+  background-color: #475759 !important;
+  .msg-card {
+    color: white;
+    width: 150px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  &::after {
+    background-color: #475759 !important;
+  }
+  button {
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 0px;
+    padding-bottom: 2px;
+    margin-top: 10px;
+    margin-left: 10px;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.btn-white-grey {
+  background-color: #293333 !important;
+  border: none;
+  color: #fff !important;
+}
+
+.btn-white-red {
+  background-color: #f46b70 !important;
+  border: none;
+  color: #fff !important;
 }

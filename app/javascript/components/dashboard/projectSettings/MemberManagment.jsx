@@ -10,12 +10,14 @@ import DropDown from '../../../elements/DropDown'
 import pencil from '../../../images/pencil-write'
 import emailSend from '../../../images/email-action-send-2'
 import trash_bucket from '../../../images/trash_bucket'
+import AddMember from './memberManagment/AddMember'
 
 
 class MemberManagment extends Component {
 
   state = {
-    tab: 1
+    tab: 1,
+    addMemberModal: false
   }
 
   changeTab = (val) => {
@@ -35,7 +37,7 @@ class MemberManagment extends Component {
   )
 
   render() {
-    const { tab } = this.state
+    const { tab, addMemberModal } = this.state
     return (
       <div id='member-managment'>
         <div className='nav-bar'>
@@ -69,7 +71,7 @@ class MemberManagment extends Component {
               </button>
             </div>
             <div>
-              <button type='button' className='btn with-icon'>
+              <button type='button' className='btn with-icon' onClick={() => this.setState({ addMemberModal: true })}>
                 <ReactSVG
                   svgStyle={{ height: 13, width: 13, marginRight: 5 }}
                   src={blueCcheck}
@@ -91,7 +93,8 @@ class MemberManagment extends Component {
           </DropDown>
         </div>
         {tab === 1 && <ActiveMembers/>}
-        {tab === 2 && <PendingMembers/>}
+        {tab === 2 && <PendingMembers />}
+        {addMemberModal && <AddMember closeModal={() => this.setState({ addMemberModal: false })}/>}
       </div>
     )
   }
