@@ -36,7 +36,7 @@ class Ability
         convention.project.user == user
       end
       # Document
-      can [:new, :create], Document do |document|
+      can [:new, :create, :create_revision], Document do |document|
         document.project.user == user ||
           document.can_create?(user)
       end

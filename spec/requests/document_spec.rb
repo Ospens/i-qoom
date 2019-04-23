@@ -30,6 +30,18 @@ describe Document, type: :request do
     expect(json['email_title']).to eql(title)
   end
 
+  it '#create_revision' do
+    title = Faker::Lorem.sentence
+    rev = FactoryBot.create(:document_revision)
+    main = rev.document_main
+    main.update(project: project)
+    document = FactoryBot.create(:document, email_title: title, revision: rev)
+    post "/api/v1/documents/#{document.id}/create_revision", params: { document: { email_title: title } }, headers: credentials(user)
+    expect(response).to have_http_status(:success)
+    expect(json['email_title']).to eql(title)
+    expect(main.revisions.count).to eql(2)
+  end
+
   it '#edit' do
     title = Faker::Lorem.sentence
     document = FactoryBot.create(:document, email_title: title)

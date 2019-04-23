@@ -4,7 +4,6 @@ class Project < ApplicationRecord
             length: { minimum: 3,
                       maximum: 255 }
 
-
   belongs_to :user
 
   has_many :conventions
