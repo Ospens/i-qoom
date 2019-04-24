@@ -42,6 +42,7 @@ class Ability
       end
       can :index, Document
       can [:edit, :update], Document, user_id: user.id
+      can [:edit, :update], DmsSetting
     end
   end
 end

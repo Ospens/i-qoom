@@ -58,20 +58,41 @@ describe Document, type: :request do
     expect(json['email_title']).to eql(title)
   end
 
-  it '#index' do
-    convention = FactoryBot.create(:convention, project: project)
-    convention.document_fields.each do |field|
-      field.update!(value: '1') if field.revision_number?
-      field.document_field_values.first.update(selected: true)
-      if field.can_limit_by_value?
-        field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
-      else
-        field.document_rights.create(user: user, limit_for: :field)
+  context '#index' do
+    before do
+      rev1 = FactoryBot.create(:document_revision)
+      rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
+      @project = rev1.document_main.project
+      convention = FactoryBot.create(:convention, project: project)
+      convention.document_fields.each do |field|
+        field.document_field_values.first.update(selected: true)
+        if field.can_limit_by_value?
+          field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
+        else
+          field.document_rights.create(user: user, limit_for: :field)
+        end
       end
+      doc_attrs = Document.build_from_convention(convention, user)
+      revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+      revision_number['value'] = '1'
+      @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
+      revision_number['value'] = '2'
+      @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
     end
-    rev = FactoryBot.create(:document_revision)
-    rev.versions.create!(Document.build_from_convention(convention, user).merge(user: user, project: rev.document_main.project))
-    get "/api/v1/projects/#{rev.document_main.project.id}/documents", headers: credentials(user)
-    expect(json[0]['document_fields'].length).to eql(7)
+
+    it 'latest revision and latest version' do
+      get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
+      expect(json[0]['id']).to eql(@doc2.id)
+      expect(json[0]['document_fields'].length).to eql(7)
+      expect(json[1]).to be_blank
+    end
+
+    it 'all revisions and latest version of each revision' do
+      @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
+      get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
+      expect(json[0]['id']).to eql(@doc1.id)
+      expect(json[0]['document_fields'].length).to eql(7)
+      expect(json[1]['id']).to eql(@doc2.id)
+    end
   end
 end

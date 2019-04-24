@@ -7,5 +7,9 @@ class DocumentRevision < ApplicationRecord
 
   scope :last_revision, -> { order_by_revision_number.last }
 
-  scope :last_version, -> { versions.order(revision_version: :asc).last }
+  scope :latest_version_of_each_revision, -> { map(&:last_version) }
+
+  def last_version
+    versions.order(revision_version: :asc).last
+  end
 end

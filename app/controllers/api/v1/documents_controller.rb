@@ -48,7 +48,8 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def index
-    render json: @project.documents, include: :document_fields
+    documents = @project.document_mains.documents_available_for(signed_in_user)
+    render json: documents, include: :document_fields
   end
 
   private

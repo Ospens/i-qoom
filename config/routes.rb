@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
       resources :projects, except: [:new, :edit] do
         resources :documents, only: [:new, :create, :index]
+        resource :dms_settings, only: [:edit, :update]
       end
     end
   end
