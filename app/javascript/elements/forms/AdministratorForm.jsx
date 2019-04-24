@@ -28,7 +28,7 @@ class AdministratorForm extends Component {
   }
 
   render() {
-    const { submitErrors, customButtons, titleModal, label, mainClass, pristine } = this.props
+    const { submitErrors, customButtons, titleModal, label, mainClass, pristine, nameForm } = this.props
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -39,8 +39,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name='title'
-                  id='title'
+                  name={`${nameForm}_title`}
+                  id={`${nameForm}_title`}
                   errorField={submitErrors}
                   placeholder='Title'
                 />
@@ -48,8 +48,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name='surname'
-                  id='surname'
+                  name={`${nameForm}_surname`}
+                  id={`${nameForm}_surname`}
                   errorField={submitErrors}
                   placeholder='Surname'
                 />
@@ -59,8 +59,8 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name='first_name'
-                  id='first_name'
+                  name={`${nameForm}_first_name`}
+                  id={`${nameForm}_first_name`}
                   errorField={submitErrors}
                   placeholder='First name'
                 />
@@ -70,8 +70,8 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name='email'
-                  id='email'
+                  name={`${nameForm}_email`}
+                  id={`${nameForm}_email`}
                   errorField={submitErrors}
                   placeholder='Email address'
                 />
@@ -81,8 +81,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name='phone_code'
-                  id='phone_code'
+                  name={`${nameForm}_phone_code`}
+                  id={`${nameForm}_phone_code`}
                   errorField={submitErrors}
                   placeholder='+00'
                 />
@@ -90,8 +90,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name='phone_number'
-                  id='phone_number'
+                  name={`${nameForm}_phone_number`}
+                  id={`${nameForm}_phone_number`}
                   errorField={submitErrors}
                   placeholder='Phone number'
                 />

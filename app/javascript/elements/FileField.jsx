@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import plus from '../images/add_1'
+import trash from '../images/trash_bucket'
 
 class FileField extends Component {
 
@@ -10,29 +11,40 @@ class FileField extends Component {
     imagePreviewUrl: ''
   }
 
+  onInputChange = (e, input) => {
+    e.preventDefault()
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+    reader.readAsDataURL(file)
+    input.onChange(file)
+  }
+
+  renderLogo = (imagePreviewUrl) => {
+    return (
+      <div className='logo-container'>
+        <ReactSVG
+          svgStyle={{ height: 35 }}
+          className='trash-icon'
+          src={trash}
+          onClick={() => this.setState({ file: '', imagePreviewUrl: ''})}
+        />
+        <img src={imagePreviewUrl} /> 
+      </div>
+    )
+  }
+
   render() {
     const { imagePreviewUrl } = this.state
     const { input, dataAllowedFileExtensions } = this.props
-    let imagePreview = null;
-    if (imagePreviewUrl) {
-      imagePreview = (<img src={imagePreviewUrl} />);
-    }
-
-    const onInputChange = (e) => {
-      e.preventDefault()
-
-      let reader = new FileReader();
-      let file = e.target.files[0];
-
-      reader.onloadend = () => {
-        this.setState({
-          file: file,
-          imagePreviewUrl: reader.result
-        });
-      }
-      reader.readAsDataURL(file)
-      input.onChange(file)
-    }
+    const imagePreview = imagePreviewUrl ? this.renderLogo(imagePreviewUrl) : null
     const mainClass = classnames({'image-preview': imagePreview})
 
     return (
@@ -41,7 +53,7 @@ class FileField extends Component {
         {!imagePreview &&
           <div>
           <input
-            onChange={onInputChange}
+            onChange={(e) => this.onInputChange(e, input)}
             id='file_logo'
             type='file'
             className='inputfile'

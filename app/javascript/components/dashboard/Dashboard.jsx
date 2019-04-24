@@ -13,18 +13,16 @@ class Dashboard extends Component {
   render() {
     const { match } = this.props
     return (
-      <div className='container-fluid'>
-        <div className='row'>
-          <SideBar />
-          <div className='col-md-9 ml-sm-auto col-lg-10 px-5'>
-            <TopBar />
-            <main role='main' className='dashboard-content'>
-              <Switch>
-                <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
-                <Route path='/' component={ProjectOverview} />
-              </Switch>
-            </main>
-          </div>
+      <div className='dashboard-container'>
+        <SideBar />
+        <div className='main-content'>
+          <TopBar />
+          <main role='main' className='dashboard-content'>
+            <Switch>
+              <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
+              <Route path='/' component={ProjectOverview} />
+            </Switch>
+          </main>
         </div>
       </div>
     )

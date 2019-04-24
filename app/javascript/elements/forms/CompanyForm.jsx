@@ -46,7 +46,7 @@ class CompanyForm extends Component {
           <div className={mainClassName}>
             <h6>{headerForm}</h6>
             <div className='row'>
-              <div className='col-4'>
+              <div className='col-3'>
                 <div className='form-group'>
                   <div className='logo-uploader'>
                     <Field
@@ -60,7 +60,7 @@ class CompanyForm extends Component {
                   </div>
                 </div>
               </div>
-              <div className='col-8'>
+              <div className='col-9'>
                 <div className='row'>
                   <div className='form-group col-12'>
                     <InputField
@@ -164,7 +164,7 @@ class CompanyForm extends Component {
               </div>
             </div>
             {creating &&
-            <div className='form-group text-left'>
+              <div className='form-group text-left rect-checkbox'>
               <CheckboxField
                 name='billing_address'
                 checkBoxId='billing_address'
@@ -181,15 +181,11 @@ class CompanyForm extends Component {
   }
 }
 
-const selector = formValueSelector('create_company')
-
-const mapDispatchToProps = dispatch => ({
-  resetForm: (formName) => dispatch(reset(formName))
-})
+const selector = formValueSelector('company_form')
 
 const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('create_company')(state),
+  submitErrors: getFormSubmitErrors('company_form')(state),
   companyName: selector(state, 'company_name')
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'create_company' })(CompanyForm))
+export default connect(mapStateToProps)(reduxForm({ form: 'company_form' })(CompanyForm))

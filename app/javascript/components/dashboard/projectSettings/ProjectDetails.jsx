@@ -4,7 +4,7 @@ import ReactSVG from 'react-svg'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
 import ModalFirstAdmin from '../projectOverview/ModalFirstAdmin'
-import { Dropdown, Ref } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
 import dots from '../../../images/dots-horizontal'
 import trashBucket from '../../../images/trash_bucket'
 import pencil from '../../../images/pencil-write'
@@ -20,6 +20,7 @@ class ProjectDetails extends Component {
     adminForm: false,
     adminErrorModal: false,
     adminInspectModal: false,
+    adminFirstSaved: false,
     confirm: false
   }
 
@@ -173,8 +174,14 @@ class ProjectDetails extends Component {
   renderAdminButtons = pristine => {
     return (
       <div>
+        <span>
+          The changes were successfully saved!
+        </span>
         {!pristine &&
-          <button type='button' className='btn btn-purple wide-button mb-2' >
+          <button type='button'
+          className='btn btn-purple wide-button mb-2'
+          onClick={() => this.setState({ adminFirstSaved: true })}
+          >
             Save changes
           </button>}
       </div>
@@ -248,14 +255,16 @@ class ProjectDetails extends Component {
     const { billingForm, adminForm, adminErrorModal, adminInspectModal } = this.state
     const options = [
       {
-        key: 'user',
-        content: this.renderItem(pencil, 'Edit details'),
-        onClick: () => this.toggleModals('adminErrorModal', true)
+        key: 'edit_details',
+        text: this.renderItem(pencil, 'Edit details'),
+        onClick: () => this.toggleModals('adminErrorModal', true),
+        selected: false
       },
       {
         key: 'settings',
         text: this.renderItem(trashBucket, 'Delete'),
-        onClick: () => this.toggleModals('adminInspectModal', true)
+        onClick: () => this.toggleModals('adminInspectModal', true),
+        selected: false
       }
     ]
 
@@ -283,7 +292,7 @@ class ProjectDetails extends Component {
             />
           </div>
           <div className='col-lg-4'>
-            {this.renderFormSecondAdminColumn()}
+            {this.renderNewSecondAdminColumn()}
           </div>
         </div>
         {adminErrorModal && this.openAdminErrorModal()}

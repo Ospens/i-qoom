@@ -45,8 +45,8 @@ class BillingAddressForm extends Component {
             <div className='form-group'>
               <InputField
                 type='text'
-                name='company_name'
-                id='company_name'
+                name='billing_company_name'
+                id='billing_company_name'
                 errorField={submitErrors}
                 placeholder='Company name'
               />
@@ -55,8 +55,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-8'>
                 <InputField
                   type='text'
-                  name='registration_number'
-                  id='registration_number'
+                  name='billing_registration_number'
+                  id='billing_registration_number'
                   errorField={submitErrors}
                   placeholder='Registration number'
                 />
@@ -64,8 +64,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col col-4'>
                 <InputField
                   type='text'
-                  name='vat_id'
-                  id='vat_id'
+                  name='billing_vat_id'
+                  id='billing_vat_id'
                   errorField={submitErrors}
                   placeholder='VAT-ID'
                 />
@@ -75,8 +75,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-8'>
                 <InputField
                   type='text'
-                  name='street_name'
-                  id='street_name'
+                  name='billing_street_name'
+                  id='billing_street_name'
                   errorField={submitErrors}
                   placeholder='Street name'
                 />
@@ -84,8 +84,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-4'>
                 <InputField
                   type='text'
-                  name='street_number'
-                  id='street_number'
+                  name='billing_street_number'
+                  id='billing_street_number'
                   errorField={submitErrors}
                   placeholder='No.'
                 />
@@ -95,8 +95,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-8'>
                 <InputField
                   type='text'
-                  name='city'
-                  id='city'
+                  name='billing_city'
+                  id='billing_city'
                   errorField={submitErrors}
                   placeholder='City'
                 />
@@ -104,8 +104,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-4'>
                 <InputField
                   type='text'
-                  name='postcode'
-                  id='postcode'
+                  name='billing_postcode'
+                  id='billing_postcode'
                   errorField={submitErrors}
                   placeholder='Postcode'
                 />
@@ -114,8 +114,8 @@ class BillingAddressForm extends Component {
             <div className='form-group'>
               <InputField
                 type='text'
-                name='country'
-                id='country'
+                name='billing_country'
+                id='billing_country'
                 errorField={submitErrors}
                 placeholder='Country'
               />
@@ -124,8 +124,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-6'>
                 <InputField
                   type='text'
-                  name='district'
-                  id='district'
+                  name='billing_district'
+                  id='billing_district'
                   errorField={submitErrors}
                   placeholder='District'
                 />
@@ -133,8 +133,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-6'>
                 <InputField
                   type='text'
-                  name='district_court'
-                  id='district_court'
+                  name='billing_district_court'
+                  id='billing_district_court'
                   errorField={submitErrors}
                   placeholder='District court'
                 />
@@ -149,17 +149,13 @@ class BillingAddressForm extends Component {
 }
 const selector = formValueSelector('billing_address')
 
-const mapDispatchToProps = dispatch => ({
-})
-
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('billing_address')(state),
   companyName: selector(state, 'company_name')
 })
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(reduxForm({
   form: 'billing_address',
   destroyOnUnmount: false

@@ -10,7 +10,7 @@ class TopBar extends Component {
   render() {
     return (
       <div className='user-info'>
-        <h3>Project ovreview </h3>
+        <h3>Project overview </h3>
         <ul className=''>
           <li className='nav-item'>
             <button type='button' className='nav-link btn-transparent'>

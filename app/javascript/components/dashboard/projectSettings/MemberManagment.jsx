@@ -9,6 +9,7 @@ import blueCcheck from '../../../images/add_1'
 import DropDown from '../../../elements/DropDown'
 import pencil from '../../../images/pencil-write'
 import emailSend from '../../../images/email-action-send-2'
+import greenCheck from '../../../images/check_3'
 import trash_bucket from '../../../images/trash_bucket'
 import AddMember from './memberManagment/AddMember'
 
@@ -40,17 +41,8 @@ class MemberManagment extends Component {
     const { tab, addMemberModal } = this.state
     return (
       <div id='member-managment'>
-        <div className='nav-bar'>
-          <div className='nav-bar-item'>
-            <button className={classnames('nav-bar-element', { 'active': tab === 1 })} onClick={() => this.changeTab(1)}>
-              Active members
-            </button>
-          </div>
-          <div className='nav-bar-item'>
-            <button className={classnames('nav-bar-element', { 'active': tab === 2 })} onClick={() => this.changeTab(2)}>
-              Pending members
-            </button>
-          </div>
+        <div className='member-managment-first-line'>
+          <h5 className='tab-title'>Define default filters</h5>
           <div className='member-managment-buttons'>
             <div>
               <button type='button' className='btn with-icon'>
@@ -79,6 +71,23 @@ class MemberManagment extends Component {
                 <span>Add member</span>
               </button>
             </div>
+          </div>
+        </div>
+        <div className='nav-bar'>
+          <div className='nav-bar-item'>
+            <button className={classnames('nav-bar-element', { 'active': tab === 1 })} onClick={() => this.changeTab(1)}>
+              <span className='yellow-dot'></span>
+              Active members
+            </button>
+          </div>
+          <div className='nav-bar-item'>
+            <button className={classnames('nav-bar-element', { 'active': tab === 2 })} onClick={() => this.changeTab(2)}>
+              <ReactSVG
+                svgStyle={{ width: 10, marginRight: 15 }}
+                src={greenCheck}
+              />
+              Pending members
+            </button>
           </div>
         </div>
         <div>

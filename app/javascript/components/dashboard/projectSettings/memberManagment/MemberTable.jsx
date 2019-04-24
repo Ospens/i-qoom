@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { Table } from 'semantic-ui-react'
 import Select from 'react-select'
 import UserAvatar from 'react-user-avatar'
+import DropDown from '../../../../elements/DropDown'
 
 const tableData = [
-  { name: 'Anna Danielson', member_id: 'ArandomnameTest12345', employment: 2 },
-  { name: 'Anna Danielsson', member_id: 'ArandomnameTest12345', employment: 1 }
+  { name: 'Anna Danielson', member_id: 'ArandomnameTest12dsf345', employment: 2, access: { DMS: true } },
+  { name: 'Anna Danielsson', member_id: 'ArandomnameTest12345', employment: 1, access: { DMS: true } }
 ]
 
 const columns = [
@@ -20,21 +21,14 @@ const columns = [
 const accessOptions = [
   {
     label: 'Contract MS',
-    options: [
-      {
-        label: 'Module master',
-        value: 'Module master'
-      }
-    ],
+    modulemaster: true
+  },
+  {
     label: 'Document MS',
-    options: [
-      {
-        label: 'Module master',
-        value: 'Module master'
-      }
-    ],
+    modulemaster: true
   }
 ]
+
 const emplOptions = [
   { value: 'Employee', label: 'Employee' },
   { value: 'Internal contractor', label: 'Internal contractor' },
@@ -69,13 +63,14 @@ class MemberTable extends Component {
     data: tableData,
     direction: null,
   }
+
   handleSort = clickedColumn => () => {
     const { column, data, direction } = this.state
 
     if (column !== clickedColumn) {
       this.setState({
         column: clickedColumn,
-        data: _.sortBy(data, [clickedColumn]),
+        // data: _.sortBy(data, [clickedColumn]),
         direction: 'ascending',
       })
 
@@ -88,6 +83,19 @@ class MemberTable extends Component {
     })
   }
 
+  renderAccessOptions = (label, modeleMaster, checked, member_id) => {
+    const className = modeleMaster ? 'subitem' : 'mainitem'
+    return (
+      <a className={`dropdown-item ${className}`} href='#'>
+        <span>{label}</span>
+        <label className='switch ml-2'>
+          <input type='checkbox' id={member_id} defaultChecked={checked}/>
+          <span className='slider round' />
+        </label>
+      </a>
+    )
+  }
+
   render() {
     const { column, data, direction } = this.state
     return (
@@ -95,6 +103,15 @@ class MemberTable extends Component {
         <Table sortable className='mamber-managment-table'>
           <Table.Header>
             <Table.Row>
+              <Table.HeaderCell className='table-checkbox'>
+                <div>
+                  <input
+                    type='checkbox'
+                    id='check_all'
+                  />
+                  <label htmlFor='check_all'></label>
+                </div>
+              </Table.HeaderCell>
               {columns.map(({ title, divider }) => (
                 <Table.HeaderCell
                   sorted={column === title ? direction : null}
@@ -110,8 +127,18 @@ class MemberTable extends Component {
           <Table.Body>
             {data.map(({ member_id, name, employment }) => (
               <Table.Row key={name}>
+                <Table.Cell className='table-checkbox'>
+                  <div>
+                    <input
+                      type='checkbox'
+                      id={member_id}
+                    />
+                    <label htmlFor={member_id}></label>
+                  </div>
+                </Table.Cell>
                 <Table.Cell className='name-column'>
                   <UserAvatar size='24' name={name} />
+                  <span className='master-icon'>M</span>
                   {name}
                 </Table.Cell>
                 <Table.Cell className='member-id'><span>{member_id}</span></Table.Cell>
@@ -148,16 +175,21 @@ class MemberTable extends Component {
                     className='form-control-select'
                   />
                 </Table.Cell>
-                <Table.Cell>
-                  <Select
-                    styles={colourStyles}
-                    onChange={this.handleChange}
-                    options={accessOptions}
-                    defaultValue={accessOptions[employment]}
-                    autoFocus={false}
-                    maxMenuHeight='110'
-                    className='form-control-select'
-                  />
+                <Table.Cell className='access-column'>
+                  <DropDown
+                    className='dropdown-with-switch'
+                    btnName='DMS, CMS'
+                    btnClass='btn btn-for-switch'
+                  >
+                    {accessOptions.map(({ label, modulemaster }) => {
+                      return (
+                        <React.Fragment key={label}>
+                          {this.renderAccessOptions(label, false, true, member_id)}
+                          {modulemaster && this.renderAccessOptions('Module master', true, false, member_id)}
+                        </React.Fragment>
+                      )
+                    })}
+                  </DropDown>
                 </Table.Cell>
               </Table.Row>
             ))}
