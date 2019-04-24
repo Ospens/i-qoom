@@ -6,6 +6,8 @@ class Project < ApplicationRecord
                         :billing_address,
                         :done ],
                       _prefix: true
+
+  after_save :update_creation_step_to_done, unless: :creation_step_done?
   
   validates :name,
             presence: true,
@@ -27,6 +29,10 @@ class Project < ApplicationRecord
   validates_presence_of :company_datum,
     unless: -> { creation_step_admins? || creation_step_name? }
 
-  # update status to done if valid? method
+  private
+
+  def update_creation_step_to_done
+    update(creation_step: "done")
+  end
 
 end

@@ -41,4 +41,18 @@ RSpec.describe Project, type: :model do
   it { is_expected.to accept_nested_attributes_for(:admins) }
   it { is_expected.to validate_presence_of(:admins) }
 
+
+  context "update_creation_step_to_done" do
+    context "when is not ready" do
+      subject { FactoryBot.build(:project, creation_step: :company_datum,
+                company_datum: FactoryBot.build(:project_company_datum_without_billing_address)) }
+      it { expect(subject.creation_step).not_to eq("done") }
+    end
+    context "when is ready" do
+      subject { FactoryBot.create(:project_company_datum_step) }
+
+      it { expect(subject.creation_step).to eq("done") }
+    end
+  end
+
 end

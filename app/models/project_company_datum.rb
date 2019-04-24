@@ -20,7 +20,9 @@ class ProjectCompanyDatum < ApplicationRecord
   validates_presence_of :vat_id
 
   validates_presence_of :billing_address,
-    if: -> { project.present? && project.creation_step_billing_address? }
+    if: -> { project.present? &&
+             ( project.creation_step_billing_address? ||
+               project.creation_step_done? ) }
 
   private
 
