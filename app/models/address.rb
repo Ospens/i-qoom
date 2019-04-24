@@ -17,6 +17,7 @@ class Address < ApplicationRecord
                         :postcode,
                         :country,
                         if: -> {
-                          project_company_datum.present?
+                          project_company_datum.present? ||
+                          project_company_billing_datum.present?
                         }
 end

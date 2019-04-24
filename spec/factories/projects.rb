@@ -9,5 +9,9 @@ FactoryBot.define do
     factory :project_company_datum_step do
       creation_step { "company_datum" }
     end
+    factory :project_done_step do
+      creation_step { "done" }
+      association :company_datum, factory: :project_company_datum
+    end
   end
 end

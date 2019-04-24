@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Project, type: :model do
 
   context "creation_step" do
-    subject { FactoryBot.build(:project) }
+    subject { FactoryBot.build(:project_done_step) }
     it { is_expected.to define_enum_for(:creation_step)
             .with_values([ :admins,
                            :name,

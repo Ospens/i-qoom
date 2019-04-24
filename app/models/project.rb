@@ -25,7 +25,7 @@ class Project < ApplicationRecord
   validates_presence_of :admins
 
   validates_presence_of :company_datum,
-    if: -> { creation_step_company_datum? || creation_step_done? }
+    unless: -> { creation_step_admins? || creation_step_name? }
 
   # update status to done if valid? method
 
