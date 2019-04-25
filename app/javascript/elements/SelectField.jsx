@@ -20,11 +20,13 @@ const IndicatorSeparator = ({ innerProps }) => {
 
 function SelectField({ input, options, value, defaultValue, errorField, id}) {
   const errorInfo = errorField[id]
-  const borderColor = errorInfo ? 'red' : '#ced4da'
+  const borderColor = errorInfo ? '#fd0944' : '#ced4da'
+  const borderWidth = errorInfo ? '2px' : '1px'
+  const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor, zIndex: '5' }),
+    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow, zIndex: '5' }),
     menu: styles => ({ ...styles, marginTop: '-2px', zIndex: '4' }),
-    option: (styles, { data, isDisabled, isFocused, isSelected }) => ({
+    option: (styles, { isFocused }) => ({
       ...styles,
       color: isFocused ? '#2fa7f9' : 'lightgray'
     })

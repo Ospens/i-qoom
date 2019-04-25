@@ -10,7 +10,8 @@ const App = ({ authed }) => (
   <BrowserRouter>
     <Switch>
       <Route exact path='/' component={LandingPage} />
-      <PrivateRoute authed={authed} path='/dashboard' component={Dashboard} routeName='Dashboard' />
+      <PrivateRoute authed={authed} path='/dashboard' component={Dashboard}/>
+      <PrivateRoute authed={authed} path='/admin_panel' component={Dashboard}/>
     </Switch>
   </BrowserRouter>
 )
