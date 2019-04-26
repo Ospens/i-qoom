@@ -8,12 +8,13 @@ import Logo from '../../images/Logo_header'
 import Left from '../../images/arrow-button-left'
 import bell from '../../images/alarm-bell'
 import messages from '../../images/email-action-unread'
-import tmpAvatar from '../../images/colors'
+import UserAvatar from 'react-user-avatar'
 
 class LandingPageHeader extends Component {
 
   render() {
-    const { toggleSignInForm,
+    const {
+      toggleSignInForm,
       showSignInSlider,
       toggleSignUp,
       showSignUp,
@@ -82,12 +83,11 @@ class LandingPageHeader extends Component {
                       />
                     </button>
                   </li>
-                  <li className='nav-item'>
+                <li className='nav-item user-info-avatar'>
                     <Link className='nav-link btn-transparent' to='/dashboard'>
-                        <ReactSVG
-                          svgStyle={{ height: 30, width: 30 }}
-                          src={tmpAvatar}
-                        />
+                      <button type='button' className='nav-link btn-transparent'>
+                        <UserAvatar size='42' name='Anna Danielsson' />
+                      </button>
                     </Link>
                   </li>
                 </ul>

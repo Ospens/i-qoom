@@ -43,7 +43,7 @@ class Reviews extends Component {
         {reviews.map((el, i) => {
           return (
             <div className='card text-left' key={i}>
-              <div className='user-info row'>
+              <div className='reviews-user-info row'>
                 <ReactSVG
                   src={el.image}
                   svgStyle={{ width: '100%', height: '100%' }}

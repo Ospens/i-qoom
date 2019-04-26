@@ -54,12 +54,13 @@ class LandingPage extends Component {
       toggleSignUp: this.toggleSignUp,
       toggleExamples: this.toggleExamples
     }
-    const nonMain = location.pathname !== '/'
+
+    const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel'
     return (
       <div className='landing-page'>
         <LandingPageHeader {...mainProps} nonMain={nonMain} />
         <Switch>
-          <Route exact path='/' render={() => <MainContent {...mainProps} />} />
+          <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} />} />
           <Route path='/imprint' component={Imprint} />
           <Route path='/Terms' component={Terms} />
         </Switch>

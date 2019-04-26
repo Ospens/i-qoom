@@ -1,0 +1,93 @@
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #221f6d;
+  flex-shrink: 0;
+  justify-content: space-between;
+
+  .navbar-brand {
+    flex-shrink: 0;
+  }
+
+  .active-project {
+    display: flex;
+    padding: 20px;
+    color: #fff;
+    border-radius: 0 25px 0 0;
+    background: rgba(24, 82, 181, 1);
+    background: -moz-linear-gradient(top, rgba(24, 82, 181, 1) 0%, rgba(24, 82, 181, 1) 40%, rgba(30, 53, 140, 1) 74%, rgba(34, 31, 109, 1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(24, 82, 181, 1)), color-stop(40%, rgba(24, 82, 181, 1)), color-stop(74%, rgba(30, 53, 140, 1)), color-stop(100%, rgba(34, 31, 109, 1)));
+    background: -webkit-linear-gradient(top, rgba(24, 82, 181, 1) 0%, rgba(24, 82, 181, 1) 40%, rgba(30, 53, 140, 1) 74%, rgba(34, 31, 109, 1) 100%);
+    background: -o-linear-gradient(top, rgba(24, 82, 181, 1) 0%, rgba(24, 82, 181, 1) 40%, rgba(30, 53, 140, 1) 74%, rgba(34, 31, 109, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(24, 82, 181, 1) 0%, rgba(24, 82, 181, 1) 40%, rgba(30, 53, 140, 1) 74%, rgba(34, 31, 109, 1) 100%);
+    background: linear-gradient(to bottom, rgba(24, 82, 181, 1) 0%, rgba(24, 82, 181, 1) 40%, rgba(30, 53, 140, 1) 74%, rgba(34, 31, 109, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1852b5', endColorstr='#221f6d', GradientType=0);
+
+    .project-description {
+      display: flex;
+      flex-direction: column;
+
+      .active-project-text {
+        color: lightgray;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 10px;
+      }
+
+      .active-project-title {
+        color: #fff;
+        font-size: 15px;
+      }
+    }
+
+    .active-project-cogs {
+      margin-left: 30px;
+
+      path,
+      circle {
+        fill: #fff;
+      }
+    }
+  }
+
+  .sidebar-sticky {
+    display: flex;
+    flex-direction: column;
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .nav-items {
+      margin-top: 50px;
+
+      .nav-item {
+        padding-left: 20px;
+        padding-right: 20px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+
+        .nav-link {
+          line-height: 30px !important;
+          text-transform: initial;
+          font-size: 17px;
+          font-weight: 600;
+        }
+
+        &.active {
+          border-left: 2px solid #fff;
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+
+  .side-bar-logo {
+    align-self: flex-start;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+}
