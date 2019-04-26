@@ -1,6 +1,8 @@
 class ProjectCompanyDatum < ApplicationRecord
   attr_accessor :same_for_billing_address
 
+  has_one_attached :logo
+
   before_validation :check_if_same_for_billing_address
 
   belongs_to :project

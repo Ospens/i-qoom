@@ -74,6 +74,7 @@ class Api::V1::ProjectsController < ApplicationController
                                :phone_number
                              ],
                              company_datum_attributes: [
+                               :logo,
                                :registration_number,
                                :vat_id,
                                :same_for_billing_address,
