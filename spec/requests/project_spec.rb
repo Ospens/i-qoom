@@ -178,6 +178,60 @@ describe "Project", type: :request do
           expect(JSON(response.body)["status"]).to eq("error")
         end
       end
+      context "creation_step 'billing_address'" do
+        it 'should get a status "success" and add a billing_address to the project' do
+          project_without_billing_address =
+            FactoryBot.create(:project_done_step,
+                              creation_step: "company_datum",
+                              user_id: user.id)
+          project_without_billing_address.company_datum
+                                         .billing_address
+                                         .destroy
+          patch "/api/v1/projects/#{project_without_billing_address.id}",
+            params: {
+              project: {
+                creation_step: "billing_address",
+                company_datum_attributes: {
+                  billing_address_attributes: FactoryBot.attributes_for(:address)
+                }
+              }
+            }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+
+          expect(response).to have_http_status(:success)
+          expect(Project.find_by(id: project_without_billing_address.id)
+                                .company_datum.billing_address).to be_present
+          expect(Project.find_by(id: project_without_billing_address.id)
+                                .creation_step).to eq("done")
+          expect(JSON(response.body)["status"]).to eq("success")
+        end
+        it "should get a status 'error' and don't
+            add a billing_address to the project" do
+          project_without_billing_address =
+            FactoryBot.create(:project_done_step,
+                              creation_step: "company_datum",
+                              user_id: user.id)
+          project_without_billing_address.company_datum
+                                         .billing_address
+                                         .destroy
+          patch "/api/v1/projects/#{project_without_billing_address.id}",
+            params: {
+              project: {
+                creation_step: "billing_address",
+                company_datum_attributes: {
+                  billing_address_attributes: { street: "unknown" }
+                }
+              }
+            }.to_json,
+            headers: headers.merge("Authorization" => auth_token)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(Project.find_by(id: project_without_billing_address.id)
+                                       .company_datum
+                                       .billing_address).not_to be_present
+          expect(JSON(response.body)["status"]).to eq("error")
+        end
+      end
     end
 
     context "destroy" do
