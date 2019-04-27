@@ -3,25 +3,26 @@ import classnames from 'classnames'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import CKEditor from '@ckeditor/ckeditor5-react'
-//import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import InlineEditor from '@ckeditor/ckeditor5-editor-inline/src/inlineeditor'
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold'
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
 import Heading from '@ckeditor/ckeditor5-heading/src/heading'
+//import '@ckeditor/ckeditor5-basic-styles'
 
 class FirstCard extends Component {
 
 
   renderForAdmin = () => (
       <CKEditor
-        editor={InlineEditor}
+      editor={ClassicEditor}
         /*config={{
           toolbar: ['heading', '|', 'bulletedList', 'numberedList', 'alignment', 'undo', 'redo']
         }}*/
         config={{
           plugins: [Alignment, Bold, Italic, Heading],
-          toolbar: ['Heading', '|', 'Bold', 'Italic', 'Alignment', 'Link', 'List', 'ListUI', 'BlockQuote', 'Undo', 'Redo'],
+          toolbar: ['Heading', '|', 'Bold', 'Italic', 'Alignment'],
           removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload']
         }}
         data="<p>Hello from CKEditor 5!</p>"

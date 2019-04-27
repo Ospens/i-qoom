@@ -3,44 +3,21 @@ const {
 } = require('@ckeditor/ckeditor5-dev-utils')
 const cssModuleRegex = /\.module\.css$/
 const cssRegex = /\.css$/
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   module: {
-    rules: [
+    loaders: [
       {
         test: cssRegex,
         exclude: [
           cssModuleRegex,
           /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css/,
         ]
-      },
-      {
+      }, {
         test: cssModuleRegex,
         exclude: [
           /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css/,
-        ]
-      },
-      {
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-        use: ['raw-loader']
-      },
-      {
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css/,
-        use: [{
-            loader: 'style-loader',
-            options: {
-              singleton: true
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: styles.getPostCssConfig({
-              themeImporter: {
-                themePath: require.resolve('@ckeditor/ckeditor5-theme-lark')
-              },
-              minify: true
-            })
-          }
         ]
       },
       {
