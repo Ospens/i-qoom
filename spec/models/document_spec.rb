@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DocumentMain, type: :model do
+RSpec.describe Document, type: :model do
   it '#build_from_convention' do
     convention = FactoryBot.create(:convention)
     user = FactoryBot.create(:user)

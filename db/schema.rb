@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 2019_04_24_044836) do
     t.string "value"
     t.string "title"
     t.integer "position"
-    t.boolean "selected"
+    t.boolean "selected", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["document_field_id"], name: "index_document_field_values_on_document_field_id"

@@ -5,7 +5,7 @@ class CreateDocumentFieldValues < ActiveRecord::Migration[5.2]
       t.string :value
       t.string :title
       t.integer :position
-      t.boolean :selected
+      t.boolean :selected, default: false
 
       t.timestamps
     end

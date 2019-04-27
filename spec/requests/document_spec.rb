@@ -61,10 +61,12 @@ describe Document, type: :request do
   context '#index' do
     before do
       rev1 = FactoryBot.create(:document_revision)
-      rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
       @project = rev1.document_main.project
       convention = FactoryBot.create(:convention, project: project)
       convention.document_fields.each do |field|
+        if field.document_number?
+          field.update(value: rand(1000..9999))
+        end
         field.document_field_values.first.update(selected: true)
         if field.can_limit_by_value?
           field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
@@ -77,6 +79,7 @@ describe Document, type: :request do
       revision_number['value'] = '1'
       @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
       revision_number['value'] = '2'
+      rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
       @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
     end
 

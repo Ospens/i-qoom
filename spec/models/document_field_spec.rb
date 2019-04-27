@@ -146,18 +146,20 @@ RSpec.describe DocumentField, type: :model do
     rev1 = FactoryBot.create(:document_revision)
     doc1 = FactoryBot.create(:document, revision: rev1)
     main = rev1.document_main
-    field = FactoryBot.create(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1)
-    doc1.document_fields << field
-    rev2 = FactoryBot.build(:document_revision, document_main: main)
-    doc2 = FactoryBot.build(:document, revision: rev2)
-    doc2.document_fields.new(FactoryBot.attributes_for(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 1))
+    field = FactoryBot.create(:document_field,
+                              kind: :codification_field,
+                              codification_kind: :revision_number,
+                              value: 1,
+                              parent: doc1)
+    rev2 = main.revisions.create
+    doc2 = rev2.versions.new(doc1.reload.attributes_for_edit)
     expect(doc2).to_not be_valid
     expect(doc2.errors.count).to eql(2)
-    doc2.document_fields.first.value = 2
+    doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '2'
     expect(doc2).to be_valid
-    doc2.document_fields.first.value = 100
+    doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '100'
     expect(doc2).to_not be_valid
-    doc2.document_fields.first.value = 99
+    doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '99'
     expect(doc2).to be_valid
   end
 
@@ -167,16 +169,62 @@ RSpec.describe DocumentField, type: :model do
     field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
     ver1.document_fields << field
     ver1.save!
-    expect(ver1.document_fields.first.value).to eql('0')
+    expect(ver1.document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.value).to eql('0')
     expect(ver1.revision_version).to eql('0')
-    ver2 = FactoryBot.build(:document, revision: rev)
-    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
-    ver2.document_fields << field
+    ver2 = rev.versions.new(ver1.attributes_for_edit)
     ver2.save!
-    expect(ver2.document_fields.first.value).to eql('1')
+    expect(ver2.document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.value).to eql('1')
     expect(ver2.revision_version).to eql('1')
     ver1.save!
-    expect(ver1.document_fields.first.value).to eql('0')
+    expect(ver1.document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.value).to eql('0')
     expect(ver1.revision_version).to eql('0')
+  end
+
+  context 'prevents codification fields updating by' do
+    it 'updating document' do
+      doc = FactoryBot.create(:document)
+      field = doc.document_fields.find_by(codification_kind: DocumentField.codification_kinds[:originating_company])
+      field.document_field_values.update_all(selected: false)
+      value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
+      value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
+      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs['document_fields_attributes']
+        .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
+        .detect{ |i| i['value'] == value1.value }['value'] = '333'
+      doc.assign_attributes(doc_attrs)
+      expect(doc).to_not be_valid
+    end
+
+    it 'creating new version' do
+      rev = FactoryBot.create(:document_revision)
+      doc = FactoryBot.create(:document, revision: rev)
+      field = doc.document_fields.find_by(codification_kind: DocumentField.codification_kinds[:originating_company])
+      field.document_field_values.update_all(selected: false)
+      value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
+      value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
+      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs['document_fields_attributes']
+        .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
+        .detect{ |i| i['value'] == value1.value }['value'] = '333'
+      doc2 = rev.versions.new(doc_attrs)
+      expect(doc2).to_not be_valid
+    end
+
+    it 'creating new revision' do
+      rev = FactoryBot.create(:document_revision)
+      main = rev.document_main
+      doc = FactoryBot.create(:document, revision: rev)
+      field = doc.document_fields.find_by(codification_kind: DocumentField.codification_kinds[:originating_company])
+      field.document_field_values.update_all(selected: false)
+      value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
+      value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
+      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs['document_fields_attributes']
+        .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
+        .detect{ |i| i['value'] == value1.value }['value'] = '333'
+      rev2 = FactoryBot.create(:document_revision, document_main: main)
+      doc2 = rev2.versions.new(doc_attrs)
+      expect(doc2).to_not be_valid
+    end
   end
 end

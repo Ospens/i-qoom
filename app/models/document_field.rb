@@ -33,11 +33,11 @@ class DocumentField < ApplicationRecord
                     if: -> { parent.class.name == 'Document' && revision_version? },
                     on: :create
 
-  after_save :update_revision_number,
-             if: -> { parent.class.name == 'Document' && revision_number? }
+  after_create :update_revision_number,
+               if: -> { parent.class.name == 'Document' && revision_number? }
 
-  after_save :update_revision_version,
-             if: -> { parent.class.name == 'Document' && revision_version? }
+  after_create :update_revision_version,
+               if: -> { parent.class.name == 'Document' && revision_version? }
 
   validates :kind,
             presence: true
@@ -76,14 +76,16 @@ class DocumentField < ApplicationRecord
   end
 
   def build_for_edit_document
-    attributes
+    original_attributes =
+      attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
     if codification_field?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
-        original_attributes['document_field_values_attributes'] << field_value.attributes
+        field_value_attrs = field_value.attributes.except('id', 'document_field_id', 'created_at', 'updated_at')
+        original_attributes['document_field_values_attributes'] << field_value_attrs
       end
     end
-    attributes
+    original_attributes
   end
 
   def can_build?(user)
@@ -126,8 +128,9 @@ class DocumentField < ApplicationRecord
   end
 
   def revision_number_valid
-    document = parent.revision.document_main.revisions.last_revision
-    if document.present? && value.to_i <= document.revision_number.to_i
+    last_revision =
+      parent.revision.document_main.revisions.where.not(id: parent.revision.id).last_revision
+    if last_revision.present? && value.to_i <= last_revision.revision_number.to_i
       errors.add(:value, :revision_number_must_be_greater_last_revision_number)
     elsif value.to_i == 0 && value != '0' && value != '00'
       errors.add(:value, :revision_number_must_be_zero_or_greater)

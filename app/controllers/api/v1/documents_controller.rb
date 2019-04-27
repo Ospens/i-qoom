@@ -14,7 +14,7 @@ class Api::V1::DocumentsController < ApplicationController
   def create
     main = @project.document_mains.create
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(user: signed_in_user, project: @project))
+    document = rev.versions.new(document_params.merge(project: @project))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -28,7 +28,9 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new revision version
   def update
     project = @document.revision.document_main.project
-    document = @document.revision.versions.new(document_params.merge(user: signed_in_user, project: project))
+    document_attrs =
+      @document.attributes_for_edit.merge(document_params.merge(project: project))
+    document = @document.revision.versions.new(document_attrs)
     if document.save
       render json: @document.attributes_for_edit
     else
@@ -39,7 +41,9 @@ class Api::V1::DocumentsController < ApplicationController
   def create_revision
     main = @document.revision.document_main
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(user: signed_in_user, project: main.project))
+    document_attrs =
+      @document.attributes_for_edit.merge(document_params.merge(project: main.project))
+    document = rev.versions.new(document_attrs)
     if document.save
       render json: document.attributes_for_edit
     else
@@ -60,8 +64,7 @@ class Api::V1::DocumentsController < ApplicationController
                                      :email_title_like_document,
                                      :email_text,
                                      document_fields_attributes:
-                                      [ :id,
-                                        :kind,
+                                      [ :kind,
                                         :codification_kind,
                                         :column,
                                         :row,
@@ -71,11 +74,10 @@ class Api::V1::DocumentsController < ApplicationController
                                         :command,
                                         :value,
                                         document_field_values_attributes: [
-                                          :id,
                                           :value,
                                           :title,
                                           :position
                                         ]
-                                      ])
+                                      ]).merge(user: signed_in_user)
   end
 end
