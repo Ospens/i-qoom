@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_24_044836) do
+ActiveRecord::Schema.define(version: 2019_04_25_053941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,17 @@ ActiveRecord::Schema.define(version: 2019_04_24_044836) do
     t.string "checksum", null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "company_name"
+    t.string "street"
+    t.string "house_number"
+    t.string "city"
+    t.string "postcode"
+    t.string "country"
+    t.string "district"
+    t.string "district_court"
   end
 
   create_table "conventions", force: :cascade do |t|
@@ -122,11 +133,33 @@ ActiveRecord::Schema.define(version: 2019_04_24_044836) do
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
+  create_table "project_administrators", force: :cascade do |t|
+    t.string "username"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "phone_code"
+    t.string "phone_number"
+    t.integer "project_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "project_company_data", force: :cascade do |t|
+    t.string "registration_number"
+    t.string "vat_id"
+    t.integer "project_id"
+    t.integer "billing_address_id"
+    t.integer "company_address_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.integer "creation_step", default: 0
   end
 
   create_table "users", force: :cascade do |t|

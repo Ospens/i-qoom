@@ -28,6 +28,7 @@ class User < ApplicationRecord
             uniqueness: true
 
   has_many :projects
+  has_many :project_administrators
 
   has_many :documents, class_name: 'DocumentMain'
 end
