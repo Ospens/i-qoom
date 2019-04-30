@@ -52,13 +52,13 @@ class FileField extends Component {
         {imagePreview}
         {!imagePreview &&
           <div>
-          <input
-            onChange={(e) => this.onInputChange(e, input)}
-            id='file_logo'
-            type='file'
-            className='inputfile'
-            data-allowed-file-extensions={dataAllowedFileExtensions}
-          />
+            <input
+              onChange={(e) => this.onInputChange(e, input)}
+              id='file_logo'
+              type='file'
+              className='inputfile'
+              data-allowed-file-extensions={dataAllowedFileExtensions}
+            />
             <label htmlFor='file_logo'>
               <ReactSVG
                 svgStyle={{ height: 20, width: 20 }}

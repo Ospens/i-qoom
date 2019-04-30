@@ -11,6 +11,7 @@ import pencil from '../../../images/pencil-write'
 import searchIcon from '../../../images/search-alternate'
 import emailSend from '../../../images/email-action-send-2'
 import ModalComponent from '../../../elements/ModalComponent'
+import DropDownMenu from '../../../elements/DropDownMenu'
 
 
 class ProjectDetails extends Component {
@@ -98,22 +99,12 @@ class ProjectDetails extends Component {
 
   renderFormSecondAdminColumn = () => {
     const { confirm } = this.state
-    const options = [
-      {
-        key: 'resend_email',
-        text: this.renderItem(emailSend, 'Resend email')
-      },
+    const options = 
       {
         key: 'check_status',
         text: this.renderItem(searchIcon, 'Check status'),
         onClick: () => this.toggleModals('adminInspectModal', true)
-      },
-      {
-        key: 'delete',
-        text: this.renderItem(trashBucket, 'Delete'),
-        onClick: () => this.toggleModals('adminInspectModal', true)
       }
-    ]
     const confirmMsg = (
       <div className='msg-card'>
         Do you really want to resend this invitation?
@@ -151,7 +142,7 @@ class ProjectDetails extends Component {
                   </Dropdown.Menu>
                 </Dropdown>
               </Dropdown.Item>
-              <Dropdown.Item {...options[1]}/>
+              <Dropdown.Item {...options}/>
               <Dropdown.Item >
                 <Dropdown trigger={this.renderItem(trashBucket, 'Delete')} pointing='right' icon={null}>
                   <Dropdown.Menu className='confirm-msg'>
@@ -256,15 +247,15 @@ class ProjectDetails extends Component {
     const options = [
       {
         key: 'edit_details',
-        text: this.renderItem(pencil, 'Edit details'),
-        onClick: () => this.toggleModals('adminErrorModal', true),
-        selected: false
+        text: 'Edit details',
+        icon: pencil,
+        onClick: () => this.toggleModals('adminErrorModal', true)
       },
       {
         key: 'settings',
-        text: this.renderItem(trashBucket, 'Delete'),
-        onClick: () => this.toggleModals('adminInspectModal', true),
-        selected: false
+        text: 'Delete',
+        icon: trashBucket,
+        onClick: () => this.toggleModals('adminInspectModal', true)
       }
     ]
 
@@ -283,7 +274,7 @@ class ProjectDetails extends Component {
             <div className='block-title'>
               <span>Project administrator 1</span>
               <span className='active-admin'>Active</span>
-              <Dropdown trigger={this.trigger()} options={options} pointing='top right' icon={null} />
+              <DropDownMenu options={options}/>
             </div>
             <AdministratorForm
               {...this.props}

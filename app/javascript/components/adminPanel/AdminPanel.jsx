@@ -5,6 +5,7 @@ import UserProfile from './UserProfile'
 import { Route, Switch } from 'react-router-dom'
 import UsersTable from './UsersTable'
 import LandingPage from '../landing/LandingPage'
+import Terms from '../landing/Terms'
 import '../../styles/Sidebar.scss'
 import './AdminPanel.scss'
 
@@ -21,6 +22,7 @@ class AdminPanel extends Component {
             <Switch>
               <Route path={`${match.path}/users/:user_id`} component={UserProfile} />
               <Route path={`${match.path}/users`} component={UsersTable} />
+              <Route path={`${match.path}/terms`} component={Terms} />
               <Route path='/' component={LandingPage} />
             </Switch>
           </main>

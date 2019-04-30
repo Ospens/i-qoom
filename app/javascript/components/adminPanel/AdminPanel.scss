@@ -10,50 +10,51 @@
     padding-left: 50px;
     padding-right: 50px;
   }
-  .dropdown {
-    width: 70%;
-    padding-top: 7px !important;
-    padding-bottom: 7px !important;
-    padding-left: 7px !important;
-
-    &:not(.active) {
-      background: none !important;
-      color: #9a98d9 !important;
-    }
-
-    &.active {
-      color: #0899f6 !important;
-      background-color: #ccd5d6 !important;
-    }
-
-    .input {
-      margin: 5px !important;
-
-      input {
-        border: none !important;
-        padding-left: 5px !important;
-        max-width: 90%;
-        padding-right: 0 !important;
-      }
-    }
-
-    .menu.transition.visible {
-       padding-left: 10px;
-       padding-right: 10px;
-       max-width: 210px;
-
-       .item {
-          padding-left: 5px !important;
-       }
-    }
-
-    div.text {
-      font-size: 17px;
-      font-weight: 600;
-    }
-  }
   .sidebar-sticky {
     overflow: visible;
+
+    .dropdown {
+      width: 70%;
+      padding-top: 7px !important;
+      padding-bottom: 7px !important;
+      padding-left: 7px !important;
+
+      &:not(.active) {
+        background: none !important;
+        color: #9a98d9 !important;
+      }
+
+      &.active {
+        color: #0899f6 !important;
+        background-color: #ccd5d6 !important;
+      }
+
+      .input {
+        margin: 5px !important;
+
+        input {
+          border: none !important;
+          padding-left: 5px !important;
+          max-width: 90%;
+          padding-right: 0 !important;
+        }
+      }
+
+      .menu.transition.visible {
+        padding-left: 10px;
+        padding-right: 10px;
+        max-width: 210px;
+
+        .item {
+          padding-left: 5px !important;
+        }
+      }
+
+      div.text {
+        font-size: 17px;
+        font-weight: 600;
+      }
+    }
   }
 
   .nav-item:not(.active) {

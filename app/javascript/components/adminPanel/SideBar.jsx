@@ -86,7 +86,7 @@ class SideBar extends Component {
             </li>
             <SideBarItem path='/admin_panel' label='Homepage'/>
             <SideBarItem path='/admin_panel/users' label='Users'/>
-            <SideBarItem path='/dashboard/' label="T & C's"/>
+            <SideBarItem path='/admin_panel/terms' label="T & C's"/>
           </ul>
         </div>
       </aside>

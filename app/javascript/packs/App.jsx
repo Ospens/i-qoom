@@ -10,9 +10,9 @@ import '../styles/semantic.css'
 const App = ({ authed }) => (
   <BrowserRouter>
     <Switch>
-      <Route exact path='/' component={LandingPage} />
       <PrivateRoute authed={authed} path='/dashboard' component={Dashboard}/>
-      <PrivateRoute authed={authed} path='/admin_panel' component={AdminPanel}/>
+      <PrivateRoute authed={authed} path='/admin_panel' component={AdminPanel} />
+      <Route path='/' component={LandingPage} />
     </Switch>
   </BrowserRouter>
 )

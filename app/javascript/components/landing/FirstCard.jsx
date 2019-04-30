@@ -1,50 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import classnames from 'classnames'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
-import CKEditor from '@ckeditor/ckeditor5-react'
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import InlineEditor from '@ckeditor/ckeditor5-editor-inline/src/inlineeditor'
-import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment'
-import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold'
-import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic'
-import Heading from '@ckeditor/ckeditor5-heading/src/heading'
-//import '@ckeditor/ckeditor5-basic-styles'
+import TextEditor from '../../elements/TextEditor'
 
 class FirstCard extends Component {
 
-
-  renderForAdmin = () => (
-      <CKEditor
-      editor={ClassicEditor}
-        /*config={{
-          toolbar: ['heading', '|', 'bulletedList', 'numberedList', 'alignment', 'undo', 'redo']
-        }}*/
-        config={{
-          plugins: [Alignment, Bold, Italic, Heading],
-          toolbar: ['Heading', '|', 'Bold', 'Italic', 'Alignment'],
-          removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload']
-        }}
-        data="<p>Hello from CKEditor 5!</p>"
-        onInit={editor => {
-          // You can store the "editor" and use when it is needed.
-          console.log('Editor is ready to use!', editor.config._config.toolbar);
-        }}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({ event, editor, data });
-        }}
-        onBlur={editor => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={editor => {
-          console.log('Focus.', editor);
-        }}
-      />
-  )
-
   render() {
-    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage } = this.props
+    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage, authed, isAdmin } = this.props
     const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
     return (
       <section id='first-card'>
@@ -55,8 +19,18 @@ class FirstCard extends Component {
           <div className='container'>
           <div className='welcome-and-signin justify-content-center'>
             <div className={welcomeClass}>
-              <div className='first-line'>We get your project</div>
-              <div className='second-line'>Started & Managed</div>
+              {authed && isAdmin ?
+                (
+                  <React.Fragment>
+                    <TextEditor text={<div className='first-line'>We get your project</div>} />
+                    <TextEditor text={<div className='second-line'>Started & Managed</div>} />
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <div className='first-line'>We get your project</div>
+                    <div className='second-line'>Started & Managed</div>
+                  </React.Fragment>
+                )}
               <a href='#get-started-card' className='btn btn-light contact-us'>Contact us</a>
             </div>
             <SignIn
@@ -70,4 +44,9 @@ class FirstCard extends Component {
   }
 }
 
-export default FirstCard
+const mapStateToProps = ({ auth }) => ({
+  authed: auth.authStatus,
+  isAdmin: true
+})
+
+export default connect(mapStateToProps)(FirstCard)
