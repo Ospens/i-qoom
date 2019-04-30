@@ -64,7 +64,7 @@ describe Document, type: :request do
       @project = rev1.document_main.project
       convention = FactoryBot.create(:convention, project: project)
       convention.document_fields.each do |field|
-        if field.document_number?
+        if field.document_number? || field.revision_date?
           field.update(value: rand(1000..9999))
         end
         field.document_field_values.first.update(selected: true)

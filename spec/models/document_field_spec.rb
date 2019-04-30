@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe DocumentField, type: :model do
   context 'validate :value_by_kind' do
-    subject { FactoryBot.build(:document_field) }
+    let(:document) { FactoryBot.build(:document) }
+    subject { FactoryBot.build(:document_field, parent: document) }
 
     it { should be_valid }
 
@@ -20,6 +21,7 @@ RSpec.describe DocumentField, type: :model do
         it kind do
           subject.kind = :codification_field
           subject.codification_kind = kind
+          subject.document_field_values.first.selected = true
           should be_valid
           subject.document_field_values.delete_all
           should_not be_valid
@@ -225,6 +227,96 @@ RSpec.describe DocumentField, type: :model do
       rev2 = FactoryBot.create(:document_revision, document_main: main)
       doc2 = rev2.versions.new(doc_attrs)
       expect(doc2).to_not be_valid
+    end
+  end
+
+  context '#field_is_required' do
+    let(:document) { FactoryBot.build(:document) }
+
+    it 'text_field' do
+      field = FactoryBot.build(:document_field, required: true)
+      document.document_fields << field
+      expect(document).to be_valid
+      field.value = nil
+      expect(document).to_not be_valid
+    end
+
+    [:textarea_field, :date_field].each do |kind|
+      it kind do
+        field = FactoryBot.build(:document_field, required: true, kind: kind)
+        document.document_fields << field
+        expect(document).to be_valid
+        field.value = nil
+        expect(document).to_not be_valid
+      end
+    end
+
+    it 'select_field' do
+      field = FactoryBot.build(:document_field, required: true, kind: :select_field)
+      value = FactoryBot.build(:document_field_value, selected: true)
+      field.document_field_values << value
+      document.document_fields << field
+      expect(document).to be_valid
+      value.selected = false
+      expect(document).to_not be_valid
+    end
+
+    it 'project_phase_field' do
+      field = FactoryBot.build(:document_field, required: true, kind: :project_phase_field)
+      value = FactoryBot.build(:document_field_value, selected: true)
+      field.document_field_values << value
+      document.document_fields << field
+      expect(document).to be_valid
+      value.selected = false
+      expect(document).to_not be_valid
+    end
+
+    ['originating_company', 'discipline', 'document_type'].each do |kind|
+      it kind do
+        document.document_fields
+                .detect{ |i| i['codification_kind'] == kind }
+                .document_field_values
+                .first.selected = false
+        expect(document).to_not be_valid
+      end
+    end
+
+    it 'receiving_company' do
+      field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: :receiving_company)
+      value = FactoryBot.build(:document_field_value, selected: true)
+      field.document_field_values << value
+      document.document_fields << field
+      expect(document).to be_valid
+      value.selected = false
+      expect(document).to_not be_valid
+    end
+
+    [:document_number, :revision_number,:revision_date].each do |kind|
+      it kind do
+        field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: kind)
+        document.document_fields << field
+        expect(document).to be_valid
+        field.value = nil
+        expect(document).to_not be_valid
+      end
+    end
+
+    it 'revision_version' do
+      field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: :revision_version)
+      document.document_fields << field
+      expect(document).to be_valid
+      field.value = nil
+      document.valid?
+      expect(field.value).to be_present
+    end
+
+    it 'revision_version' do
+      field = FactoryBot.build(:document_field, required: true, kind: :upload_field)
+      field.files.attach(io: File.new(fixture('test.txt')), filename: 'test.txt')
+      document.document_fields << field
+      expect(document).to be_valid
+      field.files.delete_all
+      expect(document).to_not be_valid
     end
   end
 end

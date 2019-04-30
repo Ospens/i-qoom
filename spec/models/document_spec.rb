@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Document, type: :model do
+  subject { FactoryBot.build(:document) }
+
+  it { should be_valid }
+
   it '#build_from_convention' do
     convention = FactoryBot.create(:convention)
     user = FactoryBot.create(:user)

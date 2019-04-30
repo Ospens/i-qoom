@@ -56,6 +56,9 @@ class DocumentField < ApplicationRecord
            if: -> { parent.class.name == 'Document' && revision_number? },
            on: :create
 
+  validate :field_is_required,
+           if: -> { parent.class.name == 'Document' && required? }
+
   scope :limit_by_value, -> {
     where(kind: :codification_field,
           codification_kind: [:originating_company, :discipline, :document_type])
@@ -151,5 +154,24 @@ class DocumentField < ApplicationRecord
     document = parent.revision.versions.last_version
     return if parent == document
     self.value = document.present? ? document.revision_version.to_i + 1 : 0
+  end
+
+  def field_is_required
+    if (text_field? || textarea_field? || date_field?) && value.blank?
+      errors.add(:value, :is_required)
+    elsif (select_field? || project_phase_field?) &&
+          !document_field_values.select{ |i| i['selected'] == true }.any?
+      errors.add(:document_field_values, :is_required)
+    elsif codification_field?
+      if (originating_company? || receiving_company? || discipline? || document_type?)
+        if !document_field_values.select{ |i| i['selected'] == true }.any?
+          errors.add(:document_field_values, :is_required)
+        end
+      elsif value.blank?
+        errors.add(:value, :is_required)
+      end
+    elsif upload_field? && !files.any?
+      errors.add(:files, :is_required)
+    end
   end
 end
