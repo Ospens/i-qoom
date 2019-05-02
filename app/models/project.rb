@@ -8,7 +8,7 @@ class Project < ApplicationRecord
                       _prefix: true
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
-  
+
   validates :name,
             presence: true,
             length: { minimum: 3,
@@ -33,6 +33,11 @@ class Project < ApplicationRecord
 
   def update_creation_step_to_done
     update(creation_step: "done")
+    if creation_step_done?
+      admins.each do |admin|
+        ApplicationMailer.send_project_admin_confirmation(admin).deliver_now
+      end
+    end
   end
 
 end

@@ -7,4 +7,10 @@ class ApplicationMailer < ActionMailer::Base
     mail to: 'yasserchehade@gmx.de',
         subject: "New message by contact form from I-Qoom"
   end
+
+  def send_project_admin_confirmation(project_admin)
+    @project_admin = project_admin
+    mail to: @project_admin.email,
+         subject: "You've been added to a new project"
+  end
 end
