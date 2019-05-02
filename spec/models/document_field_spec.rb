@@ -319,4 +319,15 @@ RSpec.describe DocumentField, type: :model do
       expect(document).to_not be_valid
     end
   end
+
+  it '#multiselect_is_not_allowed' do
+    document = FactoryBot.build(:document)
+    value = FactoryBot.build(:document_field_value, selected: true)
+    field = document.document_fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+    field.document_field_values << value
+    expect(document).to_not be_valid
+    expect(document.errors.count).to eql(2)
+    value.selected = false
+    expect(document).to be_valid
+  end
 end

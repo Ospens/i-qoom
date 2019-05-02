@@ -59,6 +59,11 @@ class DocumentField < ApplicationRecord
   validate :field_is_required,
            if: -> { parent.class.name == 'Document' && required? }
 
+  validate :multiselect_is_not_allowed,
+           if: -> { parent.class.name == 'Document' &&
+                    should_have_document_field_values? &&
+                    !multiselect? }
+
   scope :limit_by_value, -> {
     where(kind: :codification_field,
           codification_kind: [:originating_company, :discipline, :document_type])
@@ -172,6 +177,12 @@ class DocumentField < ApplicationRecord
       end
     elsif upload_field? && !files.any?
       errors.add(:files, :is_required)
+    end
+  end
+
+  def multiselect_is_not_allowed
+    if document_field_values.select{ |i| i['selected'] == true }.length > 1
+      errors.add(:document_field_values, :multiselect_is_not_allowed)
     end
   end
 end
