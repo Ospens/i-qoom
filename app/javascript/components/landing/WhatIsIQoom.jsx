@@ -5,42 +5,20 @@ import TextEditor from '../../elements/TextEditor'
 class WhatIsIQoom extends Component {
 
   render() {
-    const { authed, isAdmin } = this.props
+    const { authed, isAdmin, title, description } = this.props
     return (
       <section id='what-is-card'>
         <div className='container'>
           {authed && isAdmin ?
             (
               <React.Fragment>
-                <TextEditor text={<h2 className='text-center block-header'>What is i-Qoom?</h2>} />
-                <TextEditor text={<p className='text-center'>
-                  Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless
-                  catfish Atlantic trout velvetfish char greenling. South American darter, "cornetfish sucker wolf-herring
-                  mrigal eel-goby golden dojo garibaldi gouramie thresher shark." Jewfish cavefish escolar, triplespine tetra
-                  Redfin perch dragonfish, redlip blenny orbicular batfish. Ropefish roanoke bass escolar speckled trout;
-                  triplespine catla; yellow-edged moray yellow bass common tunny toadfish broadband dogfish. Ocean sunfish
-                  sablefish ghost knifefish Indian mul. Regal whiptail catfish streamer fish ribbon eel alfonsino climbing
-                  catfish! Antarctic icefish titan triggerfish pearl danio clownfish cisco medusafish, "barbel spiny dwarf
-                  catfish sea chub," salmon harelip sucker labyrinth fish? Herring regal whiptail catfish; driftwood catfish,
-                  flathead. Spearfish damselfish electric knifefish amago bobtail snipe eel? Horsefish orbicular batfish
-                  speckled marblefish sea devil.
-        </p>} />
+                <TextEditor text={title} className='mb-5' />
+                <TextEditor text={description} />
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <h2 className='text-center block-header'>What is i-Qoom?</h2>
-                <p className='text-center'>
-                  Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless
-                  catfish Atlantic trout velvetfish char greenling. South American darter, "cornetfish sucker wolf-herring
-                  mrigal eel-goby golden dojo garibaldi gouramie thresher shark." Jewfish cavefish escolar, triplespine tetra
-                  Redfin perch dragonfish, redlip blenny orbicular batfish. Ropefish roanoke bass escolar speckled trout;
-                  triplespine catla; yellow-edged moray yellow bass common tunny toadfish broadband dogfish. Ocean sunfish
-                  sablefish ghost knifefish Indian mul. Regal whiptail catfish streamer fish ribbon eel alfonsino climbing
-                  catfish! Antarctic icefish titan triggerfish pearl danio clownfish cisco medusafish, "barbel spiny dwarf
-                  catfish sea chub," salmon harelip sucker labyrinth fish? Herring regal whiptail catfish; driftwood catfish,
-                  flathead. Spearfish damselfish electric knifefish amago bobtail snipe eel? Horsefish orbicular batfish
-                  speckled marblefish sea devil.
-                </p>
+                <div className='mb-5' dangerouslySetInnerHTML={{ __html: title }}></div>
+                <div dangerouslySetInnerHTML={{ __html: description }}></div>
               </React.Fragment>
             )}
         </div>
@@ -49,9 +27,11 @@ class WhatIsIQoom extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true
+  isAdmin: true,
+  title: landing.whatISIQoom.title,
+  description: landing.whatISIQoom.description
 })
 
 export default connect(mapStateToProps)(WhatIsIQoom)

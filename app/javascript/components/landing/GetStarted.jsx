@@ -131,7 +131,7 @@ class GetStarted extends Component {
   }
 
   render() {
-    const { authed, isAdmin } = this.props
+    const { authed, isAdmin, title } = this.props
     const { sent } = this.state
     const containerClass = classnames('form-container', { 'show-slider': sent })
     return (
@@ -139,9 +139,9 @@ class GetStarted extends Component {
         <div className='container'>
           {authed && isAdmin ?
             (
-              <TextEditor text={<h2 className='text-center block-header'>Contact - Let's get started!</h2>} />
+              <TextEditor text={title} className='mb-5'/>
             ) : (
-              <h2 className='text-center block-header'>Contact - Let's get started!</h2>
+              <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5'/>
             )}
           <div className={containerClass}>
             {this.renderSuccessMsg()}
@@ -156,7 +156,8 @@ class GetStarted extends Component {
 const mapStateToProps = state => ({
   synchronousError: getFormSyncErrors('contact_us')(state),
   authed: state.auth.authStatus,
-  isAdmin: true
+  isAdmin: true,
+  title: state.landing.getStarted.title,
 })
 
 export default connect(mapStateToProps, null)(reduxForm({ form: 'contact_us' })(GetStarted))

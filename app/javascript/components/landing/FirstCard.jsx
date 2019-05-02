@@ -8,7 +8,7 @@ import TextEditor from '../../elements/TextEditor'
 class FirstCard extends Component {
 
   render() {
-    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage, authed, isAdmin } = this.props
+    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage, authed, isAdmin, firstLine, secondLine } = this.props
     const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
     return (
       <section id='first-card'>
@@ -22,13 +22,13 @@ class FirstCard extends Component {
               {authed && isAdmin ?
                 (
                   <React.Fragment>
-                    <TextEditor text={<div className='first-line'>We get your project</div>} />
-                    <TextEditor text={<div className='second-line'>Started & Managed</div>} />
+                    <TextEditor text={firstLine} />
+                    <TextEditor text={secondLine} />
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
-                    <div className='first-line'>We get your project</div>
-                    <div className='second-line'>Started & Managed</div>
+                    <div dangerouslySetInnerHTML={{__html: firstLine}} />
+                    <div dangerouslySetInnerHTML={{ __html: secondLine}} />
                   </React.Fragment>
                 )}
               <a href='#get-started-card' className='btn btn-light contact-us'>Contact us</a>
@@ -44,9 +44,11 @@ class FirstCard extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true
+  isAdmin: true,
+  firstLine: landing.firstCard.firstLine,
+  secondLine: landing.firstCard.secondLine
 })
 
 export default connect(mapStateToProps)(FirstCard)

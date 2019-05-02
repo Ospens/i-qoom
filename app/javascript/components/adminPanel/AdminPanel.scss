@@ -6,6 +6,11 @@
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end;
+
+  .info-container {
+    padding-top: 0 !important; 
+  }
+
   .main-content {
     padding-left: 50px;
     padding-right: 50px;

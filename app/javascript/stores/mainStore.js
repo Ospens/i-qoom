@@ -5,10 +5,12 @@ import {
 } from 'redux-form'
 import thunk from 'redux-thunk'
 import authReducer from '../reducers/authReducer'
+import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  landing: landingReducer,
   projects: projectReducer,
   form: reduxFormReducer
 })

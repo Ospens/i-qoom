@@ -262,17 +262,18 @@ li {
   color: #fff;
   right: 0;
   display: inline-block;
+
   &.show-slider {
     right: 2000px;
   }
 
-  .first-line {
+  h2 {
     font-family: 'aktiv-grotesk-extended', sans-serif;
     font-size: 4em;
     line-height: 1.5;
   }
 
-  .second-line {
+  h3 {
     font-family: 'aktiv-grotesk-extended', sans-serif;
     font-size: 5em;
     font-weight: 600;
@@ -320,6 +321,10 @@ li {
   padding-top: 8em;
   padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
+  .container {
+    overflow: visible;
+  }
+
   p {
     color: #475859;
     line-height: 2;
@@ -331,6 +336,15 @@ li {
   padding-bottom: 5em;
   background: #f8f8f8;
   border-bottom: 1px solid #eaebeb;
+
+  .slick-list {
+    overflow-y: visible;
+  }
+
+  .container {
+    overflow: visible;
+  }
+
   .managment-buttons {
     button {
       border-left: 3px solid #8FB0B3;
@@ -360,18 +374,6 @@ li {
       right: 6em;
       bottom: -30px;
     }
-  }
-
-  .managment-description {
-    color: #475859;
-    line-height: 2;
-    padding-top: 2em;
-  }
-
-  .managment-headers {
-    font-weight: normal;
-    color: #222222;
-    font-size: 2em;
   }
 
   .card-img-top {
@@ -409,6 +411,10 @@ li {
     path {
       fill: #0096FA;
     }
+  }
+  .card-content {
+    margin-bottom: 10px;
+    min-height: 110px;
   }
 }
 
@@ -458,17 +464,25 @@ li {
   padding-bottom: 5em;
   background: #f8f8f8;
   border-bottom: 1px solid #eaebeb;
+
+  .container,
+  .slick-list {
+    overflow-y: visible;
+  }
+
   .new-slider {
     overflow: visible;
     animation-name: new_slider_anim;
     animation-duration: 0.5s !important;
   }
+
   .card-deck {
     margin-top: 4em;
 
     .card {
       max-width: 80%;
       height: 280px;
+
       p.card-text {
         line-height: 1.5;
       }
@@ -486,51 +500,65 @@ li {
       bottom: -30px;
     }
   }
+
   .review-title {
     margin-bottom: 20px;
     font-weight: 600;
   }
+
   .row {
     margin-right: 0;
     margin-left: 0;
   }
+
   .reviews-user-info {
     margin-top: 1.5em;
   }
+
   .block-header {
     padding-bottom: 10px;
     font-size: 3em;
   }
+
   .block-description {
     max-width: 40%;
     margin-left: auto;
     margin-right: auto;
   }
+
   .user-name-block {
     display: inline-block;
+
     .user-stars {
       margin-top: 0.5em;
     }
+
     .user-name {
       display: inline-block;
     }
+
+    
     .blue-check {
       display: inline-block;
       margin-left: 5px;
     }
+
     .vote-stars {
       display: inline-block;
       margin-right: 5px;
     }
+
     .user-country {
       font-size: 10px;
     }
   }
+
   .card {
     .card-text {
       margin-bottom: 10px;
     }
   }
+
   .review-card-avatar {
     height: 100%;
     max-width: 65px;
@@ -543,6 +571,7 @@ li {
   padding-top: 5em;
   padding-bottom: 8em;
   border-bottom: 1px solid #eaebeb;
+
   .form-container {
     display: flex;
     position: relative;
@@ -557,6 +586,7 @@ li {
       }
     }
   }
+
   .contact-us-form {
     left: 0;
     width: 100%;
@@ -565,6 +595,7 @@ li {
     right: 0;
     display: inline-block;
   }
+
   .send-card {
     left: -1000px;
     width: 100%;
@@ -572,6 +603,7 @@ li {
     display: inline-block;
     min-width: 400px;
     color: #fff;
+
     .text-center {
       font-size: 17px;
       width: 50%;
@@ -580,34 +612,42 @@ li {
       position: relative;
       color: #475859;
     }
+
     .pictures-container {
       width: 50%;
       margin-left: auto;
       margin-right: auto;
     }
+
     .svg-line {
       position: relative;
       top: 54px;
       right: 45px;
     }
+
     .svg-plan {
       position: relative;
       top: -95px;
       left: 433px;
     }
   }
+
   .block-header {
     padding-bottom: 3em;
     font-size: 2em;
   }
+
   .form-number-group {
     padding-top: 2.7rem !important;
   }
+
   label {
     color: #c8d8d9;
   }
+
   textarea {
     border-color: #c8d8d9;
+ 
     &::placeholder {
       color: #c8d8d9;
     }
@@ -620,16 +660,19 @@ li {
   border-bottom: 1px solid #eaebeb;
   background-color: #221e6d;
   color: #fff;
+
   a {
     color: #fff;
     text-decoration: none;
   }
+
   .info-row {
     max-width: 40%;
     font-size: 0.8em;
     margin-left: auto;
     margin-right: auto;
   }
+
   .rights-reserved {
     max-width: 40%;
     margin-top: 10px;
@@ -662,12 +705,14 @@ li {
       font-weight: 600;
       color: #f2f5f5;
       border-bottom: 5px solid #f2f5f5;
+
       &.active {
         color: #793DF1;
         border-bottom: 5px solid #793DF1;
       }
     }
   }
+
   .sign-up-form__header {
     margin-top: 2em;
     color: #26276a;
@@ -676,36 +721,44 @@ li {
     margin-left: auto;
     margin-right: auto;
   }
+
   .form-row {
     display: none;
     width: 70%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 5em;
+
     &.active {
       display: flex;
     }
     height: 300px;
   }
+
   .form-check {
     margin-bottom: 2em;
   }
+
   .form-buttons {
     display: flex;
     align-items: center;
     align-items: flex-end;
     justify-content: center;
+
     .btn-primary {
       path {
         fill: white;
       }
     }
+
     .btn-back {
       color: #a5adad;
+
       path {
         fill: #a5adad;
       }
     }
+
     button {
       display: flex;
       align-items: center;
@@ -748,12 +801,14 @@ input[type=checkbox]:checked + label {
   padding-bottom: 5em;
   border-bottom: 1px solid #eaebeb;
   overflow: hidden;
+
   h2 {
     color: white;
     margin-left: 100px;
     margin-right: 450px;
     text-align: center;
   }
+
   .slick-list {
     margin-left: 100px;
     margin-right: 450px;
@@ -770,17 +825,20 @@ input[type=checkbox]:checked + label {
     flex-wrap: nowrap;
     align-items: stretch;
   }
+
   .slick-dots {
     position: absolute;
     display: block;
     right: 50px;
     top: -130px;
     max-width: 300px;
+
     li {
       width: 300px;
       margin-bottom: 10px;
     }
   }
+
   .nextBtn {
     position: absolute;
     right: 460px;
@@ -792,6 +850,7 @@ input[type=checkbox]:checked + label {
     right: 500px;
     bottom: -40px;
   }
+
   path {
     fill: white;
   }
@@ -804,6 +863,7 @@ input[type=checkbox]:checked + label {
     width: 100px;
     text-align: center;
     margin-top: 10px;
+
     path {
       fill: #a5adad;
     }
@@ -855,6 +915,7 @@ input[type=checkbox]:checked + label {
     padding-bottom: 30px;
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
+
     h5 {
       margin-bottom: 20px;
     }
@@ -884,11 +945,13 @@ input[type=checkbox]:checked + label {
     justify-content: center;
     padding-bottom: 20px;
     border-bottom: 1px solid lightgray;
+
     .user-name {
       display: flex;
       justify-content: center;
       font-size: 16px;
     }
+
     .user-position {
       display: flex;
       flex-direction: column;
@@ -914,10 +977,12 @@ input[type=checkbox]:checked + label {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
+
     .block-name {
       color: lightgray;
       margin-bottom: 10px; 
     }
+
     a {
       margin-bottom: 5px; 
     }
@@ -928,6 +993,7 @@ input[type=checkbox]:checked + label {
   align-content: center;
   align-items: center;
   display: flex;
+
   img {
     width: 130px;
     max-height: 40px;
@@ -955,14 +1021,25 @@ input[type=checkbox]:checked + label {
   &.ck-toolbar {
     display: flex;
     justify-content: center;
+    border-radius: 10px 10px 0 0 !important;
+    background-color: #fff !important;
+    border: none !important;
+  }
+
+  .ck-sticky-panel__content {
     border-radius: 0 0 10px 10px !important;
     border-bottom: 1px solid #0096FA !important;
-    border-left-color: #0096FA !important;
-    border-right-color: #0096FA !important;
-    background-color: #fff !important;
+    border-left: 1px solid #0096FA !important;
+    border-right: 1px solid #0096FA !important;
+    background-color: #f0f7f7 !important;
     border-top: none !important;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    display: flex;
   }
 }
+
 .with-dropdown-menu {
   display: flex !important;
 
@@ -1003,6 +1080,7 @@ input[type=checkbox]:checked + label {
     .logo-container {
       height: 100%;
       width: 100%;
+      cursor: pointer;
 
       .trash-icon {
         display: none;
@@ -1037,8 +1115,6 @@ input[type=checkbox]:checked + label {
       width: 100%;
       height: 100%;
     }
-
-    cursor: pointer;
 
     input {
       width: 0.1px;

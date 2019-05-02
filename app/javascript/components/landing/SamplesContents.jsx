@@ -2,11 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
-import comm from '../../images/comm.svg'
-import commonFileText from '../../images/common-file-text_big-1.svg'
-import robotHead from '../../images/robot-head-1.svg'
-import cogBrowser from '../../images/cog-browser.svg'
-import conversationImg from '../../images/conversation-chat-bubble-1.svg'
 import Arrows from '../../elements/Arrows'
 import Right from '../../images/arrow-button-right'
 import TextEditor from '../../elements/TextEditor'
@@ -43,33 +38,6 @@ const options = [
   }
 ]
 
-const slidersElements = [
-  {
-    image: comm,
-    title: 'Resources'
-  },
-  {
-    image: commonFileText,
-    title: 'Documents'
-  },
-  {
-    image: robotHead,
-    title: 'Technical Clarification'
-  },
-  {
-    image: cogBrowser,
-    title: 'Quality Control'
-  },
-  {
-    image: conversationImg,
-    title: 'Correspondences'
-  },
-  {
-    image: robotHead,
-    title: 'Documents'
-  }
-]
-
 class SamplesContents extends Component {
 
   state = {
@@ -81,8 +49,8 @@ class SamplesContents extends Component {
   }
 
   renderCards = () => {
-    const { toggleExamples, authed, isAdmin } = this.props
-    const elements = slidersElements.map((el, i) => {
+    const { toggleExamples, authed, isAdmin, cards } = this.props
+    const elements = cards.map((el, i) => {
       return (
         <div className='card with-dropdown-menu' key={i}>
           {authed && isAdmin && <DropDownMenu options={options} />}
@@ -91,21 +59,17 @@ class SamplesContents extends Component {
             svgStyle={{ height: 100, marginTop: 20 }}
             className='card-img-top text-center'
           />
-          <div className='card-body text-center'>
+          <div className='card-body'>
             {authed && isAdmin ? (
               <React.Fragment>
-                <TextEditor text={<h5 className='card-title'>{el.title}</h5>} />
-                <TextEditor text={<p className='card-text'>Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>} />
+                <TextEditor text={el.description} className='card-content'/>
               </React.Fragment>
             ) : (
-              <React.Fragment>
-                <h5 className='card-title'>{el.title}</h5>
-                <p className='card-text'>Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>
-              </React.Fragment>
+              <div className='card-content' dangerouslySetInnerHTML={{ __html: el.description }} />
             )}
             <button className='show-example' onClick={toggleExamples}>
               Show Examples
-                        <ReactSVG
+              <ReactSVG
                 src={Right}
                 svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
               />
@@ -129,8 +93,7 @@ class SamplesContents extends Component {
             />
           </div>
           <div className='card-body text-center'>
-            <TextEditor text={<h5 className='card-title'>Title</h5>} />
-            <TextEditor text={<p className='card-text'>Text</p>} />
+            <TextEditor text={`<h5 className='card-title'>Title</h5>`} className='card-content'/>
             <button className='show-example' onClick={toggleExamples}>
               Add examples
             <ReactSVG
@@ -149,7 +112,7 @@ class SamplesContents extends Component {
   render() {
     const cardCount = window.innerWidth > 1580 ? 5 : window.innerWidth > 1220 ? 4 : 3
     const { showDescription } = this.state
-    const { authed, isAdmin } = this.props
+    const { authed, isAdmin, title, firstTab, secondTab } = this.props
     const header = showDescription === 'comercial'
       ? 'Comercial Managment'
       : 'Project Managment'
@@ -169,27 +132,23 @@ class SamplesContents extends Component {
           {authed && isAdmin ?
             (
               <React.Fragment>
-                <TextEditor text={<h2 className='text-center block-header'>Samples & Contents</h2>} />
+                <TextEditor text={title} className='mb-5'/>
               </React.Fragment>
             ) : (
-              <h2 className='text-center block-header'>Samples & Contents</h2>
+              <div dangerouslySetInnerHTML={{ __html: title }} />
             )}
-          <div className='managment row'>
+          <div className='managment row mt-5'>
             <ul className='managment-buttons col-4'>
               <li>
                 {authed && isAdmin ?
                   (
-                    <React.Fragment>
-                      <TextEditor text={
-                        <button
-                          type='button'
-                          className={`btn ${showDescription === 'comercial' ? 'active' : ''}`}
-                          data-id='comercial'
-                        >
-                          Comercial Managment
-                       </button>}
-                      />
-                    </React.Fragment>
+                    <button
+                      type='button'
+                      className='btn active'
+                      data-id='comercial'
+                    >
+                      <TextEditor text={firstTab.title} />
+                    </button>
                   ) : (
                     <button
                       type='button'
@@ -197,24 +156,20 @@ class SamplesContents extends Component {
                       onClick={this.toggleManagment}
                       data-id='comercial'
                     >
-                      Comercial Managment
+                      {firstTab.title}
                   </button>
                   )}
               </li>
               <li>
                 {authed && isAdmin ?
                   (
-                    <React.Fragment>
-                      <TextEditor text={
-                        <button
-                          type='button'
-                          className={`btn ${showDescription === 'project' ? 'active' : ''}`}
-                          data-id='comercial'
-                        >
-                          Project Managment
-                        </button>}
-                      />
-                    </React.Fragment>
+                    <button
+                      type='button'
+                      className='btn mt-2'
+                      data-id='comercial'
+                    >
+                      <TextEditor text={secondTab.title} />
+                    </button>
                   ) : (
                     <button
                       type='button'
@@ -222,7 +177,7 @@ class SamplesContents extends Component {
                       onClick={this.toggleManagment}
                       data-id='project'
                     >
-                      Project Managment
+                      {secondTab.title}
                     </button>
                   )}
               </li>
@@ -230,24 +185,9 @@ class SamplesContents extends Component {
             <div className='col-8'>
               {authed && isAdmin ?
                 (
-                  <React.Fragment>
-                    <TextEditor text={<h4 className='managment-headers'>{header}</h4>}/>
-                    <TextEditor text={<div className='managment-description'>
-                      Largemouth bass Arctic char, salmon brook lamprey,
-                      delta smelt thorny catfish cardinalfish
-                      barbelless catfish Atlantic trout velvetfish char greenling
-                    </div>}
-                    />
-                  </React.Fragment>
+                  <TextEditor text={firstTab.description} />
                 ) : (
-                  <React.Fragment>
-                    <h4 className='managment-headers'>{header}</h4>
-                    <div className='managment-description'>
-                      Largemouth bass Arctic char, salmon brook lamprey,
-                      delta smelt thorny catfish cardinalfish
-                      barbelless catfish Atlantic trout velvetfish char greenling
-                    </div>
-                  </React.Fragment>
+                  <div dangerouslySetInnerHTML={{ __html: firstTab.description }} />
                 )}
             </div>
           </div>
@@ -260,9 +200,13 @@ class SamplesContents extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true
+  isAdmin: true,
+  title: landing.samplesAndContent.title,
+  firstTab: landing.samplesAndContent.firstTab,
+  secondTab: landing.samplesAndContent.secondTab,
+  cards: landing.samplesAndContent.cards,
 })
 
 export default connect(mapStateToProps)(SamplesContents)

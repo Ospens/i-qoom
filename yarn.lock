@@ -49,6 +49,13 @@
     "@ckeditor/ckeditor5-core" "^12.1.0"
     "@ckeditor/ckeditor5-ui" "^12.1.0"
 
+"@ckeditor/ckeditor5-autoformat@^11.0.1":
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autoformat/-/ckeditor5-autoformat-11.0.1.tgz#74a118d87c249e03b728da1cf63cd82f85c5751e"
+  integrity sha512-9HZJUKoij87hzZJkiBtVrNqoEfF0hXmTIKcYwkXPSENQnOuLn7xcW6c3VKhLmx938i7LMjI49vTT3k6r8LH1bQ==
+  dependencies:
+    "@ckeditor/ckeditor5-core" "^12.1.0"
+
 "@ckeditor/ckeditor5-basic-styles@^11.1.0":
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-basic-styles/-/ckeditor5-basic-styles-11.1.0.tgz#e9fa972331749d56d82b12a13bb8a19ddfe39a13"
@@ -149,6 +156,15 @@
     "@ckeditor/ckeditor5-enter" "^11.0.1"
     "@ckeditor/ckeditor5-typing" "^12.0.1"
     "@ckeditor/ckeditor5-undo" "^11.0.1"
+
+"@ckeditor/ckeditor5-font@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-font/-/ckeditor5-font-11.1.0.tgz#da4d1632a3c38877190237477a58ce1591b05471"
+  integrity sha512-LLmsWn/7dGp8jsbKRs7937YFSJOYwVfqh6k9tVh10N1zPI9qOxNBsijKF0amPPsCU9uGfhPh1ZM851noWTNXQw==
+  dependencies:
+    "@ckeditor/ckeditor5-core" "^12.1.0"
+    "@ckeditor/ckeditor5-ui" "^12.1.0"
+    "@ckeditor/ckeditor5-utils" "^12.1.0"
 
 "@ckeditor/ckeditor5-heading@^11.0.1":
   version "11.0.1"

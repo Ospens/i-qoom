@@ -68,20 +68,21 @@ class Reviews extends Component {
         <img className='review-card-avatar' src={tmpAvatar} alt='' />
         <div className='clearfix' />
         <div className='user-name-block col-9'>
-          <TextEditor text={<h6 className='user-name'>{el.name}</h6>} />
+        <div className='row'>
+          <TextEditor text={el.name} />
           <ReactSVG
             src={blueCheck}
             svgStyle={{ width: 15, height: 15 }}
             className='blue-check'
           />
-          <TextEditor text={<div className='user-country text-muted'>{el.country}</div>} />
+        </div>
+          <TextEditor text={el.country} />
           <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
       </div>
       <div className='card-body'>
-        <TextEditor text={<div className='review-title'>{el.title}</div>} />
-        <TextEditor text={<p className='card-text'>{el.desription}</p>} />
+        <TextEditor text={el.desription} />
       </div>
     </div>
   )
@@ -92,20 +93,21 @@ class Reviews extends Component {
         <img className='review-card-avatar' src={tmpAvatar} alt='' />
         <div className='clearfix' />
         <div className='user-name-block col-9'>
-          <h6 className='user-name'>{el.name}</h6>
-          <ReactSVG
-            src={blueCheck}
-            svgStyle={{ width: 15, height: 15 }}
-            className='blue-check'
-          />
-          <div className='user-country text-muted'>{el.country}</div>
+          <div className='row'>
+            <div dangerouslySetInnerHTML={{ __html: el.name }} />
+            <ReactSVG
+              src={blueCheck}
+              svgStyle={{ width: 15, height: 15 }}
+              className='blue-check'
+            />
+        </div>
+          <div dangerouslySetInnerHTML={{ __html: el.country}} />
           <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
       </div>
       <div className='card-body'>
-        <div className='review-title'>{el.title}</div>
-        <p className='card-text'>{el.desription}</p>
+        <div dangerouslySetInnerHTML={{ __html: el.desription }} />
       </div>
     </div>
   )
@@ -190,65 +192,22 @@ class Reviews extends Component {
   }
 
   render() {
-    const { authed, isAdmin } = this.props
+    const { authed, isAdmin, description, cards } = this.props
     const { readMore } = this.state
-    const reviews = [
-      {
-        name: 'Humayra Samiha',
-        country: 'California, USA',
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Hamburg, GER',
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'North American darter sea bass sixgill shark. Freshwater hatchetfish whale catfish riffle dace, salmon shark lookdown catfish, menhaden sixgill shark sprat.'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Stockhorm, SE',
-        stars: 5,
-        title: 'Freshwater hatchetfish',
-        desription: 'North American darter sea bass sixgill shark; weasel shark yellowfin croaker'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Stockhorm, SE',
-        stars: 5,
-        title: 'Freshwater hatchetfish',
-        desription: 'North American darter sea bass sixgill shark; weasel shark yellowfin croaker'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Hamburg, GER',
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'North American darter sea bass sixgill shark. Freshwater hatchetfish whale catfish riffle dace, salmon shark lookdown catfish, menhaden sixgill shark sprat.'
-      }
-    ]
-
+ 
     return (
       <section id='reviews-card'>
-        <div className='text-center container'>
+        <div className='container'>
           {authed && isAdmin ?
             (
-              <React.Fragment>
-                <TextEditor text={<h2 className='block-header'>i-Qoom Reviews</h2>} />
-                <TextEditor text={<p className='block-description'>Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>} />
-              </React.Fragment>
+              <TextEditor text={description} />
             ) : (
-              <React.Fragment>
-                <h2 className='block-header'>i-Qoom Reviews</h2>
-                <p className='block-description'>Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>
-              </React.Fragment>
+              <div dangerouslySetInnerHTML={{ __html: description }} />
             )}
         </div>
-        {this.renderReviewsSlider(reviews)}
-        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
-        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
+        {this.renderReviewsSlider(cards)}
+        {readMore && this.renderReviewsSlider(cards, 'new-slider')}
+        {readMore && this.renderReviewsSlider(cards, 'new-slider')}
         <div className='text-center container'>
           {this.renderToggleButton()}
         </div>
@@ -257,9 +216,11 @@ class Reviews extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true
+  isAdmin: true,
+  description: landing.reviews.description,
+  cards: landing.reviews.cards,
 })
 
 export default connect(mapStateToProps)(Reviews)
