@@ -5,6 +5,7 @@ import Footer from './Footer'
 import MainContent from './MainContent'
 import Imprint from './Imprint'
 import Terms from './Terms'
+import LandingMenu from './LandingMenu'
 
 class LandingPage extends Component {
 
@@ -62,7 +63,8 @@ class LandingPage extends Component {
         <Switch>
           <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} />} />
           <Route path='/imprint' component={Imprint} />
-          <Route path='/Terms' component={Terms} />
+          <Route path='/terms' component={Terms} />
+          <Route path='/menu' component={LandingMenu} />
         </Switch>
         
         <Footer />

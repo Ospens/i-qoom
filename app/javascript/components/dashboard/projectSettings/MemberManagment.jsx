@@ -5,7 +5,7 @@ import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
 import roleList from '../../../images/task-list-edit'
 import disciplineList from '../../../images/common-file-text'
-import blueCcheck from '../../../images/add_1'
+import blueCheck from '../../../images/add_1'
 import DropDown from '../../../elements/DropDown'
 import pencil from '../../../images/pencil-write'
 import emailSend from '../../../images/email-action-send-2'
@@ -66,7 +66,7 @@ class MemberManagment extends Component {
               <button type='button' className='btn with-icon' onClick={() => this.setState({ addMemberModal: true })}>
                 <ReactSVG
                   svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                  src={blueCcheck}
+                  src={blueCheck}
                 />
                 <span>Add member</span>
               </button>
