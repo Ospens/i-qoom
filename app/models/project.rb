@@ -33,8 +33,11 @@ class Project < ApplicationRecord
 
   def update_creation_step_to_done
     update(creation_step: "done")
-    admins.unconfirmed.each do |admin|
-      admin.send_confirmation_email
+    if creation_step_done?
+      admins.unconfirmed.each do |admin|
+        admin.send_confirmation_email
+      end
     end
   end
+
 end
