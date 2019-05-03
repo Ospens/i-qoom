@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import projectsIcon from '../../images/folder-empty'
-import timeSheetIcon from '../../images/calendar-3'
-import taskListIcon from '../../images/task-checklist-check'
-import resourcePlanningIcon from '../../images/common-file-share'
+import projectsIcon from '../../images/streamline-icon-folder-file'
+import calendarIcon from '../../images/streamline-icon-calendar-1'
+import timeSheetIcon from '../../images/streamline-icon-stopwatch'
+import taskListIcon from '../../images/streamline-icon-task-list-edit'
+import resourcePlanningIcon from '../../images/streamline-icon-module-hand-puzzle'
 import { startFetchProjects } from '../../actions/projectActions'
 import blueCheck from '../../images/add_1'
 
@@ -29,7 +30,7 @@ const menuListFirstRow = [
   },
   {
     title: 'Calendar',
-    img: timeSheetIcon
+    img: calendarIcon
   }
 ]
 
@@ -45,7 +46,6 @@ class LandingMenu extends Component {
   }
 
   renderCardContent = (project, i) => {
-    console.log(project, i)
     if (project.id === 0) {
       return (
         <Link to={`/dashboard/projects`}>

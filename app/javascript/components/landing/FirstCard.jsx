@@ -8,7 +8,16 @@ import TextEditor from '../../elements/TextEditor'
 class FirstCard extends Component {
 
   render() {
-    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage, authed, isAdmin, firstLine, secondLine } = this.props
+    const {
+      showSignInSlider,
+      toggleSignInForm,
+      showSignUp,
+      showMainPage,
+      authed,
+      editable,
+      firstLine,
+      secondLine
+    } = this.props
     const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
     return (
       <section id='first-card'>
@@ -19,7 +28,7 @@ class FirstCard extends Component {
           <div className='container'>
           <div className='welcome-and-signin justify-content-center'>
             <div className={welcomeClass}>
-              {authed && isAdmin ?
+              {authed && editable ?
                 (
                   <React.Fragment>
                     <TextEditor text={firstLine} />
@@ -46,7 +55,6 @@ class FirstCard extends Component {
 
 const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true,
   firstLine: landing.firstCard.firstLine,
   secondLine: landing.firstCard.secondLine
 })

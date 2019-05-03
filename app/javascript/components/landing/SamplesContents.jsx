@@ -49,18 +49,18 @@ class SamplesContents extends Component {
   }
 
   renderCards = () => {
-    const { toggleExamples, authed, isAdmin, cards } = this.props
+    const { toggleExamples, authed, editable, cards } = this.props
     const elements = cards.map((el, i) => {
       return (
         <div className='card with-dropdown-menu' key={i}>
-          {authed && isAdmin && <DropDownMenu options={options} />}
+          {authed && editable && <DropDownMenu options={options} />}
           <ReactSVG
             src={el.image}
             svgStyle={{ height: 100, marginTop: 20 }}
             className='card-img-top text-center'
           />
           <div className='card-body'>
-            {authed && isAdmin ? (
+            {authed && editable ? (
               <React.Fragment>
                 <TextEditor text={el.description} className='card-content'/>
               </React.Fragment>
@@ -79,7 +79,7 @@ class SamplesContents extends Component {
       )
     })
 
-    if (authed && isAdmin) {
+    if (authed && editable) {
       elements.push(
         <div className='card with-dropdown-menu' key='new'>
           <DropDownMenu options={options} />
@@ -112,10 +112,7 @@ class SamplesContents extends Component {
   render() {
     const cardCount = window.innerWidth > 1580 ? 5 : window.innerWidth > 1220 ? 4 : 3
     const { showDescription } = this.state
-    const { authed, isAdmin, title, firstTab, secondTab } = this.props
-    const header = showDescription === 'comercial'
-      ? 'Comercial Managment'
-      : 'Project Managment'
+    const { authed, editable, title, firstTab, secondTab } = this.props
 
     const settings = {
       dots: false,
@@ -129,7 +126,7 @@ class SamplesContents extends Component {
     return (
       <section id='samples-card'>
         <div className='container'>
-          {authed && isAdmin ?
+          {authed && editable ?
             (
               <React.Fragment>
                 <TextEditor text={title} className='mb-5'/>
@@ -140,7 +137,7 @@ class SamplesContents extends Component {
           <div className='managment row mt-5'>
             <ul className='managment-buttons col-4'>
               <li>
-                {authed && isAdmin ?
+                {authed && editable ?
                   (
                     <button
                       type='button'
@@ -161,7 +158,7 @@ class SamplesContents extends Component {
                   )}
               </li>
               <li>
-                {authed && isAdmin ?
+                {authed && editable ?
                   (
                     <button
                       type='button'
@@ -183,7 +180,7 @@ class SamplesContents extends Component {
               </li>
             </ul>
             <div className='col-8'>
-              {authed && isAdmin ?
+              {authed && editable ?
                 (
                   <TextEditor text={firstTab.description} />
                 ) : (
@@ -202,7 +199,6 @@ class SamplesContents extends Component {
 
 const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true,
   title: landing.samplesAndContent.title,
   firstTab: landing.samplesAndContent.firstTab,
   secondTab: landing.samplesAndContent.secondTab,

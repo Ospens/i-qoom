@@ -131,13 +131,13 @@ class GetStarted extends Component {
   }
 
   render() {
-    const { authed, isAdmin, title } = this.props
+    const { authed, editable, title } = this.props
     const { sent } = this.state
     const containerClass = classnames('form-container', { 'show-slider': sent })
     return (
       <section id='get-started-card'>
         <div className='container'>
-          {authed && isAdmin ?
+          {authed && editable ?
             (
               <TextEditor text={title} className='mb-5'/>
             ) : (
@@ -156,7 +156,6 @@ class GetStarted extends Component {
 const mapStateToProps = state => ({
   synchronousError: getFormSyncErrors('contact_us')(state),
   authed: state.auth.authStatus,
-  isAdmin: true,
   title: state.landing.getStarted.title,
 })
 

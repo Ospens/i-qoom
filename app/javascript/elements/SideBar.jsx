@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import logo from '../../images/Logo_header'
-import searchIcon from '../../images/search-alternate'
-import burgerOpen from '../../images/Burgermenu_1'
-import SideBarItem from '../../elements/SideBarItem'
+import logo from '../images/Logo_header'
+import searchIcon from '../images/search-alternate'
+import burgerOpen from '../images/Burgermenu_1'
+import SideBarItem from './SideBarItem'
 import { Dropdown, Input } from 'semantic-ui-react'
 
 const tagOptions = [

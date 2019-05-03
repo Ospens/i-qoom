@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classnames from 'classnames'
 import SideBar from './SideBar'
 import TopBar from './TopBar'
 import UserProfile from './UserProfile'
@@ -10,13 +11,14 @@ import '../../styles/Sidebar.scss'
 import './AdminPanel.scss'
 
 class AdminPanel extends Component {
-  state = {  }
+
   render() {
     const { location, match } = this.props
+    const mainClass = classnames('main-content', { 'p-0': location.pathname === match.path })
     return (
       <div className='admin-panel-container'>
         <SideBar pathName={match}/>
-        <div className='main-content'>
+        <div className={mainClass}>
           {location.pathname !== match.path && <TopBar />}
           <main role='main'>
             <Switch>

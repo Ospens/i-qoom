@@ -17,7 +17,8 @@ class MainContent extends Component {
       toggleExamples,
       toggleSignUp,
       toggleSignInForm,
-      showMainPage
+      showMainPage,
+      editable
     } = this.props
 
     return (
@@ -27,13 +28,14 @@ class MainContent extends Component {
           showSignUp={showSignUp}
           toggleSignInForm={toggleSignInForm}
           showMainPage={showMainPage}
+          editable={editable}
         />
-        <WhatIsIQoom />
-        {!showExamples && <SamplesContents toggleExamples={toggleExamples} />}
-        {showExamples && <ExampleCard toggleExamples={toggleExamples} />}
-        <Pricing toggleSignUp={toggleSignUp} />
-        <Reviews />
-        <GetStarted />
+        <WhatIsIQoom editable={editable}/>
+        {!showExamples && <SamplesContents toggleExamples={toggleExamples} editable={editable}/>}
+        {showExamples && <ExampleCard toggleExamples={toggleExamples} editable={editable}/>}
+        <Pricing toggleSignUp={toggleSignUp} editable={editable}/>
+        <Reviews editable={editable}/>
+        <GetStarted editable={editable}/>
       </div>
     )
   }

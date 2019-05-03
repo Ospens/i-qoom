@@ -9,7 +9,8 @@ const initialState = {
   authStatus: localToken !== null,
   token: localToken,
   exp: null,
-  user_id: null
+  user_id: null,
+  isAdmin: true
 }
 
 const authReducer = (state = initialState, action) => {

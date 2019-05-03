@@ -6,6 +6,7 @@ import MainContent from './MainContent'
 import Imprint from './Imprint'
 import Terms from './Terms'
 import LandingMenu from './LandingMenu'
+import PrivateRoute from '../../elements/PrivateRoute'
 
 class LandingPage extends Component {
 
@@ -45,7 +46,7 @@ class LandingPage extends Component {
 
   render() {
     const { showSignInSlider, showSignUp, showExamples } = this.state
-    const { location } = this.props
+    const { location, authed } = this.props
     const mainProps = {
       showSignInSlider,
       showSignUp,
@@ -57,14 +58,15 @@ class LandingPage extends Component {
     }
 
     const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel'
+    const editable = location.pathname === '/admin_panel'
     return (
       <div className='landing-page'>
-        <LandingPageHeader {...mainProps} nonMain={nonMain} />
+        <LandingPageHeader {...mainProps} nonMain={nonMain}/>
         <Switch>
-          <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} />} />
+          <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} editable={editable} />} />
           <Route path='/imprint' component={Imprint} />
           <Route path='/terms' component={Terms} />
-          <Route path='/menu' component={LandingMenu} />
+          <PrivateRoute path='/menu' authed={authed} component={LandingMenu} />
         </Switch>
         
         <Footer />

@@ -9,6 +9,7 @@ import Left from '../../images/arrow-button-left'
 import bell from '../../images/alarm-bell'
 import messages from '../../images/email-action-unread'
 import UserAvatar from 'react-user-avatar'
+import burgerIcon from '../../images/Burgermenu_2'
 
 class LandingPageHeader extends Component {
 
@@ -21,7 +22,8 @@ class LandingPageHeader extends Component {
       showMainPage,
       authenticated,
       signOutUser,
-      nonMain
+      nonMain,
+      isAdmin
     } = this.props
     const navClass = classnames({ 'show-slider': showSignInSlider || showSignUp || nonMain })
     const headerClass = classnames({ 'colorful': nonMain })
@@ -29,6 +31,14 @@ class LandingPageHeader extends Component {
     return (
       <header className={headerClass}>
         <nav className='navbar navbar-expand-sm'>
+          {isAdmin && 
+          <div className='navbar-admin-access-block'>
+            <ReactSVG
+              svgStyle={{ height: 40 }}
+              src={burgerIcon}
+            />
+            <span className='text-white'>Admin access</span>
+          </div>}
           <div className='container'>
             <Link className='navbar-brand logo_h' to='/'>
               <ReactSVG
@@ -60,13 +70,37 @@ class LandingPageHeader extends Component {
 
               {!authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
-                  <li className='nav-item'><Link to='/' className='nav-link btn-transparent' onClick={toggleSignUp}>Register</Link></li>
-                  <li className='nav-item'><Link to='/' className='nav-link btn-transparent' onClick={toggleSignInForm}>Login</Link></li>
+                  <li className='nav-item'>
+                    <Link
+                      to='/'
+                      className='nav-link btn-transparent'
+                      onClick={toggleSignUp}
+                    >
+                      Register
+                    </Link>
+                  </li>
+                  <li className='nav-item'>
+                    <Link
+                      to='/'
+                      className='nav-link btn-transparent'
+                      onClick={toggleSignInForm}
+                    >
+                      Login
+                    </Link>
+                  </li>
                 </ul>
               }
               {authenticated &&
                 <ul className='nav navbar-nav justify-content-end auth-buttons'>
-                <li className='nav-item'><button type='button' className='nav-link btn-transparent' onClick={signOutUser}>Logout</button></li>
+                <li className='nav-item'>
+                  <button
+                    type='button'
+                    className='nav-link btn-transparent'
+                    onClick={signOutUser}
+                  >
+                    Logout
+                  </button>
+                </li>
                   <li className='nav-item'>
                     <button type='button' className='nav-link btn-transparent'>
                       <ReactSVG
@@ -101,7 +135,8 @@ class LandingPageHeader extends Component {
 }
 
 const mapStateToProps = ({ auth }) => ({
-  authenticated: auth.authStatus
+  authenticated: auth.authStatus,
+  isAdmin: auth.isAdmin
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -11,7 +11,6 @@ import pencil from '../../images/pencil-write'
 import trashBucket from '../../images/trash_bucket'
 import direction_button from '../../images/direction-button-5'
 import tmpAvatar from '../../images/tmp_avatar'
-import FileField from '../../elements/FileField'
 
 const options = [
   {
@@ -121,9 +120,9 @@ class Reviews extends Component {
       nextArrow: <Arrows type='nextBtn' />,
       prevArrow: <Arrows type='prevBtn' />
     }
-    const { authed, isAdmin } = this.props
+    const { authed, editable } = this.props
     let reviewsContent
-    if (authed && isAdmin) {
+    if (authed && editable) {
       reviewsContent = (
         reviews.map((el, i) => {
           return this.renderAdminCard(el, i)
@@ -192,13 +191,13 @@ class Reviews extends Component {
   }
 
   render() {
-    const { authed, isAdmin, description, cards } = this.props
+    const { authed, editable, description, cards } = this.props
     const { readMore } = this.state
  
     return (
       <section id='reviews-card'>
         <div className='container'>
-          {authed && isAdmin ?
+          {authed && editable ?
             (
               <TextEditor text={description} />
             ) : (
@@ -218,7 +217,6 @@ class Reviews extends Component {
 
 const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true,
   description: landing.reviews.description,
   cards: landing.reviews.cards,
 })

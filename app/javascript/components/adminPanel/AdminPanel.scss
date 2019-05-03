@@ -67,11 +67,27 @@
       color: #9a98d9 !important;
     }
   }
+
+  #first-card {
+    filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+  }
 }
 
 .sidebar.sidebar-admin-panel {
   z-index: 20;
   background-color: #383838;
+  display: none;
+
+  &.is-visible {
+    display: flex !important;
+  }
+
+  .burger-button {
+    cursor: pointer;
+  }
 }
 
 .user-table-block {

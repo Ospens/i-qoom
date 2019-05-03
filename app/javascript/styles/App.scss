@@ -237,6 +237,23 @@ li {
   }
 }
 
+.navbar-admin-access-block {
+  display: flex;
+  align-items: center;
+
+  @media only screen and (max-width: 1380px) {
+    span {
+      display: none !important;
+    }
+  }
+
+  span {
+    display: flex;
+    width: max-content;
+    font-size: 1.5em;
+    margin-left: 15px;
+  }
+}
 
 .navbar-collapse {
   position: relative;

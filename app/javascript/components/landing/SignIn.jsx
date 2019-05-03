@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
 import { getFormSubmitErrors, reduxForm } from 'redux-form'
+import { Redirect } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
 import Left from '../../images/arrow-button-left'
@@ -9,7 +10,8 @@ import Left from '../../images/arrow-button-left'
 class SignIn extends Component {
   state = {
     login: null,
-    password: null
+    password: null,
+    loginSuccess: false
   }
 
   handleChange = e => {
@@ -20,14 +22,19 @@ class SignIn extends Component {
 
   handleSubmit = () => {
     const { login, password } = this.state
-    const { signInUser, history, toggleSignInForm } = this.props
-    return signInUser(login, password, history).then(() => toggleSignInForm())
+    const { signInUser, history } = this.props
+    return signInUser(login, password, history).then(() => this.setState({ loginSuccess: true }))
   }
 
   render() {
     const { showSignInSlider, toggleSignInForm, submitErrors } = this.props
+    const { loginSuccess } = this.state
 
     const openClass = `${showSignInSlider ? 'show-slider' : ''}`
+
+    if (loginSuccess) {
+      return <Redirect to={'/menu'} />
+    }
 
     return (
       <div className={`sign-in-form ${openClass}`}>

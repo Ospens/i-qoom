@@ -5,11 +5,11 @@ import TextEditor from '../../elements/TextEditor'
 class WhatIsIQoom extends Component {
 
   render() {
-    const { authed, isAdmin, title, description } = this.props
+    const { authed, editable, title, description } = this.props
     return (
       <section id='what-is-card'>
         <div className='container'>
-          {authed && isAdmin ?
+          {authed && editable ?
             (
               <React.Fragment>
                 <TextEditor text={title} className='mb-5' />
@@ -29,7 +29,6 @@ class WhatIsIQoom extends Component {
 
 const mapStateToProps = ({ auth, landing }) => ({
   authed: auth.authStatus,
-  isAdmin: true,
   title: landing.whatISIQoom.title,
   description: landing.whatISIQoom.description
 })
