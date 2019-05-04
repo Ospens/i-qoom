@@ -21,45 +21,167 @@ describe Document, type: :request do
     { 'Authorization' => session.auth_token }
   end
 
-  it '#new' do
-    get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
-    expect(response).to have_http_status(:success)
-    expect(json['document_fields_attributes'].count).to eql(6)
+  context '#new' do
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/documents/new"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(FactoryBot.create(:user))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user with rights' do
+      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json['document_fields_attributes'].count).to eql(6)
+    end
+
+    it 'project user' do
+      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
+      expect(response).to have_http_status(:success)
+    end
   end
 
-  it '#create' do
-    title = Faker::Lorem.sentence
-    post "/api/v1/projects/#{project.id}/documents", params: { document: { email_title: title } }, headers: credentials(user)
-    expect(response).to have_http_status(:success)
-    expect(json['email_title']).to eql(title)
+  context '#create' do
+    let(:title) { Faker::Lorem.sentence }
+    let(:document_params) { { document: { email_title: title } } }
+
+    it 'anon' do
+      post "/api/v1/projects/#{project.id}/documents", params: document_params
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(FactoryBot.create(:user))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user with rights' do
+      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json['email_title']).to eql(title)
+    end
+
+    it 'project user' do
+      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(project.user)
+      expect(response).to have_http_status(:success)
+    end
   end
 
-  it '#create_revision' do
-    title = Faker::Lorem.sentence
-    rev = FactoryBot.create(:document_revision)
-    main = rev.document_main
-    main.update(project: project)
-    document = FactoryBot.create(:document, email_title: title, revision: rev)
-    post "/api/v1/documents/#{document.id}/create_revision", params: { document: { email_title: title } }, headers: credentials(user)
-    expect(response).to have_http_status(:success)
-    expect(json['email_title']).to eql(title)
-    expect(main.revisions.count).to eql(2)
-  end
+  context '' do
+    let(:title) { Faker::Lorem.sentence }
+    let(:owner) { FactoryBot.create(:user) }
+    let(:document) do
+      rev = FactoryBot.create(:document_revision)
+      convention.document_fields.each do |field|
+        if field.document_number? || field.revision_date?
+          field.update(value: rand(1000..9999))
+        end
+        field.document_field_values.first.update(selected: true)
+      end
+      doc_attrs = Document.build_from_convention(convention, user)
+      revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+      revision_number['value'] = '1'
+      rev.versions.create!(doc_attrs.merge(user_id: owner.id, project_id: project.id))
+    end
 
-  it '#edit' do
-    title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document, email_title: title)
-    get "/api/v1/documents/#{document.id}/edit", headers: credentials(document.user)
-    expect(response).to have_http_status(:success)
-    expect(json['email_title']).to eql(title)
-  end
+    context '#create_revision' do
+      let(:attrs) do
+        attrs = document.attributes_for_edit
+        attrs['email_title'] = title
+        revision_number = attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+        revision_number['value'] = '2'
+        attrs
+      end
 
-  it '#update' do
-    title = Faker::Lorem.sentence
-    document = FactoryBot.create(:document, email_title: title)
-    patch "/api/v1/documents/#{document.id}", params: { document: { email_title: title } }, headers: credentials(document.user)
-    expect(response).to have_http_status(:success)
-    expect(json['email_title']).to eql(title)
+      it 'anon' do
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json['email_title']).to eql(title)
+        expect(document.revision.document_main.revisions.count).to eql(2)
+      end
+
+      it 'owner' do
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context '#edit' do
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}/edit"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}/edit", headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        document.update!(email_title: title)
+        get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json['email_title']).to eql(title)
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}/edit", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}/edit", headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context '#update' do
+      it 'anon' do
+        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }, headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'owner' do
+        attrs = document.attributes_for_edit
+        attrs['email_title'] = title
+        patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+        expect(json['email_title']).to eql(title)
+      end
+
+      it 'project user' do
+        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }, headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do

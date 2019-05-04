@@ -32,13 +32,14 @@ class Api::V1::DocumentsController < ApplicationController
       @document.attributes_for_edit.merge(document_params.merge(project: project))
     document = @document.revision.versions.new(document_attrs)
     if document.save
-      render json: @document.attributes_for_edit
+      render json: document.attributes_for_edit
     else
-      render json: @document.errors, status: :unprocessable_entity
+      render json: document.errors, status: :unprocessable_entity
     end
   end
   # creates new revision
   def create_revision
+    authorize! :edit, @document
     main = @document.revision.document_main
     rev = main.revisions.create
     document_attrs =
@@ -77,7 +78,8 @@ class Api::V1::DocumentsController < ApplicationController
                                         document_field_values_attributes: [
                                           :value,
                                           :title,
-                                          :position
+                                          :position,
+                                          :selected
                                         ]
                                       ]).merge(user: signed_in_user)
   end
