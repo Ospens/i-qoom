@@ -76,7 +76,7 @@ class DocumentField < ApplicationRecord
     if codification_field?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
-        next if document_rights.find_by(user: user, document_field_value: field_value).blank?
+        next if document_rights.find_by(user: user, document_field_value: field_value, enabled: true, view_only: false).blank?
         original_attributes['document_field_values_attributes'] << field_value.build_for_new_document
       end
     end

@@ -46,7 +46,9 @@ RSpec.describe DocumentField, type: :model do
 
     context 'non codification' do
       before do
-        subject.document_rights.create(document_field: subject, limit_for: :field, user: user)
+        subject.document_rights.create(document_field: subject,
+                                       limit_for: :field,
+                                       user: user)
       end
 
       it do

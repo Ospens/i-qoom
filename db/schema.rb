@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 2019_04_25_053941) do
   end
 
   create_table "conventions", force: :cascade do |t|
-    t.integer "number"
+    t.integer "number", default: 1
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "project_id"
@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 2019_04_25_053941) do
     t.bigint "user_id"
     t.bigint "document_field_id"
     t.integer "limit_for"
+    t.boolean "enabled", default: false
+    t.boolean "view_only", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "document_field_value_id"

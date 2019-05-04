@@ -10,7 +10,11 @@ RSpec.describe Document, type: :model do
     user = FactoryBot.create(:user)
     convention.document_fields.each do |field|
       if field.can_limit_by_value?
-        field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
+        field.document_rights.create(user: user,
+                                     document_field_value:
+                                      field.document_field_values.first,
+                                     limit_for: :value,
+                                     enabled: true)
       else
         field.document_rights.create(user: user, limit_for: :field)
       end

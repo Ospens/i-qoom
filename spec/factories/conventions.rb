@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :convention do
-    number { 1 }
     project
 
     before(:create) do |instance|

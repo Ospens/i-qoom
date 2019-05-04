@@ -2,14 +2,63 @@ class DocumentRight < ApplicationRecord
   enum limit_for: [ :field, :value ], _prefix: true
 
   belongs_to :user
+
   belongs_to :document_field
+
   belongs_to :document_field_value, optional: true
+
+  has_one :convention,
+          through: :document_field,
+          source: :parent,
+          source_type: 'Convention'
+
+  has_one :project, through: :convention
 
   validates :user,
             :document_field,
             presence: true
 
+  validates :document_field_value,
+            presence: true,
+            if: :limit_for_value?
+
   validate :limit_for_based_on_field_kind
+
+  def self.attributes_for_edit(project, only_new_users = false)
+    kinds = DocumentField.codification_kinds.slice(:originating_company, :discipline, :document_type).values
+    fields = project.conventions.active.document_fields.where(codification_kind: kinds)
+    fields_with_rights =
+      fields.joins(:document_rights).where(document_rights: { enabled: true })
+    user_ids =
+      DocumentRight.where(document_field: fields_with_rights).pluck(:user_id).uniq
+    users = only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
+    attrs = {
+      fields: [], # used just for info
+      users: []
+    }
+    fields.each do |field|
+      values = DocumentFieldValue.where(document_field: field).pluck(:value)
+      attrs[:fields] << { field.codification_kind => values }
+    end
+    users.each do |user|
+      rights_attrs = []
+      fields.each do |field|
+        field.document_field_values.each do |value|
+          right =
+            user.document_rights.where(document_field: field,
+                                       document_field_value: value,
+                                       limit_for: :value).first_or_create
+          rights_attrs << right.attributes.slice('id',
+                                                 'document_field_id',
+                                                 'document_field_value_id',
+                                                 'enabled',
+                                                 'view_only')
+        end
+      end
+      attrs[:users] << { id: user.id, document_rights_attributes: rights_attrs }
+    end
+    attrs
+  end
 
   private
 

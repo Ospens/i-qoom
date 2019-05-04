@@ -7,7 +7,11 @@ describe Document, type: :request do
   let!(:convention) do
     convention = FactoryBot.create(:convention, project: project)
     convention.document_fields.limit_by_value.each do |field|
-      field.document_rights.create(user: user, limit_for: :value)
+      field.document_rights
+           .create(user: user,
+                   limit_for: :value,
+                   document_field_value: field.document_field_values.first,
+                   enabled: true)
     end
     convention
   end
@@ -62,14 +66,17 @@ describe Document, type: :request do
     before do
       rev1 = FactoryBot.create(:document_revision)
       @project = rev1.document_main.project
-      convention = FactoryBot.create(:convention, project: project)
+      convention = FactoryBot.create(:convention, project: @project)
       convention.document_fields.each do |field|
         if field.document_number? || field.revision_date?
           field.update(value: rand(1000..9999))
         end
         field.document_field_values.first.update(selected: true)
         if field.can_limit_by_value?
-          field.document_rights.create(user: user, document_field_value: field.document_field_values.first, limit_for: :value)
+          field.document_rights.create(user: user,
+                                       document_field_value: field.document_field_values.first,
+                                       limit_for: :value,
+                                       enabled: true)
         else
           field.document_rights.create(user: user, limit_for: :field)
         end
@@ -77,17 +84,17 @@ describe Document, type: :request do
       doc_attrs = Document.build_from_convention(convention, user)
       revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
       revision_number['value'] = '1'
-      @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
+      @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
       revision_number['value'] = '2'
       rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
-      @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: project.id))
+      @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
     end
 
     it 'latest revision and latest version' do
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
       expect(json[0]['id']).to eql(@doc2.id)
       expect(json[0]['document_fields'].length).to eql(7)
-      expect(json[1]).to be_blank
+      expect(json.length).to eql(1)
     end
 
     it 'all revisions and latest version of each revision' do
@@ -96,6 +103,7 @@ describe Document, type: :request do
       expect(json[0]['id']).to eql(@doc1.id)
       expect(json[0]['document_fields'].length).to eql(7)
       expect(json[1]['id']).to eql(@doc2.id)
+      expect(json.length).to eql(2)
     end
   end
 end

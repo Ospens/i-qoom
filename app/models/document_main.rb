@@ -9,14 +9,14 @@ class DocumentMain < ApplicationRecord
       all.each do |main|
         documents = main.revisions.latest_version_of_each_revision
         documents.each do |document|
-          final_documents << document if document.can_create?(user)
+          final_documents << document if document.can_view?(user)
         end
       end
       final_documents
     else
       all.map do |main|
         document = main.revisions.last_revision.last_version
-        document if document.can_create?(user)
+        document if document.can_view?(user)
       end.compact
     end
   end

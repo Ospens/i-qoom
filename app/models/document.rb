@@ -41,7 +41,23 @@ class Document < ApplicationRecord
     # user cannot create document if he has no access to at least one value
     # for each field that can be limited by value
     !project.conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user, limit_for: :value).any?
+      field.document_rights.where(user: user,
+                                  limit_for: :value,
+                                  enabled: true,
+                                  view_only: false).any?
+    end.include?(false)
+  end
+
+  def can_view?(user)
+    # user cannot view document if he has no access all values
+    # for each field that can be limited by value
+    !project.conventions.active.document_fields.limit_by_value.map do |field|
+      !field.document_field_values.map do |value|
+        field.document_rights.where(user: user,
+                                    limit_for: :value,
+                                    enabled: true,
+                                    document_field_value: value).any?
+      end.include?(false)
     end.include?(false)
   end
 
