@@ -1,5 +1,9 @@
 # README
 
+run EDITOR=nano rails credentials:edit to generate config/credentials.yml.enc and config/manter.key
+
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
