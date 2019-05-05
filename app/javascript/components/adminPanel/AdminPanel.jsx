@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-import TopBar from './TopBar'
 import UserProfile from './UserProfile'
 import { Route, Switch } from 'react-router-dom'
 import UsersTable from './UsersTable'
@@ -13,13 +12,13 @@ class AdminPanel extends Component {
 
   render() {
     const { location, match } = this.props
-    const mainClass = classnames('main-content', { 'p-0': location.pathname === match.path })
+    const mainClass = classnames('admin-panel-container', { 'p-0': location.pathname === match.path })
     return (
-      <div className='admin-panel-container'>
+      <div className={mainClass}>
         <Switch>
           <Route path={`${match.path}/users/:user_id`} component={UserProfile} />
           <Route path={`${match.path}/users`} component={UsersTable} />
-          <Route path={`${match.path}/terms`} component={Terms} />
+          <Route path={`${match.path}/terms`} render={() => <Terms editable={true}/>} />
           <Route path='/' component={LandingPage} />
         </Switch>
       </div>

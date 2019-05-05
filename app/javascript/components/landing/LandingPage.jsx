@@ -28,8 +28,8 @@ class LandingPage extends Component {
       <div className='landing-page'>
         <Switch>
           <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} editable={editable} />} />
-          <Route path='/imprint' component={Imprint} editable={editable}/>
-          <Route path='/terms' component={Terms} editable={editable}/>
+          <Route path='/imprint' component={Imprint} />
+          <Route path='/terms' component={Terms} />
           <Route path='/signin' render={props => <SignIn {...props} />} />
           <Route path='/signup' render={props => <SignUp {...props} />} />
         </Switch>

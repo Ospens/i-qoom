@@ -10,7 +10,7 @@ import SideBar from '../elements/SideBar'
 import LandingMenu from '../components/landing/LandingMenu'
 import '../styles/semantic.css'
 
-const App = ({ authed }) => {
+const App = ({ authed, isAdmin }) => {
   const [openSB, toggleSB] = useState(true)
   console.log(openSB)
 
@@ -27,7 +27,7 @@ const App = ({ authed }) => {
           <Switch>
             <PrivateRoute path='/menu' authed={authed} component={LandingMenu} />
             <PrivateRoute authed={authed} path='/dashboard' component={Dashboard} />
-            <PrivateRoute authed={authed} path='/admin_panel' component={AdminPanel} />
+            <PrivateRoute authed={authed && isAdmin} path='/admin_panel' component={AdminPanel} />
             <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
           </Switch>
         </div>
@@ -36,7 +36,8 @@ const App = ({ authed }) => {
   )
 }
 const mapStateToProps = ({ user }) => ({
-  authed: user.authStatus
+  authed: user.authStatus,
+  isAdmin: user.isAdmin
 })
 
 export default connect(mapStateToProps)(App)
