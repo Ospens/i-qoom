@@ -40,15 +40,17 @@ gem 'react-rails'
 gem 'slim'
 
 gem 'valid_email'
-gem 'faker'
 gem 'devise'
 gem 'jwt'
 gem 'cancancan', '~> 2.0'
 gem 'countries'
+gem 'figaro', '~> 1.1', '>= 1.1.1'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'faker'
+  gem 'factory_bot_rails', '~> 5.0', '>= 5.0.1'
 end
 
 group :development do
@@ -60,7 +62,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   # Use Capistrano for deployment
-  gem "capistrano", "~> 3.10", require: false
+  gem 'capistrano', '~> 3.10', require: false
   gem 'capistrano-rvm'
   gem "capistrano-rails", "~> 1.4", require: false
   gem 'capistrano-webpacker-precompile', require: false
@@ -71,11 +73,9 @@ group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
-  
+
   gem "webdrivers"
 
   gem 'rspec-rails', '~> 3.8'
   gem 'shoulda-matchers'
-
-  gem 'factory_bot_rails'
 end

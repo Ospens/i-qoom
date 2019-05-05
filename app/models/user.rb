@@ -28,5 +28,9 @@ class User < ApplicationRecord
             uniqueness: true
 
   has_many :projects
+  has_many :project_administrators
 
+  has_many :documents, class_name: 'DocumentMain'
+  has_many :document_rights
+  accepts_nested_attributes_for :document_rights
 end

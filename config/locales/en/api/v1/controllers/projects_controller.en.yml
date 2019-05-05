@@ -4,11 +4,11 @@ en:
       projects:
         create:
           success_message:
-            Successfully created
+            Successfully added
           error_message:
             Something went wrong
         update:
           success_message:
-            Successfully updated
+            Successfully added
           error_message:
             Something went wrong

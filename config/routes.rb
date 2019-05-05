@@ -12,7 +12,17 @@ Rails.application.routes.draw do
       resources :contacts, only: :create
       resources :sessions, only: :create
       resources :users, only: [:create, :update, :destroy]
-      resources :projects, except: [:new, :edit]
+
+      resources :conventions, only: [:edit, :update]
+      resources :documents, except: [:new, :create, :index] do
+        post :create_revision
+      end
+
+      resources :projects, except: [:new, :edit] do
+        resources :documents, only: [:new, :create, :index]
+        resource :dms_settings, only: [:edit, :update]
+        resource :document_rights, only: [:new, :edit, :update]
+      end
     end
   end
 
