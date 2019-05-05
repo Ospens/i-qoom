@@ -155,7 +155,7 @@ class GetStarted extends Component {
 
 const mapStateToProps = state => ({
   synchronousError: getFormSyncErrors('contact_us')(state),
-  authed: state.auth.authStatus,
+  authed: state.user.authStatus,
   title: state.landing.getStarted.title,
 })
 

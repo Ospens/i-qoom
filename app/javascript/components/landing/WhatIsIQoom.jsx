@@ -27,8 +27,8 @@ class WhatIsIQoom extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, landing }) => ({
-  authed: auth.authStatus,
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
   title: landing.whatISIQoom.title,
   description: landing.whatISIQoom.description
 })

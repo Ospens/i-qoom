@@ -3,7 +3,6 @@ import Select, { components } from 'react-select'
 
 const DropdownIndicator = props => {
   const { isFocused } = props
-  console.log(props)
   return (
     <components.DropdownIndicator {...props} className='mr-3'>
       {!isFocused && <i className='arrow down'/>}
@@ -24,7 +23,7 @@ function SelectField({ input, options, value, defaultValue, errorField, id}) {
   const borderWidth = errorInfo ? '2px' : '1px'
   const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow, zIndex: '5' }),
+    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow, zIndex: '5', maxHeight: '25px' }),
     menu: styles => ({ ...styles, marginTop: '-2px', zIndex: '4' }),
     option: (styles, { isFocused }) => ({
       ...styles,

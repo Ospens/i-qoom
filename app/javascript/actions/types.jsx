@@ -1,7 +1,8 @@
-/* Auth */
+/* User */
 export const SIGN_IN_USER = 'SIGN_IN_USER'
 export const SIGN_UP_USER = 'SIGN_UP_USER'
 export const SIGN_OUT_USER = 'SIGN_OUT_USER'
+export const FETCH_USER_SUCCESS = 'FETCH_USER_SUCCESS'
 
 /* Project */
 export const PROJECT_CREATE_SUCCESS = 'PROJECT_CREATE_SUCCESS'

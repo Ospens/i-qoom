@@ -11,32 +11,21 @@ class MainContent extends Component {
 
   render() {
     const {
-      showSignInSlider,
-      showSignUp,
       showExamples,
       toggleExamples,
-      toggleSignUp,
-      toggleSignInForm,
-      showMainPage,
       editable
     } = this.props
 
     return (
-      <div>
-        <FirstCard
-          showSignInSlider={showSignInSlider}
-          showSignUp={showSignUp}
-          toggleSignInForm={toggleSignInForm}
-          showMainPage={showMainPage}
-          editable={editable}
-        />
+      <React.Fragment>
+        <FirstCard editable={editable}/>
         <WhatIsIQoom editable={editable}/>
         {!showExamples && <SamplesContents toggleExamples={toggleExamples} editable={editable}/>}
         {showExamples && <ExampleCard toggleExamples={toggleExamples} editable={editable}/>}
-        <Pricing toggleSignUp={toggleSignUp} editable={editable}/>
+        <Pricing editable={editable}/>
         <Reviews editable={editable}/>
         <GetStarted editable={editable}/>
-      </div>
+      </React.Fragment>
     )
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm, getFormSubmitErrors } from 'redux-form'
+import { Link, Redirect } from 'react-router-dom'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
@@ -46,9 +47,9 @@ class SignUp extends Component {
   }
 
   handleSubmit = () => {
-    const { showMainPage, signUpUser } = this.props
+    const { signUpUser, history } = this.props
     const { userFields } = this.state
-    return signUpUser(userFields).then(() => showMainPage())
+    return signUpUser(userFields).then(() => history.push({pathname: '/'}))
   }
 
   nextStep = () => this.setState({step: 2})
@@ -68,7 +69,7 @@ class SignUp extends Component {
       email
     } = this.state
 
-    const { showMainPage, submitErrors } = this.props
+    const { submitErrors } = this.props
     const firstFormClass = classnames('form-row', { active: step === 1 })
     const secondFormClass = classnames('form-row', { active: step === 2 })
 
@@ -150,13 +151,13 @@ class SignUp extends Component {
               </div>
             </div>
             <div className='form-buttons col-12 text-center'>
-              <button type='button' className='col-3 btn btn-back' onClick={showMainPage}>
+              <Link to='/' className='col-3 btn btn-back'>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                   src={Left}
                 />
                 Back
-              </button>
+              </Link>
               <button type='button' className='col-3 btn btn-primary' onClick={this.nextStep}>
                 Next
                 <ReactSVG

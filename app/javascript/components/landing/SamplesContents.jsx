@@ -197,8 +197,8 @@ class SamplesContents extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, landing }) => ({
-  authed: auth.authStatus,
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
   title: landing.samplesAndContent.title,
   firstTab: landing.samplesAndContent.firstTab,
   secondTab: landing.samplesAndContent.secondTab,

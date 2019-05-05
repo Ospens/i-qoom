@@ -9,11 +9,11 @@ class Terms extends Component {
   }
 
   render() {
-    const { authed, isAdmin, content } = this.props
+    const { authed, isAdmin, content, editable } = this.props
     return (
       <section className='container info-container'>
         <div className='text-center'>
-        {authed && isAdmin ?
+        {authed && editable ?
           (
             <TextEditor text={content} />
           ) : (
@@ -25,8 +25,8 @@ class Terms extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, landing }) => ({
-  authed: auth.authStatus,
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
   isAdmin: true,
   content: landing.terms.content
 })

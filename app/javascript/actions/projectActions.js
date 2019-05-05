@@ -38,7 +38,7 @@ export const startCreateProject = name => dispatch => {
 }
 
 export const startFetchProjects = () => (dispatch, getState) => {
-  const { token } = getState().auth
+  const { token } = getState().user
   const headers = {
     Authorization: token
   }
@@ -54,7 +54,9 @@ export const startFetchProjects = () => (dispatch, getState) => {
 }
 
 export const startFetchProject = id => (dispatch, getState) => {
-  const { token } = getState().auth
+  const {
+    token
+  } = getState().user
   const headers = {
     Authorization: token
   }

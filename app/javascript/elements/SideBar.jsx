@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
+import { connect } from 'react-redux'
 import logo from '../images/Logo_header'
 import searchIcon from '../images/search-alternate'
 import burgerOpen from '../images/Burgermenu_1'
 import SideBarItem from './SideBarItem'
 import { Dropdown, Input } from 'semantic-ui-react'
+import { withRouter } from 'react-router-dom'
 
 const tagOptions = [
   {
@@ -26,15 +28,15 @@ const tagOptions = [
 ]
 
 class SideBar extends Component {
-
-  state = {
-    open: true
-  }
-
   render() {
-    const { open } = this.state
+    const { location: { pathname }, isAdmin, isOpen, toggle } = this.props
+    const sideBarShow = isAdmin || pathname.includes('/dashboard')
 
-    const mainClass = classnames('sidebar sidebar-admin-panel', { 'is-visible': open })
+    if (!sideBarShow) {
+      return null
+    }
+
+    const mainClass = classnames('sidebar sidebar-admin-panel', { 'is-visible': isOpen })
     return (
       <aside className={mainClass}>
         <div className='sidebar-sticky'>
@@ -50,7 +52,7 @@ class SideBar extends Component {
               svgStyle={{ height: 10, marginLeft: 20 }}
               src={burgerOpen}
               className='burger-button'
-              onClick={() => this.setState({ open: !open})}
+              onClick={toggle}
             />
           </div>
           <ul className='nav flex-column nav-items'>
@@ -95,4 +97,9 @@ class SideBar extends Component {
   }
 }
 
-export default SideBar
+const mapStateToProps = ({ user }) => ({
+  authed: user.authStatus,
+  isAdmin: user.isAdmin
+})
+
+export default connect(mapStateToProps)(withRouter(SideBar))

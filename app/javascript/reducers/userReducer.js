@@ -1,7 +1,8 @@
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
-  SIGN_OUT_USER
+  SIGN_OUT_USER,
+  FETCH_USER_SUCCESS
 } from '../actions/types'
 
 const localToken = localStorage.getItem('jwt-iqoom-token')
@@ -10,16 +11,24 @@ const initialState = {
   token: localToken,
   exp: null,
   user_id: null,
-  isAdmin: true
+  id: null,
+  city: null,
+  country: null,
+  email: null,
+  first_name: null,
+  last_name: null,
+  state: null,
+  updated_at: null,
+  username: null,
+  isAdmin: false
 }
 
-const authReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
   case SIGN_IN_USER:
     return {
       ...state,
-      ...action.payload.expiry,
-      token: action.payload.token,
+      ...action.payload,
       authStatus: true
     }
   case SIGN_UP_USER:
@@ -32,9 +41,14 @@ const authReducer = (state = initialState, action) => {
       authStatus: false,
       token: null
     }
+  case FETCH_USER_SUCCESS:
+    return {
+      ...state,
+      ...action.payload.data
+    }
   default:
     return state
   }
 }
 
-export default authReducer
+export default userReducer

@@ -215,8 +215,8 @@ class Reviews extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, landing }) => ({
-  authed: auth.authStatus,
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
   description: landing.reviews.description,
   cards: landing.reviews.cards,
 })

@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import ProjectOverview from './projectOverview/ProjectOverview'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import SideBar from './SideBar'
-import TopBar from './TopBar'
+import TopBar from '../../elements/TopBar'
 
 class Dashboard extends Component {
 
@@ -31,7 +31,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  info: state.auth
+  info: state.user
 })
 
 export default connect(mapStateToProps)(Dashboard)
