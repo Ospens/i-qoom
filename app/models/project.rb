@@ -1,5 +1,4 @@
 class Project < ApplicationRecord
-
   enum creation_step: [ :admins,
                         :name,
                         :company_datum,
@@ -15,8 +14,18 @@ class Project < ApplicationRecord
                       maximum: 255 },
             unless: :creation_step_admins?
 
-
   belongs_to :user
+
+  has_many :conventions
+
+  has_many :document_mains
+
+  has_many :documents
+
+  has_many :dms_settings
+
+  accepts_nested_attributes_for :dms_settings
+
   has_many :admins, class_name: "ProjectAdministrator"
   has_one :company_datum, class_name: "ProjectCompanyDatum"
 
@@ -39,5 +48,4 @@ class Project < ApplicationRecord
       end
     end
   end
-
 end

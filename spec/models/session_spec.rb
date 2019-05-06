@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe Session, type: :model do
-  user = FactoryBot.create(:user)
+  let(:user) { FactoryBot.create(:user) }
+
   context "is expected to be successfull" do
     it "with an email" do
       session = Session.new(login: user.email, password: "password1")
@@ -14,7 +15,7 @@ describe Session, type: :model do
   end
 
   context "is expected not to be successfull" do
-    context "without" do 
+    context "without" do
       it "login" do
         session = Session.new(password: "password1")
         expect(session.auth_token).to be_falsy

@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 describe "Project", type: :request do
-  headers = { "CONTENT_TYPE" => "application/json" }
-  user = FactoryBot.create(:user)
-  project = FactoryBot.create(:project, user_id: user.id)
-  second_project = FactoryBot.create(:project, user_id: user.id)
+  let(:headers) { { "CONTENT_TYPE" => "application/json" } }
+  let(:user) { FactoryBot.create(:user) }
+  let(:project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
+
   context "logged in" do
     let(:auth_token) do
       post "/api/v1/sessions",

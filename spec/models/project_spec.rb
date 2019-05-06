@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Project, type: :model do
-
   context "creation_step" do
     subject { FactoryBot.build(:project_done_step) }
     it { is_expected.to define_enum_for(:creation_step)
@@ -12,7 +11,7 @@ RSpec.describe Project, type: :model do
                            :done ])
             .with_prefix(:creation_step) }
   end
-  
+
   context "creation step is admins" do
     subject { FactoryBot.build(:project,
                                creation_step: :admins) }
@@ -54,5 +53,4 @@ RSpec.describe Project, type: :model do
       it { expect(subject.creation_step).to eq("done") }
     end
   end
-
 end
