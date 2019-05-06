@@ -204,6 +204,7 @@ describe "Project", type: :request do
                                 .company_datum.billing_address).to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).to eq("done")
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
           expect(JSON(response.body)["status"]).to eq("success")
         end
         it "should get a status 'error' and don't
