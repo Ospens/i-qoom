@@ -12,6 +12,8 @@ class ProjectAdministrator < ApplicationRecord
             email: true,
             presence: true
 
+  before_save :add_user
+
   def send_confirmation_email
     if awaiting_confirmation!
       if first_confirmation_sent_at.nil?
@@ -22,6 +24,15 @@ class ProjectAdministrator < ApplicationRecord
       ApplicationMailer.send_project_admin_confirmation(self).deliver_now
       self.save
     end
+  end
+
+  private
+
+  # adds a user only when admin is being created,
+  # then a user can be changed only by confirmation
+
+  def add_user
+    self.user = User.find_by(email: email) if user.nil?
   end
 
 end
