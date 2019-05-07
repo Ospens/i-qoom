@@ -53,39 +53,6 @@ describe "Project", type: :request do
         expect(JSON(response.body)["status"]).to eq("error")
       end
     end
-    context "update (creation_step 'admins')" do
-      it 'should get a status "success" and add a new admin to the project' do
-        patch "/api/v1/projects/#{project.id}",
-          params: { project:
-                    { admins_attributes:
-                      { id: "",
-                        email: "someemail@gmail.com"
-                      }
-                    }
-                  }.to_json,
-          headers: headers.merge("Authorization" => auth_token)
-        expect(response).to have_http_status(:success)
-        expect(Project.find_by(id: project.id).admins.count).to eq(2)
-        expect(Project.find_by(id: project.id).admins.last.email).to\
-          eq("someemail@gmail.com")
-        expect(JSON(response.body)["status"]).to eq("success")
-      end
-      it 'should get a status "error" and don\'t
-          add an admin' do
-        patch "/api/v1/projects/#{project.id}",
-          params: { project:
-                    { admins_attributes:
-                      { id: "",
-                        email: "ail.com"
-                      }
-                    }
-                  }.to_json,
-          headers: headers.merge("Authorization" => auth_token)
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(Project.find_by(id: second_project.id).name).not_to eq("12")
-        expect(JSON(response.body)["status"]).to eq("error")
-      end
-    end
     context "update" do
       context "creation_step 'admins'" do
         it 'should get a status "success" and add new admin to the project' do
