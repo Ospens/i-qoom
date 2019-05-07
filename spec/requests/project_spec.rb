@@ -149,12 +149,8 @@ describe "Project", type: :request do
       context "creation_step 'billing_address'" do
         it 'should get a status "success" and add a billing_address to the project' do
           project_without_billing_address =
-            FactoryBot.create(:project_done_step,
-                              creation_step: "company_datum",
-                              user_id: user.id)
-          project_without_billing_address.company_datum
-                                         .billing_address
-                                         .destroy
+            FactoryBot.create(:project_pre_billing_address_step,
+                               user_id: user.id)
           patch "/api/v1/projects/#{project_without_billing_address.id}",
             params: {
               project: {
@@ -177,12 +173,8 @@ describe "Project", type: :request do
         it "should get a status 'error' and don't
             add a billing_address to the project" do
           project_without_billing_address =
-            FactoryBot.create(:project_done_step,
-                              creation_step: "company_datum",
-                              user_id: user.id)
-          project_without_billing_address.company_datum
-                                         .billing_address
-                                         .destroy
+            FactoryBot.create(:project_pre_billing_address_step,
+                               user_id: user.id)
           patch "/api/v1/projects/#{project_without_billing_address.id}",
             params: {
               project: {
@@ -198,6 +190,8 @@ describe "Project", type: :request do
           expect(Project.find_by(id: project_without_billing_address.id)
                                        .company_datum
                                        .billing_address).not_to be_present
+          expect(Project.find_by(id: project_without_billing_address.id)
+                                .creation_step).not_to eq("done")
           expect(JSON(response.body)["status"]).to eq("error")
         end
       end
