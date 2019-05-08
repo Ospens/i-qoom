@@ -15,44 +15,6 @@ const columns = [
   { title: 'Go to profile', divider: true },
   { title: 'Log into account', divider: true }
 ]
-
-const accessOptions = [
-  {
-    label: 'Contract MS',
-    modulemaster: true
-  },
-  {
-    label: 'Document MS',
-    modulemaster: true
-  }
-]
-
-const emplOptions = [
-  { value: 'Employee', label: 'Employee' },
-  { value: 'Internal contractor', label: 'Internal contractor' },
-  { value: 'External contractor', label: 'External contractor' }
-]
-
-const roleOptions = [
-  { value: 'Designer', label: 'Designer' },
-  { value: 'Electrian', label: 'Electrian' },
-  { value: 'Certifier', label: 'Certifier' },
-  { value: 'Other', label: 'Other' }
-]
-
-const discOptions = [
-  { value: 'Design', label: 'Design' },
-  { value: 'Electrical', label: 'Electrical' },
-  { value: 'Certification', label: 'Certification' }
-]
-
-const minHeight = '30px'
-const height = '30px'
-
-const colourStyles = {
-  control: styles => ({ ...styles, minHeight, height })
-}
-
 class UsersTable extends Component {
 
   state = {

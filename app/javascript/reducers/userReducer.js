@@ -20,7 +20,7 @@ const initialState = {
   state: null,
   updated_at: null,
   username: null,
-  isAdmin: true
+  isAdmin: false
 }
 
 const userReducer = (state = initialState, action) => {

@@ -12,7 +12,6 @@ import '../styles/semantic.css'
 
 const App = ({ authed, isAdmin }) => {
   const [openSB, toggleSB] = useState(true)
-  console.log(openSB)
 
   return (
     <BrowserRouter>
@@ -26,7 +25,7 @@ const App = ({ authed, isAdmin }) => {
           </header>
           <Switch>
             <PrivateRoute path='/menu' authed={authed} component={LandingMenu} />
-            <PrivateRoute authed={authed} path='/dashboard' component={Dashboard} />
+            <PrivateRoute authed={authed} path='/dashboard' component={Dashboard} title='Dashboard' />
             <PrivateRoute authed={authed && isAdmin} path='/admin_panel' component={AdminPanel} />
             <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
           </Switch>

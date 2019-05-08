@@ -73,11 +73,13 @@
   }
 }
 
-.sidebar.sidebar-admin-panel {
+.sidebar {
   z-index: 20;
-  background-color: #383838;
   display: none;
-
+  
+  &.sidebar-admin-panel {
+    background-color: #383838;
+  }
   &.is-visible {
     display: flex !important;
   }

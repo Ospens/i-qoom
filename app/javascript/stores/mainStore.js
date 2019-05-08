@@ -7,10 +7,12 @@ import thunk from 'redux-thunk'
 import userReducer from '../reducers/userReducer'
 import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
+import documentsReducer from '../reducers/documentsReducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
   landing: landingReducer,
+  documents: documentsReducer,
   projects: projectReducer,
   form: reduxFormReducer
 })

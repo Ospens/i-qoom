@@ -5,13 +5,16 @@ import dots from '../images/dots-horizontal'
 
 class DropDownMenu extends Component {
 
-  trigger = () => (
-    <ReactSVG
-      svgStyle={{ height: 15, width: 15 }}
-      src={dots}
-      className='dropdown-menu-triger'
-    />
-  )
+  trigger = () => {
+    const { svgStyle } = this.props
+    return (
+      <ReactSVG
+        svgStyle={svgStyle ? svgStyle : { height: 15, width: 15 }}
+        src={dots}
+        className='dropdown-menu-triger'
+      />
+    )
+  }
 
   renderItem = (pic, title, action) => (
     <span onClick={action} className='text'>

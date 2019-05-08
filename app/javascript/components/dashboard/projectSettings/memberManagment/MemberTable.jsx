@@ -73,8 +73,6 @@ class MemberTable extends Component {
         // data: _.sortBy(data, [clickedColumn]),
         direction: 'ascending',
       })
-
-      return
     }
 
     this.setState({
@@ -98,6 +96,7 @@ class MemberTable extends Component {
 
   render() {
     const { column, data, direction } = this.state
+
     return (
       <div className='table-block'>
         <Table sortable className='mamber-managment-table'>
@@ -142,7 +141,7 @@ class MemberTable extends Component {
                   {name}
                 </Table.Cell>
                 <Table.Cell className='member-id'><span>{member_id}</span></Table.Cell>
-                <Table.Cell>
+                <Table.Cell className='td-select-dropdown'>
                   <Select
                     styles={colourStyles}
                     onChange={this.handleChange}
@@ -153,7 +152,7 @@ class MemberTable extends Component {
                     className='form-control-select'
                   />
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className='td-select-dropdown'>
                   <Select
                     styles={colourStyles}
                     onChange={this.handleChange}
@@ -164,7 +163,7 @@ class MemberTable extends Component {
                     className='form-control-select'
                   />
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell className='td-select-dropdown'>
                   <Select
                     styles={colourStyles}
                     onChange={this.handleChange}

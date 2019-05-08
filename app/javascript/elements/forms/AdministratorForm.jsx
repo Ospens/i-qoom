@@ -110,10 +110,10 @@ const selector = formValueSelector('create_administrator')
 const mapStateToProps = (state, ownProps) => ({
   form: ownProps.nameForm,
   submitErrors: getFormSubmitErrors('create_administrator')(state),
-  title: selector(state, 'title'),
-  surname: selector(state, 'surname'),
-  first_name: selector(state, 'first_name'),
-  email: selector(state, 'email')
+  title: selector(state, 'create_administrator_title'),
+  surname: selector(state, 'create_administrator_surname'),
+  first_name: selector(state, 'create_administrator_first_name'),
+  email: selector(state, 'create_administrator_email')
 })
 
 export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))

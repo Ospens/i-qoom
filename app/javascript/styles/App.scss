@@ -42,19 +42,43 @@ input::placeholder {
 }
 
 .landing-page {
-    position: relative;
-    height: calc(100vh + 38px);
-    margin-top: -100px;
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        font-family: 'aktiv-grotesk-extended', sans-serif;
-        font-weight: bold;
-        letter-spacing: 1px;
-    }
+  position: relative;
+  height: calc(100vh + 38px);
+  margin-top: -100px;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+      font-family: 'aktiv-grotesk-extended', sans-serif;
+      font-weight: bold;
+      letter-spacing: 1px;
+  }
+  input[type=checkbox]+label {
+    background: url('../images/unchecked_checkbox.svg') no-repeat;
+    background-size: 100%;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    padding: 0;
+    margin-right: 1em;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  input[type=checkbox]:checked+label {
+    background: url('../images/checked_checkbox.svg') no-repeat;
+    background-size: 100%;
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    padding: 0;
+    margin-right: 1em;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
 }
 
 body {
@@ -756,30 +780,6 @@ input[type=checkbox] {
     display: none;
 }
 
-input[type=checkbox]+label {
-    background: url('../images/unchecked_checkbox.svg') no-repeat;
-    background-size: 100%;
-    height: 20px;
-    width: 20px;
-    display: inline-block;
-    padding: 0;
-    margin-right: 1em;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-input[type=checkbox]:checked+label {
-    background: url('../images/checked_checkbox.svg') no-repeat;
-    background-size: 100%;
-    height: 20px;
-    width: 20px;
-    display: inline-block;
-    padding: 0;
-    margin-right: 1em;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
 #example-card {
     background-color: #475759;
     padding-top: 5em;
@@ -845,19 +845,29 @@ input[type=checkbox]:checked+label {
 }
 
 .top-bar-user-info {
-    display: flex;
-    flex-direction: row;
-    margin-top: 10px;
-    margin-bottom: 30px;
-    min-height: 56px;
-    ul {
-        margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  min-height: 56px;
+  margin-left: 30px; 
+  margin-right: 30px; 
+
+  ul {
+    margin-left: auto;
+  }
+
+  .nav-link {
+    path {
+      fill: grey;
     }
-    .nav-link {
-        path {
-            fill: grey;
-        }
+  }
+
+  .navbar-burger-block {
+    path {
+      fill: black;
     }
+  }
 }
 
 .user-info-avatar {

@@ -6,8 +6,7 @@ import '../../styles/Sidebar.scss'
 import 'react-datepicker/dist/react-datepicker.css'
 import ProjectOverview from './projectOverview/ProjectOverview'
 import ProjectSettings from './projectSettings/ProjectSettings'
-import SideBar from './SideBar'
-import TopBar from '../../elements/TopBar'
+import DMS from './dms/DMS'
 
 class Dashboard extends Component {
 
@@ -15,13 +14,12 @@ class Dashboard extends Component {
     const { match } = this.props
     return (
       <div className='dashboard-container'>
-        <SideBar />
         <div className='main-content'>
-          <TopBar />
           <main role='main' className='dashboard-content'>
             <Switch>
+              <Route path={`${match.path}/documents`} component={DMS} />
               <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
-              <Route path='/' component={ProjectOverview} />
+              <Route path='/' component={ProjectOverview}/>
             </Switch>
           </main>
         </div>

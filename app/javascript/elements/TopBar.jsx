@@ -7,7 +7,8 @@ import { Link, withRouter } from 'react-router-dom'
 import bell from '../images/alarm-bell'
 import messages from '../images/email-action-unread'
 import UserAvatar from 'react-user-avatar'
-import Logo from '../images/Logo_header'
+import logo from '../images/Logo_header'
+import logoPurple from '../images/i-Qoom_Brand_Logo_Gradient'
 import Left from '../images/arrow-button-left'
 import burgerIcon from '../images/Burgermenu_2'
 
@@ -53,7 +54,7 @@ class TopBar extends Component {
             <Link className='navbar-brand logo_h' to='/'>
               <ReactSVG
                 svgStyle={{ height: 40 }}
-                src={Logo}
+                src={logo}
               />
             </Link>
             <div className='collapse navbar-collapse offset'>
@@ -125,9 +126,22 @@ class TopBar extends Component {
     )
   }
 
-  renderDashboardBar = () => (
-    <div className='top-bar-user-info container'>
-      <h3>Project overview </h3>
+  renderDashboardBar = (isOpen, toggle) => (
+    <div className='top-bar-user-info'>
+      {!isOpen &&
+        <div className='navbar-burger-block'>
+          <ReactSVG
+            svgStyle={{ height: 40 }}
+            src={burgerIcon}
+            onClick={toggle}
+          />
+        </div>
+      }
+      <div className='navbar-burger-block'>
+        <h2 className='logo-png' >
+          <img src={logoPurple} onClick={toggle}/>
+        </h2>
+      </div>
       <ul>
         <li className='nav-item'>
           <button type='button' className='nav-link btn-transparent'>
@@ -161,7 +175,7 @@ class TopBar extends Component {
     if (landingBarPath.includes(pathname) || pathname === '/admin_panel') {
       return (this.renderLandingBar(isOpen, toggle))
     } else {
-      return (this.renderDashboardBar())
+      return (this.renderDashboardBar(isOpen, toggle))
     }
   }
 }

@@ -23,7 +23,6 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   flex-basis: 100%;
 }
 
@@ -163,6 +162,26 @@ button:disabled {
   display: inline-block;
 }
 
+.red-dot {
+  height: 7px;
+  width: 7px;
+  margin-right: 15px;
+  margin-bottom: 1px;
+  background-color: #ff2826;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.gray-dot {
+  height: 7px;
+  width: 7px;
+  margin-right: 15px;
+  margin-bottom: 1px;
+  background-color: #b2ced1;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .modal {
   overflow: auto !important;
 }
@@ -237,18 +256,6 @@ button:disabled {
     border: none;
     button {
       padding: 0.2em 2em;
-    }
-  }
-  .btn-white {
-    color: lightgrey;
-    background-color:#fff;
-    border-color:lightgrey;
-
-    &:hover {
-      color: grey;
-      background-color: #fff;
-      border-color: grey;
-      text-decoration: none;
     }
   }
 
@@ -457,11 +464,29 @@ button:disabled {
   margin-bottom: 20px;
 }
 
+.btn-white {
+  color: lightgrey !important;
+  background-color: #fff !important;
+  border-color: lightgrey !important;
+
+  &:hover {
+    color: grey !important;
+    background-color: #fff !important;
+    border-color: grey !important;
+    text-decoration: none !important;
+  }
+}
+
 .btn-white-blue {
+  display: flex !important;
   background-color: #fff !important;
   border: 1px solid #ced4da !important;
   color: #0096FA !important;
   font-weight: 600 !important;
+  border-radius: 5px !important;
+  display: flex;
+  justify-items: center;
+  align-items: center;
 
   &.clear-form {
     position: absolute;
@@ -552,7 +577,8 @@ button:disabled {
   }
 
   input[type=checkbox]:checked+label {
-    margin-top: 3px;
+    margin-top: 0;
+    margin-bottom: 0;
     background-color: #e8f3f4;
     border-radius: 3px;
     height: 15px;
@@ -561,28 +587,32 @@ button:disabled {
   }
 }
 
+input[type=checkbox]+label {
+  background-color: #e8f3f4;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 3px;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}
+
+input[type=checkbox]:checked+label {
+  background: url('../../images/checked_checkbox.svg') no-repeat;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: #e8f3f4;
+  border-radius: 3px;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+  background-size: 100%;
+}
+
 .mamber-managment-table {
   border: none !important;
   font-size: 12px !important;
   border-collapse: collapse !important;
-
-  input[type=checkbox]+label {
-    background-color: #e8f3f4;
-    margin-top: 3px;
-    border-radius: 3px;
-    height: 15px;
-    width: 15px;
-    cursor: pointer;
-  }
-
-  input[type=checkbox]:checked+label {
-    margin-top: 3px;
-    background-color: #e8f3f4;
-    border-radius: 3px;
-    height: 15px;
-    width: 15px;
-    cursor: pointer;
-  }
 
   tbody {
     tr {
@@ -600,7 +630,11 @@ button:disabled {
     font-weight: 500 !important;
 
     &.table-checkbox {
-      padding-left: .78571429em !important;
+      padding-left: 16.8px !important;
+
+      label {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -608,19 +642,36 @@ button:disabled {
     border-top: none !important;
     padding-left: 22px !important;
     padding-left: 1.2rem !important;
-    max-width: 120px !important;
-    min-width: 180px;
     align-content: center;
     text-align: center;
+
+    &.td-select-dropdown {
+      max-width: 120px !important;
+      min-width: 180px;
+    }
+
     &.table-checkbox {
       min-width: 20px !important;
     }
+
     &.member-id {
       padding-top: 15px !important;
       color:#0095f9;
     }
+
     &.access-column {
       min-width: 80px !important;
+    }
+
+    &.td-files {
+      min-width: 0;
+      max-width: 30px;
+
+      .td-files-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
   }
 
@@ -664,28 +715,60 @@ span.divider {
 
 .dropdown-menu {
   min-width: 160px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+
   .dropdown-item {
     color: grey;
+    display: flex;
+    align-items: center;
+    padding: 7px;
+    cursor: pointer;
+
+    span.item-text {
+      margin-left: 10px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+  }
+
+  .dropdown-item:not(.dropdown-submenu) {
+
     path {
       fill: grey;
     }
-    display: flex;
-    align-items: flex-end;
-    span.item-text {
-      margin-left: 5px;
-      display: flex;
-      align-items: center;
+
+    &:hover,
+    &:active {
+      background-color: #f5fcfc;
+      color: #0095f9;
+
+      path,
+      circle {
+        fill: #0095f9;
+      }
     }
   }
 }
 
-.dropdown-toggle {
-  min-width: 160px !important;
-  line-height: 1 !important;
-}
-
 .btn-group {
   display: block !important;
+}
+
+.dropdown-with-icon {
+  button {
+    border: none !important;
+    padding: 0;
+
+    &:hover, &:active {
+      background: none !important;
+
+      circle {
+        fill: #0096FA !important;
+      }
+    }
+  }
 }
 
 .table-block {
@@ -742,15 +825,18 @@ span.tab-description {
 
 .confirm-msg {
   background-color: #475759 !important;
+
   .msg-card {
     color: white;
     width: 150px;
     white-space: normal;
     line-height: 1.2;
   }
+
   &::after {
     background-color: #475759 !important;
   }
+
   button {
     padding-left: 7px;
     padding-right: 7px;
@@ -758,6 +844,7 @@ span.tab-description {
     padding-bottom: 2px;
     margin-top: 10px;
     margin-left: 10px;
+
     &:hover {
       opacity: 0.8;
     }
@@ -1029,4 +1116,73 @@ i.arrow {
 
 .gray-purple {
   color: #9a98d9;
+}
+
+.dropdown-submenu {
+  background: none;
+  border: none;
+
+  button {
+    display: flex;
+    align-items: center;
+    padding: 0 !important;
+  }
+
+  .dropdown-menu {
+    top: 0;
+    left: 105%;
+  }
+
+  &:active {
+    color: #fff;
+    text-decoration: none;
+    background: none !important;
+  }
+}
+
+.download-files-dropdown {
+  min-width: 350px;
+  padding: 10px;
+
+  .download-files-dropdown__title {
+    padding-bottom: 5px;
+    border-bottom: 1px solid lightgray;
+
+    span {
+      color: gray;
+    }
+  }
+
+  .col-6 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+
+    label {
+      margin-right: 10px; 
+    }
+
+    span {
+      margin-left: 10px; 
+    }
+  }
+
+  .button-block {
+    display: flex;
+
+    button {
+      height: 30px;
+      display: flex;
+      justify-content: center;
+    }
+
+    button:first-of-type {
+      margin-right: 5px;
+    }
+
+    button:last-of-type {
+      margin-left: 5px;
+    }
+  }
 }

@@ -26520,6 +26520,7 @@ Floated Menu / Item
 
 .ui.table thead tr:first-child > th:first-child {
   border-radius: 0.28571429rem 0em 0em 0em;
+  padding-left: 16.8px !important;
 }
 
 .ui.table thead tr:first-child > th:last-child {

@@ -54,9 +54,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
 }
 
 export const startFetchProject = id => (dispatch, getState) => {
-  const {
-    token
-  } = getState().user
+  const { token } = getState().user
   const headers = {
     Authorization: token
   }
@@ -64,6 +62,7 @@ export const startFetchProject = id => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${id}`, { headers })
       .then(response => {
+        console.log(response)
         dispatch(projectFetched(response.data.location))
       })
       .catch(e => {
