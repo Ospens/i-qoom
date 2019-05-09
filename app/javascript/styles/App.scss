@@ -79,6 +79,11 @@ input::placeholder {
     vertical-align: middle;
   }
 
+  li {
+    display: inline-block;
+    margin-right: 30px;
+  }
+
 }
 
 body {
@@ -155,11 +160,6 @@ header {
     .back-to-start {
         display: flex;
     }
-}
-
-li {
-    display: inline-block;
-    margin-right: 30px;
 }
 
 #first-card {
@@ -855,6 +855,7 @@ input[type=checkbox] {
 
   ul {
     margin-left: auto;
+    display: flex;
   }
 
   .nav-link {

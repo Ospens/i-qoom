@@ -1,7 +1,21 @@
 .dms-container {
   height: 100%;
 
+  &.new-document {
+    .col-10 {
+      border-radius: 5px;
+      border: 1px solid lightgrey;
+    }
+  }
+
   .head-buttons {
+
+    a {
+      span {
+        color: #0096FA !important;
+      }
+    }
+
     span {
       font-size: 16px;
       height: auto;
@@ -65,13 +79,13 @@
       .dms-sidebar-menu__item {
         width: 100%;
 
-        button {
+        button, a {
           display: flex;
           padding: 10px;
           width: 100%;
           align-items: center;
 
-          &:hover, &:active {
+          &:hover, &:active, &.active {
             background-color: #f0f7f7;
           }
         }
@@ -207,5 +221,47 @@
   .btn-group {
     margin-left: 5px;
     margin-right: 5px;
+  }
+}
+
+.new-project__project-phases {
+
+  span {
+    color: gray;
+  }
+
+  ul {
+    margin-bottom: 30px;
+    margin-top: 30px;
+    border-bottom: 2px solid lightgrey;
+    display: flex;
+
+    li {
+      margin-bottom: -2px;
+      padding-left: 0; 
+      padding-right: 0;
+
+      &.active {
+        color: #009aa8 !important;
+        border-bottom: 2px solid #009aa8;
+
+        button {
+          color: #009aa8 !important;
+        }
+      }
+
+      button {
+        text-decoration: none;
+        border: none;
+        background-color: transparent;
+        color: lightgrey;
+        display: flex;
+        padding: 10px;
+        padding-bottom: 15px;
+        padding-top: 15px;
+        border-bottom: 2px solid transparent;
+        width: 100%;
+      }
+    }
   }
 }

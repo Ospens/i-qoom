@@ -75,7 +75,7 @@ class SideBar extends Component {
         <span className='light-grey'>Frequently used</span>
       </li>
       <SideBarItem path='/dashboard/' label='Project overview' />
-      <SideBarItem path='/dashboard/documents/' label='Documents' />
+      <SideBarItem path='/dashboard/documents/overview/' label='Documents' />
     </ul>
   )
 

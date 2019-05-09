@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import ProjectOverview from './projectOverview/ProjectOverview'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
+import NewDocument from './dms/NewDocument'
 
 class Dashboard extends Component {
 
@@ -17,7 +18,8 @@ class Dashboard extends Component {
         <div className='main-content'>
           <main role='main' className='dashboard-content'>
             <Switch>
-              <Route path={`${match.path}/documents`} component={DMS} />
+              <Route path={`${match.path}/documents/overview`} component={DMS} />
+              <Route path={`${match.path}/documents/new`} component={NewDocument} />
               <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
               <Route path='/' component={ProjectOverview}/>
             </Switch>
