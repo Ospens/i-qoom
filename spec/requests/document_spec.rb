@@ -182,6 +182,36 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
       end
     end
+
+    context '#show' do
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}", headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        get "/api/v1/documents/#{document.id}", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json['project_name']).to eql(project.name)
+        expect(json['document_id']).to eql(document.codification_string)
+        expect(json['username']).to eql({'first_name' => owner.first_name, 'last_name' => owner.last_name})
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}", headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do
