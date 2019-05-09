@@ -43,6 +43,7 @@ describe "Project", type: :request do
                   }.to_json,
           headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:success)
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
         expect(JSON(response.body)["status"]).to eq("success")
       end
       it 'should get a status "error"' do
