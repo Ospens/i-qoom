@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'
-import { startFetchProject } from '../../../actions/projectActions'
+import { startFetchProject, startFetchProjectAdministrator } from '../../../actions/projectActions'
 import ProjectDetails from './ProjectDetails'
 import ProjectStatus from './ProjectStatus'
 import MemberManagment from './MemberManagment'
@@ -20,9 +20,10 @@ class ProjectSettings extends Component {
   }
 
   componentWillMount() {
-    const { startFetchProject } = this.props
+    const { startFetchProject, fetchProjectAdministrator } = this.props
     const { project_id } = this.props.match.params
     startFetchProject(project_id)
+    fetchProjectAdministrator(project_id)
   }
 
   renderProjectStatus = (color, text) => (
@@ -76,7 +77,8 @@ class ProjectSettings extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchProject: (id) => dispatch(startFetchProject(id))
+  startFetchProject: (id) => dispatch(startFetchProject(id)),
+  fetchProjectAdministrator: (id) => dispatch(startFetchProjectAdministrator(id))
 })
 
 const mapStateToProps = state => ({

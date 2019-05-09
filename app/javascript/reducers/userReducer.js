@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
@@ -5,7 +6,11 @@ import {
   FETCH_USER_SUCCESS
 } from '../actions/types'
 
-const localToken = localStorage.getItem('jwt-iqoom-token')
+const token = localStorage.getItem('jwt-iqoom-token')
+const tokenExp = localStorage.getItem('jwt-iqoom-token-expiry')
+const currentDate = new Date()
+const localToken = new Date(Number(tokenExp)) < currentDate ? token : null
+
 const initialState = {
   authStatus: localToken !== null,
   token: localToken,

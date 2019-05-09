@@ -57,7 +57,7 @@ class ModalCreateProject extends Component {
             closeModal={this.closeModalAndDiscardSteps}
             termsAccepted={termsAccepted}
             nextStep={() => this.changeStep(1)}
-          />
+            />
         }
         {step === 2 &&
           <ModalFirstAdmin

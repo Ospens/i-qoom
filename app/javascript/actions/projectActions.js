@@ -30,15 +30,16 @@ export const startCreateProject = () => (dispatch, getState) => {
     Authorization: token
   }
   const admins_attributes = {
+    id: '',
     ...form.administrator_form.values,
   }
 
   const company_form = form.company_form.values
 
   const request = {
-    creation_step: 1,
     project: {
-      //name: form.project_form.values.project_title,
+      creation_step: 'admins',
+      name: form.project_form.values.project_title,
       admins_attributes,
       /*company_datum_attributes: {
         logo: company_form.logo,
@@ -50,7 +51,6 @@ export const startCreateProject = () => (dispatch, getState) => {
       }*/
     }
   }
-  console.log(request)
 
   return (
     axios.post('/api/v1/projects', request, { headers })
@@ -95,4 +95,22 @@ export const startFetchProject = id => (dispatch, getState) => {
         console.error(e)
       })
   )
+}
+
+export const startFetchProjectAdministrator = id => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = {
+    Authorization: token
+  }
+/*
+  return (
+    axios.get(`/api/v1/projects/${id}`, { headers })
+      .then(response => {
+        console.log(response)
+        dispatch(projectFetched(response.data.location))
+      })
+      .catch(e => {
+        console.error(e)
+      })
+  )*/
 }

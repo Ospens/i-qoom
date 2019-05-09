@@ -9,6 +9,7 @@
   }
 
   .head-buttons {
+    display: flex;
 
     a {
       span {
@@ -53,7 +54,6 @@
         stroke: lightgray;
       }
     }
-
   }
 
   .dms-sidebar-menu {

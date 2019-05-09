@@ -63,8 +63,9 @@ export const signInUser = (login, password) => dispatch => {
   return (
     axios.post('/api/v1/sessions', request)
       .then(response => {
-        localStorage.setItem('jwt-iqoom-token', response.data.auth_token)
         const decoded = jwtDecode(response.data.auth_token)
+        localStorage.setItem('jwt-iqoom-token-expiry', decoded.exp)
+        localStorage.setItem('jwt-iqoom-token', response.data.auth_token )
         dispatch(signIn(response.data.auth_token, decoded.exp, decoded.user_id))
         dispatch(fetchUser(decoded.user_id))
       })
