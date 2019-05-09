@@ -300,7 +300,7 @@ class ProjectDetails extends Component {
             closeModal={() => this.toggleModals('adminForm', false)}
             customButtons={this.modalButtonsAdmin}
             modalTitle='New project administrator'
-            nameForm='create_administrator_2'
+            nameForm='administrator_form_2'
             customSubmit={() => this.toggleModals('adminForm', false)}
           />}
       </React.Fragment>

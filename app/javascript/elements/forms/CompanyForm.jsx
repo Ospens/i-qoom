@@ -51,7 +51,7 @@ class CompanyForm extends Component {
                   <div className='logo-uploader'>
                     <Field
                       type='file'
-                      name='file_logo'
+                      name='logo'
                       id='file_logo'
                       label='Add a logo'
                       component={FileField}
@@ -98,7 +98,7 @@ class CompanyForm extends Component {
               <div className='form-group col-8'>
                 <InputField
                   type='text'
-                  name='street_name'
+                  name='street'
                   id='street_name'
                   errorField={submitErrors}
                   placeholder='Street name'
@@ -107,7 +107,7 @@ class CompanyForm extends Component {
               <div className='form-group col-4'>
                 <InputField
                   type='text'
-                  name='street_number'
+                  name='house_number'
                   id='street_number'
                   errorField={submitErrors}
                   placeholder='No.'
@@ -166,9 +166,9 @@ class CompanyForm extends Component {
             {creating &&
               <div className='form-group text-left rect-checkbox'>
               <CheckboxField
-                name='billing_address'
+                name='same_for_billing_address'
                 checkBoxId='billing_address'
-                labelClass='form-check-label'
+                labelClass='form-check-label mr-2'
                 text='This is also the billing address'
                 errorField={submitErrors}
               />
@@ -188,4 +188,12 @@ const mapStateToProps = state => ({
   companyName: selector(state, 'company_name')
 })
 
-export default connect(mapStateToProps)(reduxForm({ form: 'company_form' })(CompanyForm))
+export default connect(
+  mapStateToProps
+  )(reduxForm(
+    {
+      form: 'company_form',
+      initialValues: { same_for_billing_address: true },
+      destroyOnUnmount: false
+    })
+  (CompanyForm))

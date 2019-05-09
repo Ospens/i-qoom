@@ -189,12 +189,14 @@ button:disabled {
 .modal-dialog {
   margin-top: 25vh !important;
   line-height: 1.5;
+
   h4 {
     font-family: 'aktiv-grotesk', sans-serif;
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 40px;
   }
+
   .modal-body{
     display: flex;
     flex-direction: column;
@@ -203,9 +205,16 @@ button:disabled {
     min-height: 250px;
     padding-left: 30px;
     padding-right: 30px;
+
     &.terms-modal {
       padding-left: 60px;
       padding-right: 60px;
+
+      a:hover {
+        text-decoration: none;
+        outline: none;
+        color: #007bff;
+      }
     }
 
     &.project-name,
@@ -217,7 +226,6 @@ button:disabled {
         label {
           color: #c8d8d9;
           display: flex;
-          align-self: flex-start;
         }
       }
 

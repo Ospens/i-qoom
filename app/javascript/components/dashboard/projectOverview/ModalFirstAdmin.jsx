@@ -14,7 +14,7 @@ class ModalFirstAdmin extends Component {
             {...this.props}
             titleModal='Who is the project administrator?'
             label='Project administrator'
-            nameForm={nameForm ||'create_administrator'}
+            nameForm={nameForm ||'administrator_form'}
             mainClass='modal-body'
           />
         </div>

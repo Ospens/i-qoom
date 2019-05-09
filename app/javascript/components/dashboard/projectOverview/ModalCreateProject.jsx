@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { reset } from 'redux-form'
 import ModalTerms from './ModalTerms'
+import { startCreateProject } from '../../../actions/projectActions'
 import ModalFirstAdmin from './ModalFirstAdmin'
 import ModalSecondAdmin from './ModalSecondAdmin'
 import ModalProjectName from './ModalProjectName'
@@ -21,6 +22,12 @@ class ModalCreateProject extends Component {
     this.setState({ step: step + increase })
   }
 
+  submitChanges = () => {
+    const { startCreateProject } = this.props
+    startCreateProject()
+    // this.setState({ step: 7 })
+  }
+
   toogleTerms = () => {
     const { termsAccepted } = this.state
     this.setState({ termsAccepted: !termsAccepted })
@@ -30,8 +37,8 @@ class ModalCreateProject extends Component {
     const { resetForm } = this.props
     const { closeModal } = this.props
     this.setState({ step: 1, termsAccepted: false })
-    resetForm('create_project')
-    resetForm('create_administrator')
+    resetForm('project_form')
+    resetForm('administrator_form')
     closeModal()
   }
 
@@ -75,7 +82,7 @@ class ModalCreateProject extends Component {
         {step === 5 &&
           <ModalCompanyData
             closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={(increase) => this.changeStep(increase)}
+            customSubmit={() => this.submitChanges()}
             changeStep={(val) => this.changeStep(val)}
           />
         }
@@ -99,7 +106,8 @@ class ModalCreateProject extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  resetForm: (formName) => dispatch(reset(formName))
+  resetForm: (formName) => dispatch(reset(formName)),
+  startCreateProject: () => dispatch(startCreateProject())
 })
 
 export default connect(null, mapDispatchToProps)(ModalCreateProject)

@@ -5,9 +5,14 @@ import ModalComponent from '../../../elements/ModalComponent'
 class ModalCompanyData extends Component {
 
   handleSubmit = (values) => {
-    const { changeStep } = this.props
-    const step = values.billing_address ? 2 : 1
-    changeStep(step)
+    const { changeStep, customSubmit } = this.props
+    const step = values.same_for_billing_address ? 2 : 1
+    console.log(step)
+    if (step === 2) {
+      customSubmit()
+    } else {
+      changeStep(step)
+    }
   }
 
   render() {

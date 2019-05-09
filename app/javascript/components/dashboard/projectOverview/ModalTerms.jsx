@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import ModalComponent from '../../../elements/ModalComponent'
 
 function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
@@ -6,7 +7,7 @@ function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
     <ModalComponent>
       <div>
         <div className='modal-body terms-modal'>
-          <h5>Please read our <a href='#'>Terms and Conditions</a></h5>
+          <h5>Please read our <Link to='/terms' target='_blank'>Terms and Conditions</Link></h5>
           <h5>and check the box below</h5>
 
           <div className='checkbox-terms rect-checkbox'>
@@ -15,7 +16,7 @@ function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
               id='terms'
               onClick={toogleTerms}
             />
-            <label htmlFor='terms'></label>
+            <label htmlFor='terms' className='mr-2'/>
             <span>I have read and agree to the Terms</span>
           </div>
         </div>

@@ -11,8 +11,8 @@ class AdministratorForm extends Component {
   }
 
   renderSubmitButtons = () => {
-    const { closeModal, title, surname, first_name, email } = this.props
-    const hasEmptyFields = !title || !surname || !first_name || !email
+    const { closeModal, username, last_name, first_name, email } = this.props
+    const hasEmptyFields = !username || !last_name || !first_name || !email
     return (
       <div className='modal-footer'>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
@@ -39,19 +39,19 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_title`}
-                  id={`${nameForm}_title`}
+                  name='username'
+                  id={`${nameForm}_username`}
                   errorField={submitErrors}
-                  placeholder='Title'
+                  placeholder='Username'
                 />
               </div>
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_surname`}
-                  id={`${nameForm}_surname`}
+                  name='last_name'
+                  id={`${nameForm}_last_name`}
                   errorField={submitErrors}
-                  placeholder='Surname'
+                  placeholder='Last name'
                 />
               </div>
             </div>
@@ -59,7 +59,7 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_first_name`}
+                  name='first_name'
                   id={`${nameForm}_first_name`}
                   errorField={submitErrors}
                   placeholder='First name'
@@ -70,7 +70,7 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_email`}
+                  name='email'
                   id={`${nameForm}_email`}
                   errorField={submitErrors}
                   placeholder='Email address'
@@ -81,7 +81,7 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_phone_code`}
+                  name='phone_code'
                   id={`${nameForm}_phone_code`}
                   errorField={submitErrors}
                   placeholder='+00'
@@ -90,7 +90,7 @@ class AdministratorForm extends Component {
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name={`${nameForm}_phone_number`}
+                  name='phone_number'
                   id={`${nameForm}_phone_number`}
                   errorField={submitErrors}
                   placeholder='Phone number'
@@ -105,15 +105,15 @@ class AdministratorForm extends Component {
   }
 }
 
-const selector = formValueSelector('create_administrator')
+const selector = formValueSelector('administrator_form')
 
 const mapStateToProps = (state, ownProps) => ({
   form: ownProps.nameForm,
-  submitErrors: getFormSubmitErrors('create_administrator')(state),
-  title: selector(state, 'create_administrator_title'),
-  surname: selector(state, 'create_administrator_surname'),
-  first_name: selector(state, 'create_administrator_first_name'),
-  email: selector(state, 'create_administrator_email')
+  submitErrors: getFormSubmitErrors('administrator_form')(state),
+  username: selector(state, 'username'),
+  last_name: selector(state, 'last_name'),
+  first_name: selector(state, 'first_name'),
+  email: selector(state, 'email')
 })
 
 export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))

@@ -20,14 +20,40 @@ const projectFetched = payload => ({
   payload
 })
 
-export const startCreateProject = name => dispatch => {
+export const startCreateProject = () => (dispatch, getState) => {
+  const {
+    user: { token },
+    form
+  } = getState()
+
+  const headers = {
+    Authorization: token
+  }
+  const admins_attributes = {
+    ...form.administrator_form.values,
+  }
+
+  const company_form = form.company_form.values
+
   const request = {
+    creation_step: 1,
     project: {
-      name
+      //name: form.project_form.values.project_title,
+      admins_attributes,
+      /*company_datum_attributes: {
+        logo: company_form.logo,
+        registration_number: company_form.registration_number,
+        vat_id: company_form.vat_id,
+        same_for_billing_address: company_form.same_for_billing_address,
+
+        company_address_attributes: {...company_form}
+      }*/
     }
   }
+  console.log(request)
+
   return (
-    axios.post('/api/v1/project', request)
+    axios.post('/api/v1/projects', request, { headers })
       .then(response => {
         dispatch(projectCreated(response.data.name))
       })
