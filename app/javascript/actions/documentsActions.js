@@ -19,12 +19,12 @@ export const startFetchDocuments = () => (dispatch, getState) => {
     axios.get('/api/v1/documents', {
       headers
     })
-    .then(response => {
-      console.log('startFetchDocuments')
-      //dispatch(documentsFetched(response.data.location))
-    })
-    .catch(e => {
-      console.log(e)
-    })
+      .then(() => {
+        console.log('startFetchDocuments')
+      // dispatch(documentsFetched(response.data.location))
+      })
+      .catch(e => {
+        console.log(e)
+      })
   )
 }

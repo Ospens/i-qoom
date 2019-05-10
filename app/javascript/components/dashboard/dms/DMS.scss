@@ -1,10 +1,76 @@
 .dms-container {
   height: 100%;
 
-  &.new-document {
+  .new-document {
     .col-10 {
       border-radius: 5px;
       border: 1px solid lightgrey;
+    }
+
+    .input-container {
+      display: flex;
+
+      .document-id-code {
+        max-width: 20%;
+
+        &:not(:last-of-type) {
+          padding-right: 15px;
+        }
+      }
+    }
+
+    .generate-id-checkbox {
+      min-height: 54.5px;
+    }
+
+    textarea {
+      min-height: 180px;
+    }
+
+    label {
+      color: gray;
+    }
+
+    .ck {
+      &.ck-editor {
+        display: flex;
+        flex-direction: column;
+      }
+
+      &.ck-content {
+        background: #fff !important;
+        border: none !important;
+        min-height: 200px;
+
+        &.ck-focused {
+          box-shadow: none;
+        }
+      }
+
+      &.ck-toolbar {
+        display: flex;
+        width: max-content;
+        background-color: #fff !important;
+        justify-content: center;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 1px solid lightgray;
+        border-radius: 5px !important;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .ck-sticky-panel__content {
+        background-color: #fff !important;
+        border-top: 1px solid lightgray !important;
+        border-right: none;
+        border-left: none;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        display: flex;
+      }
     }
   }
 
@@ -263,5 +329,23 @@
         width: 100%;
       }
     }
+  }
+}
+
+.subject-like-document {
+    align-items: center;
+    display: flex;
+    padding-top: 14px;
+}
+
+.create-document-footer {
+  background: #f5f9fa;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 150px;
+    margin: 10px;
   }
 }

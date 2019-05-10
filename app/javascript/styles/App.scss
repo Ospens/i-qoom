@@ -86,6 +86,45 @@ input::placeholder {
     margin-right: 30px;
   }
 
+  /* CKEDITOR */
+
+  .ck {
+    &.ck-editor {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    &.ck-content {
+      background: #f0f7f7 !important;
+      border-radius: 10px 10px 0 0 !important;
+      border-top-color: #0096FA !important;
+      border-left-color: #0096FA !important;
+      border-right-color: #0096FA !important;
+      border-bottom: none !important;
+    }
+
+    &.ck-toolbar {
+      display: flex;
+      justify-content: center;
+      border-radius: 10px 10px 0 0 !important;
+      background-color: #fff !important;
+      border: none !important;
+    }
+
+    .ck-sticky-panel__content {
+      border-radius: 0 0 10px 10px !important;
+      border-bottom: 1px solid #0096FA !important;
+      border-left: 1px solid #0096FA !important;
+      border-right: 1px solid #0096FA !important;
+      background-color: #f0f7f7 !important;
+      border-top: none !important;
+      justify-content: center;
+      justify-items: center;
+      align-items: center;
+      display: flex;
+    }
+  }
+
 }
 
 body {
@@ -975,43 +1014,6 @@ input[type=checkbox] {
     }
 }
 
-
-/* CKEDITOR */
-
-.ck {
-    &.ck-editor {
-        display: flex;
-        flex-direction: column-reverse;
-    }
-    &.ck-content {
-        background: #f0f7f7 !important;
-        border-radius: 10px 10px 0 0 !important;
-        border-top-color: #0096FA !important;
-        border-left-color: #0096FA !important;
-        border-right-color: #0096FA !important;
-        border-bottom: none !important;
-    }
-    &.ck-toolbar {
-        display: flex;
-        justify-content: center;
-        border-radius: 10px 10px 0 0 !important;
-        background-color: #fff !important;
-        border: none !important;
-    }
-    .ck-sticky-panel__content {
-        border-radius: 0 0 10px 10px !important;
-        border-bottom: 1px solid #0096FA !important;
-        border-left: 1px solid #0096FA !important;
-        border-right: 1px solid #0096FA !important;
-        background-color: #f0f7f7 !important;
-        border-top: none !important;
-        justify-content: center;
-        justify-items: center;
-        align-items: center;
-        display: flex;
-    }
-}
-
 .with-dropdown-menu {
     display: flex !important;
     .dropdown {
@@ -1167,4 +1169,8 @@ input[type=checkbox] {
             }
         }
     }
+}
+
+.react-datepicker-popper {
+  z-index: 999;
 }

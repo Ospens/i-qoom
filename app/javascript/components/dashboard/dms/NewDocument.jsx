@@ -5,12 +5,12 @@ import { Link, Route } from 'react-router-dom'
 import {
   getFormSubmitErrors,
   reduxForm,
-  Field,
   formValueSelector
 } from 'redux-form'
-import InputField from '../../../elements/InputField'
 import overviewIcon from '../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../images/task-list-settings'
+import DocDocumentsAndFiles from './DocDocumentsAndFiles'
+import AccessAndCommunication from './AccessAndCommunication'
 
 const menuItems = [
   {
@@ -41,176 +41,38 @@ const SideBarItem = ({ path, label, icon }) => (
 )
 
 class NewDocument extends Component {
-  state = {  }
-  render() { 
+
+  state = { 
+    step: 1
+   }
+
+  render() {
+    const { step } = this.state
+
     return (
-      <div className='dms-container new-document'>
-        <div className='row pt-5'>
-          <div className='col-2'>
-            <div className='dms-sidebar-menu'>
-              <div className='dms-sidebar-menu__block'>
-                <h4>DMS menu</h4>
-                <ul className='dms-sidebar-menu__list'>
-                  {menuItems.map(({ path, title, icon }, i) => (
-                    <React.Fragment key={i}>
-                      <SideBarItem path={path} label={title} icon={icon} />
-                    </React.Fragment>
-                  ))}
-                </ul>
+      <div className='dms-container'>
+        <div className='new-document'>
+          <div className='row pt-5'>
+            <div className='col-2'>
+              <div className='dms-sidebar-menu'>
+                <div className='dms-sidebar-menu__block'>
+                  <h4>DMS menu</h4>
+                  <ul className='dms-sidebar-menu__list'>
+                    {menuItems.map(({ path, title, icon }, i) => (
+                      <React.Fragment key={i}>
+                        <SideBarItem path={path} label={title} icon={icon} />
+                      </React.Fragment>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
-          </div>
-          <div className='col-10 p-4'>
-            <div className='new-document__header'>
-              <h4>Add documents data & files</h4>
-              <div className='new-project__project-phases'>
-                <span>Project phases</span>
-                <ul className='row mx-0'>
-                  <li className='col-3 active'>
-                    <button>
-                      Planning
-                  </button>
-                  </li>
-                  <li className='col-3'>
-                    <button>
-                      Development
-                  </button>
-                  </li>
-                  <li className='col-3'>
-                    <button>
-                      Execution
-                  </button>
-                  </li>
-                  <li className='col-3'>
-                    <button>
-                      Operation
-                  </button>
-                  </li>
-                </ul>
-              </div>
+            <div className='col-10 p-0 mb-5'>
+              {step === 1
+                ? <DocDocumentsAndFiles {...this.props} nextStep={() => this.setState({ step: 2 })} />
+                : <AccessAndCommunication {...this.props} backStep={() => this.setState({ step: 1 })} />
+              }
             </div>
-
-            <form className='form-body'>
-              <div className='row'>
-
-                <div className='col-6'>
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='document_id'
-                      id='document_id'
-                      label='Pleace select or generate Document ID'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='orig_company'
-                      id='orig_company'
-                      label='Originating company*'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='discipline_company'
-                      id='discipline_company'
-                      label='Select a discipline*'
-                    />
-                  </div>
-
-                  <div className='row'>
-                    <div className='col-6'>
-                      <div className='form-group'>
-                        <InputField
-                          type='text'
-                          name='revision_number'
-                          id='revision_number'
-                          label='Define a revision number'
-                        />
-                      </div>
-                    </div>
-                    <div className='col-6'>
-                      <div className='form-group'>
-                        <InputField
-                          type='text'
-                          name='revision_number'
-                          id='revision_number'
-                          label='Revision Date*'
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className='col-6'>
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='document_type'
-                      id='document_type'
-                      label='Select a document type*'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='document_titile'
-                      id='document_titile'
-                      placeholder='Title'
-                      label='Define a document title*'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='relevance_first'
-                      id='relevance_first'
-                      label='Select relevance |'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='relevance_second'
-                      id='relevance_second'
-                      label='Select relevance ||'
-                    />
-                  </div>
-
-                  <div className='form-group'>
-                    <InputField
-                      type='text'
-                      name='originator'
-                      id='originator'
-                      label='Originator*'
-                    />
-                  </div>
-                </div>
-
-              </div>
-
-              <div className='form-group'>
-                <InputField
-                  type='text'
-                  name='originator'
-                  id='originator'
-                  placeholder='Information'
-                  label='Add additional information'
-                />
-              </div>
-
-              <div className='row'>
-                <div className='col-6'>
-                </div>
-              </div>
-            </form>
-
           </div>
         </div>
       </div>
@@ -218,4 +80,15 @@ class NewDocument extends Component {
   }
 }
 
-export default (reduxForm({ form: 'document_form' })(NewDocument))
+const selector = formValueSelector('document_form')
+
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('document_form')(state),
+  orig_company: selector(state, 'orig_company')
+})
+
+const mapDispatchToProps = dispatch => ({
+  
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'document_form' })(NewDocument))

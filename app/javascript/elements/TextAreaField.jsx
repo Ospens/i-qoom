@@ -1,14 +1,14 @@
 import React from 'react'
 import { Field } from 'redux-form'
 
-function InputField({ errorField = {}, className, label, ...input }) {
+function TextAreaField({ errorField = {}, className, label, ...input }) {
   const errorInfo = errorField[input.id]
   return (
     <div className={className}>
       {label && <label htmlFor={input.name}>{label}</label>}
       <Field
         {...input}
-        component='input'
+        component='textarea'
         className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
       />
       <div className='invalid-feedback'>
@@ -18,4 +18,4 @@ function InputField({ errorField = {}, className, label, ...input }) {
   )
 }
 
-export default InputField
+export default TextAreaField

@@ -11,8 +11,8 @@ const initialState = {
       codification_kind: 'AWE-ECR-EOS-LET-0113',
       title: 'Tellus in hac habitasse',
       revision: '12.10.2018',
-      version: '1.5',
-      
+      version: '1.5'
+
     },
     {
       id: 2,

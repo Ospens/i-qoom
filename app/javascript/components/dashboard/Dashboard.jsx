@@ -18,8 +18,8 @@ class Dashboard extends Component {
         <div className='main-content'>
           <main role='main' className='dashboard-content'>
             <Switch>
-              <Route path={`${match.path}/documents/overview`} component={DMS} />
-              <Route path={`${match.path}/documents/new`} component={NewDocument} />
+              <Route path={`${match.path}/projects/:project_id/documents/overview`} component={DMS} />
+              <Route path={`${match.path}/projects/:project_id/documents/new`} component={NewDocument} />
               <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
               <Route path='/' component={ProjectOverview}/>
             </Switch>

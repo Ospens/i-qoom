@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
-import jwtDecode  from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import { errorNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
@@ -40,9 +40,8 @@ export const signOutUser = () => {
   })
 }
 
-export const fetchUser = userId => dispatch => {
-  return (
-    axios.get(`/api/v1/users/${userId}`)
+export const fetchUser = userId => dispatch => (
+  axios.get(`/api/v1/users/${userId}`)
     .then(response => {
       dispatch(fetchUserSuccess(response.data.location))
     })
@@ -50,8 +49,7 @@ export const fetchUser = userId => dispatch => {
       errorNotify(response.data.message)
       throw new SubmissionError(response.data.error_messages)
     })
-  )
-}
+)
 
 export const signInUser = (login, password) => dispatch => {
   const request = {
@@ -65,7 +63,7 @@ export const signInUser = (login, password) => dispatch => {
       .then(response => {
         const decoded = jwtDecode(response.data.auth_token)
         localStorage.setItem('jwt-iqoom-token-expiry', decoded.exp)
-        localStorage.setItem('jwt-iqoom-token', response.data.auth_token )
+        localStorage.setItem('jwt-iqoom-token', response.data.auth_token)
         dispatch(signIn(response.data.auth_token, decoded.exp, decoded.user_id))
         dispatch(fetchUser(decoded.user_id))
       })

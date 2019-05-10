@@ -119,14 +119,15 @@ class DMS extends Component {
 
   renderHeader = () => {
     const { checkedDocs } = this.state
+    const { match: { params } } = this.props
     const checkedLength = checkedDocs.length
     const btnClass = classnames('btn with-icon', { 'disable': checkedLength === 0 })
 
     return (
       <ul className='head-buttons'>
-        <Route path='/dashboard/documents/new/' exact>
+        <Route path='/dashboard/projects/:project_id/documents/new/' exact>
           <li>
-            <Link className='btn d-flex' to='/dashboard/documents/new/'>
+            <Link className='btn d-flex' to={`/dashboard/projects/${params.project_id}/documents/new/`}>
               <ReactSVG
                 svgStyle={{ height: 15, width: 15, marginRight: 5 }}
                 src={blueCheck}
