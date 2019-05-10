@@ -314,7 +314,7 @@ RSpec.describe DocumentField, type: :model do
 
     it 'revision_version' do
       field = FactoryBot.build(:document_field, required: true, kind: :upload_field)
-      field.files.attach(io: File.new(fixture('test.txt')), filename: 'test.txt')
+      field.files.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
       expect(document).to be_valid
       field.files.delete_all

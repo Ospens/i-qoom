@@ -27,7 +27,7 @@ RSpec.describe Document, type: :model do
   it 'upload field' do
     doc = FactoryBot.create(:document)
     field = doc.document_fields.create(kind: :upload_field)
-    field.files.attach(io: File.new(fixture('test.txt')), filename: 'test.txt')
+    field.files.attach(fixture_file_upload('test.txt'))
     expect(field.files.first.download.strip).to eql('111')
   end
 end

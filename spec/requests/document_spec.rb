@@ -80,8 +80,8 @@ describe Document, type: :request do
     document_params = Document.build_from_convention(convention, user)
     revision_number = document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
     revision_number['value'] = '0'
-    file1 = Rack::Test::UploadedFile.new(fixture('test.txt'), 'text/plain')
-    file2 = Rack::Test::UploadedFile.new(fixture('test.txt'), 'text/plain')
+    file1 = fixture_file_upload('test.txt')
+    file2 = fixture_file_upload('test.txt')
     field = FactoryBot.attributes_for(:document_field, kind: :upload_field, files: [file1, file2])
     document_params['document_fields_attributes'] << field
     post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
