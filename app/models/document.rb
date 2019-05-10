@@ -9,7 +9,7 @@ class Document < ApplicationRecord
 
   has_one :document_main, through: :revision
 
-  has_many :document_fields, as: :parent
+  has_many :document_fields, as: :parent, index_errors: true
 
   accepts_nested_attributes_for :document_fields
 

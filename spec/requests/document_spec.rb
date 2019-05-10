@@ -70,6 +70,30 @@ describe Document, type: :request do
     end
   end
 
+  it 'uploads files' do
+    convention.document_fields.each do |field|
+      if field.document_number? || field.revision_date?
+        field.update(value: rand(1000..9999))
+      end
+      field.document_field_values.first.update(selected: true)
+    end
+    document_params = Document.build_from_convention(convention, user)
+    revision_number = document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+    revision_number['value'] = '0'
+    file1 = Rack::Test::UploadedFile.new(fixture('test.txt'), 'text/plain')
+    file2 = Rack::Test::UploadedFile.new(fixture('test.txt'), 'text/plain')
+    field = FactoryBot.attributes_for(:document_field, kind: :upload_field, files: [file1, file2])
+    document_params['document_fields_attributes'] << field
+    post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
+    expect(response).to have_http_status(:success)
+    files = Document.last.document_fields.find_by(kind: :upload_field).files
+    file1 = files.first
+    file2 = files.last
+    expect(files.length).to eql(2)
+    expect(file1.download.strip).to eql('111')
+    expect(file2.download.strip).to eql('111')
+  end
+
   context '' do
     let(:title) { Faker::Lorem.sentence }
     let(:owner) { FactoryBot.create(:user) }

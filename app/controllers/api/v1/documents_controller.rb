@@ -81,7 +81,7 @@ class Api::V1::DocumentsController < ApplicationController
                                         :title,
                                         :command,
                                         :value,
-                                        :files,
+                                        files: [],
                                         document_field_values_attributes: [
                                           :value,
                                           :title,

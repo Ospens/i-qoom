@@ -86,6 +86,12 @@ class DocumentField < ApplicationRecord
   def build_for_edit_document
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
+    if upload_field?
+      original_attributes['files'] = []
+      files.each do |file|
+        original_attributes['files'] << file.attributes.except('id', 'created_at')
+      end
+    end
     if codification_field?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
