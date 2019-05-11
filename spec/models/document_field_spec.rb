@@ -312,7 +312,16 @@ RSpec.describe DocumentField, type: :model do
       expect(field.value).to be_present
     end
 
-    it 'revision_version' do
+    it 'document_native_file' do
+      field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+      field.files.attach(fixture_file_upload('test.txt'))
+      document.document_fields << field
+      expect(document).to be_valid
+      field.files.delete_all
+      expect(document).to_not be_valid
+    end
+
+    it 'upload_field' do
       field = FactoryBot.build(:document_field, required: true, kind: :upload_field)
       field.files.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
@@ -320,6 +329,16 @@ RSpec.describe DocumentField, type: :model do
       field.files.delete_all
       expect(document).to_not be_valid
     end
+  end
+
+  it '#native_file_is_only_one' do
+    document = FactoryBot.build(:document)
+    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+    field.files.attach(fixture_file_upload('test.txt'))
+    document.document_fields << field
+    expect(document).to be_valid
+    field.files.attach(fixture_file_upload('test.txt'))
+    expect(document).to_not be_valid
   end
 
   it '#multiselect_is_not_allowed' do
@@ -331,5 +350,40 @@ RSpec.describe DocumentField, type: :model do
     expect(document.errors.count).to eql(2)
     value.selected = false
     expect(document).to be_valid
+  end
+
+  context '#attach_previous_native_file' do
+    let(:rev) { FactoryBot.create(:document_revision) }
+    let(:doc) { FactoryBot.create(:document, revision: rev) }
+    let(:doc_attrs) { doc.attributes_for_edit }
+    let(:file_field1) { doc.document_fields.find_by(codification_kind: :document_native_file) }
+
+    before do
+      field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+      field.files.attach(fixture_file_upload('test.txt'))
+      doc.document_fields << field
+      doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }['files'] = []
+    end
+
+    it 'new version' do
+      file1 = file_field1.files.first
+      doc2 = rev.versions.create!(doc_attrs)
+      file_field2 = doc2.document_fields.find_by(codification_kind: :document_native_file)
+      file2 = file_field2.files.first
+      expect(file_field2.files.length).to eql(1)
+      expect(file1.blob_id).to_not eql(file2.blob_id)
+      expect(file1.download).to eql(file2.download)
+    end
+
+    it 'new revision' do
+      file1 = file_field1.files.first
+      rev2 = FactoryBot.create(:document_revision, document_main: rev.document_main)
+      doc2 = rev2.versions.create!(doc_attrs)
+      file_field2 = doc2.document_fields.find_by(codification_kind: :document_native_file)
+      file2 = file_field2.files.first
+      expect(file_field2.files.length).to eql(1)
+      expect(file1.blob_id).to_not eql(file2.blob_id)
+      expect(file1.download).to eql(file2.download)
+    end
   end
 end

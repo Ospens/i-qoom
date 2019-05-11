@@ -14,23 +14,32 @@ class DocumentField < ApplicationRecord
                             :document_number,
                             :revision_number,
                             :revision_date,
-                            :revision_version ]
+                            :revision_version,
+                            :document_native_file ]
 
   belongs_to :parent, polymorphic: true
 
   has_many :document_rights
 
-  has_many :document_field_values
+  has_many :document_field_values,
+           dependent: :destroy
 
   accepts_nested_attributes_for :document_field_values
 
-  has_many_attached :files
+  has_many_attached :files,
+                    dependent: :purge
 
   before_validation :set_required,
                     if: :codification_field?
 
   before_validation :set_revision_version,
                     if: -> { parent.class.name == 'Document' && revision_version? },
+                    on: :create
+
+  before_validation :attach_previous_native_file,
+                    if: -> { parent.class.name == 'Document' &&
+                             document_native_file? &&
+                             !files.any? },
                     on: :create
 
   after_create :update_revision_number,
@@ -64,6 +73,11 @@ class DocumentField < ApplicationRecord
                     should_have_document_field_values? &&
                     !multiselect? }
 
+  validate :native_file_is_only_one,
+           if: -> { parent.class.name == 'Document' &&
+                    document_native_file? &&
+                    files.length > 1 }
+
   scope :limit_by_value, -> {
     where(kind: :codification_field,
           codification_kind: [:originating_company, :discipline, :document_type])
@@ -86,10 +100,10 @@ class DocumentField < ApplicationRecord
   def build_for_edit_document
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
-    if upload_field?
+    if upload_field? || document_native_file?
       original_attributes['files'] = []
       files.each do |file|
-        original_attributes['files'] << file.attributes.except('id', 'created_at')
+        original_attributes['files'] << { filename: file.filename.to_s }
       end
     end
     if codification_field?
@@ -178,11 +192,13 @@ class DocumentField < ApplicationRecord
         if !document_field_values.select{ |i| i['selected'] == true }.any?
           errors.add(:document_field_values, :is_required)
         end
+      elsif document_native_file?
+        errors.add(:files, :is_required) if !files.any?
       elsif value.blank?
         errors.add(:value, :is_required)
       end
-    elsif upload_field? && !files.any?
-      errors.add(:files, :is_required)
+    elsif upload_field?
+      errors.add(:files, :is_required) if !files.any?
     end
   end
 
@@ -190,5 +206,28 @@ class DocumentField < ApplicationRecord
     if document_field_values.select{ |i| i['selected'] == true }.length > 1
       errors.add(:document_field_values, :multiselect_is_not_allowed)
     end
+  end
+
+  def native_file_is_only_one
+    errors.add(:files, :should_be_only_one)
+  end
+
+  def attach_previous_native_file
+    rev = parent.revision
+    revs = rev.document_main.revisions.where.not(id: rev)
+    vers = rev.versions.where.not(id: parent)
+    return unless vers.any? || revs.any?
+    last_version_fields =
+      if vers.any? # if new version
+        vers.last_version.document_fields
+      elsif revs.any? # if new revision
+        revs.last_revision.last_version.document_fields
+      end
+    file_field =
+      last_version_fields.find_by(codification_kind: :document_native_file)
+    file = file_field.files.first
+    files.attach(io: StringIO.new(file.download),
+                 filename: file.filename,
+                 content_type: file.content_type)
   end
 end
