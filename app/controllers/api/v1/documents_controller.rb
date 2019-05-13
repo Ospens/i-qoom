@@ -1,8 +1,11 @@
 class Api::V1::DocumentsController < ApplicationController
   load_resource :project
-  load_resource :document, only: [:edit, :update]
+  load_resource :document, only: [:edit, :update, :show]
   load_resource :document, only: [:create_revision], id_param: :document_id
-  load_resource :document, through: :project, except: [:edit, :update, :create_revision]
+  load_resource :document, through: :project, except: [ :edit,
+                                                        :update,
+                                                        :create_revision,
+                                                        :show ]
   authorize_resource :document
 
   def new
@@ -57,6 +60,10 @@ class Api::V1::DocumentsController < ApplicationController
     render json: documents, include: :document_fields
   end
 
+  def show
+    render json: @document.attributes_for_show
+  end
+
   private
 
   def document_params
@@ -74,7 +81,7 @@ class Api::V1::DocumentsController < ApplicationController
                                         :title,
                                         :command,
                                         :value,
-                                        :files,
+                                        files: [],
                                         document_field_values_attributes: [
                                           :value,
                                           :title,

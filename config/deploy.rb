@@ -22,6 +22,7 @@ set :deploy_to, "/home/admin/i-qoom"
 
 # Default value for :linked_files is []
 append :linked_files, "config/master.key",
+                      "config/credentials.yml.enc",
                       "config/application.yml",
                       "puma.rb"
 
