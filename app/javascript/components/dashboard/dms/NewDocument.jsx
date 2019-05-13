@@ -9,8 +9,12 @@ import {
 } from 'redux-form'
 import overviewIcon from '../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../images/task-list-settings'
+import editIcon from '../../../images/pencil-write'
+import checkIcon from '../../../images/check_1'
 import DocDocumentsAndFiles from './DocDocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
+import DocIdModal from './DocIdModal'
+import AddRevisionModal from './AddRevisionModal'
 
 const menuItems = [
   {
@@ -24,6 +28,7 @@ const menuItems = [
     path: '/dashboard/documents/new/'
   }
 ]
+
 const SideBarItem = ({ path, label, icon }) => (
   <Route path={path} exact>
     {({ match }) => (
@@ -43,18 +48,47 @@ const SideBarItem = ({ path, label, icon }) => (
 class NewDocument extends Component {
 
   state = { 
-    step: 1
+    step: 1,
+    modal: 0
    }
 
   render() {
-    const { step } = this.state
+    const { step, modal } = this.state
 
     return (
       <div className='dms-container'>
+        {modal === 1 && <DocIdModal />}
+        {modal === 2 && <AddRevisionModal />}
         <div className='new-document'>
           <div className='row pt-5'>
             <div className='col-2'>
               <div className='dms-sidebar-menu'>
+
+                <div className='dms-sidebar-menu__document-title'>
+                  <div className='editable-title'>
+                    <h5>(Document name)</h5>
+                    <ReactSVG
+                      svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
+                      src={editIcon}
+                    />
+                  </div>
+                  <button className='btn copy-to-folder'>Copy to folder</button>
+                  {false && <React.Fragment>
+                    <div className='copied-to-folder'>
+                      <ReactSVG
+                        svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
+                        src={checkIcon}
+                      />
+                      <span>Copied to folders</span>
+                      <button className='btn copy-to-folder'>change</button>
+                    </div>
+                    <div className='not-relevant-for-me'>
+                      <span>Not relevant for me</span>
+                      <button className='btn copy-to-folder'>More</button>
+                    </div>
+                  </React.Fragment>}
+                </div>
+
                 <div className='dms-sidebar-menu__block'>
                   <h4>DMS menu</h4>
                   <ul className='dms-sidebar-menu__list'>
