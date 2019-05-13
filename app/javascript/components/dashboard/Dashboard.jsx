@@ -8,6 +8,7 @@ import ProjectOverview from './projectOverview/ProjectOverview'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import NewDocument from './dms/NewDocument'
+import AddRevision from './dms/AddRevision'
 
 class Dashboard extends Component {
 
@@ -20,6 +21,10 @@ class Dashboard extends Component {
             <Switch>
               <Route path={`${match.path}/projects/:project_id/documents/overview`} component={DMS} />
               <Route path={`${match.path}/projects/:project_id/documents/new`} component={NewDocument} />
+              <Route
+                path={`${match.path}/projects/:project_id/documents/:document_id/add_revision`}
+                component={AddRevision}
+              />
               <Route path={`${match.path}/projects/:project_id`} component={ProjectSettings} />
               <Route path='/' component={ProjectOverview}/>
             </Switch>

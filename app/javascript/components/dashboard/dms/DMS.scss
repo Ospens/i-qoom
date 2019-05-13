@@ -5,6 +5,7 @@
     .col-10 {
       border-radius: 5px;
       border: 1px solid lightgrey;
+      height: 100%;
     }
 
     .input-container {
@@ -71,6 +72,11 @@
         align-items: center;
         display: flex;
       }
+    }
+    
+    .revision-title-block {
+      display: flex;
+      margin-bottom: 30px;
     }
   }
 
@@ -275,6 +281,37 @@
         }
       }
     }
+
+    .scroll-block {
+      .revision-list {
+        max-height: 250px;
+        overflow: auto;
+
+        li {
+          width: max-content;
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+          border-radius: 5px;
+          color: #0096FA;
+          padding: 5px;
+          margin-left: 15px;
+
+          &.active {
+            background: #f0f7f7;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .scroll-block-title {
+        display: flex;
+        background-color: #f0f7f7;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+    }
   }
 
   .red-rounded-info {
@@ -289,7 +326,6 @@
     margin-left: auto;
   }
 }
-
 
 .status-name {
   display: inline-block;
@@ -460,4 +496,19 @@
     color: #0096FA;
     padding-left: 0;
   }
+}
+
+label.red-label {
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: #ffd9df;
+  border-radius: 20px;
+  height: 25px;
+  width: 125px;
+  display: flex;
+  align-items: center;
+  color: #ff448e !important;
+  justify-content: center;
 }

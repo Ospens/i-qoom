@@ -15,6 +15,7 @@ class AddRevisionModal extends Component {
 
   render() {
     const { submitErrors } = this.props
+
     return (
       <div>
         <ModalComponent>

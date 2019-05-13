@@ -8,7 +8,7 @@ import {
 const token = localStorage.getItem('jwt-iqoom-token')
 const tokenExp = localStorage.getItem('jwt-iqoom-token-expiry')
 const currentDate = new Date()
-const localToken = new Date(Number(tokenExp)) <= currentDate ? token : null
+const localToken = new Date(Number(tokenExp) * 1000) >= currentDate ? token : null
 
 const initialState = {
   authStatus: localToken !== null,
