@@ -9,7 +9,10 @@ class Document < ApplicationRecord
 
   has_one :document_main, through: :revision
 
-  has_many :document_fields, as: :parent
+  has_many :document_fields,
+           as: :parent,
+           index_errors: true,
+           dependent: :destroy
 
   accepts_nested_attributes_for :document_fields
 
@@ -49,7 +52,7 @@ class Document < ApplicationRecord
   end
 
   def can_view?(user)
-    # user cannot view document if he has no access all values
+    # user cannot view document if he has no access to all values
     # for each field that can be limited by value
     !project.conventions.active.document_fields.limit_by_value.map do |field|
       !field.document_field_values.map do |value|
@@ -70,6 +73,15 @@ class Document < ApplicationRecord
         doc['document_fields_attributes'] << field_attributes
       end
     end
+    doc
+  end
+
+  def attributes_for_show
+    doc = attributes_for_edit
+    doc['project_name'] = project.name
+    doc['document_id'] = codification_string
+    doc['username'] = user.attributes.slice('first_name', 'last_name')
+    doc['created_at'] = created_at
     doc
   end
 
