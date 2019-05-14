@@ -35,7 +35,7 @@ describe Document, type: :request do
     it 'user with rights' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['document_fields_attributes'].count).to eql(7)
+      expect(json['document_fields_attributes'].count).to eql(8)
     end
 
     it 'project user' do
@@ -280,7 +280,7 @@ describe Document, type: :request do
     it 'latest revision and latest version' do
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
       expect(json[0]['id']).to eql(@doc2.id)
-      expect(json[0]['document_fields'].length).to eql(7)
+      expect(json[0]['document_fields'].length).to eql(8)
       expect(json.length).to eql(1)
     end
 
@@ -288,7 +288,7 @@ describe Document, type: :request do
       @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
       expect(json[0]['id']).to eql(@doc1.id)
-      expect(json[0]['document_fields'].length).to eql(7)
+      expect(json[0]['document_fields'].length).to eql(8)
       expect(json[1]['id']).to eql(@doc2.id)
       expect(json.length).to eql(2)
     end

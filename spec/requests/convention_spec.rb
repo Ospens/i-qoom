@@ -14,7 +14,7 @@ describe Convention, type: :request do
     get "/api/v1/conventions/#{convention.id}/edit", headers: credentials(convention.project.user)
     expect(response).to have_http_status(:success)
     expect(json['id']).to eql(convention.id)
-    expect(json['document_fields'].count).to eql(7)
+    expect(json['document_fields'].count).to eql(8)
   end
 
   it '#update' do
@@ -22,7 +22,7 @@ describe Convention, type: :request do
     title = Faker::Lorem.sentence
     expect(convention_field.title).to_not eql(title)
     patch "/api/v1/conventions/#{convention.id}", params: { convention: { document_fields_attributes: { id: convention_field.id, title: title } } }, headers: credentials(convention.project.user)
-    expect(convention.document_fields.count).to eql(7)
+    expect(convention.document_fields.count).to eql(8)
     expect(convention_field.reload.title).to eql(title)
     patch "/api/v1/conventions/#{convention.id}", params: { convention: { document_fields_attributes: { id: convention_field.id, column: 3 } } }, headers: credentials(convention.project.user)
     expect(json['document_fields.column']).to eql(['is not included in the list'])

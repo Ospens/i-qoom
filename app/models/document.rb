@@ -82,6 +82,7 @@ class Document < ApplicationRecord
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')
     doc['created_at'] = created_at
+    doc['additional_information'] = additional_information
     doc
   end
 
@@ -99,6 +100,10 @@ class Document < ApplicationRecord
     str << '-'
     str << document_fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
     str
+  end
+
+  def additional_information_field
+    document_fields.find_by(codification_kind: :additional_information)
   end
 
   private
@@ -122,5 +127,27 @@ class Document < ApplicationRecord
         end.include?(true)
       end.include?(true)
     errors.add(:document_fields, :codification_field_changed) if error
+  end
+
+  def additional_information
+    return if additional_information_field.blank?
+    revisions = revision.document_main.revisions.order_by_revision_number
+    temporal_value = []
+    revisions.each do |rev|
+      val = rev.last_version.additional_information_field.value
+      next if val.blank?
+      temporal_value << { revision: rev.revision_number, value: val }
+    end
+    final_value = []
+    temporal_value.each_with_index do |val, index|
+      prev_val = temporal_value[index - 1]
+      if prev_val.present? && val[:value] == prev_val[:value]
+        h = final_value.detect{ |i| i[:min] == prev_val[:revision] }
+        h[:max] = val[:revision]
+      else
+        final_value << { min: val[:revision], max: val[:revision], value: val[:value]}
+      end
+    end
+    final_value
   end
 end

@@ -4,13 +4,13 @@ RSpec.describe Convention, type: :model do
   context  'create_default_fields' do
     let(:convention) { FactoryBot.create(:convention) }
 
-    it { expect(convention.document_fields.count).to eql(7) }
+    it { expect(convention.document_fields.count).to eql(8) }
     it { expect(convention.document_fields.pluck(:codification_kind).compact).to\
-      eq(['originating_company', 'discipline', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date']) }
+      eq(['originating_company', 'discipline', 'additional_information', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date']) }
     it do
       convention2 = FactoryBot.create(:convention, number: 2)
       expect(convention2.document_fields.pluck(:codification_kind).compact).to\
-        eq(['originating_company', 'receiving_company', 'discipline', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date'])
+        eq(['originating_company', 'receiving_company', 'discipline', 'additional_information', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date'])
     end
 
     context 'should set column and row' do
@@ -60,14 +60,25 @@ RSpec.describe Convention, type: :model do
       end
 
       it do
-        field = find_field(:document_native_file)
+        field = find_field(:additional_information)
         expect(field.column).to eql(1)
         expect(field.row).to eql(5)
         convention = FactoryBot.create(:convention, number: 2)
         convention.build_default_fields
-        field = convention.document_fields.find_by(codification_kind: :document_native_file)
+        field = convention.document_fields.find_by(codification_kind: :additional_information)
         expect(field.column).to eql(1)
         expect(field.row).to eql(6)
+      end
+
+      it do
+        field = find_field(:document_native_file)
+        expect(field.column).to eql(1)
+        expect(field.row).to eql(6)
+        convention = FactoryBot.create(:convention, number: 2)
+        convention.build_default_fields
+        field = convention.document_fields.find_by(codification_kind: :document_native_file)
+        expect(field.column).to eql(1)
+        expect(field.row).to eql(7)
       end
     end
   end
