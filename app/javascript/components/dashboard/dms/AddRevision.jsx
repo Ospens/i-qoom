@@ -5,6 +5,10 @@ import DragAndDropField from '../../../elements/DragAndDropField'
 import InputField from '../../../elements/InputField'
 import overviewIcon from '../../../images/task-checklist-check'
 import revisionIcon from '../../../images/Revise_2'
+import allDocIcon from '../../../images/folder-image'
+import myDocIcon from '../../../images/folder-image-1'
+import plus from '../../../images/add_1'
+import folderIcon from '../../../images/folder-empty'
 import dmsSettingsIcon from '../../../images/task-list-settings'
 import editIcon from '../../../images/pencil-write'
 import lockIcon from '../../../images/Locked'
@@ -31,6 +35,90 @@ const menuItems = [
 
 class AddRevision extends Component {
 
+  state = {
+    popup: false
+  }
+
+  renderPopCreateFolder = () => {
+    const { popup } = this.state
+
+    return (
+      <div className='copy-to-folder-block'>
+        <button className='btn btn-copy-to-folder' onClick={() => this.setState({ popup: !popup })}>Copy to folder</button>
+
+        {popup &&
+        <div className='copy-to-folder-block__popup'>
+          <label className='copy-to-folder-block__popup_title'>Copy to folder</label>
+          <ul>
+            <li className='new-folder'>
+              <ReactSVG
+                svgStyle={{ height: 15, width: 15, marginRight: 10 }}
+                src={plus}
+              />
+              <span>New folder</span>
+            </li>
+            <li className='checked'>
+              <input
+                type='checkbox'
+                id='my_concerns'
+                checked={true}
+                onChange={(val) => console.log(val)}
+              />
+              <label htmlFor='my_concerns' />
+              <ReactSVG
+                svgStyle={{ height: 15, width: 15, marginRight: 10, marginLeft: 10 }}
+                src={folderIcon}
+              />
+              <span>My concerns</span>
+            </li>
+            <li>
+              <input
+                type='checkbox'
+                id='my_concerns'
+                checked={false}
+                onChange={(val) => console.log(val)}
+              />
+              <label htmlFor='my_concerns' />
+              <ReactSVG
+                svgStyle={{ height: 15, width: 15, marginRight: 10, marginLeft: 10 }}
+                src={folderIcon}
+              />
+              <span>Not relevant for me</span>
+            </li>
+            <li className='disabled'>
+              <input
+                type='checkbox'
+                id='my_concerns'
+                checked={false}
+                onChange={(val) => console.log(val)}
+              />
+              <label htmlFor='my_concerns' />
+              <ReactSVG
+                svgStyle={{ height: 15, width: 15, marginRight: 10, marginLeft: 10 }}
+                src={allDocIcon}
+              />
+              <span>All documents</span>
+            </li>
+            <li className='disabled'>
+              <input
+                type='checkbox'
+                id='my_concerns'
+                checked={false}
+                onChange={(val) => console.log(val)}
+              />
+              <label htmlFor='my_concerns' />
+              <ReactSVG
+                svgStyle={{ height: 15, width: 15, marginRight: 10, marginLeft: 10 }}
+                src={myDocIcon}
+              />
+              <span>My documents</span>
+            </li>
+          </ul>
+        </div>}
+      </div>
+    )
+  }
+
   render() { 
     const { submitErrors } = this.props
     return (
@@ -48,7 +136,8 @@ class AddRevision extends Component {
                       src={editIcon}
                     />
                   </div>
-                  <button className='btn copy-to-folder'>Copy to folder</button>
+                  {this.renderPopCreateFolder()}
+
                   {false && <React.Fragment>
                     <div className='copied-to-folder'>
                       <ReactSVG
