@@ -20,10 +20,9 @@ class ProjectSettings extends Component {
   }
 
   componentWillMount() {
-    const { startFetchProject, fetchProjectAdministrator } = this.props
+    const { startFetchProject } = this.props
     const { project_id } = this.props.match.params
     startFetchProject(project_id)
-    fetchProjectAdministrator(project_id)
   }
 
   renderProjectStatus = (color, text) => (

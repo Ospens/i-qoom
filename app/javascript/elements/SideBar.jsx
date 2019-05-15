@@ -75,12 +75,41 @@ class SideBar extends Component {
         <span className='light-grey'>Frequently used</span>
       </li>
       <SideBarItem path='/dashboard/' label='Project overview' />
-      <SideBarItem path='/dashboard/documents/overview/' label='Documents' />
     </ul>
   )
 
+  renderProjectContent = () => (
+    <div className='mb-4'>
+      <ul className='nav flex-column nav-items'>
+        <li className='nav-item'>
+          <span className='light-grey'>Frequently used</span>
+        </li>
+        <SideBarItem path='/dashboard/' label='Resources' />
+        <SideBarItem path='/dashboard/' label='Contracts' />
+        <SideBarItem path='/dashboard/projects/1/documents/overview/' label='Documents' />
+      </ul>
+      <ul className='nav flex-column nav-items'>
+        <li className='nav-item'>
+          <span className='light-grey'>Commercial Managment</span>
+        </li>
+        <SideBarItem path='/dashboard/' label='Time sheet' />
+        <SideBarItem path='/dashboard/' label='Cost Managment' />
+        <SideBarItem path='/dashboard/' label='Templates' />
+        <SideBarItem path='/dashboard/' label='Invoices' />
+      </ul>
+      <ul className='nav flex-column nav-items'>
+        <li className='nav-item'>
+          <span className='light-grey'>Project Managment</span>
+        </li>
+        <SideBarItem path='/dashboard/' label='Technical Clarification' />
+        <SideBarItem path='/dashboard/' label='Quality Control' />
+        <SideBarItem path='/dashboard/' label='Correspondences' />
+      </ul>
+    </div>
+  )
+
   render() {
-    const { location: { pathname }, isAdmin, isOpen, toggle } = this.props
+    const { location: { pathname }, isAdmin, isOpen, toggle, currentProject } = this.props
     const sideBarShow = isAdmin || pathname.includes('/dashboard')
 
     if (!sideBarShow) {
@@ -106,30 +135,37 @@ class SideBar extends Component {
               onClick={toggle}
             />
           </div>
-          { pathname.includes('/dashboard')
-            ? this.renderDashboardContent()
-            : this.renderAdminContent()
-          }
+          {(() => {
+            if (currentProject.id) {
+              return(this.renderProjectContent())
+            } else if (pathname.includes('/dashboard')) {
+              return (this.renderDashboardContent())
+            } else if (isAdmin) {
+              return (this.renderAdminContent())
+            }
+          })()}
         </div>
+        {currentProject.id && 
         <div className='active-project'>
           <div className='project-description'>
             <span className='active-project-text'>Active project</span>
-            <span className='active-project-title'>Project name</span>
+            <span className='active-project-title'>{currentProject.name}</span>
           </div>
           <ReactSVG
             svgStyle={{ height: 20 }}
             src={cogs}
             className='active-project-cogs'
           />
-        </div>
+        </div>}
       </aside>
     )
   }
 }
 
-const mapStateToProps = ({ user }) => ({
+const mapStateToProps = ({ user, projects }) => ({
   authed: user.authStatus,
-  isAdmin: user.isAdmin
+  isAdmin: user.isAdmin,
+  currentProject: projects.current
 })
 
 export default connect(mapStateToProps)(withRouter(SideBar))

@@ -1,6 +1,7 @@
 import {
   PROJECT_CREATE_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
+  PROJECT_EXIT,
   PROJECT_FETCH_SUCCESS
 } from '../actions/types'
 
@@ -29,6 +30,11 @@ const projectReducer = (state = initialState, action) => {
     return {
       ...state,
       current: action.payload
+    }
+  case PROJECT_EXIT:
+    return {
+      ...state,
+      current: initialState.current
     }
   default:
     return state

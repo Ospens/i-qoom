@@ -3,6 +3,7 @@ import { SubmissionError } from 'redux-form'
 import {
   PROJECT_CREATE_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
+  PROJECT_EXIT,
   PROJECT_FETCH_SUCCESS
 } from './types'
 import { errorNotify } from '../elements/Notices'
@@ -24,6 +25,11 @@ const projectsFetched = payload => ({
 
 const projectFetched = payload => ({
   type: PROJECT_FETCH_SUCCESS,
+  payload
+})
+
+export const exitProject = payload => ({
+  type: PROJECT_EXIT,
   payload
 })
 

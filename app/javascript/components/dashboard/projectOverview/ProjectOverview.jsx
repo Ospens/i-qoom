@@ -6,7 +6,7 @@ import plus from '../../../images/add_1'
 import cogs from '../../../images/cog-double'
 import WelcomeModal from './ModalWelcome'
 import ModalCreateProject from './ModalCreateProject'
-import { startFetchProjects } from '../../../actions/projectActions'
+import { startFetchProjects, exitProject } from '../../../actions/projectActions'
 
 class ProjectOverview extends Component {
 
@@ -15,7 +15,8 @@ class ProjectOverview extends Component {
   }
 
   componentWillMount() {
-    const { startFetchProjects } = this.props
+    const { startFetchProjects, exitProject } = this.props
+    exitProject()
     startFetchProjects()
   }
 
@@ -95,7 +96,8 @@ class ProjectOverview extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchProjects: () => dispatch(startFetchProjects())
+  startFetchProjects: () => dispatch(startFetchProjects()),
+  exitProject: () => dispatch(exitProject())
 })
 
 const mapStateToProps = state => ({

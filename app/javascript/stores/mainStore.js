@@ -8,6 +8,7 @@ import userReducer from '../reducers/userReducer'
 import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
 import documentsReducer from '../reducers/documentsReducer'
+import { loadState, saveState } from './localStorage'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -17,9 +18,20 @@ const rootReducer = combineReducers({
   form: reduxFormReducer
 })
 
-export default createStore(
+const persistedState = loadState()
+
+const store = createStore(
   rootReducer,
+  persistedState.state,
   composeWithDevTools(
     applyMiddleware(thunk)
   )
 )
+
+store.subscribe(() => {
+  saveState({
+    state: store.getState()
+  })
+})
+
+export default store
