@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'
-import { startFetchProject, startFetchProjectAdministrator } from '../../../actions/projectActions'
+import { startFetchProject } from '../../../actions/projectActions'
 import ProjectDetails from './ProjectDetails'
 import ProjectStatus from './ProjectStatus'
 import MemberManagment from './MemberManagment'
@@ -77,8 +77,7 @@ class ProjectSettings extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchProject: (id) => dispatch(startFetchProject(id)),
-  fetchProjectAdministrator: (id) => dispatch(startFetchProjectAdministrator(id))
+  startFetchProject: (id) => dispatch(startFetchProject(id))
 })
 
 const mapStateToProps = state => ({

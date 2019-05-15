@@ -9,12 +9,12 @@ import {
   FETCH_USER_SUCCESS
 } from './types'
 
-const signIn = (token, exp, user_id) => ({
+const signIn = (token, exp, userId) => ({
   type: SIGN_IN_USER,
   payload: {
     token,
     exp,
-    user_id
+    user_id: userId
   }
 })
 

@@ -5,6 +5,7 @@ import {
   PROJECTS_FETCH_SUCCESS,
   PROJECT_FETCH_SUCCESS
 } from './types'
+import { errorNotify } from '../elements/Notices'
 
 const projectCreated = payload => ({
   type: PROJECT_CREATE_SUCCESS,
@@ -93,8 +94,8 @@ export const startCreateProject = () => (dispatch, getState) => {
       .then(response => {
         dispatch(projectCreated(response.data))
       })
-      .catch(e => {
-        console.error(e)
+      .catch(() => {
+        errorNotify('Something went wrong')
       })
   )
 }
@@ -109,8 +110,8 @@ export const startFetchProjects = () => (dispatch, getState) => {
       .then(response => {
         dispatch(projectsFetched(response.data.location))
       })
-      .catch(e => {
-        console.log(e)
+      .catch(() => {
+        errorNotify('Something went wrong')
       })
   )
 }
@@ -124,28 +125,10 @@ export const startFetchProject = id => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${id}`, { headers })
       .then(response => {
-        console.log(response)
         dispatch(projectFetched(response.data.location))
       })
-      .catch(e => {
-        console.error(e)
+      .catch(() => {
+        errorNotify('Something went wrong')
       })
   )
-}
-
-export const startFetchProjectAdministrator = id => (dispatch, getState) => {
-  /* const { token } = getState().user
-  const headers = {
-    Authorization: token
-  }
-  return (
-    axios.get(`/api/v1/projects/${id}`, { headers })
-      .then(response => {
-        console.log(response)
-        dispatch(projectFetched(response.data.location))
-      })
-      .catch(e => {
-        console.error(e)
-      })
-  ) */
 }

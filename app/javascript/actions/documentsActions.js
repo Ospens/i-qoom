@@ -2,6 +2,8 @@ import axios from 'axios'
 import {
   DOCUMENTS_FETCH_SUCCESS
 } from './types'
+import { errorNotify } from '../elements/Notices'
+
 
 const documentsFetched = payload => ({
   type: DOCUMENTS_FETCH_SUCCESS,
@@ -19,12 +21,15 @@ export const startFetchDocuments = () => (dispatch, getState) => {
     axios.get('/api/v1/documents', {
       headers
     })
-      .then(() => {
-        console.log('startFetchDocuments')
-      // dispatch(documentsFetched(response.data.location))
+      .then(response => {
+        dispatch(documentsFetched(response.data.location))
       })
-      .catch(e => {
-        console.log(e)
+      .catch(() => {
+        errorNotify('Something went wrong')
       })
   )
+}
+
+export const startFetchDocument = () => () => {
+
 }

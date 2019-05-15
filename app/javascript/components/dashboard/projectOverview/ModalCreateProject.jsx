@@ -25,7 +25,6 @@ class ModalCreateProject extends Component {
   submitChanges = () => {
     const { startCreateProject } = this.props
     startCreateProject().then(() => this.setState({ step: 5 }))
-    // this.setState({ step: 7 })
   }
 
   toogleTerms = () => {
