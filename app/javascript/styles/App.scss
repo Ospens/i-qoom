@@ -231,7 +231,6 @@ header {
 }
 
 .sign-in-form {
-  //left: 110%;
   position: relative;
   display: flex;
   align-items: center;
@@ -262,143 +261,147 @@ header {
 }
 
 .invalid-feedback {
-    margin-bottom: -16px;
-    width: max-content;
-    margin-top: 0px;
-    background-color: #fd0944;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 0 0 10px 10px;
-    color: white;
-    font-size: 12px;
-    margin-bottom: -32px;
-    text-transform: uppercase;
+  position: relative;
+  margin-bottom: -16px;
+  width: max-content;
+  margin-top: 0px;
+  background-color: #fd0944;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0 0 10px 10px;
+  color: white;
+  font-size: 12px;
+  margin-bottom: -32px;
+  text-transform: uppercase;
+  max-width: 95%;
+  z-index: 1;
 }
 
 .form-control.is-invalid {
-    display: block;
-    border: 2px solid #fd0845;
-    background-image: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: block;
+  border: 2px solid #fd0845;
+  background-image: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .form-control-select.is-invalid~.invalid-feedback {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sign-in-form__header {
-    font-weight: 600;
-    font-size: 3em;
+  font-weight: 600;
+  font-size: 3em;
     margin-bottom: 1.5em;
 }
 
 .menu_nav {
-    width: 100%;
-    position: relative;
-    right: 0;
-    &.show-slider {
-        right: 2000px;
-    }
-    li:last-child {
-        margin-right: 0;
-    }
+  width: 100%;
+  position: relative;
+  right: 0;
+  &.show-slider {
+    right: 2000px;
+  }
+  li:last-child {
+    margin-right: 0;
+  }
 }
 
 .nav-item {
-    margin-right: 20px;
-    z-index: 10;
+  margin-right: 20px;
+  z-index: 10;
 }
 
 .nav-link {
-    font-size: 13px;
-    font-weight: 100;
-    text-transform: uppercase;
-    color: #fff;
-    padding: 0;
-    display: inline-block;
-    outline: none;
-    line-height: 40px !important;
-    path {
-        fill: white;
-    }
+  font-size: 13px;
+  font-weight: 100;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 0;
+  display: inline-block;
+  outline: none;
+  line-height: 40px !important;
+
+  path {
+    fill: white;
+  }
 }
 
 .navbar-burger-block {
-    margin-left: 1rem;
-    display: flex;
-    align-items: center;
-    @media only screen and (max-width: 1380px) {
-        span {
-            display: none !important;
-        }
-    }
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  @media only screen and (max-width: 1380px) {
     span {
-        display: flex;
-        width: max-content;
-        font-size: 1.5em;
-        margin-left: 15px;
+      display: none !important;
     }
+  }
+  span {
+    display: flex;
+    width: max-content;
+    font-size: 1.5em;
+    margin-left: 15px;
+  }
 }
 
 .navbar-collapse {
-    position: relative;
-    align-self: flex-end !important;
+  position: relative;
+  align-self: flex-end !important;
 }
 
 .auth-buttons {
-    display: contents;
-    .nav-link {
-        text-transform: capitalize;
-        font-size: 15px;
-    }
-    li {
-        margin-right: 0;
-    }
+  display: contents;
+  .nav-link {
+    text-transform: capitalize;
+    font-size: 15px;
+  }
+  li {
+    margin-right: 0;
+  }
 }
 
 .btn-transparent {
-    margin-right: 0;
-    text-decoration: none;
-    border: none;
-    background-color: transparent;
+  margin-right: 0;
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
 }
 
 .welocme-text {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    position: relative;
-    color: #fff;
-    right: 0;
-    &.show-slider {
-        right: 2000px;
-    }
-    h2 {
-        font-family: 'aktiv-grotesk-extended', sans-serif;
-        font-size: 4em;
-        line-height: 1.5;
-    }
-    h3 {
-        font-family: 'aktiv-grotesk-extended', sans-serif;
-        font-size: 5em;
-        font-weight: 600;
-        line-height: 1.2;
-    }
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  color: #fff;
+  right: 0;
+  &.show-slider {
+    right: 2000px;
+  }
+  h2 {
+    font-family: 'aktiv-grotesk-extended', sans-serif;
+    font-size: 4em;
+    line-height: 1.5;
+  }
+  h3 {
+    font-family: 'aktiv-grotesk-extended', sans-serif;
+    font-size: 5em;
+    font-weight: 600;
+    line-height: 1.2;
+  }
 }
 
 .contact-us {
-    width: 30%;
-    color: #221F6D;
-    margin-top: 2em;
+  width: 30%;
+  color: #221F6D;
+  margin-top: 2em;
 }
 
 .back-button {

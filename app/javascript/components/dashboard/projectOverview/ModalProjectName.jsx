@@ -9,12 +9,13 @@ import ModalComponent from '../../../elements/ModalComponent'
 class ModalProjectName extends Component {
 
   handleSubmit = () => {
-    const { changeStep } = this.props
-    changeStep(1)
+    const { customSubmit } = this.props
+    customSubmit()
   }
 
   render() {
     const { submitErrors, closeModal, changeStep, pristine, modalTitle } = this.props
+
     return (
       <ModalComponent>
         <div className='new-project-modal'>

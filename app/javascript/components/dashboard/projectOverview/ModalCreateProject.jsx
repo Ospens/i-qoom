@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { reset } from 'redux-form'
 import ModalTerms from './ModalTerms'
-import { startCreateProject } from '../../../actions/projectActions'
+import { startCreateProject, startFetchProjects } from '../../../actions/projectActions'
 import ModalFirstAdmin from './ModalFirstAdmin'
 import ModalSecondAdmin from './ModalSecondAdmin'
 import ModalProjectName from './ModalProjectName'
@@ -24,7 +24,7 @@ class ModalCreateProject extends Component {
 
   submitChanges = () => {
     const { startCreateProject } = this.props
-    startCreateProject()
+    startCreateProject().then(() => this.setState({ step: 5 }))
     // this.setState({ step: 7 })
   }
 
@@ -34,11 +34,12 @@ class ModalCreateProject extends Component {
   }
 
   closeModalAndDiscardSteps = () => {
-    const { resetForm } = this.props
+    const { resetForm, startFetchProjects } = this.props
     const { closeModal } = this.props
     this.setState({ step: 1, termsAccepted: false })
     resetForm('project_form')
     resetForm('administrator_form')
+    startFetchProjects()
     closeModal()
   }
 
@@ -75,14 +76,14 @@ class ModalCreateProject extends Component {
         {step === 4 &&
           <ModalProjectName
             closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={(increase) => this.changeStep(increase)}
+            customSubmit={() => this.submitChanges()}
             changeStep={(val) => this.changeStep(val)}
           />
         }
         {step === 5 &&
           <ModalCompanyData
             closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={() => this.submitChanges()}
+            customSubmit={(increase) => this.changeStep(increase)}
             changeStep={(val) => this.changeStep(val)}
           />
         }
@@ -107,7 +108,8 @@ class ModalCreateProject extends Component {
 
 const mapDispatchToProps = dispatch => ({
   resetForm: (formName) => dispatch(reset(formName)),
-  startCreateProject: () => dispatch(startCreateProject())
+  startCreateProject: () => dispatch(startCreateProject()),
+  startFetchProjects: () => dispatch(startFetchProjects())
 })
 
 export default connect(null, mapDispatchToProps)(ModalCreateProject)

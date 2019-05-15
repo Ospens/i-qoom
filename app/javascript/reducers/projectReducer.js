@@ -18,6 +18,13 @@ const projectReducer = (state = initialState, action) => {
   case PROJECT_CREATE_SUCCESS:
     return {
       ...state,
+      current: {
+        ...action.payload
+      }
+    }
+  case PROJECT_CREATE_SUCCESS:
+    return {
+      ...state,
       ...action.payload
     }
   case PROJECTS_FETCH_SUCCESS:

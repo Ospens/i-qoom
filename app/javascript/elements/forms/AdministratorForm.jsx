@@ -5,7 +5,7 @@ import InputField from '../InputField'
 
 class AdministratorForm extends Component {
 
-  handleSubmit = (values) => {
+  handleSubmit = () => {
     const { customSubmit } = this.props
     customSubmit()
   }

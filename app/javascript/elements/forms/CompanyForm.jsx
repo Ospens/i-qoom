@@ -17,7 +17,7 @@ class CompanyForm extends Component {
   handleSubmit = (values) => {
     const { customSubmit } = this.props
     if (customSubmit) {
-      customSubmit(values)
+      return customSubmit(values)
     }
   }
 
@@ -40,6 +40,7 @@ class CompanyForm extends Component {
 
   render() {
     const { submitErrors, mainClassName, customButtons, headerForm, creating, pristine } = this.props
+    
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -86,7 +87,7 @@ class CompanyForm extends Component {
                     <InputField
                       type='text'
                       name='vat_id'
-                      id='vat_id'
+                      id='company_datum.vat_id'
                       errorField={submitErrors}
                       placeholder='VAT-ID'
                     />
@@ -99,7 +100,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='street'
-                  id='street_name'
+                  id='company_datum.company_address.street'
                   errorField={submitErrors}
                   placeholder='Street name'
                 />
@@ -108,7 +109,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='house_number'
-                  id='street_number'
+                  id='company_datum.company_address.house_number'
                   errorField={submitErrors}
                   placeholder='No.'
                 />
@@ -119,7 +120,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='city'
-                  id='city'
+                  id='company_datum.company_address.city'
                   errorField={submitErrors}
                   placeholder='City'
                 />
@@ -128,7 +129,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='postcode'
-                  id='postcode'
+                  id='company_datum.company_address.postcode'
                   errorField={submitErrors}
                   placeholder='Postcode'
                 />
@@ -138,7 +139,7 @@ class CompanyForm extends Component {
               <InputField
                 type='text'
                 name='country'
-                id='country'
+                id='company_datum.company_address.country'
                 errorField={submitErrors}
                 placeholder='Country'
               />

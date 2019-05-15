@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { SubmissionError } from 'redux-form'
 import {
   PROJECT_CREATE_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
@@ -6,6 +7,11 @@ import {
 } from './types'
 
 const projectCreated = payload => ({
+  type: PROJECT_CREATE_SUCCESS,
+  payload
+})
+
+const projectUpdated = payload => ({
   type: PROJECT_CREATE_SUCCESS,
   payload
 })
@@ -20,11 +26,50 @@ const projectFetched = payload => ({
   payload
 })
 
+export const startUpdateProject = (values, id, step = 'billing_address') => (dispatch, getState) => {
+  const { user: { token } } = getState()
+
+  const headers = {
+    Authorization: token
+  }
+
+  const request = {
+    project: {
+      creation_step: step,
+      company_datum_attributes: {
+        id: values.id || '',
+        logo: values.logo,
+        registration_number: values.registration_number,
+        vat_id: values.vat_id,
+        same_for_billing_address: values.same_for_billing_address,
+        company_address_attributes: {
+          company_name: values.company_name,
+          street: values.street,
+          house_number: values.house_number,
+          city: values.city,
+          postcode: values.postcode,
+          country: values.country,
+          district: values.district,
+          district_court: values.district_court
+        },
+        billing_address_attributes: {}
+      }
+    }
+  }
+
+  return (
+    axios.put(`/api/v1/projects/${id}`, request, { headers })
+      .then(response => {
+        dispatch(projectUpdated(response.data))
+      })
+      .catch(({ response }) => {
+        throw new SubmissionError(response.data.error_messages)
+      })
+  )
+}
+
 export const startCreateProject = () => (dispatch, getState) => {
-  const {
-    user: { token },
-    form
-  } = getState()
+  const { user: { token }, form } = getState()
 
   const headers = {
     Authorization: token
@@ -35,28 +80,18 @@ export const startCreateProject = () => (dispatch, getState) => {
     ...form.administrator_form.values
   }
 
-  // const company_form = form.company_form.values
-
   const request = {
     project: {
       creation_step: 'admins',
       name: form.project_form.values.project_title,
       admins_attributes: adminsAttributes
-      /* company_datum_attributes: {
-        logo: company_form.logo,
-        registration_number: company_form.registration_number,
-        vat_id: company_form.vat_id,
-        same_for_billing_address: company_form.same_for_billing_address,
-
-        company_address_attributes: {...company_form}
-      } */
     }
   }
 
   return (
     axios.post('/api/v1/projects', request, { headers })
       .then(response => {
-        dispatch(projectCreated(response.data.name))
+        dispatch(projectCreated(response.data))
       })
       .catch(e => {
         console.error(e)

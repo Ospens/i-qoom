@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import CompanyForm from '../../../elements/forms/CompanyForm'
 import ModalComponent from '../../../elements/ModalComponent'
+import { startUpdateProject } from '../../../actions/projectActions'
 
 class ModalCompanyData extends Component {
 
   handleSubmit = (values) => {
-    const { changeStep, customSubmit } = this.props
+    const { changeStep, updateProject, project } = this.props
     const step = values.same_for_billing_address ? 2 : 1
-    console.log(step)
+
     if (step === 2) {
-      customSubmit()
+      // TODO: update this method
+      return updateProject(values, project.id || 1, 'company_datum')
+        .then(() => changeStep(step))
     } else {
       changeStep(step)
     }
@@ -35,4 +39,12 @@ class ModalCompanyData extends Component {
   }
 }
 
-export default ModalCompanyData
+const mapStateToProps = state => ({
+  project: state.projects.current
+})
+
+const mapDispatchToProps = dispatch => ({
+  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalCompanyData)
