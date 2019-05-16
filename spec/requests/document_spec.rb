@@ -279,18 +279,21 @@ describe Document, type: :request do
 
     it 'latest revision and latest version' do
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json[0]['id']).to eql(@doc2.id)
-      expect(json[0]['document_fields'].length).to eql(8)
-      expect(json.length).to eql(1)
+      expect(json['originating_companies'].length).to eql(1)
+      expect(json['discipline'].length).to eql(1)
+      expect(json['document_types'].length).to eql(1)
+      expect(json['documents'][0]['id']).to eql(@doc2.id)
+      expect(json['documents'][0]['document_fields'].length).to eql(8)
+      expect(json['documents'].length).to eql(1)
     end
 
     it 'all revisions and latest version of each revision' do
       @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json[0]['id']).to eql(@doc1.id)
-      expect(json[0]['document_fields'].length).to eql(8)
-      expect(json[1]['id']).to eql(@doc2.id)
-      expect(json.length).to eql(2)
+      expect(json['documents'][0]['id']).to eql(@doc1.id)
+      expect(json['documents'][0]['document_fields'].length).to eql(8)
+      expect(json['documents'][1]['id']).to eql(@doc2.id)
+      expect(json['documents'].length).to eql(2)
     end
   end
 end

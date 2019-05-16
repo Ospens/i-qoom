@@ -57,7 +57,36 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
     documents = @project.document_mains.documents_available_for(signed_in_user)
-    render json: documents, include: :document_fields
+
+    if params[:originating_companies].present? && params[:originating_companies].any?
+      documents = documents.filter_by_originating_company(params[:originating_companies])
+    end
+
+    if params[:discipline].present? && params[:discipline].any?
+      documents = documents.filter_by_discipline(params[:discipline])
+    end
+
+    if params[:document_types].present? && params[:document_types].any?
+      documents = documents.filter_by_document_type(params[:document_types])
+    end
+
+    documents = documents.as_json(include: { document_fields: { include: :document_field_values } })
+
+    document_fields = @project.conventions.active.document_fields
+    originating_companies =
+      document_fields.find_by(codification_kind: :originating_company)
+                     .document_field_values.pluck(:value)
+    discipline =
+      document_fields.find_by(codification_kind: :discipline)
+                     .document_field_values.pluck(:value)
+    document_type =
+      document_fields.find_by(codification_kind: :document_type)
+                     .document_field_values.pluck(:value)
+
+    render json: { documents: documents,
+                   originating_companies: originating_companies,
+                   discipline: discipline,
+                   document_types: document_type }
   end
 
   def show
