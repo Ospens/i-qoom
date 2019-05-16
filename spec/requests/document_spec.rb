@@ -244,6 +244,35 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
       end
     end
+
+    context '#download_native_file' do
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}/download_native_file"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to eql("111\n")
+        expect(response.header['Content-Disposition']).to include(document.codification_string)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do

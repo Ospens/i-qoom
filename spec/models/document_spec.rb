@@ -71,7 +71,7 @@ RSpec.describe Document, type: :model do
     field2 = doc2.document_fields.find_by(codification_kind: :originating_company)
     value2 = field2.document_field_values.find_by(selected: true).value
     ids = Document.all.filter_by_originating_company([value1, value2]).pluck(:id)
-    expect(ids).to eql([doc1.id, doc2.id])
+    expect(ids).to match_array([doc1.id, doc2.id])
   end
 
   it '#filter_by_discipline' do
@@ -85,7 +85,7 @@ RSpec.describe Document, type: :model do
     field2 = doc2.document_fields.find_by(codification_kind: :discipline)
     value2 = field2.document_field_values.find_by(selected: true).value
     ids = Document.all.filter_by_discipline([value1, value2]).pluck(:id)
-    expect(ids).to eql([doc1.id, doc2.id])
+    expect(ids).to match_array([doc1.id, doc2.id])
   end
 
   it '#filter_by_document_types' do
@@ -99,6 +99,6 @@ RSpec.describe Document, type: :model do
     field2 = doc2.document_fields.find_by(codification_kind: :document_type)
     value2 = field2.document_field_values.find_by(selected: true).value
     ids = Document.all.filter_by_document_type([value1, value2]).pluck(:id)
-    expect(ids).to eql([doc1.id, doc2.id])
+    expect(ids).to match_array([doc2.id, doc1.id])
   end
 end

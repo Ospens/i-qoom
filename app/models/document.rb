@@ -130,6 +130,10 @@ class Document < ApplicationRecord
     document_fields.find_by(codification_kind: :additional_information)
   end
 
+  def native_file
+    document_fields.find_by(codification_kind: :document_native_file).files.first
+  end
+
   private
 
   def original_document

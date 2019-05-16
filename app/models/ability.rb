@@ -40,7 +40,7 @@ class Ability
         document.project.user == user ||
           document.can_create?(user)
       end
-      can :show, Document do |document|
+      can [:show, :download_native_file], Document do |document|
         document.project.user == user ||
           document.user == user ||
           document.can_view?(user)

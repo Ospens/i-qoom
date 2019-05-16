@@ -15,7 +15,10 @@ Rails.application.routes.draw do
 
       resources :conventions, only: [:edit, :update]
       resources :documents, except: [:new, :create, :index] do
-        post :create_revision
+        member do
+          post :create_revision
+          get :download_native_file
+        end
       end
 
       resources :projects, except: [:new, :edit] do

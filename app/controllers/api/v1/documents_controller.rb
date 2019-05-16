@@ -1,11 +1,11 @@
 class Api::V1::DocumentsController < ApplicationController
   load_resource :project
-  load_resource :document, only: [:edit, :update, :show]
-  load_resource :document, only: [:create_revision], id_param: :document_id
-  load_resource :document, through: :project, except: [ :edit,
-                                                        :update,
-                                                        :create_revision,
-                                                        :show ]
+  load_resource :document, only: [ :edit,
+                                   :update,
+                                   :show,
+                                   :create_revision,
+                                   :download_native_file ]
+  load_resource :document, through: :project, only: [ :new, :create ]
   authorize_resource :document
 
   def new
@@ -91,6 +91,13 @@ class Api::V1::DocumentsController < ApplicationController
 
   def show
     render json: @document.attributes_for_show
+  end
+
+  def download_native_file
+    file = @document.native_file
+    filename =
+      "#{@document.codification_string}#{file.filename.extension_with_delimiter}"
+    send_data(file.download, filename: filename, disposition: 'attachment')
   end
 
   private
