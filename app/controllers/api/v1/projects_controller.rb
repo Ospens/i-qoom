@@ -3,12 +3,14 @@ class Api::V1::ProjectsController < ApplicationController
   
   def index
     @projects = signed_in_user.projects
-    render json: { location: @projects },
+    render json: @projects,
+                 each_serializer: ProjectSerializer,
            status: :ok
   end
 
   def show
-    render json: { location: @project },
+    render json: @project,
+                 serializer: ProjectSerializer,
            status: :ok
   end
 
@@ -23,7 +25,7 @@ class Api::V1::ProjectsController < ApplicationController
   #       "email": "someemailaddress@gmail.com"
   #     }
   #   }
-  # } 
+  # }
   # Also in case the project creation_step is not done,
   # it is mandatory to send :creation_step with a value,
   # to apply the correspondent validations
@@ -35,7 +37,11 @@ class Api::V1::ProjectsController < ApplicationController
   def create
     @project = signed_in_user.projects.new(project_params)
     if @project.save
-      success(:created)
+      render json: { status: "success",
+                     message: t(".success_message"),
+                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
+                                         serializer: ProjectSerializer) },
+             status: :created
     else
       error(@project)
     end
@@ -43,7 +49,11 @@ class Api::V1::ProjectsController < ApplicationController
 
   def update
     if @project.update(project_params)
-      success(:created)
+      render json: { status: "success",
+                     message: t(".success_message"),
+                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
+                                         serializer: ProjectSerializer) },
+             status: :created
     else
       error(@project)
     end
