@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
-import { Link, Route } from 'react-router-dom'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -86,7 +85,7 @@ class NewDocument extends Component {
                 </div>
               </div>
             </div>
-            <div className='col-10 p-0 mb-5'>
+            <div className='col-10 p-0 mb-5 bordered'>
               {step === 1
                 ? <DocDocumentsAndFiles {...this.props} nextStep={() => this.setState({ step: 2 })} />
                 : <AccessAndCommunication {...this.props} backStep={() => this.setState({ step: 1 })} />

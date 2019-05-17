@@ -1,10 +1,13 @@
 .dms-container {
   height: 100%;
 
+  .bordered {
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+  }
+
   .new-document {
     .col-10 {
-      border-radius: 5px;
-      border: 1px solid lightgrey;
       height: 100%;
     }
 
@@ -478,7 +481,7 @@
     padding-top: 14px;
 }
 
-.create-document-footer {
+.dms-footer {
   background: #f5f9fa;
   padding: 20px;
   display: flex;
@@ -558,4 +561,28 @@ label.red-label {
   align-items: center;
   color: #ff448e !important;
   justify-content: center;
+}
+
+.document-show {
+  .document-show__info-row {
+    display: flex;
+    margin-bottom: 20px;
+    min-height: 22px;
+
+    label {
+      min-width: 120px;
+      align-items: center;
+      display: flex;
+    }
+  }
+
+  .document-show__text-row {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 20px;
+  }
+}
+
+.border-divider {
+  border-bottom: 1px solid lightgrey;
 }

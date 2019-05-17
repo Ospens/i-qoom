@@ -211,7 +211,7 @@ class AddRevision extends Component {
               </div>
             </div>
 
-            <div className='col-10 p-0 mb-5'>
+            <div className='col-10 p-0 mb-5 bordered'>
               <div className='p-5'>
                 <div className='revision-title-block'>
                   <h5>Add new Revision:</h5>
@@ -266,7 +266,7 @@ class AddRevision extends Component {
                 </div>
               </div>
 
-              <div className='create-document-footer'>
+              <div className='dms-footer'>
                 <button type='button' className='btn btn-white'>Cancel</button>
                 <button
                   type='submit'

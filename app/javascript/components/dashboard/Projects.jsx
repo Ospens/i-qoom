@@ -5,6 +5,7 @@ import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import NewDocument from './dms/NewDocument'
 import AddRevision from './dms/AddRevision'
+import ShowDocument from './dms/ShowDocument'
 import { startFetchProject } from '../../actions/projectActions'
 
 class Projects extends Component {
@@ -20,10 +21,11 @@ class Projects extends Component {
 
     return (
       <Switch>
-        <Route path={`${match.path}/documents/overview`} component={DMS} />
-        <Route path={`${match.path}/documents/new`} component={NewDocument} />
+        <Route path={`${match.path}/documents/overview/`} component={DMS} />
+        <Route path={`${match.path}/documents/new/`} component={NewDocument} />
+        <Route path={`${match.path}/documents/:document_id/`} component={ShowDocument} />
         <Route
-          path={`${match.path}/documents/:document_id/add_revision`}
+          path={`${match.path}/documents/:document_id/add_revision/`}
           component={AddRevision}
         />
         <Route path={`${match.path}`} component={ProjectSettings} />

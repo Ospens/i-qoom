@@ -257,7 +257,7 @@ class DocDocumentsAndFiles extends Component {
             </div>
           </div>
         </form>
-        <div className='create-document-footer'>
+        <div className='dms-footer'>
           <button type='button' className='btn btn-white'>Cancel</button>
           <button
             type='submit'

@@ -128,7 +128,7 @@ class AccessAndCommunication extends Component {
           </div>
         </form>
 
-        <div className='create-document-footer'>
+        <div className='dms-footer'>
           <button type='button' className='btn btn-white' onClick={backStep}>Back</button>
           <button type='button' className='btn btn-white'>Cancel</button>
           <button type='submit' className='btn btn-purple'>Save only</button>
