@@ -5,9 +5,14 @@ import InputField from '../InputField'
 
 class AdministratorForm extends Component {
 
-  handleSubmit = () => {
+  componentWillMount() {
+    // const { defaultValues } = this.props
+    // this.props.initialize(defaultValues)
+  }
+
+  handleSubmit = (values) => {
     const { customSubmit } = this.props
-    customSubmit()
+    customSubmit(values)
   }
 
   renderSubmitButtons = () => {
@@ -28,7 +33,8 @@ class AdministratorForm extends Component {
   }
 
   render() {
-    const { submitErrors, customButtons, titleModal, label, mainClass, pristine, nameForm } = this.props
+    const { submitErrors, customButtons, titleModal, label, mainClass, pristine, form } = this.props
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -39,8 +45,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name='username'
-                  id={`${nameForm}_username`}
+                  name={`${form}_username`}
+                  id={`${form}_username`}
                   errorField={submitErrors}
                   placeholder='Username'
                 />
@@ -48,8 +54,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name='last_name'
-                  id={`${nameForm}_last_name`}
+                  name={`${form}_last_name`}
+                  id={`${form}_last_name`}
                   errorField={submitErrors}
                   placeholder='Last name'
                 />
@@ -59,8 +65,8 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name='first_name'
-                  id={`${nameForm}_first_name`}
+                  name={`${form}_first_name`}
+                  id={`${form}_first_name`}
                   errorField={submitErrors}
                   placeholder='First name'
                 />
@@ -70,8 +76,8 @@ class AdministratorForm extends Component {
               <div className='form-group'>
                 <InputField
                   type='text'
-                  name='email'
-                  id={`${nameForm}_email`}
+                  name={`${form}_email`}
+                  id={`${form}_email`}
                   errorField={submitErrors}
                   placeholder='Email address'
                 />
@@ -81,8 +87,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-3'>
                 <InputField
                   type='text'
-                  name='phone_code'
-                  id={`${nameForm}_phone_code`}
+                  name={`${form}_phone_code`}
+                  id={`${form}_phone_code`}
                   errorField={submitErrors}
                   placeholder='+00'
                 />
@@ -90,8 +96,8 @@ class AdministratorForm extends Component {
               <div className='form-group col-9'>
                 <InputField
                   type='text'
-                  name='phone_number'
-                  id={`${nameForm}_phone_number`}
+                  name={`${form}_phone_number`}
+                  id={`${form}_phone_number`}
                   errorField={submitErrors}
                   placeholder='Phone number'
                 />
@@ -105,15 +111,16 @@ class AdministratorForm extends Component {
   }
 }
 
-const selector = formValueSelector('administrator_form')
+const mapStateToProps = (state, ownProps) => {
+  const selector = formValueSelector(ownProps.form)
 
-const mapStateToProps = (state, ownProps) => ({
-  form: ownProps.nameForm,
-  submitErrors: getFormSubmitErrors('administrator_form')(state),
-  username: selector(state, 'username'),
-  last_name: selector(state, 'last_name'),
-  first_name: selector(state, 'first_name'),
-  email: selector(state, 'email')
-})
+  return ({
+    submitErrors: getFormSubmitErrors(ownProps.form)(state),
+    username: selector(state, `${ownProps.form}_username`),
+    last_name: selector(state, `${ownProps.form}_last_name`),
+    first_name: selector(state, `${ownProps.form}_first_name`),
+    email: selector(state, `${ownProps.form}_email`)
+  })
+}
 
-export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))
+export default connect(mapStateToProps)(reduxForm()(AdministratorForm))

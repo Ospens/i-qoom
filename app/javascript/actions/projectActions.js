@@ -33,34 +33,65 @@ export const exitProject = payload => ({
   payload
 })
 
-export const startUpdateProject = (values, id, step = 'billing_address') => (dispatch, getState) => {
+export const startUpdateProject = (values, id, step) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
   const headers = {
     Authorization: token
   }
 
+  const data = {}
+
+  if (step === 'company_datum') {
+    data.company_datum_attributes = {
+      id: values.id || '',
+      logo: values.logo,
+      registration_number: values.registration_number,
+      vat_id: values.vat_id,
+      same_for_billing_address: values.same_for_billing_address,
+      company_address_attributes: {
+        company_name: values.company_name,
+        street: values.street,
+        house_number: values.house_number,
+        city: values.city,
+        postcode: values.postcode,
+        country: values.country,
+        district: values.district,
+        district_court: values.district_court
+      }
+    }
+  }
+  if (step === 'billing_address') {
+    data.company_datum_attributes = {
+      billing_address_attributes: {
+        id: values.id || '',
+        company_name: values.company_name,
+        street: values.street,
+        house_number: values.house_number,
+        city: values.city,
+        postcode: values.postcode,
+        country: values.country,
+        district: values.district,
+        district_court: values.district_court
+      }
+    }
+  }
+
+  if (step === 'project_admins') {
+    data.admins_attributes = {
+      id: values.id || '',
+      username: values.username,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      email: values.email,
+      phone_code: values.phone_code,
+      phone_number: values.phone_number
+    }
+  }
+
   const request = {
     project: {
-      creation_step: step,
-      company_datum_attributes: {
-        id: values.id || '',
-        logo: values.logo,
-        registration_number: values.registration_number,
-        vat_id: values.vat_id,
-        same_for_billing_address: values.same_for_billing_address,
-        company_address_attributes: {
-          company_name: values.company_name,
-          street: values.street,
-          house_number: values.house_number,
-          city: values.city,
-          postcode: values.postcode,
-          country: values.country,
-          district: values.district,
-          district_court: values.district_court
-        },
-        billing_address_attributes: {}
-      }
+      ...data
     }
   }
 
@@ -114,7 +145,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
   return (
     axios.get('/api/v1/projects', { headers })
       .then(response => {
-        dispatch(projectsFetched(response.data.location))
+        dispatch(projectsFetched(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -131,7 +162,7 @@ export const startFetchProject = id => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${id}`, { headers })
       .then(response => {
-        dispatch(projectFetched(response.data.location))
+        dispatch(projectFetched(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')

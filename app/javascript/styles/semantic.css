@@ -32199,7 +32199,6 @@ body.dimmable > .dimmer {
 ---------------*/
 
 .ui.dropdown .menu>.item {
-  background-color: #fff;
   margin: 5px;
   border-radius: 3px;
   position: relative;

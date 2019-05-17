@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import CompanyForm from '../../../elements/forms/CompanyForm'
 import ReactSVG from 'react-svg'
+import { connect } from 'react-redux'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
 import ModalFirstAdmin from '../projectOverview/ModalFirstAdmin'
 import { Dropdown } from 'semantic-ui-react'
+import { startUpdateProject } from '../../../actions/projectActions'
 import dots from '../../../images/dots-horizontal'
 import trashBucket from '../../../images/trash_bucket'
 import pencil from '../../../images/pencil-write'
@@ -57,7 +59,12 @@ class ProjectDetails extends Component {
         >
           Cancel
         </button>
-        <button type='submit' className='btn btn-purple'>Invite</button>
+        <button
+          type='submit'
+          className='btn btn-purple'
+          >
+          Invite
+        </button>
       </div>
     )
   }
@@ -98,13 +105,20 @@ class ProjectDetails extends Component {
   }
 
   renderFormSecondAdminColumn = () => {
-    const { confirm } = this.state
     const options = 
       {
         key: 'check_status',
         text: this.renderItem(searchIcon, 'Check status'),
         onClick: () => this.toggleModals('adminInspectModal', true)
       }
+
+    const { admins } = this.props
+    let secondAdminFields = {}
+
+    Object.keys(admins[1]).forEach(k => {
+      secondAdminFields[`administrator_form_2_${k}`] = admins[1][k]
+    })
+
     const confirmMsg = (
       <div className='msg-card'>
         Do you really want to resend this invitation?
@@ -154,8 +168,8 @@ class ProjectDetails extends Component {
           </Dropdown>
         </div>
         <AdministratorForm
-          {...this.props}
-          nameForm='edit_administrator_2'
+          initialValues={secondAdminFields}
+          form='administrator_form_2'
           customButtons={this.renderAdminButtons}
         />
       </React.Fragment>
@@ -242,8 +256,26 @@ class ProjectDetails extends Component {
     </span>
   )
 
+  submitProjectAdmin = values => {
+    const { updateProject, id } = this.props
+    const newValues = {}
+    Object.keys(values).forEach(k => {
+      const key = k.replace(/administrator_form_\d+_/g, '')
+      newValues[key] = values[k]
+    })
+
+    updateProject(newValues, id, 'project_admins').then(() => this.toggleModals('adminForm', false))
+  }
+
   render() {
     const { billingForm, adminForm, adminErrorModal, adminInspectModal } = this.state
+    const { admins } = this.props
+    let firstAdminFields = {}
+
+    Object.keys(admins[0]).forEach(k => {
+      firstAdminFields[`administrator_form_1_${k}`] = admins[0][k]
+    })
+
     const options = [
       {
         key: 'edit_details',
@@ -266,24 +298,27 @@ class ProjectDetails extends Component {
           <div className='col-lg-4'>
             <span className='block-title'>Company data</span>
             <CompanyForm
-              {...this.props}
+              defaultValues={{ ...this.props.company_datum.company_address}}
               customButtons={this.renderCompanyDataButtons}
             />
           </div>
           <div className='col-lg-4'>
-            <div className='block-title'>
+            <div className='block-title'> 
               <span>Project administrator 1</span>
               <span className='active-admin'>Active</span>
               <DropDownMenu options={options}/>
             </div>
             <AdministratorForm
-              {...this.props}
-              nameForm='edit_administrator'
+              initialValues={firstAdminFields}
+              form='administrator_form_1'
               customButtons={this.renderAdminButtons}
             />
           </div>
           <div className='col-lg-4'>
-            {this.renderNewSecondAdminColumn()}
+            {this.props.admins.length > 1
+              ? this.renderFormSecondAdminColumn()
+              : this.renderNewSecondAdminColumn()
+            }
           </div>
         </div>
         {adminErrorModal && this.openAdminErrorModal()}
@@ -300,12 +335,16 @@ class ProjectDetails extends Component {
             closeModal={() => this.toggleModals('adminForm', false)}
             customButtons={this.modalButtonsAdmin}
             modalTitle='New project administrator'
-            nameForm='administrator_form_2'
-            customSubmit={() => this.toggleModals('adminForm', false)}
+            form='administrator_form_2'
+            customSubmit={(values) => this.submitProjectAdmin(values)}
           />}
       </React.Fragment>
       )
   }
 }
- 
-export default ProjectDetails
+
+const mapDispatchToProps = dispatch => ({
+  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step))
+})
+
+export default connect(null, mapDispatchToProps)(ProjectDetails)

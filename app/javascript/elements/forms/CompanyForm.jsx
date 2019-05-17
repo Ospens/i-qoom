@@ -14,6 +14,11 @@ import Left from '../../images/arrow-button-left'
 
 class CompanyForm extends Component {
 
+  componentWillMount() {
+    const { defaultValues } = this.props
+    this.props.initialize(defaultValues)
+  }
+
   handleSubmit = (values) => {
     const { customSubmit } = this.props
     if (customSubmit) {
@@ -40,7 +45,7 @@ class CompanyForm extends Component {
 
   render() {
     const { submitErrors, mainClassName, customButtons, headerForm, creating, pristine } = this.props
-    
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -195,6 +200,6 @@ export default connect(
     {
       form: 'company_form',
       initialValues: { same_for_billing_address: true },
-      destroyOnUnmount: false
+      destroyOnUnmount: true
     })
   (CompanyForm))

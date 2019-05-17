@@ -5,7 +5,7 @@ import ModalComponent from '../../../elements/ModalComponent'
 class ModalFirstAdmin extends Component {
 
   render() {
-    const { modalTitle, nameForm } = this.props 
+    const { modalTitle, form } = this.props 
     return (
       <ModalComponent>
         <div className='new-project-modal'>
@@ -14,7 +14,7 @@ class ModalFirstAdmin extends Component {
             {...this.props}
             titleModal='Who is the project administrator?'
             label='Project administrator'
-            nameForm={nameForm ||'administrator_form'}
+            form={form ||'administrator_form'}
             mainClass='modal-body'
           />
         </div>

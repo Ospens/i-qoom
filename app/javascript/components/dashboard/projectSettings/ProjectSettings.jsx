@@ -19,12 +19,6 @@ class ProjectSettings extends Component {
     this.setState({tab: val})
   }
 
-  componentWillMount() {
-    const { startFetchProject } = this.props
-    const { project_id } = this.props.match.params
-    startFetchProject(project_id)
-  }
-
   renderProjectStatus = (color, text) => (
     <React.Fragment>
       <span className='green-dot' />
@@ -34,11 +28,11 @@ class ProjectSettings extends Component {
   )
 
   render() {
-    const { name } = this.props.project
+    const { project } = this.props
     const { tab } = this.state
     return (
       <div className='project-settings'>
-        <div className='project-title-editable'>{name}</div>
+        <div className='project-title-editable'>{project.name}</div>
         <span className='block-title mt-1'>(Selected project)</span>
 
         <div className='nav-bar'>
@@ -59,7 +53,7 @@ class ProjectSettings extends Component {
           </div>
         </div>
 
-        {tab === 1 &&<ProjectDetails />}
+        {tab === 1 && <ProjectDetails {...project}/>}
         {tab === 2 && <MemberManagment />}
         {tab === 3 && <ProjectStatus />}
 
