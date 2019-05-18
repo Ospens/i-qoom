@@ -4,7 +4,7 @@ import { Field } from 'redux-form'
 function CheckboxField({ text, checkBoxId, labelClass, errorField, ...input }) {
   const errorInfo = errorField[checkBoxId]
   return (
-    <div className='checkbox-field'>
+    <div className='checkbox-field justify-content-center'>
       <Field
         {...input}
         id={checkBoxId}

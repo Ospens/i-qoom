@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import jwtDecode from 'jwt-decode'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
@@ -82,6 +82,7 @@ export const signUpUser = userFields => dispatch => {
   }
   return axios.post('/api/v1/users', request)
     .then(response => {
+      successNotify('You are successfully registered!')
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {

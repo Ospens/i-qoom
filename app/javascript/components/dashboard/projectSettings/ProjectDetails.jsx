@@ -115,9 +115,11 @@ class ProjectDetails extends Component {
     const { admins } = this.props
     let secondAdminFields = {}
 
-    Object.keys(admins[1]).forEach(k => {
-      secondAdminFields[`administrator_form_2_${k}`] = admins[1][k]
-    })
+    if (admins) {
+      Object.keys(admins[1]).forEach(k => {
+        secondAdminFields[`administrator_form_2_${k}`] = admins[1][k]
+      })
+    }
 
     const confirmMsg = (
       <div className='msg-card'>
@@ -258,13 +260,8 @@ class ProjectDetails extends Component {
 
   submitProjectAdmin = values => {
     const { updateProject, id } = this.props
-    const newValues = {}
-    Object.keys(values).forEach(k => {
-      const key = k.replace(/administrator_form_\d+_/g, '')
-      newValues[key] = values[k]
-    })
 
-    updateProject(newValues, id, 'project_admins').then(() => this.toggleModals('adminForm', false))
+    updateProject(values, id, 'project_admins').then(() => this.toggleModals('adminForm', false))
   }
 
   render() {
@@ -272,9 +269,11 @@ class ProjectDetails extends Component {
     const { admins } = this.props
     let firstAdminFields = {}
 
-    Object.keys(admins[0]).forEach(k => {
-      firstAdminFields[`administrator_form_1_${k}`] = admins[0][k]
-    })
+    if (admins) {
+      Object.keys(admins[0]).forEach(k => {
+        firstAdminFields[`administrator_form_1_${k}`] = admins[0][k]
+      })
+    }
 
     const options = [
       {
@@ -298,7 +297,7 @@ class ProjectDetails extends Component {
           <div className='col-lg-4'>
             <span className='block-title'>Company data</span>
             <CompanyForm
-              defaultValues={{ ...this.props.company_datum.company_address}}
+              defaultValues={this.props.company_datum ? {...this.props.company_datum.company_address} : {}}
               customButtons={this.renderCompanyDataButtons}
             />
           </div>
@@ -315,7 +314,7 @@ class ProjectDetails extends Component {
             />
           </div>
           <div className='col-lg-4'>
-            {this.props.admins.length > 1
+            {admins && admins.length > 1
               ? this.renderFormSecondAdminColumn()
               : this.renderNewSecondAdminColumn()
             }

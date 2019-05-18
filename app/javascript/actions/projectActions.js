@@ -61,6 +61,7 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
       }
     }
   }
+
   if (step === 'billing_address') {
     data.company_datum_attributes = {
       billing_address_attributes: {
@@ -113,9 +114,16 @@ export const startCreateProject = () => (dispatch, getState) => {
     Authorization: token
   }
 
+  const newValues = {}
+  const values = form.administrator_form.values
+  Object.keys(values).forEach(k => {
+    const key = k.replace(/administrator_form(.*)_/g, '')
+    newValues[key] = values[k]
+  })
+
   const adminsAttributes = {
     id: '',
-    ...form.administrator_form.values
+    ...newValues
   }
 
   const request = {

@@ -12,7 +12,14 @@ class AdministratorForm extends Component {
 
   handleSubmit = (values) => {
     const { customSubmit } = this.props
-    customSubmit(values)
+
+    const newValues = {}
+    Object.keys(values).forEach(k => {
+      const key = k.replace(/administrator_form(.*)_/g, '')
+      newValues[key] = values[k]
+    })
+
+    customSubmit(newValues)
   }
 
   renderSubmitButtons = () => {
@@ -123,4 +130,4 @@ const mapStateToProps = (state, ownProps) => {
   })
 }
 
-export default connect(mapStateToProps)(reduxForm()(AdministratorForm))
+export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))

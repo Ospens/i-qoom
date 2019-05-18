@@ -12,7 +12,7 @@ class ModalCompanyData extends Component {
 
     if (step === 2) {
       // TODO: update this method
-      return updateProject(values, project.id || 1, 'company_datum')
+      return updateProject(values, project.id, 'company_datum')
         .then(() => changeStep(step))
     } else {
       changeStep(step)
@@ -40,7 +40,7 @@ class ModalCompanyData extends Component {
 }
 
 const mapStateToProps = state => ({
-  project: state.projects.current
+  project: state.projects.project
 })
 
 const mapDispatchToProps = dispatch => ({

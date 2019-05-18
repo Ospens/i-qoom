@@ -48,7 +48,7 @@ class LandingMenu extends Component {
   renderCardContent = (project, i) => {
     if (project.id === 0) {
       return (
-        <Link to={`/dashboard/projects`}>
+        <Link to={`/dashboard/`}>
           <div className='landing-card__title-block'>
             <span>New project</span>
             <div className='d-flex justify-content-center'>
@@ -56,7 +56,7 @@ class LandingMenu extends Component {
                 svgStyle={{ height: 13, width: 13, marginRight: 5 }}
                 src={blueCheck}
               />
-              <p>Add project</p>
+              <p className='new-project'>Add project</p>
             </div>
           </div>
         </Link>
@@ -110,7 +110,9 @@ class LandingMenu extends Component {
     projects.map((el, i) => (
       menuListFirstRow[i]['project'] = el
     ))
-    menuListFirstRow[projects.length]['project'] = {id: 0}
+    {[...Array(3 - projects.length)].map((_, i) => (
+      menuListFirstRow[i + projects.length]['project'] = { id: 0 }
+    ))}
 
     return (
       <section className='container info-container text-center'>

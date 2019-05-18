@@ -11,6 +11,9 @@ import InputField from '../InputField'
 import FileField from '../FileField'
 import CheckboxField from '../CheckboxField'
 import Left from '../../images/arrow-button-left'
+import SelectField from '../SelectField'
+import countryList from '../../components/landing/countriesCodes'
+
 
 class CompanyForm extends Component {
 
@@ -44,7 +47,7 @@ class CompanyForm extends Component {
   }
 
   render() {
-    const { submitErrors, mainClassName, customButtons, headerForm, creating, pristine } = this.props
+    const { submitErrors, mainClassName, customButtons, headerForm, creating, pristine, country } = this.props
 
     return (
       <div>
@@ -141,12 +144,14 @@ class CompanyForm extends Component {
               </div>
             </div>
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
                 name='country'
                 id='company_datum.company_address.country'
+                options={countryList}
+                value={country}
+                //onChange={(e) => this.handleChangeSelect(e, 'country')}
                 errorField={submitErrors}
-                placeholder='Country'
+                component={SelectField}
               />
             </div>
             <div className='row'>
@@ -191,7 +196,8 @@ const selector = formValueSelector('company_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('company_form')(state),
-  companyName: selector(state, 'company_name')
+  companyName: selector(state, 'company_name'),
+  country: selector(state, 'country'),
 })
 
 export default connect(
