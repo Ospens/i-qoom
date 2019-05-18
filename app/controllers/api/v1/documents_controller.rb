@@ -1,4 +1,6 @@
 class Api::V1::DocumentsController < ApplicationController
+  include ActiveStorage::SendZip
+
   load_resource :project
   load_resource :document, only: [ :edit,
                                    :update,
@@ -98,6 +100,21 @@ class Api::V1::DocumentsController < ApplicationController
     filename =
       "#{@document.codification_string}#{file.filename.extension_with_delimiter}"
     send_data(file.download, filename: filename, disposition: 'attachment')
+  end
+
+  def download_native_files
+    documents =
+      @project.document_mains
+              .documents_available_for(signed_in_user)
+              .select{ |i| params[:document_ids].include?(i.id.to_s) }
+    files = []
+    documents.each do |doc|
+      file = doc.native_file
+      file.filename =
+        "#{doc.codification_string}#{file.filename.extension_with_delimiter}"
+      files << file
+    end
+    send_zip(files, filename: "#{@project.name.underscore}.zip")
   end
 
   private

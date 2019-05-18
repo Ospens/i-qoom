@@ -22,7 +22,11 @@ Rails.application.routes.draw do
       end
 
       resources :projects, except: [:new, :edit] do
-        resources :documents, only: [:new, :create, :index]
+        resources :documents, only: [:new, :create, :index] do
+          collection do
+            get :download_native_files
+          end
+        end
         resource :dms_settings, only: [:edit, :update]
         resource :document_rights, only: [:new, :edit, :update]
       end
