@@ -15,7 +15,8 @@ class DocumentField < ApplicationRecord
                             :revision_number,
                             :revision_date,
                             :revision_version,
-                            :document_native_file ]
+                            :document_native_file,
+                            :additional_information ]
 
   belongs_to :parent, polymorphic: true
 
@@ -194,6 +195,8 @@ class DocumentField < ApplicationRecord
         end
       elsif document_native_file?
         errors.add(:files, :is_required) if !files.any?
+      elsif additional_information?
+        # nothing, not required
       elsif value.blank?
         errors.add(:value, :is_required)
       end

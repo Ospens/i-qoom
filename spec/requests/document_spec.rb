@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'zip'
 
 describe Document, type: :request do
   let(:json) { JSON(response.body) }
@@ -35,7 +36,7 @@ describe Document, type: :request do
     it 'user with rights' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['document_fields_attributes'].count).to eql(7)
+      expect(json['document_fields_attributes'].count).to eql(8)
     end
 
     it 'project user' do
@@ -102,6 +103,7 @@ describe Document, type: :request do
     let(:owner) { FactoryBot.create(:user) }
     let(:document) do
       rev = FactoryBot.create(:document_revision)
+      rev.document_main.update!(project: project)
       convention.document_fields.each do |field|
         if field.document_number? || field.revision_date?
           field.update(value: rand(1000..9999))
@@ -244,6 +246,68 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
       end
     end
+
+    context '#download_native_file' do
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}/download_native_file"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to eql("111\n")
+        expect(response.header['Content-Disposition']).to include(document.codification_string)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context '#download_native_files' do
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents/download_native_files"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'user with rights' do
+        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        files = Zip::InputStream.open(StringIO.new(response.body))
+        file = files.get_next_entry
+        expect(file.name).to include(document.codification_string)
+        expect(file.get_input_stream.read).to eql("111\n")
+        expect(response.header['Content-Disposition']).to include(project.name.underscore)
+        expect(files.get_next_entry).to be_nil
+      end
+
+      it 'owner' do
+        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do
@@ -279,18 +343,21 @@ describe Document, type: :request do
 
     it 'latest revision and latest version' do
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json[0]['id']).to eql(@doc2.id)
-      expect(json[0]['document_fields'].length).to eql(7)
-      expect(json.length).to eql(1)
+      expect(json['originating_companies'].length).to eql(1)
+      expect(json['discipline'].length).to eql(1)
+      expect(json['document_types'].length).to eql(1)
+      expect(json['documents'][0]['id']).to eql(@doc2.id)
+      expect(json['documents'][0]['document_fields'].length).to eql(8)
+      expect(json['documents'].length).to eql(1)
     end
 
     it 'all revisions and latest version of each revision' do
       @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
       get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json[0]['id']).to eql(@doc1.id)
-      expect(json[0]['document_fields'].length).to eql(7)
-      expect(json[1]['id']).to eql(@doc2.id)
-      expect(json.length).to eql(2)
+      expect(json['documents'][0]['id']).to eql(@doc1.id)
+      expect(json['documents'][0]['document_fields'].length).to eql(8)
+      expect(json['documents'][1]['id']).to eql(@doc2.id)
+      expect(json['documents'].length).to eql(2)
     end
   end
 end
