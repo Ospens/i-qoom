@@ -1,16 +1,16 @@
 import React from 'react'
 import { Field } from 'redux-form'
 
-function Checkbox({ text, checkBoxId, inputClass, labelClass, onChange, name, errorField }) {
+function CheckboxField({ text, checkBoxId, labelClass, errorField, ...input }) {
   const errorInfo = errorField[checkBoxId]
   return (
-    <div>
-      <input
-        type='checkbox'
-        className={`form-check-input ${errorInfo ? ' is-invalid' : ''}`}
+    <div className='checkbox-field justify-content-center'>
+      <Field
+        {...input}
         id={checkBoxId}
-        onChange={onChange}
-        name={name}
+        type='checkbox'
+        component='input'
+        className={`form-check-input ${errorInfo ? ' is-invalid' : ''}`}
       />
       <label className={labelClass} htmlFor={checkBoxId}></label>
       <span>{text}</span>
@@ -21,4 +21,4 @@ function Checkbox({ text, checkBoxId, inputClass, labelClass, onChange, name, er
   )
 }
 
-export default Checkbox
+export default CheckboxField

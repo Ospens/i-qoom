@@ -1,35 +1,47 @@
 import React, { Component } from 'react'
-import classnames from 'classnames'
-import SignIn from './SignIn'
-import SignUp from './SignUp'
+import { connect } from 'react-redux'
+import TextEditor from '../../elements/TextEditor'
 
 class FirstCard extends Component {
 
   render() {
-    const { showSignInSlider, toggleSignInForm, showSignUp, showMainPage } = this.props
-    const welcomeClass = classnames('welocme-text', { 'show-slider': showSignInSlider})
+    const {
+      authed,
+      editable,
+      firstLine,
+      secondLine
+    } = this.props
+
     return (
       <section id='first-card'>
-        {showSignUp && <SignUp
-          showMainPage={showMainPage}
-        />}
-        {!showSignUp &&
-          <div className='container'>
+        <div className='container'>
           <div className='welcome-and-signin justify-content-center'>
-            <div className={welcomeClass}>
-              <div className='first-line'>We get your project</div>
-              <div className='second-line'>Started & Managed</div>
+            <div className='welocme-text'>
+              {authed && editable ?
+                (
+                  <React.Fragment>
+                    <TextEditor text={firstLine} />
+                    <TextEditor text={secondLine} />
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <div dangerouslySetInnerHTML={{__html: firstLine}} />
+                    <div dangerouslySetInnerHTML={{ __html: secondLine}} />
+                  </React.Fragment>
+                )}
               <a href='#get-started-card' className='btn btn-light contact-us'>Contact us</a>
             </div>
-            <SignIn
-              showSignInSlider={showSignInSlider}
-              toggleSignInForm={toggleSignInForm}
-            />
           </div>
-        </div>}
+        </div>
       </section>
     )
   }
 }
 
-export default FirstCard
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
+  firstLine: landing.firstCard.firstLine,
+  secondLine: landing.firstCard.secondLine
+})
+
+export default connect(mapStateToProps)(FirstCard)

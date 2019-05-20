@@ -1,26 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import mainStore from '../stores/mainStore'
+import PrivateRoute from '../elements/PrivateRoute'
 import LandingPage from '../components/landing/LandingPage'
 import Dashboard from '../components/dashboard/Dashboard'
-import '../../../node_modules/bootstrap/dist/css/bootstrap.css'
-import '../styles/App.scss'
-import 'react-toastify/dist/ReactToastify.css'
+import AdminPanel from '../components/adminPanel/AdminPanel'
+import TopBar from '../elements/TopBar'
+import SideBar from '../elements/SideBar'
+import LandingMenu from '../components/landing/LandingMenu'
+import '../styles/semantic.css'
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Provider store={mainStore} >
-      <BrowserRouter>
-        <Switch>
-          <Route path='/dashboard' component={Dashboard} />
-          <Route path='/' component={LandingPage} />
-        </Switch>
-      </BrowserRouter>
-      <ToastContainer />
-    </Provider>,
-    document.getElementById('app'),
+const App = ({ authed, isAdmin }) => {
+  const [openSB, toggleSB] = useState(true)
+
+  return (
+    <BrowserRouter>
+      <div id='wrapper'>
+        {authed && <SideBar toggle={() => toggleSB(!openSB)} isOpen={openSB}/>}
+        <div id='main'>
+          <header id='header'>
+            <div className='wrap'>
+              <TopBar toggle={() => toggleSB(!openSB)} isOpen={openSB} />
+            </div>
+          </header>
+          <Switch>
+            <PrivateRoute path='/menu' authed={authed} component={LandingMenu} />
+            <PrivateRoute authed={authed} path='/dashboard' component={Dashboard} title='Dashboard' />
+            <PrivateRoute authed={authed && isAdmin} path='/admin_panel' component={AdminPanel} />
+            <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
+          </Switch>
+        </div>
+      </div>
+    </BrowserRouter>
   )
+}
+const mapStateToProps = ({ user }) => ({
+  authed: user.authStatus,
+  isAdmin: user.isAdmin
 })
+
+export default connect(mapStateToProps)(App)
