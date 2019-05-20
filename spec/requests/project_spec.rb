@@ -19,7 +19,7 @@ describe "Project", type: :request do
         get "/api/v1/projects",
              headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:success)
-        expect(JSON(response.body)["location"]
+        expect(JSON(response.body)
                 .map { |h| h["id"] }).to include(*user.projects.map(&:id))
       end
     end
@@ -28,7 +28,7 @@ describe "Project", type: :request do
         get "/api/v1/projects/#{project.id}",
              headers: headers.merge("Authorization" => auth_token)
         expect(response).to have_http_status(:success)
-        expect(JSON(response.body)["location"].values).to include(project.name)
+        expect(JSON(response.body).values).to include(project.name)
       end
     end
     context  "create (creation_step 'admins')" do

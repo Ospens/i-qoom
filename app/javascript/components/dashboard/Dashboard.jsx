@@ -1,35 +1,27 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import axios from 'axios';
+import { Route, Switch } from 'react-router-dom'
+import './Dashboard.scss'
+import '../../styles/Sidebar.scss'
+import 'react-datepicker/dist/react-datepicker.css'
+import ProjectOverview from './projectOverview/ProjectOverview'
+import Projects from './Projects'
 
 class Dashboard extends Component {
 
-  state = {
-    user: null
-  }
-
-  componentDidMount() {
-    const { token } = this.props.info
-    if ( !token ) {
-      console.log('Unauthorization')
-    }
-
-    axios.get('/home', { headers: { Authorization: token } })
-      .then(res => this.setState({user: res.data.hello}))
-  }
-
   render() {
-    const { user } = this.state
     return (
-      <h1>
-        Hello, {user}
-      </h1>
+      <div className='dashboard-container'>
+        <div className='main-content'>
+          <main role='main' className='dashboard-content'>
+            <Switch>
+              <Route path='/dashboard/projects/:project_id' component={Projects} />
+              <Route exact path='/dashboard/' component={ProjectOverview} />
+            </Switch>
+          </main>
+        </div>
+      </div>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  info: state.auth
-})
-
-export default connect(mapStateToProps)(Dashboard)
+export default Dashboard

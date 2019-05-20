@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 class Pricing extends Component {
 
   render() {
-    const { toggleSignUp } = this.props
     return (
       <section id='pricing-card'>
         <div className='text-center container'>
           <h2 className='text-center block-header'>Pricing</h2>
           <h3 className='text-center'>Become an i-Qoom member and register for free</h3>
-          <a href='#sign-up-form' className='btn btn-primary' onClick={toggleSignUp}>Register</a>
+          <Link to='/signup' className='btn btn-primary'>Register</Link>
           <div className='pricing-project'>
             <h3>Pricing projects: yes, it's that easy</h3>
             <div className='row first-row'>

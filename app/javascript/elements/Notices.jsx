@@ -12,3 +12,15 @@ export const errorNotify = (msg) => {
   }
   )
 }
+
+export const successNotify = (msg) => {
+  toast.success(msg, {
+    position: 'top-right',
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true
+  }
+  )
+}

@@ -36,10 +36,18 @@ class Convention < ApplicationRecord
                         command: 'Select a discipline',
                         column: 1,
                         row: number == 2 ? 5 : 4)
-    document_fields.new(kind: :upload_field,
-                        command: 'Add native file here',
+    document_fields.new(kind: :codification_field,
+                        codification_kind: :additional_information,
+                        title: 'Add additional information',
+                        command: 'Information',
                         column: 1,
                         row: number == 2 ? 6 : 5)
+    document_fields.new(kind: :codification_field,
+                        codification_kind: :document_native_file,
+                        title: 'Add native file here',
+                        command: 'Click here to browse your files',
+                        column: 1,
+                        row: number == 2 ? 7 : 6)
     document_fields.new(kind: :codification_field,
                         codification_kind: :document_type,
                         title: 'Document type',
@@ -63,6 +71,6 @@ class Convention < ApplicationRecord
                         title: 'Revision date',
                         command: 'Select a revision date',
                         column: 2,
-                        row: 3)
+                        row: 4)
   end
 end
