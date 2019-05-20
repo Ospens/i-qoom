@@ -121,7 +121,7 @@ class BillingAddressForm extends Component {
                 id='billing_country'
                 options={countryList}
                 value={country}
-                defaultValue={country}
+                newValue={country}
                 errorField={submitErrors}
                 component={SelectField}
               />

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, getFormSubmitErrors } from 'redux-form'
-import { Link, Redirect } from 'react-router-dom'
+import { Field, reduxForm, getFormSubmitErrors, formValueSelector } from 'redux-form'
+import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
@@ -14,62 +14,21 @@ import countryList from './countriesCodes'
 
 class SignUp extends Component {
   state = {
-    step: 1,
-    userFields: {
-      username: null,
-      password: null,
-      password_confirmation: null,
-      first_name: null,
-      last_name: null,
-      country: null,
-      state: null,
-      city: null,
-      email: null
-    }
+    step: 1
   }
 
-  handleChange = e => {
-    this.setState({
-      userFields: {
-        ...this.state.userFields,
-        [e.target.id]: e.target.checked || e.target.value
-      }
-    })
-  }
-
-  handleChangeSelect = (e, name) => {
-    this.setState({
-      userFields: {
-        ...this.state.userFields,
-        [name]: e
-      }
-    })
-  }
-
-  handleSubmit = () => {
+  handleSubmit = values => {
     const { signUpUser, history } = this.props
-    const { userFields } = this.state
-    return signUpUser(userFields).then(() => history.push({pathname: '/'}))
+    return signUpUser(values).then(() => history.push({pathname: '/'}))
   }
 
   nextStep = () => this.setState({step: 2})
   prevStep = () => this.setState({step: 1})
 
   render() {
-    const {
-      username,
-      step,
-      password,
-      password_confirmation,
-      first_name,
-      last_name,
-      country,
-      state,
-      city,
-      email
-    } = this.state
+    const { step } = this.state
+    const { submitErrors, country } = this.props
 
-    const { submitErrors } = this.props
     const firstFormClass = classnames('form-row', { active: step === 1 })
     const secondFormClass = classnames('form-row', { active: step === 2 })
 
@@ -91,23 +50,21 @@ class SignUp extends Component {
                   name='first_name'
                   id='first_name'
                   label='Type in first name'
-                  onChange={this.handleChange}
-                  defaultValue={first_name}
                   errorField={submitErrors}
                   placeholder='First name'
                 />
               </div>
               <div className='form-group next-row'>
                 <label htmlFor='country'>Select your country</label>
-                  <Field
-                    name='country'
-                    id='country'
-                    options={countryList}
-                    value={country}
-                    onChange={(e) => this.handleChangeSelect(e, 'country')}
-                    errorField={submitErrors}
-                    component={SelectField}
-                  />
+                <Field
+                  name='country'
+                  id='country'
+                  options={countryList}
+                  value={country}
+                  newValue={country}
+                  errorField={submitErrors}
+                  component={SelectField}
+                />
               </div>
             </div>
             <div className='form-group col-6'>
@@ -117,8 +74,6 @@ class SignUp extends Component {
                   name='last_name'
                   id='last_name'
                   label='Type in last name'
-                  onChange={this.handleChange}
-                  defaultValue={last_name}
                   errorField={submitErrors}
                   placeholder='Last name'
                 />
@@ -130,8 +85,6 @@ class SignUp extends Component {
                     name='state'
                     id='state'
                     label='State'
-                    onChange={this.handleChange}
-                    defaultValue={state}
                     errorField={submitErrors}
                     placeholder='State'
                   />
@@ -142,8 +95,6 @@ class SignUp extends Component {
                     name='city'
                     id='city'
                     label='City'
-                    onChange={this.handleChange}
-                    defaultValue={city}
                     errorField={submitErrors}
                     placeholder='City'
                   />
@@ -176,8 +127,6 @@ class SignUp extends Component {
                   name='email'
                   id='email'
                   label='Type in e-mail address'
-                  onChange={this.handleChange}
-                  defaultValue={email}
                   errorField={submitErrors}
                   placeholder='E-mail'
                 />
@@ -188,8 +137,6 @@ class SignUp extends Component {
                   name='password'
                   id='password'
                   label='Type in password'
-                  onChange={this.handleChange}
-                  defaultValue={password}
                   errorField={submitErrors}
                   placeholder='Password'
                 />
@@ -202,8 +149,6 @@ class SignUp extends Component {
                   name='username'
                   id='username'
                   label='Define your user ID'
-                  onChange={this.handleChange}
-                  defaultValue={username}
                   errorField={submitErrors}
                   placeholder='Username'
                 />
@@ -214,8 +159,6 @@ class SignUp extends Component {
                   name='password_confirmation'
                   id='password_confirmation'
                   label='Confirm password'
-                  onChange={this.handleChange}
-                  defaultValue={password_confirmation}
                   errorField={submitErrors}
                   placeholder='Password'
                 />
@@ -223,7 +166,6 @@ class SignUp extends Component {
             </div>
             <div className='form-check col-12 text-center'>
               <CheckboxField
-                onChange={this.handleChange}
                 name='accept_terms_and_conditions'
                 labelClass='form-check-label'
                 checkBoxId='accept_terms_and_conditions'
@@ -248,11 +190,18 @@ class SignUp extends Component {
   }
 }
 
+const selector = formValueSelector('sign_up')
+
 const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('sign_up')(state)
+  submitErrors: getFormSubmitErrors('sign_up')(state),
+  country: selector(state, 'country'),
 })
 const mapDispatchToProps = dispatch => ({
   signUpUser: (userFields) => dispatch(signUpUser(userFields))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'sign_up' })(SignUp))
+export default connect(mapStateToProps, mapDispatchToProps)
+  (reduxForm({
+    form: 'sign_up',
+    enableReinitialize: true })
+  (SignUp))

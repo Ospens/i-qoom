@@ -44,6 +44,7 @@ class AccessAndCommunication extends Component {
                 name='document_type'
                 id='document_type'
                 value={orig_company}
+                newValue={orig_company}
                 options={ddItems}
                 errorField={submitErrors}
                 component={SelectField}
@@ -83,6 +84,7 @@ class AccessAndCommunication extends Component {
                     name='isssued_for'
                     id='isssued_for'
                     value={orig_company}
+                    newValue={orig_company}
                     options={ddItems}
                     errorField={submitErrors}
                     component={SelectField}
@@ -100,6 +102,7 @@ class AccessAndCommunication extends Component {
                     name='select_reviewers'
                     id='isssued_for'
                     value={orig_company}
+                    newValue={orig_company}
                     options={ddItems}
                     errorField={submitErrors}
                     component={SelectField}

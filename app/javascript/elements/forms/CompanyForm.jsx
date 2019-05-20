@@ -144,7 +144,7 @@ class CompanyForm extends Component {
                 id='country'
                 options={countryList}
                 value={country}
-                defaultValue={country}
+                newValue={country}
                 errorField={submitErrors}
                 component={SelectField}
               />

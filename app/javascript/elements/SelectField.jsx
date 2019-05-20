@@ -17,7 +17,7 @@ const IndicatorSeparator = ({ innerProps }) => {
   )
 }
 
-function SelectField({ input, options, value, defaultValue, errorField, id, label}) {
+function SelectField({ input, options, newValue, errorField, id, label}) {
   const errorInfo = errorField[id]
   const borderColor = errorInfo ? '#fd0944' : '#ced4da'
   const borderWidth = errorInfo ? '2px' : '1px'
@@ -38,7 +38,7 @@ function SelectField({ input, options, value, defaultValue, errorField, id, labe
         {...input}
         components={{ DropdownIndicator, IndicatorSeparator }}
         options={options}
-        value={options.filter(option => option.value === defaultValue)}
+        value={options.filter(option => option.value === newValue)}
         autoFocus={false}
         styles={colourStyles}
         onChange={value => input.onChange(value.value)}
