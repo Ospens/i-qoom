@@ -1,0 +1,27 @@
+{
+  "workbench.startupEditor": "newUntitledFile",
+  "workbench.statusBar.feedback.visible": false,
+  "workbench.statusBar.visible": false,
+  "window.menuBarVisibility": "toggle",
+  "workbench.activityBar.visible": false,
+  "editor.minimap.enabled": false,
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "workbench.editor.tabSizing": "shrink",
+  "editor.detectIndentation": false,
+  "editor.renderLineHighlight": "all",
+  "editor.folding": false,
+  "editor.glyphMargin": false,
+  "editor.smoothScrolling": true,
+  "files.autoSave": "onFocusChange",
+  "editor.formatOnPaste": true,
+  "editor.rulers": [
+  80
+  ],
+  "ruby.lint": {
+    "rubocop": {
+      "lint": true,
+      "rails": true
+    }
+  }
+}

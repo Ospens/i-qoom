@@ -41,7 +41,6 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   }
 
   const data = {}
-
   if (step === 'company_datum') {
     data.company_datum_attributes = {
       id: values.id || '',
@@ -66,14 +65,14 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
     data.company_datum_attributes = {
       billing_address_attributes: {
         id: values.id || '',
-        company_name: values.company_name,
-        street: values.street,
-        house_number: values.house_number,
-        city: values.city,
-        postcode: values.postcode,
-        country: values.country,
-        district: values.district,
-        district_court: values.district_court
+        company_name: values.billing_company_name,
+        street: values.billing_street,
+        house_number: values.billing_house_number,
+        city: values.billing_city,
+        postcode: values.billing_postcode,
+        country: values.billing_country,
+        district: values.billing_district,
+        district_court: values.billing_district_court
       }
     }
   }
@@ -102,6 +101,7 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
         dispatch(projectUpdated(response.data))
       })
       .catch(({ response }) => {
+        errorNotify('Something went wrong')
         throw new SubmissionError(response.data.error_messages)
       })
   )
@@ -115,9 +115,9 @@ export const startCreateProject = () => (dispatch, getState) => {
   }
 
   const newValues = {}
-  const values = form.administrator_form.values
+  const { values } = form.administrator_form
   Object.keys(values).forEach(k => {
-    const key = k.replace(/administrator_form(.*)_/g, '')
+    const key = k.replace('administrator_form_', '')
     newValues[key] = values[k]
   })
 

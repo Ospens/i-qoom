@@ -30,7 +30,7 @@ class DropDown extends Component {
     const { isOpen } = this.state
     const mainClass = classnames(className, 'btn-group', { 'show': isOpen })
     const ddClass = classnames('dropdown-menu', { 'show': isOpen })
-    const iClass = classnames('arrow ml-auto', { 'up': isOpen }, { 'down': !isOpen })
+    const iClass = classnames('arrow ml-4', { 'up': isOpen }, { 'down': !isOpen })
     const customBtnClass = btnClass ? btnClass : 'btn btn-white-blue'
 
     return (
@@ -48,7 +48,7 @@ class DropDown extends Component {
             btnComponent
           ) : (
             <React.Fragment>
-              <span className='ml-auto'>{btnName}</span>
+              <span className='mx-auto'>{btnName}</span>
               <i className={iClass}/>
             </React.Fragment>
           )}

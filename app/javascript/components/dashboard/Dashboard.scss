@@ -20,6 +20,7 @@ body {
 .main-content {
   padding-left: 30px;
   padding-right: 30px;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -702,6 +703,9 @@ input[type=checkbox]:checked+label {
 
   .name-column {
     position: relative;
+    flex-direction: row;
+    display: flex;
+
     .user-and-conpany {
       display: flex;
       flex-direction: column;
@@ -1039,6 +1043,8 @@ input:checked+.slider:before {
 }
 
 .dropdown-with-switch {
+  min-width: 170px;
+
   .dropdown-menu {
     margin-top: -5px; 
     z-index: 9;

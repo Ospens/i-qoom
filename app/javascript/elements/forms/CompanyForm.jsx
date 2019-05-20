@@ -17,11 +17,6 @@ import countryList from '../../components/landing/countriesCodes'
 
 class CompanyForm extends Component {
 
-  componentWillMount() {
-    const { defaultValues } = this.props
-    this.props.initialize(defaultValues)
-  }
-
   handleSubmit = (values) => {
     const { customSubmit } = this.props
     if (customSubmit) {
@@ -95,7 +90,7 @@ class CompanyForm extends Component {
                     <InputField
                       type='text'
                       name='vat_id'
-                      id='company_datum.vat_id'
+                      id='vat_id'
                       errorField={submitErrors}
                       placeholder='VAT-ID'
                     />
@@ -108,7 +103,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='street'
-                  id='company_datum.company_address.street'
+                  id='street'
                   errorField={submitErrors}
                   placeholder='Street name'
                 />
@@ -117,7 +112,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='house_number'
-                  id='company_datum.company_address.house_number'
+                  id='house_number'
                   errorField={submitErrors}
                   placeholder='No.'
                 />
@@ -128,7 +123,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='city'
-                  id='company_datum.company_address.city'
+                  id='city'
                   errorField={submitErrors}
                   placeholder='City'
                 />
@@ -137,7 +132,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='postcode'
-                  id='company_datum.company_address.postcode'
+                  id='postcode'
                   errorField={submitErrors}
                   placeholder='Postcode'
                 />
@@ -146,10 +141,10 @@ class CompanyForm extends Component {
             <div className='form-group'>
               <Field
                 name='country'
-                id='company_datum.company_address.country'
+                id='country'
                 options={countryList}
                 value={country}
-                //onChange={(e) => this.handleChangeSelect(e, 'country')}
+                defaultValue={country}
                 errorField={submitErrors}
                 component={SelectField}
               />
@@ -205,7 +200,7 @@ export default connect(
   )(reduxForm(
     {
       form: 'company_form',
-      initialValues: { same_for_billing_address: true },
-      destroyOnUnmount: true
+      destroyOnUnmount: false,
+      enableReinitialize: true
     })
   (CompanyForm))

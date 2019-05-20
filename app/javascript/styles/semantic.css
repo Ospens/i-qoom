@@ -32928,8 +32928,6 @@ select.ui.dropdown {
 /* Menu Item Hover */
 
 .ui.dropdown .menu > .item:hover {
-  background: #e9f6ff;
-  color: #9cd6fc;
   z-index: 13;
 }
 

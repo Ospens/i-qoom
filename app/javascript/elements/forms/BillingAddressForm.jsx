@@ -4,10 +4,13 @@ import ReactSVG from 'react-svg'
 import {
   getFormSubmitErrors,
   reduxForm,
+  Field,
   formValueSelector
 } from 'redux-form'
 import InputField from '../InputField'
 import Left from '../../images/arrow-button-left'
+import SelectField from '../SelectField'
+import countryList from '../../components/landing/countriesCodes'
 
 class BillingAddressForm extends Component {
 
@@ -36,7 +39,8 @@ class BillingAddressForm extends Component {
   }
 
   render() {
-    const { submitErrors, mainClassName, titleModal, customButtons } = this.props
+    const { submitErrors, mainClassName, titleModal, customButtons, country } = this.props
+
     return (
       <div>
         <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
@@ -75,8 +79,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-8'>
                 <InputField
                   type='text'
-                  name='billing_street_name'
-                  id='billing_street_name'
+                  name='billing_street'
+                  id='billing_street'
                   errorField={submitErrors}
                   placeholder='Street name'
                 />
@@ -84,8 +88,8 @@ class BillingAddressForm extends Component {
               <div className='form-group col-4'>
                 <InputField
                   type='text'
-                  name='billing_street_number'
-                  id='billing_street_number'
+                  name='billing_house_number'
+                  id='billing_house_number'
                   errorField={submitErrors}
                   placeholder='No.'
                 />
@@ -112,12 +116,14 @@ class BillingAddressForm extends Component {
               </div>
             </div>
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
                 name='billing_country'
                 id='billing_country'
+                options={countryList}
+                value={country}
+                defaultValue={country}
                 errorField={submitErrors}
-                placeholder='Country'
+                component={SelectField}
               />
             </div>
             <div className='row'>
@@ -151,13 +157,15 @@ const selector = formValueSelector('billing_address')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('billing_address')(state),
-  companyName: selector(state, 'company_name')
+  companyName: selector(state, 'billing_company_name'),
+  country: selector(state, 'billing_country'),
 })
 
 export default connect(
   mapStateToProps
 )(reduxForm({
   form: 'billing_address',
-  destroyOnUnmount: false
-})(BillingAddressForm)
+  destroyOnUnmount: false,
+  enableReinitialize: true
+  })(BillingAddressForm)
 )

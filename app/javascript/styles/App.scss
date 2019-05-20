@@ -198,7 +198,7 @@ header {
   width: 100%;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 999;
   &.colorful {
     background-color: #221e6d;
     position: relative;
@@ -758,26 +758,33 @@ header {
     margin-top: 100px;
     padding-left: 5em;
     padding-right: 5em;
-    height: calc(100vh - 218px);
+    // height: calc(100vh - 218px);
     min-height: 80.5vh;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
     .next-row {
         margin-top: 3em;
     }
+
     label {
         color: #c8d8d9;
     }
+
     .steps {
         .step {
             padding-bottom: 15px;
             font-weight: 600;
             color: #f2f5f5;
             border-bottom: 5px solid #f2f5f5;
+
             &.active {
                 color: #793DF1;
                 border-bottom: 5px solid #793DF1;
             }
         }
     }
+
     .sign-up-form__header {
         margin-top: 2em;
         color: #26276a;
@@ -786,12 +793,14 @@ header {
         margin-left: auto;
         margin-right: auto;
     }
+
     .form-row {
         display: none;
         width: 70%;
         margin-left: auto;
         margin-right: auto;
         margin-top: 5em;
+
         &.active {
             display: flex;
         }

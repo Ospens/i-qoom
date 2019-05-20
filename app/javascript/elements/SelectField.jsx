@@ -30,6 +30,7 @@ function SelectField({ input, options, value, defaultValue, errorField, id, labe
       color: isFocused ? '#2fa7f9' : 'lightgray'
     })
   }
+
   return (
     <div>
       {label && <label htmlFor={input.name}>{label}</label>}
@@ -37,10 +38,9 @@ function SelectField({ input, options, value, defaultValue, errorField, id, labe
         {...input}
         components={{ DropdownIndicator, IndicatorSeparator }}
         options={options}
-        value={value}
+        value={options.filter(option => option.value === defaultValue)}
         autoFocus={false}
         styles={colourStyles}
-        defaultValue={defaultValue}
         onChange={value => input.onChange(value.value)}
         maxMenuHeight='180'
         onBlur={value => input.onBlur(value.value)}

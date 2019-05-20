@@ -52,7 +52,8 @@ const minHeight = '30px'
 const height = '30px'
 
 const colourStyles = {
-  control: styles => ({ ...styles, minHeight, height })
+  control: styles => ({ ...styles, minHeight, height }),
+  indicatorsContainer: styles => ({ ...styles, minHeight, height })
 }
 
 class MemberTable extends Component {
@@ -136,9 +137,11 @@ class MemberTable extends Component {
                   </div>
                 </Table.Cell>
                 <Table.Cell className='name-column'>
-                  <UserAvatar size='24' name={name} />
-                  <span className='master-icon'>M</span>
-                  {name}
+                  <div>
+                    <UserAvatar size='24' name={name} />
+                    <span className='master-icon'>M</span>
+                  </div>
+                  <span>{name}</span>
                 </Table.Cell>
                 <Table.Cell className='member-id'><span>{member_id}</span></Table.Cell>
                 <Table.Cell className='td-select-dropdown'>

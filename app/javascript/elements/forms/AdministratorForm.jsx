@@ -5,20 +5,14 @@ import InputField from '../InputField'
 
 class AdministratorForm extends Component {
 
-  componentWillMount() {
-    // const { defaultValues } = this.props
-    // this.props.initialize(defaultValues)
-  }
-
   handleSubmit = (values) => {
     const { customSubmit } = this.props
 
     const newValues = {}
     Object.keys(values).forEach(k => {
-      const key = k.replace(/administrator_form(.*)_/g, '')
+      const key = k.replace(/administrator_form_(.)_/g, '')
       newValues[key] = values[k]
     })
-
     customSubmit(newValues)
   }
 
@@ -130,4 +124,8 @@ const mapStateToProps = (state, ownProps) => {
   })
 }
 
-export default connect(mapStateToProps)(reduxForm({destroyOnUnmount: false})(AdministratorForm))
+export default connect(mapStateToProps)
+                (reduxForm({
+                  destroyOnUnmount: false,
+                  enableReinitialize: true})
+                (AdministratorForm))
