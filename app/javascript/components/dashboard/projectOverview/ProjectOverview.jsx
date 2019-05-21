@@ -63,7 +63,7 @@ class ProjectOverview extends Component {
               </div>
             </div>
           ))}
-          {[...Array(3 - allProjects.length)].map((e, i) => (
+          {allProjects.length < 4 && [...Array(3 - allProjects.length)].map((e, i) => (
             <div className='col-sm-4' key={i}>
               <div className='project-card blank' onClick={this.openCreateProjectModal}>
                 <ReactSVG
