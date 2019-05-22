@@ -7,8 +7,9 @@ function ModalTerms({ toogleTerms, closeModal, termsAccepted, nextStep}) {
     <ModalComponent>
       <div>
         <div className='modal-body terms-modal'>
-          <h5>Please read our <Link to='/terms' target='_blank'>Terms and Conditions</Link></h5>
-          <h5>and check the box below</h5>
+          <h5 className='text-center'>
+            Please read our <Link to='/terms' target='_blank'>Terms and Conditions</Link> and check the box below
+          </h5>
 
           <div className='checkbox-terms rect-checkbox'>
             <input
