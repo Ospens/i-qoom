@@ -711,7 +711,10 @@ header {
         font-size: 2em;
     }
     .form-number-group {
-        padding-top: 2.7rem !important;
+      position: absolute;
+      width: calc(100% - 10px);
+      bottom: 0;
+      margin-bottom: 0;
     }
     label {
         color: #c8d8d9;
