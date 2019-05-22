@@ -1,12 +1,18 @@
 .dms-container {
   height: 100%;
 
+  @media only screen and (max-width: 1400px) {
+    button, a {
+      font-size: 0.8em !important;
+    }
+  }
+
   .bordered {
     border-radius: 5px;
     border: 1px solid lightgrey;
   }
 
-  .new-document {
+  .new-document, .show-document {
     .col-10 {
       height: 100%;
     }
@@ -80,6 +86,13 @@
     .revision-title-block {
       display: flex;
       margin-bottom: 30px;
+    }
+
+    .new-document__header {
+      h4 {
+        font-weight: 500;
+        font-size: 1.5em;
+      }
     }
   }
 

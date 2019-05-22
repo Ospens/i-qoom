@@ -3,106 +3,21 @@ import './DMS.scss'
 import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import { startFetchDocuments } from '../../../actions/documentsActions'
-import {
-  Link,
-  Route
-} from 'react-router-dom'
+import { startFetchDocuments, newDocument } from '../../../actions/documentsActions'
+import { Link, Route } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import DropDown from '../../../elements/DropDown'
 import DmsSideBar from './DmsSideBar'
 import blueCheck from '../../../images/add_1'
 import revisionIcon from '../../../images/Revise_2'
 import editDocIcon from '../../../images/common-file-edit'
-import emailSendIcon from '../../../images/email-action-send-2'
-import copyToFolderIcon from '../../../images/folder-empty'
-import showDetailsIcon from '../../../images/common-file-text'
 import dlIcon from '../../../images/common-file-text_gary'
 import nativeIcon from '../../../images/common-file-text-1'
 import pdfIcon from '../../../images/office-file-pdf'
-import downloadDetailsIcon from '../../../images/download-button'
-import reviewDocIcon from '../../../images/single-neutral-actions-text'
 import dots from '../../../images/dots-horizontal'
+import DMSLayout from './DMSLayout'
+import { actionDDitems, columns, DtOptions } from './constants'
 
-const actionDDitems = [
-  {
-    title: 'Email',
-    icon: emailSendIcon
-  },
-  {
-    title: 'Copy to folder',
-    icon: copyToFolderIcon
-  },
-  {
-    title: 'Show details',
-    icon: showDetailsIcon
-  },
-  {
-    title: 'Download Files',
-    icon: downloadDetailsIcon
-  },
-  {
-    title: 'Edit document',
-    icon: editDocIcon
-  },
-  {
-    title: 'Add revision',
-    icon: revisionIcon
-  },
-  {
-    title: 'Review document',
-    icon: reviewDocIcon
-  },
-  {
-    title: 'Download as list',
-    icon: downloadDetailsIcon
-  }
-]
-
-const columns = [
-  { title: 'DOC-ID', divider: true },
-  { title: 'Document Title', divider: true },
-  { title: 'DL', divider: true },
-  { title: 'Native', divider: true },
-  { title: 'Additional', divider: true },
-  { title: 'Revision', divider: true },
-  { title: 'Version', divider: true }
-]
-
-const DtOptions = [
-  {
-    key: 'certification',
-    title: 'Certification'
-  },
-  {
-    key: 'contracts',
-    title: 'Contracts'
-  },
-  {
-    key: 'dataSheets',
-    title: 'Data Sheets'
-  },
-  {
-    key: 'drawings',
-    title: 'Drawings'
-  },
-  {
-    key: 'hsse',
-    title: 'HSSE'
-  },
-  {
-    key: 'letters',
-    title: 'Letters'
-  },
-  {
-    key: 'reports',
-    title: 'Reports'
-  },
-  {
-    key: 'shedules',
-    title: 'Shedules'
-  }
-] 
 class DMS extends Component {
 
   state = {
@@ -113,7 +28,8 @@ class DMS extends Component {
    }
 
   componentWillMount() {
-    const { startFetchDocuments } = this.props
+    const { startFetchDocuments, newDocument } = this.props
+    newDocument()
     startFetchDocuments()
   }
 
@@ -127,7 +43,7 @@ class DMS extends Component {
       <ul className='head-buttons'>
         <Route path='/dashboard/projects/:project_id/documents/new/' exact>
           <li>
-            <Link className='btn d-flex' to={`/dashboard/projects/${params.project_id}/documents/new/`}>
+            <Link className='btn d-flex align-items-center' to={`/dashboard/projects/${params.project_id}/documents/new/`}>
               <ReactSVG
                 svgStyle={{ height: 15, width: 15, marginRight: 5 }}
                 src={blueCheck}
@@ -275,6 +191,13 @@ class DMS extends Component {
     )
   }
 
+  renderDropDownIcon = () => (
+    <ReactSVG
+      svgStyle={{ height: 20, width: 20 }}
+      src={dots}
+    />
+  )
+
   checkItem = (stateName, stateItems, value) => {
     let newVal
 
@@ -291,7 +214,7 @@ class DMS extends Component {
     const { documents } = this.props
     const { checkedDocs } = this.state
     return (
-      <React.Fragment>
+      <div>
         { this.renderTableHeader() }
         <Table sortable className='mamber-managment-table'>
           <Table.Header>
@@ -320,12 +243,7 @@ class DMS extends Component {
 
                 <Table.Cell>
                   <DropDown
-                    btnComponent={
-                      <ReactSVG
-                        svgStyle={{ height: 20, width: 20 }}
-                        src={dots}
-                      />
-                    }
+                    btnComponent={this.renderDropDownIcon()}
                     className='dropdown-with-icon'
                   >
                     {actionDDitems.map(({ icon, title }, i) => (
@@ -392,7 +310,7 @@ class DMS extends Component {
         <div className='d-flex'>
           <span className='ml-auto'>{documents.length} total documents</span>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 
@@ -400,26 +318,25 @@ class DMS extends Component {
     const { myReview, allReview, checkedDocs } = this.state
 
     return (
-      <div className='dms-container'>
-        {this.renderHeader()}
-        <div className='row pt-5'>
+      <DMSLayout
+        header={this.renderHeader()}
+        sidebar={
           <DmsSideBar
             myReview={myReview}
             allReview={allReview}
             checkedDocs={checkedDocs}
             renderDropDownItems={(icon, title) => this.renderDropDownItems(icon, title)}
           />
-          <div className='col-10'>
-            {this.renderTable()}
-          </div>
-        </div>
-      </div>
+        }
+        content={this.renderTable()}
+      />
     )
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: () => dispatch(startFetchDocuments())
+  startFetchDocuments: () => dispatch(startFetchDocuments()),
+  newDocument: () => dispatch(newDocument())
 })
 
 const mapStateToProps = ({ documents }) => ({

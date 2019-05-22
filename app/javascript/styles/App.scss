@@ -176,9 +176,11 @@ footer:after,
   padding: 0 15px;
   overflow: hidden;
   &.info-container {
-    margin-top: 100px;
+    margin-top: 10  0px;
+    margin-top: 8em;
     padding-top: 2em;
     height: 100vh;
+    overflow: auto;
   }
 }
 
