@@ -1,10 +1,43 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
-import comm from '../../images/comm.svg'
+import TextEditor from '../../elements/TextEditor'
 import Arrows from '../../elements/Arrows'
 import blueCheck from '../../images/blue_check.svg'
 import star from '../../images/gold_star.svg'
+import DropDownMenu from '../../elements/DropDownMenu'
+import pencil from '../../images/pencil-write'
+import trashBucket from '../../images/trash_bucket'
+import direction_button from '../../images/direction-button-5'
+import tmpAvatar from '../../images/tmp_avatar'
+
+const options = [
+  {
+    key: 'edit_text',
+    text: 'Edit text',
+    icon: pencil,
+    onClick: undefined
+  },
+  {
+    key: 'replace_icon',
+    text: 'Replace icon',
+    icon: direction_button,
+    onClick: undefined
+  },
+  {
+    key: 'move_section',
+    text: 'Move section',
+    icon: direction_button,
+    onClick: undefined
+  },
+  {
+    key: 'delete',
+    text: 'Delete',
+    icon: trashBucket,
+    onClick: undefined
+  }
+]
 
 class Reviews extends Component {
 
@@ -27,8 +60,58 @@ class Reviews extends Component {
     return stars
   }
 
-  renderReviewsSlider = (reviews, newClassName = '') => {
+  renderAdminCard = (el, i) => (
+    <div className='card text-left with-dropdown-menu' key={i}>
+      <DropDownMenu options={options} />
+      <div className='reviews-user-info row'>
+        <img className='review-card-avatar' src={tmpAvatar} alt='' />
+        <div className='clearfix' />
+        <div className='user-name-block col-9'>
+        <div className='row'>
+          <TextEditor text={el.name} />
+          <ReactSVG
+            src={blueCheck}
+            svgStyle={{ width: 15, height: 15 }}
+            className='blue-check'
+          />
+        </div>
+          <TextEditor text={el.country} />
+          <div className='user-stars'>{this.starsRender(el.stars)}
+          </div>
+        </div>
+      </div>
+      <div className='card-body'>
+        <TextEditor text={el.desription} />
+      </div>
+    </div>
+  )
 
+  renderCommonCard = (el, i) => (
+    <div className='card text-left with-dropdown-menu' key={i}>
+      <div className='reviews-user-info row'>
+        <img className='review-card-avatar' src={tmpAvatar} alt='' />
+        <div className='clearfix' />
+        <div className='user-name-block col-9'>
+          <div className='row'>
+            <div dangerouslySetInnerHTML={{ __html: el.name }} />
+            <ReactSVG
+              src={blueCheck}
+              svgStyle={{ width: 15, height: 15 }}
+              className='blue-check'
+            />
+        </div>
+          <div dangerouslySetInnerHTML={{ __html: el.country}} />
+          <div className='user-stars'>{this.starsRender(el.stars)}
+          </div>
+        </div>
+      </div>
+      <div className='card-body'>
+        <div dangerouslySetInnerHTML={{ __html: el.desription }} />
+      </div>
+    </div>
+  )
+
+  renderReviewsSlider = (reviews, newClassName = '') => {
     const settings = {
       infinite: true,
       speed: 1000,
@@ -37,39 +120,49 @@ class Reviews extends Component {
       nextArrow: <Arrows type='nextBtn' />,
       prevArrow: <Arrows type='prevBtn' />
     }
+    const { authed, editable } = this.props
+    let reviewsContent
+    if (authed && editable) {
+      reviewsContent = (
+        reviews.map((el, i) => {
+          return this.renderAdminCard(el, i)
+        })
+      )
+      reviewsContent.push(
+        <div className='card text-left with-dropdown-menu' key='new'>
+          <DropDownMenu options={options} />
+          <div className='reviews-user-info row'>
+            <img className='review-card-avatar' src={tmpAvatar} alt='' />
+            <div className='clearfix' />
+            <div className='user-name-block col-9'>
+              <h6 className='user-name'>Name</h6>
+              <ReactSVG
+                src={blueCheck}
+                svgStyle={{ width: 15, height: 15 }}
+                className='blue-check'
+              />
+              <div className='user-country text-muted'>Place</div>
+              <div className='user-stars'>{this.starsRender(5)}
+              </div>
+            </div>
+          </div>
+          <div className='card-body'>
+            <div className='review-title'>Title</div>
+            <p className='card-text'>Text</p>
+          </div>
+        </div>
+      )
+    } else {
+      reviewsContent = (
+        reviews.map((el, i) => {
+          return this.renderCommonCard(el, i)
+        })
+      )
+    }
 
     return (
       <Slider className={`card-deck mx-4 mb-4 ${newClassName}`} {...settings}>
-        {reviews.map((el, i) => {
-          return (
-            <div className='card text-left' key={i}>
-              <div className='user-info row'>
-                <ReactSVG
-                  src={el.image}
-                  svgStyle={{ width: '100%', height: '100%' }}
-                  className='col-3'
-                  svgClassName='mt-2'
-                />
-                <div className='clearfix' />
-                <div className='user-name-block col-9'>
-                  <h6 className='user-name'>{el.name}</h6>
-                  <ReactSVG
-                    src={blueCheck}
-                    svgStyle={{ width: 15, height: 15 }}
-                    className='blue-check'
-                  />
-                  <div className='user-country text-muted'>{el.country}</div>
-                  <div className='user-stars'>{this.starsRender(el.stars)}
-                  </div>
-                </div>
-              </div>
-              <div className='card-body'>
-                <div className='review-title'>{el.title}</div>
-                <p className='card-text'>{el.desription}</p>
-              </div>
-            </div>
-          )
-        })}
+        {reviewsContent}
       </Slider>)
   }
 
@@ -98,59 +191,22 @@ class Reviews extends Component {
   }
 
   render() {
+    const { authed, editable, description, cards } = this.props
     const { readMore } = this.state
-    const reviews = [
-      {
-        name: 'Humayra Samiha',
-        country: 'California, USA',
-        image: comm,
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Hamburg, GER',
-        image: comm,
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'North American darter sea bass sixgill shark. Freshwater hatchetfish whale catfish riffle dace, salmon shark lookdown catfish, menhaden sixgill shark sprat.'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Stockhorm, SE',
-        image: comm,
-        stars: 5,
-        title: 'Freshwater hatchetfish',
-        desription: 'North American darter sea bass sixgill shark; weasel shark yellowfin croaker'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Stockhorm, SE',
-        image: comm,
-        stars: 5,
-        title: 'Freshwater hatchetfish',
-        desription: 'North American darter sea bass sixgill shark; weasel shark yellowfin croaker'
-      },
-      {
-        name: 'Humayra Samiha',
-        country: 'Hamburg, GER',
-        image: comm,
-        stars: 5,
-        title: 'Crevice kelpfish',
-        desription: 'North American darter sea bass sixgill shark. Freshwater hatchetfish whale catfish riffle dace, salmon shark lookdown catfish, menhaden sixgill shark sprat.'
-      }
-    ]
-
+ 
     return (
       <section id='reviews-card'>
-        <div className='text-center container'>
-          <h2 className='block-header'>i-Qoom Reviews</h2>
-          <p className='block-description'>Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>
+        <div className='container'>
+          {authed && editable ?
+            (
+              <TextEditor text={description} />
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: description }} />
+            )}
         </div>
-        {this.renderReviewsSlider(reviews)}
-        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
-        {readMore && this.renderReviewsSlider(reviews, 'new-slider')}
+        {this.renderReviewsSlider(cards)}
+        {readMore && this.renderReviewsSlider(cards, 'new-slider')}
+        {readMore && this.renderReviewsSlider(cards, 'new-slider')}
         <div className='text-center container'>
           {this.renderToggleButton()}
         </div>
@@ -159,4 +215,11 @@ class Reviews extends Component {
   }
 }
 
-export default Reviews
+const mapStateToProps = ({ user, landing }) => ({
+  authed: user.authStatus,
+  description: landing.reviews.description,
+  cards: landing.reviews.cards,
+})
+
+export default connect(mapStateToProps)(Reviews)
+

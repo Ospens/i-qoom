@@ -1,40 +1,16 @@
 import React, { Component } from 'react'
-import LandingPageHeader from './LandingPageHeader'
 import { Route, Switch } from 'react-router-dom'
 import Footer from './Footer'
 import MainContent from './MainContent'
 import Imprint from './Imprint'
 import Terms from './Terms'
+import SignIn from './SignIn'
+import SignUp from './SignUp'
 
 class LandingPage extends Component {
 
   state = {
-    showSignInSlider: false,
-    showSignUp: false,
     showExamples: false
-  }
-
-  toggleSignInSlider = () => {
-    const { showSignInSlider } = this.state
-    this.setState({
-      showSignInSlider: !showSignInSlider,
-      showSignUp: false
-    })
-  }
-
-  toggleSignUp = () => {
-    const { showSignUp } = this.state
-    this.setState({
-      showSignUp: !showSignUp,
-      showSignInSlider: false
-    })
-  }
-
-  showMainPage = () => {
-    this.setState({
-      showSignUp: false,
-      showSignInSlider: false
-    })
   }
 
   toggleExamples = () => {
@@ -43,25 +19,19 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { showSignInSlider, showSignUp, showExamples } = this.state
+    const { showExamples } = this.state
     const { location } = this.props
-    const mainProps = {
-      showSignInSlider,
-      showSignUp,
-      showExamples,
-      showMainPage: this.showMainPage,
-      toggleSignInForm: this.toggleSignInSlider,
-      toggleSignUp: this.toggleSignUp,
-      toggleExamples: this.toggleExamples
-    }
-    const nonMain = location.pathname !== '/'
+    const mainProps = { showExamples, toggleExamples: this.toggleExamples }
+
+    const editable = location.pathname === '/admin_panel'
     return (
       <div className='landing-page'>
-        <LandingPageHeader {...mainProps} nonMain={nonMain} />
         <Switch>
-          <Route exact path='/' render={() => <MainContent {...mainProps} />} />
+          <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} editable={editable} />} />
           <Route path='/imprint' component={Imprint} />
-          <Route path='/Terms' component={Terms} />
+          <Route path='/terms' component={Terms} />
+          <Route path='/signin' render={props => <SignIn {...props} />} />
+          <Route path='/signup' render={props => <SignUp {...props} />} />
         </Switch>
         
         <Footer />

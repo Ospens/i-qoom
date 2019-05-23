@@ -4,16 +4,34 @@ import {
   reducer as reduxFormReducer
 } from 'redux-form'
 import thunk from 'redux-thunk'
-import authReducer from '../reducers/authReducer'
+import userReducer from '../reducers/userReducer'
+import landingReducer from '../reducers/landingReducer'
+import projectReducer from '../reducers/projectReducer'
+import documentsReducer from '../reducers/documentsReducer'
+import { loadState, saveState } from './localStorage'
 
 const rootReducer = combineReducers({
-  auth: authReducer,
+  user: userReducer,
+  landing: landingReducer,
+  documents: documentsReducer,
+  projects: projectReducer,
   form: reduxFormReducer
 })
 
-export default createStore(
+const persistedState = loadState()
+
+const store = createStore(
   rootReducer,
+  persistedState.state,
   composeWithDevTools(
     applyMiddleware(thunk)
   )
 )
+
+store.subscribe(() => {
+  saveState({
+    state: store.getState()
+  })
+})
+
+export default store

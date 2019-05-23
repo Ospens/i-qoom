@@ -1,11 +1,11 @@
 import React from 'react'
 import { Field } from 'redux-form'
 
-function InputField({ errorField = {}, label, ...input }) {
+function InputField({ errorField = {}, className, label, ...input }) {
   const errorInfo = errorField[input.id]
   return (
-    <div>
-      <label htmlFor='first_name'>{label}</label>
+    <div className={className}>
+      {label && <label htmlFor={input.name}>{label}</label>}
       <Field
         {...input}
         component='input'

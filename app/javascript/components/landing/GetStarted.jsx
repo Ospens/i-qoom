@@ -8,6 +8,7 @@ import classnames from 'classnames'
 import InputField from '../../elements/InputField'
 import lines from '../../images/send-lines'
 import plan from '../../images/send-email-big'
+import TextEditor from '../../elements/TextEditor'
 
 const emailValid = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
@@ -130,12 +131,18 @@ class GetStarted extends Component {
   }
 
   render() {
+    const { authed, editable, title } = this.props
     const { sent } = this.state
     const containerClass = classnames('form-container', { 'show-slider': sent })
     return (
       <section id='get-started-card'>
         <div className='container'>
-          <h2 className='text-center block-header'>Contact - Let's get started!</h2>
+          {authed && editable ?
+            (
+              <TextEditor text={title} className='mb-5'/>
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5'/>
+            )}
           <div className={containerClass}>
             {this.renderSuccessMsg()}
             {this.renderContactForm()}
@@ -147,7 +154,9 @@ class GetStarted extends Component {
 }
 
 const mapStateToProps = state => ({
-  synchronousError: getFormSyncErrors('contact_us')(state)
+  synchronousError: getFormSyncErrors('contact_us')(state),
+  authed: state.user.authStatus,
+  title: state.landing.getStarted.title,
 })
 
 export default connect(mapStateToProps, null)(reduxForm({ form: 'contact_us' })(GetStarted))
