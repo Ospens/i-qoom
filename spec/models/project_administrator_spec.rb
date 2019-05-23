@@ -7,20 +7,27 @@ RSpec.describe ProjectAdministrator, type: :model do
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
 
   context "add_user" do
-    it 'should be added' do
-      project = FactoryBot.create(:project)
-      project.admins.first.update(email: project.user.email)
-      expect(project.admins.first.user).to eq(project.user)
+    it 'should be added when created' do
+      user = FactoryBot.create(:user)
+      project =
+        FactoryBot.create(:project,
+          admins: [FactoryBot.build(:project_administrator,
+                                     email: user.email)] )
+      expect(project.admins.first.user).to eq(user)
     end
-    it "shouldn't be added" do
+    it "shouldn't be added if there is no such user" do
       project = FactoryBot.create(:project)
       expect(project.admins.first.user).to eq(nil)
     end
-    it "shouldn't be replaced" do
-      project = FactoryBot.create(:project)
-      project.admins.first.update(email: project.user.email)
-      project.admins.first.update(email: Faker::Internet.email)
-      expect(project.admins.first.user).to eq(project.user)
+    it "shouldn't be replaced after updating" do
+      user = FactoryBot.create(:user)
+      project =
+        FactoryBot.create(:project,
+          admins: [FactoryBot.build(:project_administrator,
+                                     email: user.email)] )
+      second_user = FactoryBot.create(:user)
+      project.admins.first.update(email: second_user.email)
+      expect(project.admins.first.user).not_to eq(second_user)
     end
   end
 end

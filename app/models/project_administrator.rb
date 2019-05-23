@@ -12,7 +12,7 @@ class ProjectAdministrator < ApplicationRecord
             email: true,
             presence: true
 
-  before_save :add_user
+  before_create :add_user
 
   def send_confirmation_email
     if awaiting_confirmation!
@@ -24,6 +24,10 @@ class ProjectAdministrator < ApplicationRecord
       ApplicationMailer.send_project_admin_confirmation(self).deliver_now
       self.save
     end
+  end
+
+  def confirmation_token
+    ::JsonWebToken.encode(admin_id: id, email: email)
   end
 
   private
