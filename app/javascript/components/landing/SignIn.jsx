@@ -68,7 +68,7 @@ class SignIn extends Component {
                   </div>
                   <div className='btn-toolbar pt-4'>
                     <div className='btn-group justify-content-center'>
-                      <Link className='col-6 btn btn-back' to='/'>
+                      <Link className='col-6 btn btn-back mx-auto' to='/'>
                           <ReactSVG
                             svgStyle={{ height: 15, width: 15, marginRight: 10 }}
                             src={Left}
