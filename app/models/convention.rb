@@ -1,6 +1,9 @@
 # Conventions must be created automatically with project
 class Convention < ApplicationRecord
-  has_many :document_fields, as: :parent
+  has_many :document_fields,
+           as: :parent,
+           index_errors: true,
+           dependent: :destroy
 
   accepts_nested_attributes_for :document_fields
 

@@ -13,7 +13,6 @@ Rails.application.routes.draw do
       resources :sessions, only: :create
       resources :users, only: [:create, :update, :destroy]
 
-      resources :conventions, only: [:edit, :update]
       resources :documents, except: [:new, :create, :index] do
         member do
           post :create_revision
@@ -22,6 +21,7 @@ Rails.application.routes.draw do
       end
 
       resources :projects, except: [:new, :edit] do
+        resource :conventions, only: [:edit, :update]
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
