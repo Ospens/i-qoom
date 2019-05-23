@@ -58,7 +58,7 @@ class DmsSideBar extends Component {
           </div>
           <div className='dms-sidebar-menu__block'>
             {checkedDocs.length !== 0
-              ? <div className='selected-doc-title'><span>{checkedDocs.length}</span> selected Doc</div>
+              ? <div className='selected-info-block'><span>{checkedDocs.length}</span> selected Doc</div>
               : <h4>Actions</h4>}
             <DropDown
               btnName='Action'

@@ -215,14 +215,14 @@ class AddRevision extends Component {
               <div className='p-5'>
                 <div className='revision-title-block'>
                   <h5>Add new Revision:</h5>
-                  <label className='red-label ml-4'>
+                  <label className='rounded-label red ml-4'>
                     Revision 41
                     <ReactSVG
                       svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
                       src={lockIcon}
                     />
                   </label>
-                  <label className='red-label ml-4'>
+                  <label className='rounded-label red ml-4'>
                     Version 0.0
                     <ReactSVG
                       svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
