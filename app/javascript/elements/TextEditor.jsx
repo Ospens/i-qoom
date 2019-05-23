@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
-import '../styles/ckEditor'
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials'
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat'
 import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily'

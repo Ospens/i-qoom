@@ -6,7 +6,10 @@ import { ToastContainer } from 'react-toastify'
 import '../../../node_modules/bootstrap/dist/css/bootstrap.css'
 import '../styles/App.scss'
 import 'react-toastify/dist/ReactToastify.css'
-import App from './App'
+import App from '../components/App'
+import '../styles/semantic.css'
+import 'react-datepicker/dist/react-datepicker.css'
+import '../styles/ckEditor.css'
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
