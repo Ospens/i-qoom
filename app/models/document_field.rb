@@ -60,7 +60,7 @@ class DocumentField < ApplicationRecord
             inclusion: { in: [1, 2] }
 
   validate :has_field_values,
-           if: :should_have_document_field_values?
+           if: -> { parent.class.name != 'DocumentFolder' && should_have_document_field_values? }
 
   validate :revision_number_valid,
            if: -> { parent.class.name == 'Document' && revision_number? },
