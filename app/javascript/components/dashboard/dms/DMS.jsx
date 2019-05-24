@@ -16,6 +16,7 @@ import nativeIcon from '../../../images/common-file-text-1'
 import pdfIcon from '../../../images/office-file-pdf'
 import dots from '../../../images/dots-horizontal'
 import DMSLayout from './DMSLayout'
+import DocumentPopup from './DocumentPopup'
 import { actionDDitems, columns, DtOptions } from './constants'
 
 class DMS extends Component {
@@ -25,7 +26,7 @@ class DMS extends Component {
     direction: null,
     checkedDocs: [],
     checkedDocTypes: []
-   }
+  }
 
   componentWillMount() {
     const { startFetchDocuments, newDocument } = this.props
@@ -101,7 +102,7 @@ class DMS extends Component {
 
     return (
       <div className='dms-container__table-header'>
-        <h5>Show</h5>
+        <span className='mr-4'>Show</span>
         <DropDown
           btnName='Documents Types'
           btnClass='btn dms-topbar-menu__dropdown'
@@ -215,6 +216,7 @@ class DMS extends Component {
     const { checkedDocs } = this.state
     return (
       <div>
+        {<DocumentPopup/>}
         { this.renderTableHeader() }
         <Table sortable className='mamber-managment-table'>
           <Table.Header>

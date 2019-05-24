@@ -719,11 +719,15 @@ input[type=checkbox]:checked+label {
     }
 
     .master-icon {
+      display: flex;
+      width: 23px;
+      height: 23px;
+      justify-content: center;
+      align-content: center;
       position: absolute;
       border: 1px solid white;
       background-color: #4b5b5d;
       color: white;
-      padding: 5px;
       border-radius: 100%;
       left: 0;
       top: 20px;

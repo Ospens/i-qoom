@@ -10,7 +10,7 @@ import ModalAddComment from './ModalAddComment'
 class ShowDocument extends Component {
 
   state = {
-    addComment: true
+    addComment: false
   }
 
   renderContent = () => {
