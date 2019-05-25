@@ -10,6 +10,12 @@ class DocumentFolder < ApplicationRecord
 
   has_and_belongs_to_many :documents
 
+  validate :document_fields_values
+
+  def convention
+    project.conventions.active
+  end
+
   def originating_company
     document_fields.find_by(codification_kind: :originating_company)
   end
@@ -45,5 +51,16 @@ class DocumentFolder < ApplicationRecord
       all_docs = all_docs.filter_by_codification_kind(:document_number, value)
     end
     Document.find(documents.pluck(:id) + all_docs.pluck(:id))
+  end
+
+  def document_fields_values
+    document_fields.each do |field|
+      next if !(field.originating_company? || field.discipline? || field.document_type?)
+      con_field = convention.document_fields
+                            .find_by(codification_kind: field.codification_kind)
+      if !con_field.document_field_values.pluck(:value).include?(field.value)
+        errors.add(:document_fields, :value_is_not_exist_in_convention)
+      end
+    end
   end
 end
