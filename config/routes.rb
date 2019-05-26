@@ -20,6 +20,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :document_folders, only: [:create, :edit, :update, :show] do
+        collection do
+          post :add_document_to_folders
+        end
+      end
+
       resources :projects, except: [:new, :edit] do
         resource :conventions, only: [:edit, :update]
         resources :documents, only: [:new, :create, :index] do
