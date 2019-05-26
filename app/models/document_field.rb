@@ -57,7 +57,8 @@ class DocumentField < ApplicationRecord
             if: :codification_field?
 
   validates :column,
-            inclusion: { in: [1, 2] }
+            inclusion: { in: [1, 2] },
+            if: -> { parent.class.name != 'DocumentFolder' }
 
   validate :has_field_values,
            if: -> { parent.class.name != 'DocumentFolder' && should_have_document_field_values? }

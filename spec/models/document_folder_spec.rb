@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe DocumentFolder, type: :model do
   context 'all_documents' do
-    let(:project) { FactoryBot.create(:project) }
-    let(:user) { FactoryBot.create(:user) }
-    let(:folder) { FactoryBot.create(:document_folder, project: project, user: user) }
+    let(:folder) { FactoryBot.create(:document_folder) }
+    let(:project) { folder.project }
+    let(:user) { folder.user }
     let!(:doc1) { FactoryBot.create(:document) }
     let!(:doc2) { FactoryBot.create(:document) }
 
@@ -21,7 +21,6 @@ RSpec.describe DocumentFolder, type: :model do
       value = field.value
       folder.document_fields.create!(kind: :codification_field,
                                      codification_kind: field.codification_kind,
-                                     column: 1,
                                      value: value)
     end
 
@@ -66,7 +65,6 @@ RSpec.describe DocumentFolder, type: :model do
       @field =
         folder.document_fields.new(kind: :codification_field,
                                    codification_kind: kind,
-                                   column: 1,
                                    value: '111')
     end
 
@@ -92,6 +90,22 @@ RSpec.describe DocumentFolder, type: :model do
       expect(folder).to_not be_valid
       @field.value = @convention_field_value
       expect(folder).to be_valid
+    end
+  end
+
+  context 'allowed_to_add_document?' do
+    let!(:folder) { FactoryBot.create(:document_folder) }
+    let(:project) { folder.project }
+    let(:user) { folder.user }
+    let!(:doc) { FactoryBot.create(:document) }
+
+    it do
+      dbl = double
+      allow(project).to receive(:document_mains).and_return(dbl)
+      allow(dbl).to receive(:documents_available_for).with(user).and_return([])
+      expect(folder.allowed_to_add_document?(doc, user)).to eql(false)
+      allow(dbl).to receive(:documents_available_for).with(user).and_return([doc])
+      expect(folder.allowed_to_add_document?(doc, user)).to eql(true)
     end
   end
 end

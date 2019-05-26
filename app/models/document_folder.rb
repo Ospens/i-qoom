@@ -8,6 +8,8 @@ class DocumentFolder < ApplicationRecord
            index_errors: true,
            dependent: :destroy
 
+  accepts_nested_attributes_for :document_fields
+
   has_and_belongs_to_many :documents
 
   validate :document_fields_values
@@ -62,5 +64,11 @@ class DocumentFolder < ApplicationRecord
         errors.add(:document_fields, :value_is_not_exist_in_convention)
       end
     end
+  end
+
+  def allowed_to_add_document?(document, user_to_check)
+    user == user_to_check &&
+    !documents.include?(document) &&
+    project.document_mains.documents_available_for(user_to_check).include?(document)
   end
 end

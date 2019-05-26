@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :document_folder do
-    project { nil }
-    user { nil }
+    project
+    user
     title { "MyString" }
   end
 end
