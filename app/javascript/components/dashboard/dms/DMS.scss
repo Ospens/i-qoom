@@ -659,9 +659,18 @@ input.search-input {
   border: 1px solid lightgray;
   border-radius: 5px;
   min-width: 800px;
-  padding: 10px;
+  height: 400px;
+  padding-top: 15px;
   z-index: 9999;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+
+  textarea:focus, input:focus{
+    outline: none;
+  }
+
+  .row {
+    height: 100%;
+  }
 
   .search-input {
     width: 100%;
@@ -670,11 +679,19 @@ input.search-input {
 
   .add-subject {
     display: flex;
-    width: 100%;
+    margin-left: auto;
     justify-content: flex-end;
+    cursor: pointer;
+
+    div {
+      display: flex;
+      align-items: center;
+      align-content: center;
+    }
 
     span {
       color: #0096FA;
+      white-space: nowrap;
     }
   }
 
@@ -682,14 +699,25 @@ input.search-input {
   .review-subject__title,
   .conversations-block__title {
     display: flex;
+    padding-right: 15px;
+    padding-left: 15px;
     padding-bottom: 10px;
     margin-bottom: 10px;
     border-bottom: 1px solid lightgray;
+    position: relative;
+
+    svg {
+      cursor: pointer;
+    }
+
     label {
       width: 100%;
+      margin: 0;
 
       &.gray {
-        color: gray
+        color: gray;
+        width: fit-content;
+        cursor: pointer;
       }
     }
   }
@@ -697,7 +725,14 @@ input.search-input {
   .documents-in-review-block,
   .review-subject-block,
   .conversations-block {
-    border-right: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #f1f1f1;
+    -ms-flex: 0 0 33.333333%;
+    -webkit-box-flex: 0;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+    height: 100%;
 
     .documents-in-review__doc-list {
 
@@ -707,11 +742,11 @@ input.search-input {
         align-items: center;
         width: 100%;
         padding: 10px;
-        border-bottom: 1px solid lightgray;
+        border-bottom: 1px solid #f9f9f9;
 
         &.active {
           cursor: pointer;
-          background: lightgray;
+          background: #f9f9f9;
           border-radius: 5px;
 
           i.arrow {
@@ -766,11 +801,12 @@ input.search-input {
       align-items: center;
       width: 240px;
       padding: 10px;
-      border-bottom: 1px solid lightgray;
+      border-bottom: 1px solid #f9f9f9;
+      width: 100%;
 
       &:hover {
         cursor: pointer;
-        background: lightgray;
+        background: #f9f9f9;
         border-radius: 5px;
 
         i.arrow {
@@ -891,3 +927,155 @@ input.search-input {
     }
   }
 }
+
+.conversations__messages-block {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.conversations__messages-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  height: 100%;
+  overflow-y: auto;
+
+  .date-block {
+    align-self: center;
+    font-size: 0.8em;
+    color: gray;
+    padding-top: 5px; 
+    padding-bottom: 5px; 
+  }
+
+  .my-message {
+    p {
+      background-color:#4bb8fb;
+      color: #fff;
+      border-radius: 20px;
+      padding: 1em;
+      max-width: 80%;
+      float: right;
+    }
+  }
+  
+  .incoming-message {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    div.author-info {
+      background-color: #f9f9f9;
+      border-radius: 20px 20px 0 0;
+      max-width: 80%;
+      padding: 1em;
+      width: fit-content;
+      margin-top: -15px;
+      bottom: -15px;
+      position: relative;
+
+      span {
+        font-weight: 600;
+      }
+    }
+
+    p {
+      background-color: #f9f9f9;
+      border-radius: 20px;
+      padding: 1em;
+      max-width: 80%;
+      float: left;
+    }
+  }
+
+}
+
+.type-message-block {
+  width: 100%;
+  background-color: #f5f9fa;
+  padding: 10px;
+  display: flex;
+
+  .type-message-area {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 20px;
+    border: 1px solid #ced4da;
+    min-height: 25px;
+    width: 100%;
+    resize: none;
+  }
+
+  .check-icon {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    cursor: pointer;
+  }
+}
+
+.tooltip-info-block {
+  position: absolute;
+  width: 100%;
+  min-height: 100px;
+  border-radius: 10px;
+  padding: 15px;
+  border: 1px solid lightgray;
+  background-color: #fff;
+  bottom: 35px;
+  right: calc(50% - 30px);
+  left: auto;
+  z-index: 999;
+  max-width: 350px;
+
+  &::after {
+    bottom: -0.25em;
+    right: 50%;
+    margin: 0em;
+    transform: rotate(45deg);
+    display: block;
+    position: absolute;
+    pointer-events: none;
+    content: '';
+    visibility: visible;
+    -webkit-transform: rotate(225deg);
+    transform: rotate(225deg);
+    width: 0.5em;
+    height: 0.5em;
+    -webkit-box-shadow: -1px -1px 0px 0px rgba(34, 36, 38, .15);
+    box-shadow: -1px -1px 0px 0px rgba(34, 36, 38, .15);
+    background: #FFFFFF;
+    z-index: 2;
+  }
+
+  label {
+    color: gray;
+  }
+
+  label.tooltip-info-block__title {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 10px;
+    font-size: 1.2em;
+  }
+
+  .review-owner, .review-lead, .reviewers {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .reviwer {
+      display: flex;
+      margin-top: 5px;
+
+      path {
+        fill: black;
+      }
+    }
+  }
+}
+

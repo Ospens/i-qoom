@@ -91,7 +91,7 @@ class ShowDocument extends Component {
               <div className='document-show__info-row'>
                 <label>Relevance I</label>
                 <span>Mastus majus est
-                          <div className='tooltip'>
+                  <div className='tooltip'>
                     <span>some text</span>
                   </div>
                 </span>

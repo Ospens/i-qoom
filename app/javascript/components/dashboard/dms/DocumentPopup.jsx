@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import UserAvatar from 'react-user-avatar'
 import ReactSVG from 'react-svg'
-import searchIcon from '../../../images/search-alternate-gray'
-import attachIcon from '../../../images/attachment-1'
 import dots from '../../../images/dots-horizontal'
 import plus from '../../../images/add_1'
+import ConversationsBlock from './ConversationsBlock'
 
 class DocumentPopup extends Component {
 
@@ -80,7 +79,7 @@ class DocumentPopup extends Component {
             <div className='review-subject__rows'>
               <div className='review-subject__first-row'>
                 <span className='name'>Lorem Ipsum</span>
-                <span className='date'>Today</span>
+                <span className='date'>12.12.2019</span>
               </div>
               <div className='review-subject__second-row'>
                 <span className='status accepted'>Accepted</span>
@@ -101,35 +100,13 @@ class DocumentPopup extends Component {
     )
   }
 
-  renderConversations = () => {
-    return (
-      <div className='conversations-block col-4'>
-        <div className='conversations-block__title'>
-          <label className='gray'>2/4</label>
-          <ReactSVG
-            svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-            src={searchIcon}
-          />
-          <ReactSVG
-            svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-            src={attachIcon}
-          />
-          <ReactSVG
-            svgStyle={{ height: 15, width: 15 }}
-            src={dots}
-          />
-        </div>
-      </div>
-    )
-  }
-
   render() {
     return (
       <div className='document-popup'>
-        <div className='row p-0'>
+        <div className='row m-0'>
           {this.renderDocuments()}
           {this.renderReviwers()}
-          {this.renderConversations()}
+          {<ConversationsBlock/>}
         </div>
       </div>
     )
