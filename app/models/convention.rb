@@ -1,6 +1,9 @@
 # Conventions must be created automatically with project
 class Convention < ApplicationRecord
-  has_many :document_fields, as: :parent
+  has_many :document_fields,
+           as: :parent,
+           index_errors: true,
+           dependent: :destroy
 
   accepts_nested_attributes_for :document_fields
 
@@ -37,11 +40,17 @@ class Convention < ApplicationRecord
                         column: 1,
                         row: number == 2 ? 5 : 4)
     document_fields.new(kind: :codification_field,
+                        codification_kind: :additional_information,
+                        title: 'Add additional information',
+                        command: 'Information',
+                        column: 1,
+                        row: number == 2 ? 6 : 5)
+    document_fields.new(kind: :codification_field,
                         codification_kind: :document_native_file,
                         title: 'Add native file here',
                         command: 'Click here to browse your files',
                         column: 1,
-                        row: number == 2 ? 6 : 5)
+                        row: number == 2 ? 7 : 6)
     document_fields.new(kind: :codification_field,
                         codification_kind: :document_type,
                         title: 'Document type',

@@ -15,7 +15,8 @@ class DocumentField < ApplicationRecord
                             :revision_number,
                             :revision_date,
                             :revision_version,
-                            :document_native_file ]
+                            :document_native_file,
+                            :additional_information ]
 
   belongs_to :parent, polymorphic: true
 
@@ -56,10 +57,11 @@ class DocumentField < ApplicationRecord
             if: :codification_field?
 
   validates :column,
-            inclusion: { in: [1, 2] }
+            inclusion: { in: [1, 2] },
+            if: -> { parent.class.name != 'DocumentFolder' }
 
   validate :has_field_values,
-           if: :should_have_document_field_values?
+           if: -> { parent.class.name != 'DocumentFolder' && should_have_document_field_values? }
 
   validate :revision_number_valid,
            if: -> { parent.class.name == 'Document' && revision_number? },
@@ -194,6 +196,8 @@ class DocumentField < ApplicationRecord
         end
       elsif document_native_file?
         errors.add(:files, :is_required) if !files.any?
+      elsif additional_information?
+        # nothing, not required
       elsif value.blank?
         errors.add(:value, :is_required)
       end

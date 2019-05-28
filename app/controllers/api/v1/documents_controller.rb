@@ -1,11 +1,13 @@
 class Api::V1::DocumentsController < ApplicationController
+  include ActiveStorage::SendZip
+
   load_resource :project
-  load_resource :document, only: [:edit, :update, :show]
-  load_resource :document, only: [:create_revision], id_param: :document_id
-  load_resource :document, through: :project, except: [ :edit,
-                                                        :update,
-                                                        :create_revision,
-                                                        :show ]
+  load_resource :document, only: [ :edit,
+                                   :update,
+                                   :show,
+                                   :create_revision,
+                                   :download_native_file ]
+  load_resource :document, through: :project, only: [ :new, :create ]
   authorize_resource :document
 
   def new
@@ -57,11 +59,62 @@ class Api::V1::DocumentsController < ApplicationController
 
   def index
     documents = @project.document_mains.documents_available_for(signed_in_user)
-    render json: documents, include: :document_fields
+
+    if params[:originating_companies].present? && params[:originating_companies].any?
+      documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
+    end
+
+    if params[:discipline].present? && params[:discipline].any?
+      documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
+    end
+
+    if params[:document_types].present? && params[:document_types].any?
+      documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
+    end
+
+    documents = documents.as_json(include: { document_fields: { include: :document_field_values } })
+
+    document_fields = @project.conventions.active.document_fields
+    originating_companies =
+      document_fields.find_by(codification_kind: :originating_company)
+                     .document_field_values.pluck(:value)
+    discipline =
+      document_fields.find_by(codification_kind: :discipline)
+                     .document_field_values.pluck(:value)
+    document_type =
+      document_fields.find_by(codification_kind: :document_type)
+                     .document_field_values.pluck(:value)
+
+    render json: { documents: documents,
+                   originating_companies: originating_companies,
+                   discipline: discipline,
+                   document_types: document_type }
   end
 
   def show
     render json: @document.attributes_for_show
+  end
+
+  def download_native_file
+    file = @document.native_file
+    filename =
+      "#{@document.codification_string}#{file.filename.extension_with_delimiter}"
+    send_data(file.download, filename: filename, disposition: 'attachment')
+  end
+
+  def download_native_files
+    documents =
+      @project.document_mains
+              .documents_available_for(signed_in_user)
+              .select{ |i| params[:document_ids].include?(i.id.to_s) }
+    files = []
+    documents.each do |doc|
+      file = doc.native_file
+      file.filename =
+        "#{doc.codification_string}#{file.filename.extension_with_delimiter}"
+      files << file
+    end
+    send_zip(files, filename: "#{@project.name.underscore}.zip")
   end
 
   private

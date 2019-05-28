@@ -13,13 +13,26 @@ Rails.application.routes.draw do
       resources :sessions, only: :create
       resources :users, only: [:create, :update, :destroy]
 
-      resources :conventions, only: [:edit, :update]
       resources :documents, except: [:new, :create, :index] do
-        post :create_revision
+        member do
+          post :create_revision
+          get :download_native_file
+        end
+      end
+
+      resources :document_folders, only: [:create, :edit, :update, :show] do
+        collection do
+          post :add_document_to_folders
+        end
       end
 
       resources :projects, except: [:new, :edit] do
-        resources :documents, only: [:new, :create, :index]
+        resource :conventions, only: [:edit, :update]
+        resources :documents, only: [:new, :create, :index] do
+          collection do
+            get :download_native_files
+          end
+        end
         resource :dms_settings, only: [:edit, :update]
         resource :document_rights, only: [:new, :edit, :update]
       end
