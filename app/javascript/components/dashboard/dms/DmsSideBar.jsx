@@ -10,6 +10,7 @@ import dmsSettingsIcon from '../../../images/task-list-settings'
 import docPlanIcon from '../../../images/calendar-3'
 import downloadDetailsIcon from '../../../images/download-button'
 import pdfIcon from '../../../images/office-file-pdf'
+import DocumentPopup from './DocumentPopup'
 import { actionDDitems, reviewStatuses, foldersItems, SideBarItem } from './constants'
 
 const menuItems = [
@@ -34,17 +35,19 @@ class DmsSideBar extends Component {
 
   state = {
     myReview: false,
-    allReview: false
+    allReview: false,
+    popup: true
   }
 
   render() {
     const { checkedDocs, renderDropDownItems } = this.props
-    const { myReview, allReview } = this.state
+    const { myReview, allReview, popup } = this.state
     const allReviewulClass = classnames({ 'hidden': !allReview })
     const myReviewulClass = classnames({ 'hidden': !myReview })
 
     return (
       <React.Fragment>
+        {popup && <DocumentPopup closePopup={() => this.setState({ popup: false })} />}
         <div className='dms-sidebar-menu'>
           <div className='dms-sidebar-menu__block'>
             <h4>DMS menu</h4>
@@ -176,7 +179,7 @@ class DmsSideBar extends Component {
                   onClick={() => this.setState({ myReview: !myReview })}
                 >
                   My review (owned)
-                    </button>
+                </button>
                 <div className='red-rounded-info'>3</div>
               </div>
               <ul className={myReviewulClass}>

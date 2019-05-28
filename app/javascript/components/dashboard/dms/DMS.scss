@@ -664,6 +664,13 @@ input.search-input {
   z-index: 9999;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 
+  .document-popup__close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+  }
+
   textarea:focus, input:focus{
     outline: none;
   }

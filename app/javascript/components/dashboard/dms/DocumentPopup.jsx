@@ -4,6 +4,7 @@ import UserAvatar from 'react-user-avatar'
 import ReactSVG from 'react-svg'
 import dots from '../../../images/dots-horizontal'
 import plus from '../../../images/add_1'
+import close from '../../../images/close'
 import ConversationsBlock from './ConversationsBlock'
 
 class DocumentPopup extends Component {
@@ -101,12 +102,23 @@ class DocumentPopup extends Component {
   }
 
   render() {
+    const { closePopup } = this.props
+
     return (
       <div className='document-popup'>
         <div className='row m-0'>
           {this.renderDocuments()}
           {this.renderReviwers()}
           {<ConversationsBlock/>}
+        </div>
+        <div
+          className="document-popup__close"
+          onClick={closePopup}
+        >
+          <ReactSVG
+            svgStyle={{ height: 30, width: 30 }}
+            src={close}
+          />
         </div>
       </div>
     )

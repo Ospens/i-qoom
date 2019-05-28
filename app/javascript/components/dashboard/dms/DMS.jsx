@@ -16,7 +16,6 @@ import nativeIcon from '../../../images/common-file-text-1'
 import pdfIcon from '../../../images/office-file-pdf'
 import dots from '../../../images/dots-horizontal'
 import DMSLayout from './DMSLayout'
-import DocumentPopup from './DocumentPopup'
 import { actionDDitems, columns, DtOptions } from './constants'
 
 class DMS extends Component {
@@ -216,7 +215,6 @@ class DMS extends Component {
     const { checkedDocs } = this.state
     return (
       <div>
-        {<DocumentPopup/>}
         { this.renderTableHeader() }
         <Table sortable className='mamber-managment-table'>
           <Table.Header>
