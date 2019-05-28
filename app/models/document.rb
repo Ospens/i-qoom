@@ -28,28 +28,19 @@ class Document < ApplicationRecord
 
   scope :last_version, -> { order(revision_version: :asc).last }
 
-  scope :filter_by_originating_company, -> (originating_companies) {
-    joins(document_fields: :document_field_values)
+  scope :filter_by_codification_kind, -> (codification_kind, value) {
+    joins(:document_fields)
       .where(document_fields: {
-              codification_kind: :originating_company,
-              document_field_values: {
-                value: originating_companies, selected: true } })
+              codification_kind: codification_kind,
+              value: value })
   }
 
-  scope :filter_by_discipline, -> (discipline) {
+  scope :filter_by_codification_kind_and_value, -> (codification_kind, value, selected = true) {
     joins(document_fields: :document_field_values)
       .where(document_fields: {
-              codification_kind: :discipline,
+              codification_kind: codification_kind,
               document_field_values: {
-                value: discipline, selected: true } })
-  }
-
-  scope :filter_by_document_type, -> (document_types) {
-    joins(document_fields: :document_field_values)
-      .where(document_fields: {
-              codification_kind: :document_type,
-              document_field_values: {
-                value: document_types, selected: true } })
+                value: value, selected: selected } })
   }
 
   def self.build_from_convention(convention, user)

@@ -53,6 +53,8 @@ class Ability
       can [:index, :download_native_files], Document # there should be some limitation
       # DmsSetting
       can [:edit, :update], DmsSetting
+      # DocumentFolder
+      can :manage, DocumentFolder, user_id: user.id # there should be some limitation
     end
   end
 end
