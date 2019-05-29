@@ -27,6 +27,7 @@ describe ProjectAdministratorConfirmation, type: :model do
       project_admin_confirmation = 
         ProjectAdministratorConfirmation.new(token: "fsff98fgh897g087g0fhgasf",
                                              signed_in_user: user)
+      project_admin_confirmation.save
       expect(ProjectAdministrator.find_by(id: project_admin.id).user).not_to eq(user)      
     end
     it "without a signed in user" do

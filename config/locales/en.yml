@@ -32,3 +32,13 @@
 en:
   hello: "Hello world"
   access_denied: Access denied
+  activemodel:
+    errors:
+      models:
+        project_administrator_confirmation:
+          attributes:
+            token:
+              project_admin_is_not_found:
+                "problem: the project admin is not found"
+              emails_do_not_match: "problem: Emails do not match"
+
