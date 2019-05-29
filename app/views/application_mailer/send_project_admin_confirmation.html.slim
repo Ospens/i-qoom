@@ -1,1 +1,4 @@
-div Hello #{@project_admin.username}, you've been added to a new project as an admin. Please confirm it, by the link bellow.
+div = t(".you_have_been_added", username: @project_admin.username)
+
+div = link_to t(".confirm_invitation"),
+  confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token)

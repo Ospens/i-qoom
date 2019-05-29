@@ -208,9 +208,30 @@ describe "Project", type: :request do
       end
     end
 
+    context "confirm_admin" do
+      it "should confirm an admin" do
+        project_admin =
+          FactoryBot.create(:project_done_step,
+                            user_id: user.id).admins.first
+        project_admin.update(email: user.email)
+        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
+          headers: headers.merge("Authorization" => auth_token)
+        expect(response).to have_http_status(:created)
+        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(user)
+      end
+      it "shouldn't confirm an admin with wrong user" do
+        project_admin =
+          FactoryBot.create(:project_done_step,
+                            user_id: user.id).admins.first
+        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
+          headers: headers.merge("Authorization" => auth_token)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(nil)
+      end
+    end
   end
 
-  context 'not logged in and should get a status "forbidden"' do
+  context 'not logged in and should get a status "forbidden" on' do
     it 'index' do
       get "/api/v1/projects",
            headers: headers
@@ -236,6 +257,13 @@ describe "Project", type: :request do
     it 'destroy' do
       delete "/api/v1/projects/#{project.id}",
            headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'confirm_account' do
+      project_admin = FactoryBot.create(:project_done_step).admins.first
+      get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
+          headers: headers
       expect(response).to have_http_status(:forbidden)
     end
   end

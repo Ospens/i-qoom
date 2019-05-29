@@ -27,6 +27,9 @@ Rails.application.routes.draw do
       end
 
       resources :projects, except: [:new, :edit] do
+        collection do
+          get :confirm_admin
+        end
         resource :conventions, only: [:edit, :update]
         resources :documents, only: [:new, :create, :index] do
           collection do

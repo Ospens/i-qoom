@@ -64,6 +64,20 @@ class Api::V1::ProjectsController < ApplicationController
     head :no_content
   end
 
+  # if user is not logged in, on frontend side he is supposed to be
+  # redirected to the login page, and after log in this action
+  # must be run again to confirm his account as an admin
+  def confirm_admin
+    project_admin_confirmation =
+      ProjectAdministratorConfirmation.new(token: params[:token],
+                                    signed_in_user: signed_in_user)
+    if project_admin_confirmation.save
+      success(:created)
+    else
+      error(project_admin_confirmation)
+    end
+  end
+
   private
 
   def set_project
