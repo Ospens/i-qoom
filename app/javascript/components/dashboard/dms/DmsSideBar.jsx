@@ -36,7 +36,7 @@ class DmsSideBar extends Component {
   state = {
     myReview: false,
     allReview: false,
-    popup: true
+    popup: false
   }
 
   render() {

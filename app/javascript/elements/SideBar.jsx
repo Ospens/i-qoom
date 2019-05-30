@@ -78,35 +78,38 @@ class SideBar extends Component {
     </ul>
   )
 
-  renderProjectContent = () => (
-    <div className='mb-4'>
-      <ul className='nav flex-column nav-items'>
-        <li className='nav-item'>
-          <span className='light-grey'>Frequently used</span>
-        </li>
-        <SideBarItem path='/dashboard/' label='Resources' />
-        <SideBarItem path='/dashboard/' label='Contracts' />
-        <SideBarItem path='/dashboard/projects/1/documents/overview/' label='Documents' />
-      </ul>
-      <ul className='nav flex-column nav-items'>
-        <li className='nav-item'>
-          <span className='light-grey'>Commercial Managment</span>
-        </li>
-        <SideBarItem path='/dashboard/' label='Time sheet' />
-        <SideBarItem path='/dashboard/' label='Cost Managment' />
-        <SideBarItem path='/dashboard/' label='Templates' />
-        <SideBarItem path='/dashboard/' label='Invoices' />
-      </ul>
-      <ul className='nav flex-column nav-items'>
-        <li className='nav-item'>
-          <span className='light-grey'>Project Managment</span>
-        </li>
-        <SideBarItem path='/dashboard/' label='Technical Clarification' />
-        <SideBarItem path='/dashboard/' label='Quality Control' />
-        <SideBarItem path='/dashboard/' label='Correspondences' />
-      </ul>
-    </div>
-  )
+  renderProjectContent = () => {
+    const { currentProject } = this.props
+    return (
+      <div className='mb-4'>
+        <ul className='nav flex-column nav-items'>
+          <li className='nav-item'>
+            <span className='light-grey'>Frequently used</span>
+          </li>
+          <SideBarItem path='/dashboard/' label='Resources' />
+          <SideBarItem path='/dashboard/' label='Contracts' />
+          <SideBarItem path={`/dashboard/projects/${currentProject.id}/documents/overview/`} label='Documents' />
+        </ul>
+        <ul className='nav flex-column nav-items'>
+          <li className='nav-item'>
+            <span className='light-grey'>Commercial Managment</span>
+          </li>
+          <SideBarItem path='/dashboard/' label='Time sheet' />
+          <SideBarItem path='/dashboard/' label='Cost Managment' />
+          <SideBarItem path='/dashboard/' label='Templates' />
+          <SideBarItem path='/dashboard/' label='Invoices' />
+        </ul>
+        <ul className='nav flex-column nav-items'>
+          <li className='nav-item'>
+            <span className='light-grey'>Project Managment</span>
+          </li>
+          <SideBarItem path='/dashboard/' label='Technical Clarification' />
+          <SideBarItem path='/dashboard/' label='Quality Control' />
+          <SideBarItem path='/dashboard/' label='Correspondences' />
+        </ul>
+      </div>
+    )
+  }
 
   render() {
     const { location: { pathname }, isAdmin, isOpen, toggle, currentProject } = this.props

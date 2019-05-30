@@ -35,7 +35,7 @@ class NewDocument extends Component {
   state = { 
     step: 1,
     modal: 0
-   }
+  }
 
   renderSideBar = () => (
 
@@ -82,7 +82,7 @@ class NewDocument extends Component {
   renderContent = () => {
     const { step } = this.state
     return (
-      <div className='new-document bordered'>
+      <div className='dms-content bordered'>
         {step === 1
           ? <DocDocumentsAndFiles {...this.props} nextStep={() => this.setState({ step: 2 })} />
           : <AccessAndCommunication {...this.props} backStep={() => this.setState({ step: 1 })} />

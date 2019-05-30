@@ -123,7 +123,7 @@ class AddRevision extends Component {
     const { submitErrors } = this.props
     return (
       <div className='dms-container'>
-        <div className='new-document'>
+        <div className='dms-content'>
           <div className='row pt-5'>
             <div className='col-2'>
               <div className='dms-sidebar-menu'>

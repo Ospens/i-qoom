@@ -19,9 +19,9 @@ class ShowDocument extends Component {
     return (
       <div className='show-document bordered'>
         {addComment && <ModalAddComment/>}
-        <div className='new-document__header p-4'>
+        <div className='dms-content__header p-4'>
           <h4>Document details</h4>
-          <div className='new-project__project-phases'>
+          <div className='dms-content__project-phases'>
             <span>Project phases</span>
             <ul className='row mx-0'>
               <li className='col-3 active'>

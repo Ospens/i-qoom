@@ -3,7 +3,6 @@ import ReactSVG from 'react-svg'
 import searchIcon from '../../../images/search-alternate-gray'
 import attachIcon from '../../../images/attachment-1'
 import sendIcon from '../../../images/send-email-2'
-import dots from '../../../images/dots-horizontal'
 import checkIcon from '../../../images/check_1'
 import DropDown from '../../../elements/DropDown'
 import { actionDDitems } from './constants'
@@ -91,8 +90,7 @@ export default class ConversationsBlock extends Component {
             dots={true}
             className='dropdown-with-icon dropleft'
             defaultValues={actionDDitems}
-          >
-          </DropDown>
+          />
         </div>
         <div className="conversations__messages-block">
           <div className="conversations__messages-list">

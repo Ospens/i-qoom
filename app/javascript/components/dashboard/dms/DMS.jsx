@@ -3,7 +3,7 @@ import './DMS.scss'
 import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import { startFetchDocuments, newDocument } from '../../../actions/documentsActions'
+import { startFetchDocuments } from '../../../actions/documentsActions'
 import { Link, Route } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 import DropDown from '../../../elements/DropDown'
@@ -28,8 +28,7 @@ class DMS extends Component {
   }
 
   componentWillMount() {
-    const { startFetchDocuments, newDocument } = this.props
-    newDocument()
+    const { startFetchDocuments } = this.props
     startFetchDocuments()
   }
 
@@ -335,8 +334,7 @@ class DMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: () => dispatch(startFetchDocuments()),
-  newDocument: () => dispatch(newDocument())
+  startFetchDocuments: () => dispatch(startFetchDocuments())
 })
 
 const mapStateToProps = ({ documents }) => ({

@@ -12,7 +12,7 @@
     border: 1px solid lightgrey;
   }
 
-  .new-document, .show-document {
+  .dms-content, .show-document {
     .col-10 {
       height: 100%;
     }
@@ -27,10 +27,6 @@
           padding-right: 15px;
         }
       }
-    }
-
-    .generate-id-checkbox {
-      min-height: 54.5px;
     }
 
     textarea {
@@ -88,7 +84,7 @@
       margin-bottom: 30px;
     }
 
-    .new-document__header {
+    .dms-content__header {
       h4 {
         font-weight: 500;
         font-size: 1.5em;
@@ -434,7 +430,7 @@
   }
 }
 
-.new-project__project-phases {
+.dms-content__project-phases {
 
   span {
     color: gray;
@@ -577,7 +573,7 @@ label.rounded-label {
   padding-bottom: 0;
   border-radius: 20px;
   height: 25px;
-  width: 125px;
+  min-width: 125px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1086,3 +1082,90 @@ input.search-input {
   }
 }
 
+.edit-button {
+  float: right;
+  margin-right: 30px;
+  margin-left: auto;
+  height: 2em;
+  background: #0096FA;
+  padding: 5px;
+  color: #fff;
+  width: 7em;
+  text-align: center;
+  line-height: 1;
+  border-radius: 0 0 10px 10px;
+}
+
+.phases-row {
+  position: relative;
+
+  .edit-button {
+    bottom: -2em;
+    position: absolute;
+    right: 30px;
+  }
+}
+
+.edit-convention {
+  .draggable-container {
+    transition: 0s ease-in-out;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: dashed;
+    border-color: #fff;
+
+    .form-group {
+      min-height: 90px;
+      position: relative;
+      padding: 10px;
+      border-radius: 10px; 
+      display: flex;
+      flex-direction: column;
+      transition: 0s ease-in-out;
+      margin: 5px;
+
+      .form-group_drop-down, .d-flex {
+        transition: 0s ease-in-out;
+        background-color: transparent;
+
+        div, svg {
+          transition: 0s ease-in-out;
+          background-color: transparent;
+        }
+      }
+
+      &:hover {
+        transition: 0s ease-in-out;
+        background-color:#f9f9f9;
+        cursor: pointer;
+
+        .form-group_drop-down, .d-flex {
+          div {
+            background-color:#f9f9f9;
+          }
+        }
+      }
+
+      label {
+        width: fit-content;
+      }
+    }
+
+    &.dragging {
+      border-color: lightblue;
+
+      .form-group, .d-flex {
+        background-color: lightblue;
+
+        div {
+          background-color: lightblue;
+        }
+      }
+    }
+  }
+}
+
+.form-group_drop-down {
+  margin-right: 10px;
+}
+  

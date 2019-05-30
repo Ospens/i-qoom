@@ -27,6 +27,7 @@
     "prop-types": "^15.7.2",
     "raw-loader": "^2.0.0",
     "react": "^16.8.3",
+    "react-beautiful-dnd": "^11.0.3",
     "react-datepicker": "^2.4.0",
     "react-dom": "^16.8.3",
     "react-dropzone": "^10.1.4",

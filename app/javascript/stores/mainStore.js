@@ -8,6 +8,7 @@ import userReducer from '../reducers/userReducer'
 import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
 import documentsReducer from '../reducers/documentsReducer'
+import conventionReducer from '../reducers/conventionReducer'
 import { loadState, saveState } from './localStorage'
 
 const rootReducer = combineReducers({
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   landing: landingReducer,
   documents: documentsReducer,
   projects: projectReducer,
+  conventions: conventionReducer,
   form: reduxFormReducer
 })
 
