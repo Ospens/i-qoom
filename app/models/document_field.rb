@@ -85,6 +85,17 @@ class DocumentField < ApplicationRecord
           codification_kind: [:originating_company, :discipline, :document_type])
   }
 
+  scope :order_by_columns_and_rows, -> {
+    first_column = where(column: 1).order(row: :asc)
+    second_column = where(column: 2).order(row: :asc)
+    result = []
+    ((first_column.count + second_column.count) / 2).times do |i|
+      result << first_column[i] if first_column[i].present?
+      result << second_column[i] if second_column[i].present?
+    end
+    result
+  }
+
   def build_for_new_document(user)
     return if !can_build?(user)
     original_attributes =
