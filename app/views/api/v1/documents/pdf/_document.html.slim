@@ -1,0 +1,41 @@
+sass:
+  table
+    width: 100%
+    font-size: 16px
+    margin-bottom: 15px
+    td
+      width: 25%
+      padding: 5px 0px
+  table td:nth-child(1),
+  table td:nth-child(3),
+  p.title
+    color: #8FB0B3
+  table td:nth-child(2),
+  table td:nth-child(4),
+  p.description
+    color: #475759
+table
+  tbody
+    tr
+      td Project
+      td colspan='3' = @document.project.name
+    - @document.document_fields\
+               .where.not(codification_kind: [:document_native_file , :additional_information])\
+               .order_by_columns_and_rows.each_slice(2) do |arr|
+      tr
+        - arr.each do |field|
+          = render 'api/v1/documents/pdf/field', field: field
+        - if arr.length == 1
+          td
+          td
+p.title Additional information
+p.description = @document.additional_information_field.value
+p.title Files
+p.description = @document.native_file.filename
+table
+  tbody
+    tr
+      td Uploaded on
+      td = l(@document.created_at.to_date, format: '%d.%m.%Y')
+      td Uploaded by
+      td = @document.user.full_name

@@ -41,7 +41,7 @@ class Convention < ApplicationRecord
                         row: number == 2 ? 5 : 4)
     document_fields.new(kind: :codification_field,
                         codification_kind: :additional_information,
-                        title: 'Add additional information',
+                        title: 'Additional information',
                         command: 'Information',
                         column: 1,
                         row: number == 2 ? 6 : 5)
