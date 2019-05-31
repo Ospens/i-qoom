@@ -73,4 +73,21 @@ RSpec.describe Document, type: :model do
     ids = Document.all.filter_by_codification_kind_and_value(:originating_company, [value1, value2]).pluck(:id)
     expect(ids).to match_array([doc1.id, doc2.id])
   end
+
+  it 'can_view?' do
+    convention = FactoryBot.create(:convention)
+    user = FactoryBot.create(:user)
+    convention.document_fields.limit_by_value.each do |field|
+      value = field.document_field_values.create!(value: '111', position: 1)
+      target_value = field.document_field_values.where.not(id: value.id).first
+      target_value.update!(selected: true)
+      field.document_rights.create(user: user,
+                                   document_field_value: target_value,
+                                   limit_for: :value,
+                                   enabled: true)
+    end
+    document = Document.build_from_convention(convention, user)
+    doc = Document.new(document.merge(project: convention.project))
+    expect(doc.can_view?(user)).to eql(true)
+  end
 end
