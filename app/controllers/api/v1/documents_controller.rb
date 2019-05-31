@@ -1,12 +1,14 @@
 class Api::V1::DocumentsController < ApplicationController
   include ActiveStorage::SendZip
+  include PdfRender
 
   load_resource :project
   load_resource :document, only: [ :edit,
                                    :update,
                                    :show,
                                    :create_revision,
-                                   :download_native_file ]
+                                   :download_native_file,
+                                   :download_details ]
   load_resource :document, through: :project, only: [ :new, :create ]
   authorize_resource :document
 
@@ -58,7 +60,12 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def index
-    documents = @project.document_mains.documents_available_for(signed_in_user)
+    documents =
+      if @project.document_mains.any?
+        @project.document_mains.documents_available_for(signed_in_user)
+      else
+        []
+      end
 
     if params[:originating_companies].present? && params[:originating_companies].any?
       documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
@@ -100,6 +107,13 @@ class Api::V1::DocumentsController < ApplicationController
     filename =
       "#{@document.codification_string}#{file.filename.extension_with_delimiter}"
     send_data(file.download, filename: filename, disposition: 'attachment')
+  end
+
+  def download_details
+    send_data document_render(@document),
+              filename: "#{@document.codification_string}.pdf",
+              type: 'application/pdf',
+              disposition: 'attachment'
   end
 
   def download_native_files
