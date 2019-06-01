@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         end
         resource :dms_settings, only: [:edit, :update]
         resource :document_rights, only: [:new, :edit, :update]
+        resources :project_administrators, only: :destroy
       end
     end
   end

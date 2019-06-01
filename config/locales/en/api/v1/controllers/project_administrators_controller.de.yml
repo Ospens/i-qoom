@@ -1,0 +1,7 @@
+en:
+  api:
+    v1:
+      project_administrators:
+        destroy:
+          success_message: Project admin was successfully deleted
+          error_message: Something went wrong
