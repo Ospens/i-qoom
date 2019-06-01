@@ -1,0 +1,17 @@
+- if field.blank?
+  td
+  td
+- else
+  td = field.title
+  td
+    - if field.text_field? || field.textarea_field?
+      = field.value
+    - elsif field.date_field?
+      = l(field.value.to_date, format: '%d.%m.%Y')
+    - elsif field.codification_kind?
+      - if field.originating_company? || field.discipline? || field.document_type?
+        = field.document_field_values.find_by(selected: true).value
+      - elsif field.document_number? || field.revision_number? || field.revision_version?
+        = field.value
+      - elsif field.revision_date?
+        = l(field.value.to_date, format: '%d.%m.%Y')
