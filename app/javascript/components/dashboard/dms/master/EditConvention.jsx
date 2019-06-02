@@ -66,7 +66,9 @@ class EditConvention extends Component {
   )
 
   renderContent = () => {
-    const { submitErrors, orig_company, current: { grouped_fields } } = this.props
+    const { current: { grouped_fields } } = this.props
+    grouped_fields[1].unshift({ column: 1, row: 1 , title: 'test' })
+
     return (
       <div className='dms-content bordered edit-convention'>
 
@@ -130,7 +132,7 @@ class EditConvention extends Component {
 const selector = formValueSelector('convention_form')
 
 const mapStateToProps = (state) => ({
-  submitErrors: getFormSubmitErrors('document_form')(state),
+  submitErrors: getFormSubmitErrors('convention_form')(state),
   current: state.conventions.current
 })
 const mapDispatchToProps = dispatch => ({
