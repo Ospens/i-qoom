@@ -3,22 +3,18 @@ import { connect } from 'react-redux'
 import {
   getFormSubmitErrors,
   reduxForm,
-  formValueSelector,
-  Field
+  formValueSelector
 } from 'redux-form'
 import { startEditConvention } from '../../../../actions/conventionActions'
 import ReactSVG from 'react-svg'
 import SideBarItem from '../SideBarItem'
-import InputField from '../../../../elements/InputField'
-import SelectField from '../../../../elements/SelectField'
-import CheckboxField from '../../../../elements/CheckboxField'
 import DMSLayout from '../DMSLayout'
 import overviewIcon from '../../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../../images/task-list-settings'
 import docPlanIcon from '../../../../images/calendar-3'
 import lockIcon from '../../../../images/Locked'
-import DropDown from '../../../../elements/DropDown'
 import DocumentFiledsTable from './DocumentFiledsTable'
+import Tabs from '../../../../elements/Tabs'
 
 const menuItems = [
   {
@@ -65,9 +61,8 @@ class EditConvention extends Component {
     </div>
   )
 
-  renderContent = () => {
+  renderTab = () => {
     const { current: { grouped_fields } } = this.props
-    grouped_fields[1].unshift({ column: 1, row: 1 , title: 'test' })
 
     return (
       <div className='dms-content bordered edit-convention'>
@@ -89,22 +84,22 @@ class EditConvention extends Component {
               <li className='col-3 active'>
                 <button>
                   Planning
-                    </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Development
-                    </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Execution
-                    </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Operation
-                    </button>
+                </button>
               </li>
               <button className="btn edit-button">
                 Edit
@@ -112,8 +107,21 @@ class EditConvention extends Component {
             </ul>
           </div>
         </div>
-        <DocumentFiledsTable fields={grouped_fields}/>
+        <DocumentFiledsTable fields={grouped_fields} />
       </div>
+    )
+  }
+
+  renderContent = () => {
+    const { current: { grouped_fields } } = this.props
+    grouped_fields[1].unshift({ column: 1, row: 1, title: 'test' })
+
+    return (
+      <Tabs className='conventios-tabs'>
+        <div label='Convention - 1' >{this.renderTab()}</div>
+        <div label='Convention - 2' >{this.renderTab()}</div>
+        <div label='Convention - 3' >{this.renderTab()}</div>
+      </Tabs>
     )
   }
 

@@ -1,11 +1,52 @@
 import React, { Component } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import DropDown from '../../../../elements/DropDown'
+import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
-import { actionDDitems } from '../constants'
+import { actionConventions } from '../constants'
 
 export default class DocFieldsElement extends Component {
 
+  state = {
+    codificationChange: false
+  }
+
+  editButton = () => (
+    <Popup
+      trigger={<button type='button' className="btn edit-button">Edit</button>}
+      on='click'
+      position='left center'
+    >
+      <div className='tooltip-block'>
+        <span>
+          You try to make changes to the codification-section.
+          Do you want to jump to codification?
+        </span>
+        <div className="buttons-row">
+          <button className="btn btn-white">Cancel</button>
+          <a href="#" className='btn btn-purple'>Go</a>
+        </div>
+      </div>
+    </Popup>
+  )
+
+  accessList = () => (
+    <Popup
+      trigger={<span className='access-limited'>Access limited</span>}
+      on='click'
+    >
+      <div className='tooltip-block'>
+        <div className="tooltip-block-title">
+          <label className=''>Access limited to</label>
+          <button className='btn p-0'>Edit</button>
+        </div>
+        <ul className='pt-2'>
+          <li>Damla Lamm</li>
+          <li>Damla Lamm</li>
+        </ul>
+      </div>
+    </Popup>
+  )
 
   renderDocIdFields = () => (
     <React.Fragment>
@@ -103,20 +144,19 @@ export default class DocFieldsElement extends Component {
                     <DropDown
                       dots={true}
                       className='dropdown-with-icon form-group_drop-down'
-                      defaultValues={actionDDitems}
+                      defaultValues={actionConventions}
                     />
-                    <label htmlFor="document_titile">{field.title}</label>
+                    <label htmlFor="document_title">{field.title}</label>
+                    {index === 3 && this.accessList()}
                   </div>
                   <input
                     className='form-control'
                     type='text'
-                    name='document_titile'
-                    id='document_titile'
+                    name='document_title'
+                    id='document_title'
                     placeholder='Title'
                   />
-                  <button type='button' className="btn edit-button">
-                    Edit
-                </button>
+                {this.editButton()}
               </div>
               }
           </div>

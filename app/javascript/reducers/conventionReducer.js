@@ -8,8 +8,8 @@ const groupFields = fields => {
     return accumulator
   }, { 1: [], 2: [] })
 
-  sorted[1].sort((a, b) => { return a.row - b.row })
-  sorted[2].sort((a, b) => { return a.row - b.row })
+  sorted[1].sort((a, b) => a.row - b.row)
+  sorted[2].sort((a, b) => a.row - b.row)
   return sorted
 }
 
@@ -22,7 +22,7 @@ const initialState = {
 
 const conventionReducer = (state = initialState, action) => {
   switch (action.type) {
-    case EDITING_CONVENTION:
+  case EDITING_CONVENTION:
     return {
       ...state,
       current: {

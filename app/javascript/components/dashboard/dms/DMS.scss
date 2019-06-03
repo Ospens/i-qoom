@@ -3,7 +3,7 @@
 
   @media only screen and (max-width: 1400px) {
     button, a {
-      font-size: 0.8em !important;
+      font-size: 0.8em;
     }
   }
 
@@ -907,7 +907,7 @@ input.search-input {
           top: 10px;
         }
       }
-     
+
       .UserAvatar--inner {
         max-height: 34px !important;
         height: 34px !important;
@@ -1060,7 +1060,7 @@ input.search-input {
     color: gray;
   }
 
-  label.tooltip-info-block__title {
+  .tooltip-info-block__title {
     border-bottom: 1px solid lightgray;
     padding-bottom: 10px;
     font-size: 1.2em;
@@ -1094,15 +1094,24 @@ input.search-input {
   text-align: center;
   line-height: 1;
   border-radius: 0 0 10px 10px;
+
+  &:hover {
+    color: #fff;
+  }
 }
 
 .phases-row {
   position: relative;
+  margin-top: 0 !important;
 
   .edit-button {
     bottom: -2em;
     position: absolute;
     right: 30px;
+  }
+
+  button {
+    padding-left: 0 !important;
   }
 }
 
@@ -1152,7 +1161,7 @@ input.search-input {
       background-color:#f9f9f9;
       cursor: pointer;
 
-      .form-group_drop-down, .d-flex {
+      .form-group_drop-down {
         div {
           background-color:#f9f9f9;
         }
@@ -1162,10 +1171,62 @@ input.search-input {
     label:not(.form-check-label) {
       width: fit-content;
     }
+
+    .access-limited {
+      color: #ff2826;
+      margin-left: auto;
+    }
   }
 }
 
 .form-group_drop-down {
   margin-right: 10px;
 }
-  
+
+.tabs.conventios-tabs {
+  .nav-bar {
+    margin-top: 0;
+  }
+
+  .nav-bar-element {
+    font-size: 1.2em;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 2em !important;
+    padding-right: 2em !important;
+  }
+}
+
+.tooltip-block {
+  min-width: 180px;
+
+  .tooltip-block-title {
+    padding-bottom: 0;
+    display: flex;
+    align-items: baseline;
+    font-size: 1.2em;
+    border-bottom: 1px solid lightgray;
+
+    label, .btn {
+      font-size: 14px;
+    }
+
+    .btn {
+      margin-left: auto;
+      color: #0096FA;
+    }
+  }
+
+  .buttons-row {
+    display: flex;
+    margin-top: 10px;
+
+    a, button {
+      width: 40%;
+    }
+
+    a {
+      margin-left: auto;
+    }
+  }
+}

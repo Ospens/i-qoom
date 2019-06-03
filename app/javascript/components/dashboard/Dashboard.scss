@@ -286,6 +286,7 @@ button:disabled {
       margin-bottom: 0px;
     }
   }
+
   .project-admin {
     display: flex;
     color: lightgrey;
@@ -293,12 +294,12 @@ button:disabled {
   }
 
   .new-project-modal {
-
     h4 {
       padding-left: 30px;
       padding-top: 30px;
       font-weight: 600;
     }
+
     h6 {
       align-self: flex-start;
       margin-bottom: 40px;
@@ -322,6 +323,7 @@ button:disabled {
       padding-right: 100px !important;
     }
   }
+
   .form-check-label {
     display: inline-block !important;
   }
@@ -332,9 +334,11 @@ button:disabled {
   margin-top: 30px;
   border-bottom: 2px solid lightgrey;
   display: flex;
+
   .nav-bar-item {
     display: inline-flex;
     margin-bottom: -2px;
+
     .nav-bar-element {
       text-decoration: none;
       border: none;
@@ -345,6 +349,12 @@ button:disabled {
       padding-bottom: 15px;
       padding-top: 15px;
       border-bottom: 2px solid transparent;
+
+      &:hover {
+        color:  #0096FA;
+        border-bottom: 2px solid  #0096FA;
+      }
+
       &.active {
         color: black;
         border-bottom: 2px solid black;
