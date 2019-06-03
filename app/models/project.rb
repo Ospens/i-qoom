@@ -8,6 +8,8 @@ class Project < ApplicationRecord
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
+  after_update :send_confirmation_emails, if: :creation_step_done?
+
   validates :name,
             presence: true,
             length: { minimum: 3,
@@ -42,5 +44,11 @@ class Project < ApplicationRecord
 
   def update_creation_step_to_done
     update(creation_step: "done")
+  end
+
+  def send_confirmation_emails
+    admins.unconfirmed.where(first_confirmation_sent_at: nil).each do |admin|
+      admin.send_confirmation_email
+    end
   end
 end

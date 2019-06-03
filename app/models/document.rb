@@ -70,7 +70,7 @@ class Document < ApplicationRecord
     # user cannot view document if he has no access to all values
     # for each field that can be limited by value
     !project.conventions.active.document_fields.limit_by_value.map do |field|
-      !field.document_field_values.map do |value|
+      !field.document_field_values.where(selected: true).map do |value|
         field.document_rights.where(user: user,
                                     limit_for: :value,
                                     enabled: true,

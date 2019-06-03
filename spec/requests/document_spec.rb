@@ -308,56 +308,80 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
       end
     end
+
+    it 'download_details' do
+      document.update(email_title: Faker::Internet.email)
+      document.document_fields << FactoryBot.create(:document_field,
+                                                    kind: :codification_field,
+                                                    codification_kind: :revision_date,
+                                                    value: '1.1.2000',
+                                                    title: 'Revision date')
+      document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
+      get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(response.header['Content-Disposition']).to include(document.codification_string)
+      # File.open('public/document.pdf', 'w+') do |f|
+      #   f.binmode
+      #   f.write(response.body)
+      # end
+    end
   end
 
   context '#index' do
-    before do
-      rev1 = FactoryBot.create(:document_revision)
-      @project = rev1.document_main.project
-      convention = FactoryBot.create(:convention, project: @project)
-      convention.document_fields.each do |field|
-        if field.document_number? || field.revision_date?
-          field.update(value: rand(1000..9999))
+    it 'no documents' do
+      get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+    end
+
+    context 'has documents' do
+      before do
+        rev1 = FactoryBot.create(:document_revision)
+        @project = rev1.document_main.project
+        convention = FactoryBot.create(:convention, project: @project)
+        convention.document_fields.each do |field|
+          if field.document_number? || field.revision_date?
+            field.update(value: rand(1000..9999))
+          end
+          field.document_field_values.first.update(selected: true)
+          if field.can_limit_by_value?
+            field.document_rights.create(user: user,
+                                         document_field_value: field.document_field_values.first,
+                                         limit_for: :value,
+                                         enabled: true)
+          else
+            field.document_rights.create(user: user, limit_for: :field)
+          end
         end
-        field.document_field_values.first.update(selected: true)
-        if field.can_limit_by_value?
-          field.document_rights.create(user: user,
-                                       document_field_value: field.document_field_values.first,
-                                       limit_for: :value,
-                                       enabled: true)
-        else
-          field.document_rights.create(user: user, limit_for: :field)
-        end
+        doc_attrs = Document.build_from_convention(convention, user)
+        document_native_file =
+          doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
+        document_native_file['files'] = [fixture_file_upload('test.txt')]
+        revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+        revision_number['value'] = '1'
+        @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
+        revision_number['value'] = '2'
+        rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
+        @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
       end
-      doc_attrs = Document.build_from_convention(convention, user)
-      document_native_file =
-        doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-      document_native_file['files'] = [fixture_file_upload('test.txt')]
-      revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
-      revision_number['value'] = '1'
-      @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
-      revision_number['value'] = '2'
-      rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
-      @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
-    end
 
-    it 'latest revision and latest version' do
-      get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json['originating_companies'].length).to eql(1)
-      expect(json['discipline'].length).to eql(1)
-      expect(json['document_types'].length).to eql(1)
-      expect(json['documents'][0]['id']).to eql(@doc2.id)
-      expect(json['documents'][0]['document_fields'].length).to eql(8)
-      expect(json['documents'].length).to eql(1)
-    end
+      it 'latest revision and latest version' do
+        get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
+        expect(json['originating_companies'].length).to eql(1)
+        expect(json['discipline'].length).to eql(1)
+        expect(json['document_types'].length).to eql(1)
+        expect(json['documents'][0]['id']).to eql(@doc2.id)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
+        expect(json['documents'].length).to eql(1)
+      end
 
-    it 'all revisions and latest version of each revision' do
-      @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
-      get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-      expect(json['documents'][0]['id']).to eql(@doc1.id)
-      expect(json['documents'][0]['document_fields'].length).to eql(8)
-      expect(json['documents'][1]['id']).to eql(@doc2.id)
-      expect(json['documents'].length).to eql(2)
+      it 'all revisions and latest version of each revision' do
+        @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
+        get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
+        expect(json['documents'][0]['id']).to eql(@doc1.id)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
+        expect(json['documents'][1]['id']).to eql(@doc2.id)
+        expect(json['documents'].length).to eql(2)
+      end
     end
   end
 end
