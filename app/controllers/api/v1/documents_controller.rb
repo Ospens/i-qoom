@@ -21,7 +21,7 @@ class Api::V1::DocumentsController < ApplicationController
   def create
     main = @project.document_mains.create
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(project: @project))
+    document = rev.versions.new(document_params.merge(project_id: @project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -35,9 +35,7 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new revision version
   def update
     project = @document.revision.document_main.project
-    document_attrs =
-      @document.attributes_for_edit.merge(document_params.merge(project: project))
-    document = @document.revision.versions.new(document_attrs)
+    document = @document.revision.versions.new(document_params.merge(project_id: project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -49,9 +47,7 @@ class Api::V1::DocumentsController < ApplicationController
     authorize! :edit, @document
     main = @document.revision.document_main
     rev = main.revisions.create
-    document_attrs =
-      @document.attributes_for_edit.merge(document_params.merge(project: main.project))
-    document = rev.versions.new(document_attrs)
+    document = rev.versions.new(document_params.merge(project_id: main.project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -152,8 +148,8 @@ class Api::V1::DocumentsController < ApplicationController
                                         document_field_values_attributes: [
                                           :value,
                                           :title,
-                                          :position,
-                                          :selected
+                                          :selected,
+                                          :position
                                         ]
                                       ]).merge(user: signed_in_user)
   end

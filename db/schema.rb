@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 2019_05_24_020052) do
 
   # These are extensions that must be enabled in order to support this database
@@ -163,6 +164,9 @@ ActiveRecord::Schema.define(version: 2019_05_24_020052) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "status", default: 0
+    t.datetime "first_confirmation_sent_at"
+    t.datetime "confirmation_resent_at"
   end
 
   create_table "project_company_data", force: :cascade do |t|
