@@ -5,6 +5,12 @@ class ApplicationMailer < ActionMailer::Base
   def send_contact_form(contact)
     @contact = contact
     mail to: 'yasserchehade@gmx.de',
-        subject: "New message by contact form from I-Qoom"
+        subject: t(".title")
+  end
+
+  def send_project_admin_confirmation(project_admin)
+    @project_admin = project_admin
+    mail to: @project_admin.email,
+         subject: t(".title")
   end
 end
