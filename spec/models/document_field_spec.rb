@@ -19,7 +19,7 @@ RSpec.describe DocumentField, type: :model do
     context 'codification field' do
       [:originating_company, :receiving_company, :discipline, :document_type].each do |kind|
         it kind do
-          subject.kind = :codification_field
+          subject.kind = :select_field
           subject.codification_kind = kind
           subject.document_field_values.first.selected = true
           should be_valid
@@ -30,7 +30,7 @@ RSpec.describe DocumentField, type: :model do
 
       [:document_number, :revision_number, :revision_version].each do |kind|
         it kind do
-          subject.kind = :codification_field
+          subject.kind = :text_field
           subject.codification_kind = kind
           should be_valid
           subject.document_field_values.delete_all
@@ -52,7 +52,7 @@ RSpec.describe DocumentField, type: :model do
       end
 
       it do
-        expect(subject).to_not be_codification_field
+        expect(subject).to_not be_select_field
         expect(subject.parent.class.name).to eql('Convention')
         expect(subject.can_build?(user)).to eql(true)
       end
@@ -65,12 +65,12 @@ RSpec.describe DocumentField, type: :model do
 
     context 'codification' do
       before do
-        subject.kind = :codification_field
+        subject.kind = :select_field
         subject.codification_kind = :originating_company
       end
 
       it do
-        expect(subject).to be_codification_field
+        expect(subject).to be_select_field
         expect(subject.document_rights).to_not be_any
         expect(subject.can_build?(user)).to eql(false)
       end
@@ -91,7 +91,7 @@ RSpec.describe DocumentField, type: :model do
   end
 
   context '#can_limit_by_value?' do
-    subject { FactoryBot.build(:document_field, kind: :codification_field) }
+    subject { FactoryBot.build(:document_field, kind: :select_field) }
     kinds = ['originating_company', 'discipline', 'document_type']
 
     kinds.each do |kind|
@@ -126,24 +126,6 @@ RSpec.describe DocumentField, type: :model do
         expect(subject).to_not be_should_have_document_field_values
       end
     end
-
-    kinds = ['originating_company', 'receiving_company', 'discipline', 'document_type']
-
-    kinds.each do |kind|
-      it kind do
-        subject.kind = :codification_field
-        subject.codification_kind = kind
-        expect(subject).to be_should_have_document_field_values
-      end
-    end
-
-    (DocumentField.codification_kinds.keys - kinds).each do |kind|
-      it kind do
-        subject.kind = :codification_field
-        subject.codification_kind = kind
-        expect(subject).to_not be_should_have_document_field_values
-      end
-    end
   end
 
   it 'revision_number_valid' do
@@ -151,7 +133,7 @@ RSpec.describe DocumentField, type: :model do
     doc1 = FactoryBot.create(:document, revision: rev1)
     main = rev1.document_main
     field = FactoryBot.create(:document_field,
-                              kind: :codification_field,
+                              kind: :text_field,
                               codification_kind: :revision_number,
                               value: 1,
                               parent: doc1)
@@ -170,7 +152,7 @@ RSpec.describe DocumentField, type: :model do
   it 'revision_version_valid' do
     ver1 = FactoryBot.build(:document)
     rev = ver1.revision
-    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_version)
+    field = FactoryBot.build(:document_field, kind: :text_field, codification_kind: :revision_version)
     ver1.document_fields << field
     ver1.save!
     expect(ver1.document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.value).to eql('0')
@@ -284,7 +266,7 @@ RSpec.describe DocumentField, type: :model do
     end
 
     it 'receiving_company' do
-      field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: :receiving_company)
+      field = FactoryBot.build(:document_field, required: true, kind: :select_field, codification_kind: :receiving_company)
       value = FactoryBot.build(:document_field_value, selected: true)
       field.document_field_values << value
       document.document_fields << field
@@ -293,9 +275,9 @@ RSpec.describe DocumentField, type: :model do
       expect(document).to_not be_valid
     end
 
-    [:document_number, :revision_number,:revision_date].each do |kind|
+    [:document_number, :revision_number].each do |kind|
       it kind do
-        field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: kind)
+        field = FactoryBot.build(:document_field, required: true, kind: :text_field, codification_kind: kind)
         document.document_fields << field
         expect(document).to be_valid
         field.value = nil
@@ -303,8 +285,16 @@ RSpec.describe DocumentField, type: :model do
       end
     end
 
+    it 'revision_date' do
+      field = FactoryBot.build(:document_field, required: true, kind: :date_field, codification_kind: :revision_date)
+      document.document_fields << field
+      expect(document).to be_valid
+      field.value = nil
+      expect(document).to_not be_valid
+    end
+
     it 'revision_version' do
-      field = FactoryBot.build(:document_field, required: true, kind: :codification_field, codification_kind: :revision_version)
+      field = FactoryBot.build(:document_field, required: true, kind: :text_field, codification_kind: :revision_version)
       document.document_fields << field
       expect(document).to be_valid
       field.value = nil
@@ -313,7 +303,7 @@ RSpec.describe DocumentField, type: :model do
     end
 
     it 'document_native_file' do
-      field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+      field = FactoryBot.build(:document_field, kind: :upload_field, codification_kind: :document_native_file)
       field.files.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
       expect(document).to be_valid
@@ -333,7 +323,7 @@ RSpec.describe DocumentField, type: :model do
 
   it '#native_file_is_only_one' do
     document = FactoryBot.build(:document)
-    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+    field = FactoryBot.build(:document_field, kind: :upload_field, codification_kind: :document_native_file)
     field.files.attach(fixture_file_upload('test.txt'))
     document.document_fields << field
     expect(document).to be_valid
@@ -359,7 +349,7 @@ RSpec.describe DocumentField, type: :model do
     let(:file_field1) { doc.document_fields.find_by(codification_kind: :document_native_file) }
 
     before do
-      field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :document_native_file)
+      field = FactoryBot.build(:document_field, kind: :upload_field, codification_kind: :document_native_file)
       field.files.attach(fixture_file_upload('test.txt'))
       doc.document_fields << field
       doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }['files'] = []

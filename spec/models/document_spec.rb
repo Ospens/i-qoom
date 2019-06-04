@@ -34,7 +34,7 @@ RSpec.describe Document, type: :model do
   it '#additional_information' do
     field =
       FactoryBot.attributes_for(:document_field,
-                                kind: :codification_field,
+                                kind: :textarea_field,
                                 codification_kind: :additional_information,
                                 value: '111')
     rev1 = FactoryBot.create(:document_revision, revision_number: '1')
