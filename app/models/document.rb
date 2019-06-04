@@ -24,6 +24,9 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values,
            on: :update
 
+  validate :prevent_update_of_fields_and_values_from_convention,
+           on: :create
+
   scope :first_version, -> { order(revision_version: :asc).first }
 
   scope :last_version, -> { order(revision_version: :asc).last }
@@ -146,6 +149,13 @@ class Document < ApplicationRecord
         end.include?(true)
       end.include?(true)
     errors.add(:document_fields, :codification_field_changed) if error
+  end
+
+  def prevent_update_of_fields_and_values_from_convention
+    # there should be check if document_fields or document_field_values got
+    # updated or changed from same fields and values from convetion
+    # currently document uploader can change, remove or add any fields or
+    # values to document regardless of what fields and values exist in convention
   end
 
   def additional_information

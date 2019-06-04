@@ -17,7 +17,7 @@ describe DocumentFolder, type: :request do
                             .find_by(codification_kind: :originating_company)
       attrs =
         FactoryBot.attributes_for(:document_field,
-                                  kind: :codification_field,
+                                  kind: :select_field,
                                   codification_kind: :originating_company,
                                   value: con_field.document_field_values.first.value)
       { document_folder: {
