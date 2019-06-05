@@ -30,4 +30,18 @@ RSpec.describe ProjectAdministrator, type: :model do
       expect(project.admins.first.user).not_to eq(second_user)
     end
   end
+
+  context "remove admin" do
+    let(:project) { FactoryBot.create(:project_done_step) }
+    it "admin should be removed" do
+      project.admins << FactoryBot.build(:project_administrator)
+      project.save
+      project.admins.first.remove
+      expect(project.admins.count).to eq(1)
+    end
+    it "admin shouldn't be removed if he is the last one" do
+      project.admins.first.remove
+      expect(project.admins.count).to eq(1)
+    end
+  end
 end
