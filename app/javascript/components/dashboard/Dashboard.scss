@@ -800,6 +800,8 @@ span.divider {
 }
 
 .dropdown-with-icon {
+  display: flex !important;
+
   button {
     border: none !important;
     padding: 0;

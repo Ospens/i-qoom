@@ -28,3 +28,23 @@ export const startEditConvention = () => (dispatch, getState) => {
       })
   )
 }
+
+export const startCreateField = () => (dispatch, getState) => {
+  const { user: { token }, projects: { current } } = getState()
+  const headers = {
+    Authorization: token
+  }
+
+  return (
+    axios.get(`/api/v1/projects/${current.id}/conventions/edit`, {
+      headers
+    })
+      .then(response => {
+        console.log(response)
+        dispatch(editingConvention(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}

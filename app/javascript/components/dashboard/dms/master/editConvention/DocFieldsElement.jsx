@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
-import DropDown from '../../../../elements/DropDown'
+import DropDown from '../../../../../elements/DropDown'
+import { Field } from 'redux-form'
+import SelectField from '../../../../../elements/SelectField'
+import DragAndDropField from '../../../../../elements/DragAndDropField'
 import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
-import { actionConventions } from '../constants'
+import { actionConventions } from '../../constants'
 
 export default class DocFieldsElement extends Component {
 
@@ -125,6 +128,42 @@ export default class DocFieldsElement extends Component {
     </React.Fragment>
   )
 
+  renderInpuByType = (field, index) => {
+    if (index === 4) {
+      return (
+        <Field
+          type='file'
+          name={field.codification_kind}
+          id={field.codification_kind}
+          component={DragAndDropField}
+        />
+      )
+    } else if (index !== 2) {
+      return (
+        <React.Fragment>
+          <input
+            className='form-control'
+            type='text'
+            name={field.codification_kind}
+            id={field.codification_kind}
+            placeholder='Title'
+          />
+        </React.Fragment>
+      )
+    } else {
+      return (
+        <Field
+          name={field.codification_kind}
+          id={field.codification_kind}
+          value={{}}
+          newValue={{}}
+          options={[]}
+          component={SelectField}
+        />
+      )
+    }
+  }
+
   render() {
     const { index, field, column } = this.props
 
@@ -149,13 +188,7 @@ export default class DocFieldsElement extends Component {
                     <label htmlFor="document_title">{field.title}</label>
                     {index === 3 && this.accessList()}
                   </div>
-                  <input
-                    className='form-control'
-                    type='text'
-                    name='document_title'
-                    id='document_title'
-                    placeholder='Title'
-                  />
+                  {this.renderInpuByType(field, index)}
                 {this.editButton()}
               </div>
               }

@@ -5,16 +5,16 @@ import {
   reduxForm,
   formValueSelector
 } from 'redux-form'
-import { startEditConvention } from '../../../../actions/conventionActions'
+import { startEditConvention } from '../../../../../actions/conventionActions'
 import ReactSVG from 'react-svg'
-import SideBarItem from '../SideBarItem'
-import DMSLayout from '../DMSLayout'
-import overviewIcon from '../../../../images/task-checklist-check'
-import dmsSettingsIcon from '../../../../images/task-list-settings'
-import docPlanIcon from '../../../../images/calendar-3'
-import lockIcon from '../../../../images/Locked'
-import DocumentFiledsTable from './DocumentFiledsTable'
-import Tabs from '../../../../elements/Tabs'
+import SideBarItem from '../../SideBarItem'
+import DMSLayout from '../../DMSLayout'
+import overviewIcon from '../../../../../images/task-checklist-check'
+import dmsSettingsIcon from '../../../../../images/task-list-settings'
+import docPlanIcon from '../../../../../images/calendar-3'
+import lockIcon from '../../../../../images/Locked'
+import DocumentFiledsTable from './DocFiledsTable'
+import Tabs from '../../../../../elements/Tabs'
 
 const menuItems = [
   {
@@ -114,7 +114,10 @@ class EditConvention extends Component {
 
   renderContent = () => {
     const { current: { grouped_fields } } = this.props
-    grouped_fields[1].unshift({ column: 1, row: 1, title: 'test' })
+    // TODO: change this
+    grouped_fields[1][0].title === 'test'
+      ? {}
+      : grouped_fields[1].unshift({ column: 1, row: 1, title: 'test' })
 
     return (
       <Tabs className='conventios-tabs'>

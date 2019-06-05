@@ -17,9 +17,12 @@ class DropDown extends Component {
   )
 
   renderDefaultItems = actionDDitems => (
-    actionDDitems.map(({ icon, title }, i) => (
+    actionDDitems.map(({ icon, title, onClick }, i) => (
       <React.Fragment key={i}>
-        <li className='dropdown-item' >
+        <li
+          className='dropdown-item'
+          onClick={onClick}
+        >
           <ReactSVG
             svgStyle={{ height: 15, width: 15 }}
             src={icon}

@@ -15,6 +15,19 @@ const groupFields = fields => {
 
 const initialState = {
   conventions: [],
+  creating_field: {
+    parent_type: '',
+    parent_id: null,
+    kind: '',
+    codification_kind: '',
+    column: null,
+    row: null,
+    required: false,
+    multiselect: false,
+    title: '',
+    command: '',
+    document_field_values: []
+  },
   current: {
     grouped_fields: []
   }

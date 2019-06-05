@@ -2,7 +2,7 @@ import React from 'react'
 import { Field } from 'redux-form'
 
 function CheckboxField({ text, checkBoxId, labelClass, errorField, ...input }) {
-  const errorInfo = errorField[checkBoxId]
+  const errorInfo = errorField ? errorField[checkBoxId] : undefined
   return (
     <div className='checkbox-field justify-content-center'>
       <Field
@@ -14,9 +14,10 @@ function CheckboxField({ text, checkBoxId, labelClass, errorField, ...input }) {
       />
       <label className={labelClass} htmlFor={checkBoxId}></label>
       <span>{text}</span>
+      {errorInfo &&
       <div className='invalid-feedback'>
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+        {errorInfo[0]}
+      </div>}
     </div>
   )
 }

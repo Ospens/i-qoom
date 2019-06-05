@@ -6,7 +6,7 @@ import DMS from './dms/DMS'
 import NewDocument from './dms/NewDocument'
 import AddRevision from './dms/AddRevision'
 import ShowDocument from './dms/ShowDocument'
-import EditConvention from './dms/master/EditConvention'
+import EditConvention from './dms/master/editConvention/EditConvention'
 import { startFetchProject } from '../../actions/projectActions'
 
 class Projects extends Component {
