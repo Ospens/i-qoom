@@ -39,7 +39,11 @@ Rails.application.routes.draw do
         end
         resource :dms_settings, only: [:edit, :update]
         resource :document_rights, only: [:new, :edit, :update]
-        resources :project_administrators, only: :destroy
+        resources :project_administrators, only: :destroy do
+          member do
+            get :resend_confirmation
+          end
+        end
       end
     end
   end

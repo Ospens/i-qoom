@@ -13,6 +13,14 @@ describe "ProjectAdministrator", type: :request do
            headers: headers
       JSON(response.body)["auth_token"]
     end
+    context "resend_confirmation" do
+      it "should work" do
+        get "/api/v1/projects/#{project.id}/project_administrators/#{project.admins.first.id}/resend_confirmation",
+               headers: headers.merge("Authorization" => auth_token)
+        expect(response).to have_http_status(:success)
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
+      end
+    end
     context "destroy" do
       it "should work" do
         project.admins << FactoryBot.build(:project_administrator)
@@ -20,7 +28,7 @@ describe "ProjectAdministrator", type: :request do
         delete "/api/v1/projects/#{project.id}/project_administrators/#{project.admins.first.id}",
                headers: headers.merge("Authorization" => auth_token)
 
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(:success)
         expect(project.admins.count).to eq(1)
       end
       it "shouldn't work" do
@@ -35,6 +43,12 @@ describe "ProjectAdministrator", type: :request do
 
 
   context 'not logged in and should get a status "forbidden" on' do
+    it 'resend_confirmation' do
+      get "/api/v1/projects/#{project.id}/project_administrators/#{project.admins.first.id}/resend_confirmation",
+             headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it 'destroy' do
       delete "/api/v1/projects/#{project.id}/project_administrators/#{project.admins.first.id}",
              headers: headers

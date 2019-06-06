@@ -8,5 +8,11 @@ RSpec.describe Api::V1::ProjectAdministratorsController, type: :routing do
                  project_id: "1",
                  id: "1")
     end
+    it "routes to #resend_confirmation" do
+      expect(get: "/api/v1/projects/1/project_administrators/1/resend_confirmation").to\
+        route_to("api/v1/project_administrators#resend_confirmation",
+                 project_id: "1",
+                 id: "1")
+    end
   end
 end
