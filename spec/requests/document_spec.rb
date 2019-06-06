@@ -312,7 +312,7 @@ describe Document, type: :request do
     it 'download_details' do
       document.update(email_title: Faker::Internet.email)
       document.document_fields << FactoryBot.create(:document_field,
-                                                    kind: :codification_field,
+                                                    kind: :date_field,
                                                     codification_kind: :revision_date,
                                                     value: '1.1.2000',
                                                     title: 'Revision date')

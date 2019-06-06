@@ -4,8 +4,7 @@ class DocumentField < ApplicationRecord
                :textarea_field,
                :upload_field,
                :date_field,
-               :project_phase_field,
-               :codification_field ]
+               :project_phase_field ]
 
   enum codification_kind: [ :originating_company,
                             :receiving_company,
@@ -31,7 +30,7 @@ class DocumentField < ApplicationRecord
                     dependent: :purge
 
   before_validation :set_required,
-                    if: :codification_field?
+                    if: -> { codification_kind.present? }
 
   before_validation :set_revision_version,
                     if: -> { parent.class.name == 'Document' && revision_version? },
@@ -51,10 +50,6 @@ class DocumentField < ApplicationRecord
 
   validates :kind,
             presence: true
-
-  validates :codification_kind,
-            presence: true,
-            if: :codification_field?
 
   validates :column,
             inclusion: { in: [1, 2] },
@@ -80,9 +75,23 @@ class DocumentField < ApplicationRecord
                     document_native_file? &&
                     files.length > 1 }
 
+  validate :must_be_select_field,
+           if: :codification_kind_as_select_field?
+
+  validate :must_be_text_field,
+           if: :codification_kind_as_text_field?
+
+  validate :must_be_date_field,
+           if: :revision_date?
+
+  validate :must_be_upload_field,
+           if: :document_native_file?
+
+  validate :must_be_textarea_field,
+           if: :additional_information?
+
   scope :limit_by_value, -> {
-    where(kind: :codification_field,
-          codification_kind: [:originating_company, :discipline, :document_type])
+    where(codification_kind: [:originating_company, :discipline, :document_type])
   }
 
   scope :order_by_columns_and_rows, -> {
@@ -100,7 +109,7 @@ class DocumentField < ApplicationRecord
     return if !can_build?(user)
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
-    if codification_field?
+    if codification_kind.present?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
         next if document_rights.find_by(user: user, document_field_value: field_value, enabled: true, view_only: false).blank?
@@ -119,7 +128,7 @@ class DocumentField < ApplicationRecord
         original_attributes['files'] << { filename: file.filename.to_s }
       end
     end
-    if codification_field?
+    if codification_kind.present?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
         field_value_attrs = field_value.attributes.except('id', 'document_field_id', 'created_at', 'updated_at')
@@ -132,17 +141,23 @@ class DocumentField < ApplicationRecord
   def can_build?(user)
     return false if parent.class.name != 'Convention'
     can_build_codification_field?(user) ||
-    (!codification_field? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field]).any?)
+    (!codification_kind.present? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field]).any?)
   end
 
   def should_have_document_field_values?
-    (codification_field? && (originating_company? || receiving_company? || discipline? || document_type?)) ||
-      select_field? ||
-      project_phase_field?
+    select_field? || project_phase_field?
   end
 
   def can_limit_by_value?
-    codification_field? && (originating_company? || discipline? || document_type?)
+    originating_company? || discipline? || document_type?
+  end
+
+  def codification_kind_as_select_field?
+    originating_company? || receiving_company? || discipline? || document_type?
+  end
+
+  def codification_kind_as_text_field?
+    document_number? || revision_number? || revision_version?
   end
 
   private
@@ -163,7 +178,7 @@ class DocumentField < ApplicationRecord
     if can_limit_by_value?
       rights.where(user: user, limit_for: limit_for[:value]).any?
     else
-      codification_field? &&
+      codification_kind.present? &&
         (!rights.any? || rights.where(user: user, limit_for: limit_for[:field]).any?)
     end
   end
@@ -195,12 +210,7 @@ class DocumentField < ApplicationRecord
   end
 
   def field_is_required
-    if (text_field? || textarea_field? || date_field?) && value.blank?
-      errors.add(:value, :is_required)
-    elsif (select_field? || project_phase_field?) &&
-          !document_field_values.select{ |i| i['selected'] == true }.any?
-      errors.add(:document_field_values, :is_required)
-    elsif codification_field?
+    if codification_kind.present?
       if (originating_company? || receiving_company? || discipline? || document_type?)
         if !document_field_values.select{ |i| i['selected'] == true }.any?
           errors.add(:document_field_values, :is_required)
@@ -211,6 +221,12 @@ class DocumentField < ApplicationRecord
         # nothing, not required
       elsif value.blank?
         errors.add(:value, :is_required)
+      end
+    elsif (text_field? || textarea_field? || date_field?)
+      errors.add(:value, :is_required) if value.blank?
+    elsif (select_field? || project_phase_field?)
+      if !document_field_values.select{ |i| i['selected'] == true }.any?
+        errors.add(:document_field_values, :is_required)
       end
     elsif upload_field?
       errors.add(:files, :is_required) if !files.any?
@@ -244,5 +260,25 @@ class DocumentField < ApplicationRecord
     files.attach(io: StringIO.new(file.download),
                  filename: file.filename,
                  content_type: file.content_type)
+  end
+
+  def must_be_select_field
+    errors.add(:kind, :must_be_select_field) unless select_field?
+  end
+
+  def must_be_text_field
+    errors.add(:kind, :must_be_text_field) unless text_field?
+  end
+
+  def must_be_date_field
+    errors.add(:kind, :must_be_date_field) unless date_field?
+  end
+
+  def must_be_upload_field
+    errors.add(:kind, :must_be_upload_field) unless upload_field?
+  end
+
+  def must_be_textarea_field
+    errors.add(:kind, :must_be_textarea_field) unless textarea_field?
   end
 end

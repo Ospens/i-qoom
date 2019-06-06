@@ -19,7 +19,8 @@ RSpec.describe DocumentFolder, type: :model do
       field = doc1.document_fields.find_by(codification_kind: kind)
       field.update(value: Faker::Name.initials(3))
       value = field.value
-      folder.document_fields.create!(kind: :codification_field,
+      main_kind = kind == :document_number ? :text_field : :select_field
+      folder.document_fields.create!(kind: main_kind,
                                      codification_kind: field.codification_kind,
                                      value: value)
     end
@@ -63,7 +64,7 @@ RSpec.describe DocumentFolder, type: :model do
       convention_field = convention.document_fields.find_by(codification_kind: kind)
       @convention_field_value = convention_field.document_field_values.first.value
       @field =
-        folder.document_fields.new(kind: :codification_field,
+        folder.document_fields.new(kind: :select_field,
                                    codification_kind: kind,
                                    value: '111')
     end

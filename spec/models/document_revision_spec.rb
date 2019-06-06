@@ -12,7 +12,7 @@ RSpec.describe DocumentRevision, type: :model do
     main = FactoryBot.create(:document_main)
     rev1 = FactoryBot.create(:document_revision, document_main: main)
     doc1 = FactoryBot.create(:document, revision: rev1)
-    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 0)
+    field = FactoryBot.build(:document_field, kind: :text_field, codification_kind: :revision_number, value: 0)
     doc1.document_fields << field
     rev2 = FactoryBot.create(:document_revision, document_main: main)
     doc_attrs = doc1.attributes_for_edit
