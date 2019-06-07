@@ -2,6 +2,9 @@ en:
   api:
     v1:
       project_administrators:
+        resend_confirmation:
+          success_message:
+            The email confirmation was successfully resent
         destroy:
           success_message: Project admin was successfully deleted
           error_message: Something went wrong
