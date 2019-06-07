@@ -47,38 +47,39 @@ describe Document, type: :request do
 
   context '#create' do
     let(:title) { Faker::Lorem.sentence }
-    let(:document_params) { { document: { email_title: title } } }
+
+    before do
+      @params = { document: document_attributes(user) }
+      @params[:document]['email_title'] = title
+      @project_id = @params[:document]['project_id']
+      @project_user = Project.find(@project_id).user
+      @project_user.password = 'password1'
+    end
 
     it 'anon' do
-      post "/api/v1/projects/#{project.id}/documents", params: document_params
+      post "/api/v1/projects/#{@project_id}/documents", params: @params
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user' do
-      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(FactoryBot.create(:user))
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(FactoryBot.create(:user))
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user with rights' do
-      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(user)
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
     end
 
     it 'project user' do
-      post "/api/v1/projects/#{project.id}/documents", params: document_params, headers: credentials(project.user)
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
       expect(response).to have_http_status(:success)
     end
   end
 
   it 'uploads files' do
-    convention.document_fields.each do |field|
-      if field.document_number? || field.revision_date?
-        field.update(value: rand(1000..9999))
-      end
-      field.document_field_values.first.update(selected: true)
-    end
-    document_params = Document.build_from_convention(convention, user)
+    document_params = document_attributes(user)
     document_native_file =
       document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['files'] = [fixture_file_upload('test.txt')]
@@ -86,11 +87,14 @@ describe Document, type: :request do
     revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
-    field = FactoryBot.attributes_for(:document_field, kind: :upload_field, files: [file1, file2])
+    field = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title')
+    project = Project.find(document_params['project_id'])
+    project.conventions.active.document_fields.create!(field)
+    field['files'] = [file1, file2]
     document_params['document_fields_attributes'] << field
     post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
     expect(response).to have_http_status(:success)
-    files = Document.last.document_fields.find_by(kind: :upload_field).files
+    files = Document.last.document_fields.find_by(title: 'title').files
     file1 = files.first
     file2 = files.last
     expect(files.length).to eql(2)
@@ -108,7 +112,9 @@ describe Document, type: :request do
         if field.document_number? || field.revision_date?
           field.update(value: rand(1000..9999))
         end
-        field.document_field_values.first.update(selected: true)
+        if field.select_field?
+          field.document_field_values.first.update(selected: true)
+        end
       end
       doc_attrs = Document.build_from_convention(convention, user)
       document_native_file =
@@ -311,11 +317,6 @@ describe Document, type: :request do
 
     it 'download_details' do
       document.update(email_title: Faker::Internet.email)
-      document.document_fields << FactoryBot.create(:document_field,
-                                                    kind: :date_field,
-                                                    codification_kind: :revision_date,
-                                                    value: '1.1.2000',
-                                                    title: 'Revision date')
       document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
       get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -342,7 +343,9 @@ describe Document, type: :request do
           if field.document_number? || field.revision_date?
             field.update(value: rand(1000..9999))
           end
-          field.document_field_values.first.update(selected: true)
+          if field.select_field?
+            field.document_field_values.first.update(selected: true)
+          end
           if field.can_limit_by_value?
             field.document_rights.create(user: user,
                                          document_field_value: field.document_field_values.first,
@@ -370,7 +373,7 @@ describe Document, type: :request do
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
         expect(json['documents'][0]['id']).to eql(@doc2.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(8)
+        expect(json['documents'][0]['document_fields'].length).to eql(9)
         expect(json['documents'].length).to eql(1)
       end
 
@@ -378,7 +381,7 @@ describe Document, type: :request do
         @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
         get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
         expect(json['documents'][0]['id']).to eql(@doc1.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(8)
+        expect(json['documents'][0]['document_fields'].length).to eql(9)
         expect(json['documents'][1]['id']).to eql(@doc2.id)
         expect(json['documents'].length).to eql(2)
       end

@@ -15,6 +15,8 @@ class Convention < ApplicationRecord
   validates :number,
             presence: true,
             inclusion: { in: [1, 2] }
+  after_save :assign_revision_version_field,
+             if: -> { document_fields.find_by(codification_kind: :revision_version).blank? }
   # there should be way to detect active convention
   scope :active, -> { find_by(number: 1) }
 
@@ -75,5 +77,11 @@ class Convention < ApplicationRecord
                         command: 'Select a revision date',
                         column: 2,
                         row: 4)
+  end
+
+  private
+
+  def assign_revision_version_field
+    document_fields.create(kind: :hidden_field, codification_kind: :revision_version, column: 1)
   end
 end
