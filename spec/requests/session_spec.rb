@@ -3,6 +3,7 @@ require 'rails_helper'
 describe "Session", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
   let(:user) { FactoryBot.create(:user) }
+  let(:json) { JSON(response.body) }
 
   context "sign in" do
     it 'should get a status "error"' do
@@ -12,7 +13,7 @@ describe "Session", type: :request do
                              password: "password1" } }.to_json,
         headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON(response.body)["status"]).to eq("error")
+      expect(json["status"]).to eq("error")
     end
 
     it 'should get a status "success"' do
@@ -22,7 +23,7 @@ describe "Session", type: :request do
                              password: "password1" } }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
-      expect(JSON(response.body)["status"]).to eq("success")
+      expect(json["status"]).to eq("success")
     end
   end
 end
