@@ -17,11 +17,6 @@ describe Document, type: :request do
     convention
   end
 
-  def credentials(user)
-    session = Session.new(login: user.email, password: user.password)
-    { 'Authorization' => session.auth_token }
-  end
-
   context '#new' do
     it 'anon' do
       get "/api/v1/projects/#{project.id}/documents/new"

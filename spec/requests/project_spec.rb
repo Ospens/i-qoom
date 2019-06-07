@@ -1,34 +1,28 @@
 require 'rails_helper'
 
 describe "Project", type: :request do
-  let(:headers) { { "CONTENT_TYPE" => "application/json" } }
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:json) { JSON(response.body) }
 
   context "logged in" do
-    let(:auth_token) do
-      post "/api/v1/sessions",
-           params: { session: { login: user.email,
-                                password: "password1" } }.to_json,
-           headers: headers
-      JSON(response.body)["auth_token"]
-    end
+    let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     context "index" do
       it 'should get a status "success" and render projects' do
         get "/api/v1/projects",
-             headers: headers.merge("Authorization" => auth_token)
+             headers: headers
         expect(response).to have_http_status(:success)
-        expect(JSON(response.body)
+        expect(json
                 .map { |h| h["id"] }).to include(*user.projects.map(&:id))
       end
     end
     context "show" do
       it 'should get a status "success" and render the project' do
         get "/api/v1/projects/#{project.id}",
-             headers: headers.merge("Authorization" => auth_token)
+             headers: headers
         expect(response).to have_http_status(:success)
-        expect(JSON(response.body).values).to include(project.name)
+        expect(json.values).to include(project.name)
       end
     end
     context  "create (creation_step 'admins')" do
@@ -41,17 +35,17 @@ describe "Project", type: :request do
                       }
                     }
                   }.to_json,
-          headers: headers.merge("Authorization" => auth_token)
+          headers: headers
         expect(response).to have_http_status(:success)
         expect(ActionMailer::Base.deliveries.count).to eq(0)
-        expect(JSON(response.body)["status"]).to eq("success")
+        expect(json["status"]).to eq("success")
       end
       it 'should get a status "error"' do
         post "/api/v1/projects",
           params: { project: { name: "12" } }.to_json,
-          headers: headers.merge("Authorization" => auth_token)
+          headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(JSON(response.body)["status"]).to eq("error")
+        expect(json["status"]).to eq("error")
       end
     end
     context "update" do
@@ -62,12 +56,12 @@ describe "Project", type: :request do
                       { admins_attributes:
                         { id: "",
                           email: "someemail@gmail.com" } } }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).admins.count).to eq(2)
           expect(Project.find_by(id: project.id).admins.last.email).to\
             eq("someemail@gmail.com")
-          expect(JSON(response.body)["status"]).to eq("success")
+          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             add an admin' do
@@ -76,12 +70,12 @@ describe "Project", type: :request do
                       { admins_attributes:
                         { id: "",
                           email: "notemail" } } }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
           expect(Project.find_by(id: project.id).admins.last.email).not_to\
             eq("notemail")
-          expect(JSON(response.body)["status"]).to eq("error")
+          expect(json["status"]).to eq("error")
         end
       end
 
@@ -91,10 +85,10 @@ describe "Project", type: :request do
             params: { project:
                       { name: "some name",
                         creation_step: "name" } }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).name).to eq("some name")
-          expect(JSON(response.body)["status"]).to eq("success")
+          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             change the name of the project' do
@@ -102,10 +96,10 @@ describe "Project", type: :request do
             params: { project:
                       { name: "12",
                         creation_step: "name" } }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project.id).name).not_to eq("12")
-          expect(JSON(response.body)["status"]).to eq("error")
+          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'company_datum'" do
@@ -116,11 +110,11 @@ describe "Project", type: :request do
                 company_datum_attributes: FactoryBot.attributes_for(:project_company_datum,
                   company_address_attributes: FactoryBot.attributes_for(:address)))
             }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).company_datum).to be_present
           expect(Project.find_by(id: project.id).company_datum.billing_address).not_to be_present
-          expect(JSON(response.body)["status"]).to eq("success")
+          expect(json["status"]).to eq("success")
         end
         it 'should get a status "success" and add billing address to the project' do
           patch "/api/v1/projects/#{project.id}",
@@ -130,10 +124,10 @@ describe "Project", type: :request do
                   same_for_billing_address: "1",
                   company_address_attributes: FactoryBot.attributes_for(:address)))
             }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).company_datum.billing_address).to be_present
-          expect(JSON(response.body)["status"]).to eq("success")
+          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             add a company datum to the project' do
@@ -141,10 +135,10 @@ describe "Project", type: :request do
             params: {
               project: FactoryBot.attributes_for(:project_company_datum_step)
             }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project.id).company_datum).not_to be_present
-          expect(JSON(response.body)["status"]).to eq("error")
+          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'billing_address'" do
@@ -161,7 +155,7 @@ describe "Project", type: :request do
                 }
               }
             }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
 
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project_without_billing_address.id)
@@ -169,7 +163,7 @@ describe "Project", type: :request do
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).to eq("done")
           expect(ActionMailer::Base.deliveries.count).to eq(1)
-          expect(JSON(response.body)["status"]).to eq("success")
+          expect(json["status"]).to eq("success")
         end
         it "should get a status 'error' and don't
             add a billing_address to the project" do
@@ -185,7 +179,7 @@ describe "Project", type: :request do
                 }
               }
             }.to_json,
-            headers: headers.merge("Authorization" => auth_token)
+            headers: headers
 
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project_without_billing_address.id)
@@ -193,7 +187,7 @@ describe "Project", type: :request do
                                        .billing_address).not_to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).not_to eq("done")
-          expect(JSON(response.body)["status"]).to eq("error")
+          expect(json["status"]).to eq("error")
         end
       end
     end
@@ -202,7 +196,7 @@ describe "Project", type: :request do
       it "should be destroyed" do
         third_project = FactoryBot.create(:project, user_id: user.id)
         delete "/api/v1/projects/#{third_project.id}",
-              headers: headers.merge("Authorization" => auth_token)
+              headers: headers
         expect(response).to have_http_status(:success)
         expect(Project.find_by(id: third_project.id)).to be_falsy
       end
@@ -215,7 +209,7 @@ describe "Project", type: :request do
                             user_id: user.id).admins.first
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers.merge("Authorization" => auth_token)
+          headers: headers
         expect(response).to have_http_status(:created)
         expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(user)
       end
@@ -224,7 +218,7 @@ describe "Project", type: :request do
           FactoryBot.create(:project_done_step,
                             user_id: user.id).admins.first
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers.merge("Authorization" => auth_token)
+          headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(nil)
       end
@@ -232,6 +226,7 @@ describe "Project", type: :request do
   end
 
   context 'not logged in and should get a status "forbidden" on' do
+    let(:headers) { { "CONTENT_TYPE" => "application/json" } }
     it 'index' do
       get "/api/v1/projects",
            headers: headers
