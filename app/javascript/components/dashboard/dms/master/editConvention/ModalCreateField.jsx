@@ -6,12 +6,10 @@ import {
   formValueSelector,
   Field
 } from 'redux-form'
-import ReactSVG from 'react-svg'
 import { startCreateField } from '../../../../../actions/conventionActions'
 import DraggableDropDown from './DraggableDropDown'
-import dots from '../../../../../images/dots-horizontal'
 import InputField from '../../../../../elements/InputField'
-import ModalComponent from '../../../../../elements/ModalComponent'
+import NewModal from '../../../../../elements/Modal'
 import SelectField from '../../../../../elements/SelectField'
 import CheckboxField from '../../../../../elements/CheckboxField'
 import dropdownIcon from '../../../../../images/form_1'
@@ -22,17 +20,17 @@ import dateIcon from '../../../../../images/form_5'
 
 const typeVariants = [
   {
-    value: 'dropdown',
+    value: 'select_field',
     label: 'Dropdown',
     icon: dropdownIcon
   },
   {
-    value: 'text',
+    value: 'text_field',
     label: 'Textbox (one row)',
     icon: textIcon
   },
   {
-    value: 'textarea',
+    value: 'textarea_field',
     label: 'Textbox (Comment)',
     icon: textareaIcon
   },
@@ -51,17 +49,17 @@ const typeVariants = [
 class ModalCreateField extends Component {
 
   state = {
-    sections: [
-      {
-        value: 'test333'
-      },
-      {
-        value: 'lorem'
-      }
-    ],
-    newSection: ''
+    sections: [],
+    newSection: '',
+    modalOpen: false 
   }
 
+  handleOpen = () => this.setState({ modalOpen: true })
+
+  handleClose = () => {
+    this.setState({ modalOpen: false })
+    this.props.closeUpdate()
+  }
   onDragEnd = result => {
     const { sections } = this.state
     const { destination, source } = result
@@ -94,89 +92,103 @@ class ModalCreateField extends Component {
   }
 
   handleChange = e => {
-    this.setState({ newSection: e.target.value });
+    this.setState({ newSection: e.target.value })
   }
 
-  addSection = () => {
+  addNewSection = index => {
     const { sections, newSection } = this.state
-    if (newSection.length < 1) {
+    if (index === undefined && newSection.length < 1) {
       return
     }
+    const position = index > -1 ? index : sections.length
     const newValue = {
+      id: null,
       value: newSection,
-      index: sections.length
+      label: newSection,
+      position
     }
-    sections.push(newValue)
+
+    sections.splice(position, 0, newValue)
     this.setState({ sections, newSection: '' })
   }
 
-  render() {
+  handleSubmit = field => {
+    const { startCreateField, column, row, closeModal } = this.props
+    const { sections } = this.state
+    field['document_field_values'] = sections
+    field['codification_kind'] = row
+    field['column'] = column
+    field['row'] = row
+    
+    startCreateField(field)
+    this.handleClose()
+  }
+
+  renderModalContent = () => {
     const { closeModal, submitErrors, field_type } = this.props
     const { sections, newSection } = this.state
 
     return (
-      <ModalComponent>
+      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         <div className='modal-container'>
           <div className="modal-container__title-block">
             <h4>New input field</h4>
             <span className='info'>Limit access</span>
           </div>
           <div className="modal-container__content-block">
-            <form>
-              <div className='form-group'>
-                <InputField
-                  type='text'
-                  name='revision_number'
-                  id='revision_number'
-                  placeholder='Command (e.g. Select discipline)'
-                  label='Type in command'
-                />
-              </div>
-              <div className='form-group'>
-                <InputField
-                  type='text'
-                  name='revision_number'
-                  id='revision_number'
-                  placeholder='Title (e.g. Discipline)'
-                  label='Type in title'
-                />
-              </div>
-              <div className='form-group'>
-                <Field
-                  name='field_type'
-                  id='field_type'
-                  label='Choose field type'
-                  placeholder='Field type'
-                  options={typeVariants}
-                  value={field_type}
-                  newValue={field_type}
-                  component={SelectField}
-                />
-              </div>
-              <div className='form-group d-flex'>
+            <div className='form-group'>
+              <InputField
+                type='text'
+                name='command'
+                id='command'
+                placeholder='Command (e.g. Select discipline)'
+                label='Type in command'
+              />
+            </div>
+            <div className='form-group'>
+              <InputField
+                type='text'
+                name='title'
+                id='title'
+                placeholder='Title (e.g. Discipline)'
+                label='Type in title'
+              />
+            </div>
+            <div className='form-group'>
+              <Field
+                name='kind'
+                id='kind'
+                label='Choose field type'
+                placeholder='Field type'
+                options={typeVariants}
+                component={SelectField}
+              />
+            </div>
+            <div className='form-group d-flex'>
+              <CheckboxField
+                name='required'
+                checkBoxId='required'
+                labelClass='form-check-label mr-2'
+                text='Required field'
+              />
+              {field_type === 'select_field' &&
                 <CheckboxField
-                  name='required_field'
-                  checkBoxId='required_field'
-                  labelClass='form-check-label mr-2'
-                  text='Required field'
+                  name='enable_multi_selections'
+                  checkBoxId='enable_multi_selections'
+                  labelClass='form-check-label mx-2'
+                  text='Enable multi selections'
                 />
-                {field_type === 'dropdown' &&
-                  <CheckboxField
-                    name='enable_multi_selections'
-                    checkBoxId='enable_multi_selections'
-                    labelClass='form-check-label mx-2'
-                    text='Enable multi selections'
-                  />
-                }
-              </div>
-              {field_type === 'dropdown' &&
-              <div className="">
+              }
+            </div>
+            {field_type === 'select_field' &&
+              <div>
                 <div><label>Define selections</label></div>
                 <div><label>Selections</label></div>
                 <DraggableDropDown
                   sections={sections}
                   onDragEnd={this.onDragEnd}
-                  />
+                  addNewSection={this.addNewSection}
+                />
 
                 <div className="new-dropdown-section-block form-froup">
                   <div className="new-dropdown-section">
@@ -188,30 +200,48 @@ class ModalCreateField extends Component {
                       value={newSection}
                       placeholder={`Section ${sections.length + 1}`}
                       onChange={(e) => this.handleChange(e)}
-                      onBlur={() => this.addSection()}
-                      />
-                    <ReactSVG
-                      svgStyle={{ height: 20, marginLeft: 10 }}
-                      src={dots}
+                      onBlur={() => this.addNewSection()}
                     />
                   </div>
                 </div>
-              </div>
-              }
-            </form>
+              </div>}
           </div>
         </div>
         <div className='modal-footer'>
           <button
             type='button'
             className='btn btn-white'
-            onClick={closeModal}
+            onClick={this.handleClose}
           >
             Cancel
           </button>
           <button type='submit' className='btn btn-purple'>Create</button>
         </div>
-      </ModalComponent>
+      </form>
+    )
+  }
+
+  renderTrigger = () => {
+    return (
+      <button
+        type='button'
+        className="btn btn-create-new-field btn-purple my-4"
+        onClick={this.handleOpen}
+      >
+        Create new input field
+      </button>
+    )
+  }
+
+  render() {
+    const { modalOpen } = this.state
+    return (
+      <NewModal
+        content={this.renderModalContent()}
+        trigger={this.renderTrigger()}
+        modalOpen={modalOpen}
+        handleClose={this.handleClose}
+      />
     )
   }
 }
@@ -220,10 +250,10 @@ const selector = formValueSelector('new_input_form')
 
 const mapStateToProps = (state) => ({
   submitErrors: getFormSubmitErrors('new_input_form')(state),
-  field_type: selector(state, 'field_type')
+  field_type: selector(state, 'kind')
 })
 const mapDispatchToProps = dispatch => ({
-  createField: () => dispatch(startCreateField(values))
+  startCreateField: (section, column) => dispatch(startCreateField(section, column))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'new_input_form' })(ModalCreateField))

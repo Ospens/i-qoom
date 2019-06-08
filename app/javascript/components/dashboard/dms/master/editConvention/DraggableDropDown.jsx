@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -9,60 +10,88 @@ import sectionBelow from '../../../../../images/upload-menu1'
 import sectionAbove from '../../../../../images/upload-menu2'
 import copyIcon from '../../../../../images/folder-empty'
 
-const newDDElementOtions = [
-  {
-    title: 'New section above',
-    icon: sectionAbove,
-    onClick: (() => console.log('ssfdsf'))
-  },
-  {
-    title: 'New section below',
-    icon: sectionBelow
-  },
-  {
-    title: 'Copy',
-    icon: copyIcon
-  },
-  {
-    title: 'Delete',
-    icon: trashIcon
-  }
-]
+const portal = document.createElement('div')
+portal.classList.add('draggable-portal')
+
 class DropDownElement extends Component {
 
   render() {
-    const { index, field } = this.props
+    const { index, field, addNewSection } = this.props
 
+    const newDDElementOtions = [
+      {
+        title: 'New section above',
+        icon: sectionAbove,
+        onClick: ((index) => addNewSection(index))
+      },
+      {
+        title: 'New section below',
+        icon: sectionBelow,
+        onClick: ((index) => addNewSection(index + 1))
+      },
+      {
+        title: 'Copy',
+        icon: copyIcon
+      },
+      {
+        title: 'Delete',
+        icon: trashIcon
+      }
+    ]
+    document.body.appendChild(portal)
+    
     return (
       <Draggable draggableId={`field_${index}`} index={index}>
-        {(provided, snapshot) => (
-          <div
-            className={classnames("draggable-container", { 'dragging': snapshot.isDragging })}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-          >
-            <div className="dropdown-section">
-              <input
-                type='text'
-                className='form-control'
-                value={field.value}
-                onChange={() => (console.log('change me'))}
-              />
-              <DropDown
-                btnComponent={
-                  <ReactSVG
-                    className='svg-container'
-                    svgStyle={{ height: 25, width: 25, marginLeft: 10 }}
-                    src={dots}
-                  />
-                }
-                className='dropdown-with-icon dropleft'
-                defaultValues={newDDElementOtions}
-              />
+        {(provided, snapshot) => {
+          const usePortal = snapshot.isDragging
+
+          const child = (
+            <div
+              className={classnames("draggable-container", { 'dragging': snapshot.isDragging })}
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <div className="dropdown-section">
+                <input
+                  type='text'
+                  className='form-control'
+                  value={field.value}
+                  onChange={() => (console.log('change me'))}
+                />
+                <DropDown
+                  btnComponent={
+                    <ReactSVG
+                      className='svg-container'
+                      svgStyle={{ height: 25, width: 25, marginLeft: 10 }}
+                      src={dots}
+                    />
+                  }
+                  className='dropdown-with-icon dropleft'
+                >
+                  {newDDElementOtions.map(({icon, title, onClick }, i) => (
+                    <React.Fragment key={i}>
+                      <li
+                        className='dropdown-item'
+                        onClick={() => onClick(index)}
+                      >
+                        <ReactSVG
+                          svgStyle={{ height: 15, width: 15 }}
+                          src={icon}
+                        />
+                        <span className='item-text'>{title}</span>
+                      </li>
+                    </React.Fragment>
+                  ))}
+                </DropDown>
+              </div>
             </div>
-          </div>
-        )}
+          )
+          if (!usePortal) {
+            return child
+          }
+          return ReactDOM.createPortal(child, portal)
+        }}
       </Draggable>
     )
   }
@@ -70,7 +99,7 @@ class DropDownElement extends Component {
 
 class DropDownColumn extends Component {
   render() {
-    const { sections, column } = this.props
+    const { sections, column, addNewSection } = this.props
 
     return (
       <Droppable droppableId='column_1'>
@@ -84,6 +113,7 @@ class DropDownColumn extends Component {
             {sections.map((field, i) => {
               return (
                 <DropDownElement
+                  addNewSection={addNewSection}
                   key={i}
                   column={column}
                   field={field}
@@ -102,11 +132,11 @@ class DropDownColumn extends Component {
 export default class DraggableDropDown extends Component {
 
   render() {
-    const { sections, onDragEnd } = this.props
+    const { sections, onDragEnd, addNewSection } = this.props
 
     return (
       <DragDropContext onDragEnd={onDragEnd}>
-        <DropDownColumn sections={sections}/>
+        <DropDownColumn sections={sections} addNewSection={addNewSection}/>
       </DragDropContext>
     )
   }

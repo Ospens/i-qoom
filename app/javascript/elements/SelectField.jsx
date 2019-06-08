@@ -63,7 +63,7 @@ function SelectField({ input, options, newValue, errorField, id, label, placehol
         {...input}
         components={{ DropdownIndicator, IndicatorSeparator, Option }}
         options={options}
-        value={options.filter(option => option.value === newValue)}
+        value={options.filter(option => option.value === input.value)}
         autoFocus={false}
         styles={colourStyles(errorInfo)}
         onChange={value => input.onChange(value.value)}

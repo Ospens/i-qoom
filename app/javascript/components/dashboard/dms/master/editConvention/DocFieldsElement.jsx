@@ -2,11 +2,17 @@ import React, { Component } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import DropDown from '../../../../../elements/DropDown'
 import { Field } from 'redux-form'
+import ReactSVG from 'react-svg'
+import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
 import DragAndDropField from '../../../../../elements/DragAndDropField'
+import ModalCreateField from './ModalCreateField'
+import trashIcon from '../../../../../images/trash_bucket'
+import fieldBelow from '../../../../../images/upload-menu1'
+import fieldAbove from '../../../../../images/upload-menu2'
+import copyToFolderIcon from '../../../../../images/folder-empty'
 import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
-import { actionConventions } from '../../constants'
 
 export default class DocFieldsElement extends Component {
 
@@ -128,37 +134,54 @@ export default class DocFieldsElement extends Component {
     </React.Fragment>
   )
 
-  renderInpuByType = (field, index) => {
-    if (index === 4) {
+  renderInputByType = field => {
+    const uniqName = `${field.column}_${field.row}`
+    if (field.kind === 'upload_field') {
       return (
         <Field
           type='file'
-          name={field.codification_kind}
-          id={field.codification_kind}
+          name={uniqName}
+          id={uniqName}
           component={DragAndDropField}
         />
       )
-    } else if (index !== 2) {
-      return (
-        <React.Fragment>
-          <input
-            className='form-control'
-            type='text'
-            name={field.codification_kind}
-            id={field.codification_kind}
-            placeholder='Title'
-          />
-        </React.Fragment>
-      )
-    } else {
+    } else if (field.kind === 'select_field') {
       return (
         <Field
-          name={field.codification_kind}
-          id={field.codification_kind}
+          name={uniqName}
+          id={uniqName}
+          options={field.document_field_values}
+          placeholder={field.command}
+          component={SelectField}
+        />
+      )
+    }  else if (field.kind === 'textarea_field') {
+      return (
+        <Field
+          name={uniqName}
+          id={uniqName}
           value={{}}
           newValue={{}}
           options={[]}
           component={SelectField}
+        />
+      )
+    } else if (field.kind === 'date_field') {
+      return (
+        <Field
+          name={uniqName}
+          id={uniqName}
+          options={[]}
+          component={SelectField}
+        />
+      )
+    } else {
+      return (
+        <InputField
+          type='text'
+          name={uniqName}
+          id={uniqName}
+          placeholder={field.command}
         />
       )
     }
@@ -166,6 +189,28 @@ export default class DocFieldsElement extends Component {
 
   render() {
     const { index, field, column } = this.props
+    const { formField } = this.state
+
+
+    const actionConventions = [
+      {
+        title: 'New field above',
+        icon: fieldAbove,
+        onClick: () => this.setState({ formField: true })
+      },
+      {
+        title: 'New field below',
+        icon: fieldBelow
+      },
+      {
+        title: 'Copy',
+        icon: copyToFolderIcon
+      },
+      {
+        title: 'Delete',
+        icon: trashIcon
+      }
+    ]
 
     return (
       <Draggable draggableId={`column_${column}_${index}`} index={index}>
@@ -176,6 +221,13 @@ export default class DocFieldsElement extends Component {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
+            {formField &&
+              <ModalCreateField
+                closeModal={() => this.setState({ formField: false })}
+                column={column}
+                row={index}
+              />
+            }
             {field.title === 'test'
               ? this.renderDocIdFields()
               : <div className='form-group'>
@@ -183,12 +235,26 @@ export default class DocFieldsElement extends Component {
                     <DropDown
                       dots={true}
                       className='dropdown-with-icon form-group_drop-down'
-                      defaultValues={actionConventions}
-                    />
+                    >
+                    {actionConventions.map(({ icon, title, onClick }, i) => (
+                      <React.Fragment key={i}>
+                        <li
+                          className='dropdown-item'
+                          onClick={onClick}
+                        >
+                          <ReactSVG
+                            svgStyle={{ height: 15, width: 15 }}
+                            src={icon}
+                          />
+                          <span className='item-text'>{title}</span>
+                        </li>
+                      </React.Fragment>
+                    ))}
+                    </DropDown>
                     <label htmlFor="document_title">{field.title}</label>
                     {index === 3 && this.accessList()}
                   </div>
-                  {this.renderInpuByType(field, index)}
+                  {this.renderInputByType(field, index)}
                 {this.editButton()}
               </div>
               }

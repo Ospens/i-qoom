@@ -1,9 +1,11 @@
 import {
-  EDITING_CONVENTION
+  EDITING_CONVENTION,
+  NEW_FIELD,
+  ORDER_FILEDS
 } from '../actions/types'
 
 const groupFields = fields => {
-  const sorted = fields.reduce((accumulator, currentValue, index, array) => {
+  const sorted = fields.reduce((accumulator, currentValue) => {
     accumulator[currentValue.column].push(currentValue)
     return accumulator
   }, { 1: [], 2: [] })
@@ -29,7 +31,7 @@ const initialState = {
     document_field_values: []
   },
   current: {
-    grouped_fields: []
+    grouped_fields: [{}]
   }
 }
 
@@ -41,6 +43,20 @@ const conventionReducer = (state = initialState, action) => {
       current: {
         ...action.payload,
         grouped_fields: groupFields(action.payload.document_fields)
+      }
+    }
+  case NEW_FIELD:
+    return {
+      ...state,
+      current: {
+        grouped_fields: action.payload
+      }
+    }
+  case ORDER_FILEDS:
+    return {
+      ...state,
+      current: {
+        grouped_fields: action.payload
       }
     }
   default:

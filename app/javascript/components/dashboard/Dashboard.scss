@@ -193,11 +193,17 @@ button:disabled {
 }
 
 .modal {
-  overflow: auto !important;
+  left: auto !important;
+  top: auto !important;
+  margin: 1rem auto !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: inherit !important;
 }
 
-.modal-dialog {
-  margin-top: 25vh !important;
+.modal-window {
+  min-width: 500px;
+  will-change: top, left, margin, opacity !important;
   line-height: 1.5;
 
   h4 {
@@ -207,7 +213,7 @@ button:disabled {
     margin-bottom: 40px;
   }
 
-  .modal-body{
+  .modal-body {
     display: flex;
     flex-direction: column;
     justify-content: center;

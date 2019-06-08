@@ -10,9 +10,6 @@ import editDocIcon from '../../../images/common-file-edit'
 import revisionIcon from '../../../images/Revise_2'
 import allDocIcon from '../../../images/folder-image'
 import myDocIcon from '../../../images/folder-image-1'
-import trashIcon from '../../../images/trash_bucket'
-import fieldBelow from '../../../images/upload-menu1'
-import fieldAbove from '../../../images/upload-menu2'
 
 export const actionDDitems = [
   {
@@ -46,25 +43,6 @@ export const actionDDitems = [
   {
     title: 'Download as list',
     icon: downloadDetailsIcon
-  }
-]
-
-export const actionConventions = [
-  {
-    title: 'New field above',
-    icon: fieldAbove
-  },
-  {
-    title: 'New field below',
-    icon: fieldBelow
-  },
-  {
-    title: 'Copy',
-    icon: copyToFolderIcon
-  },
-  {
-    title: 'Delete',
-    icon: trashIcon
   }
 ]
 

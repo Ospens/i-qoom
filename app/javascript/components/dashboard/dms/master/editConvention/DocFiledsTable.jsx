@@ -1,93 +1,35 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { reorderFields } from '../../../../../actions/conventionActions'
 import { DragDropContext } from 'react-beautiful-dnd'
 import DocFieldsColumn from './DocFieldsColumn'
 import ModalCreateField from './ModalCreateField'
 
-export default class DocFiledsTable extends Component {
-
-  state = {
-    fields: this.props.fields,
-    creatingField: true
-  }
+class DocFiledsTable extends Component {
 
   onDragEnd = result => {
-    const { fields } = this.state
-    const { destination, source } = result
-    let { draggableId } = result
-    draggableId = draggableId.replace(/column_(.)_/g, '')
-
-    if (!destination) {
-      return
-    }
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-      ) {
-      return
-    }
-
-    if (source.droppableId === destination.droppableId) {
-      const column = fields[source.droppableId]
-      const newFields = new Array(...column)
-
-      newFields.splice(source.index, 1)
-      newFields.splice(destination.index, 0, column[draggableId])
-
-      const newState = {
-        fields: {
-          ...fields,
-          [source.droppableId]: newFields
-        }
-      }
-
-      this.setState(newState)
-      return
-    }
-
-    const startColumn = fields[source.droppableId]
-    const startFields = new Array(...startColumn)
-
-    startFields.splice(source.index, 1)
-
-    const finishColumn = fields[destination.droppableId]
-    const finishFields = new Array(...finishColumn)
-    finishFields.splice(destination.index, 0, startColumn[draggableId])
-
-    const newState = {
-      fields: {
-        ...fields,
-        [source.droppableId]: startFields,
-        [destination.droppableId]: finishFields
-      }
-    }
-
-    this.setState(newState)
+    const { fields, reorderFields } = this.props
+    reorderFields(result, fields)
   }
 
   render() {
-    const { fields, creatingField } = this.state
-
+    const { fields } = this.props
+    const fieldsKeys = Object.keys(fields)
+    console.log(fields)
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
-        {creatingField &&
-          <ModalCreateField
-            closeModal={() => this.setState({ creatingField: false })}
-          />
-        }
         <form className='form-body p-4'>
           <div className='row'>
-            {Object.keys(fields).map((key, i) => (
+            {fieldsKeys.map((key, i) => (
               <DocFieldsColumn column={i + 1} fields={fields[key]} key={i}/>
             ))}
           </div>
-          <button
-            type='button'
-            className="btn btn-create-new-field btn-purple my-4"
-            onClick={() => this.setState({ creatingField: true })}
-          >
-            Create new input field
-          </button>
+
+          <ModalCreateField
+            column={fieldsKeys.length}
+            row={fields[fieldsKeys.length].length + 1}
+            closeUpdate={() => this.forceUpdate()}
+          />
         </form>
         <div className='dms-footer edit-convetion-footer'>
           <div className='changes-description'>
@@ -103,3 +45,12 @@ export default class DocFiledsTable extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+})
+
+const mapDispatchToProps = dispatch => ({
+  reorderFields: (result, fields) => dispatch(reorderFields(result, fields))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DocFiledsTable)

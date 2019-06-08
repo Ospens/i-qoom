@@ -21,7 +21,7 @@ class ModalWelcome extends Component {
           role='dialog'
           aria-modal='true'
         >
-          <div className='modal-dialog' role='document'>
+          <div className='modal-window' role='document'>
             <div className='modal-content'>
               <div className='modal-body'>
                 <h4>Welcome to i-Qoom!</h4>
