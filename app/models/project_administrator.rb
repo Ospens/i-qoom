@@ -4,7 +4,8 @@ class ProjectAdministrator < ApplicationRecord
                  :awaiting_confirmation,
                  :active ]
 
-  belongs_to :project
+  belongs_to :project,
+    inverse_of: :admins
 
   belongs_to :user, required: false
 
@@ -28,6 +29,16 @@ class ProjectAdministrator < ApplicationRecord
 
   def confirmation_token
     ::JsonWebToken.encode(admin_id: id, email: email)
+  end
+
+  def remove
+    if project.admins.count > 1
+      destroy
+      true
+    else
+      errors.add(:project, :last_admin)
+      false
+    end
   end
 
   private

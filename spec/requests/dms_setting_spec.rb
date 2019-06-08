@@ -4,11 +4,6 @@ describe DmsSetting, type: :request do
   let(:json) { JSON(response.body) }
   let(:project) { FactoryBot.create(:project) }
 
-  def credentials(user)
-    session = Session.new(login: user.email, password: user.password)
-    { 'Authorization' => session.auth_token }
-  end
-
   it '#edit' do
     get "/api/v1/projects/#{project.id}/dms_settings/edit", headers: credentials(project.user)
     expect(response).to have_http_status(:success)

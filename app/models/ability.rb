@@ -31,6 +31,10 @@ class Ability
     if user.present?
       # Project
       can :manage, Project, user_id: user.id
+      # ProjectAdministrator
+      can :manage, ProjectAdministrator do |project_admin|
+        project_admin.project.user_id == user.id
+      end
       # Convention
       can :manage, Convention do |convention|
         convention.project.user == user

@@ -4,11 +4,6 @@ describe Convention, type: :request do
   let(:headers) { { 'CONTENT_TYPE' => 'application/json' } }
   let(:json) { JSON(response.body) }
 
-  def credentials(user)
-    session = Session.new(login: user.email, password: user.password)
-    { 'Authorization' => session.auth_token }
-  end
-
   it '#new' do
     project = FactoryBot.create(:project)
     get "/api/v1/projects/#{project.id}/conventions/edit", headers: credentials(project.user)
@@ -25,7 +20,7 @@ describe Convention, type: :request do
       get "/api/v1/projects/#{convention.project.id}/conventions/edit", headers: credentials(convention.project.user)
       expect(response).to have_http_status(:success)
       expect(json['id']).to eql(convention.id)
-      expect(json['document_fields'].count).to eql(8)
+      expect(json['document_fields'].count).to eql(9)
       field = json['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
       expect(field['document_field_values'].length).to eql(1)
     end
@@ -38,7 +33,7 @@ describe Convention, type: :request do
       patch "/api/v1/projects/#{convention.project.id}/conventions",\
         params: { convention: { document_fields_attributes: { id: convention_field.id, title: title } } },\
         headers: credentials(project.user)
-      expect(convention.document_fields.count).to eql(8)
+      expect(convention.document_fields.count).to eql(9)
       expect(convention_field.reload.title).to eql(title)
       patch "/api/v1/projects/#{convention.project.id}/conventions",\
         params: { convention: { document_fields_attributes: { id: convention_field.id, column: 3 } } },\
