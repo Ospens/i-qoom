@@ -4,7 +4,8 @@ class DocumentField < ApplicationRecord
                :textarea_field,
                :upload_field,
                :date_field,
-               :project_phase_field ]
+               :project_phase_field,
+               :hidden_field ]
 
   enum codification_kind: [ :originating_company,
                             :receiving_company,
@@ -42,8 +43,8 @@ class DocumentField < ApplicationRecord
                              !files.any? },
                     on: :create
 
-  after_create :update_revision_number,
-               if: -> { parent.class.name == 'Document' && revision_number? }
+  after_save :update_revision_number,
+             if: -> { parent.class.name == 'Document' && revision_number? }
 
   after_create :update_revision_version,
                if: -> { parent.class.name == 'Document' && revision_version? }
@@ -122,12 +123,12 @@ class DocumentField < ApplicationRecord
   def build_for_edit_document
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
-    if upload_field? || document_native_file?
-      original_attributes['files'] = []
-      files.each do |file|
-        original_attributes['files'] << { filename: file.filename.to_s }
-      end
-    end
+    # if upload_field? || document_native_file?
+    #   original_attributes['files'] = []
+    #   files.each do |file|
+    #     original_attributes['files'] << { filename: file.filename.to_s }
+    #   end
+    # end
     if codification_kind.present?
       original_attributes['document_field_values_attributes'] = []
       document_field_values.each do |field_value|
@@ -139,9 +140,9 @@ class DocumentField < ApplicationRecord
   end
 
   def can_build?(user)
-    return false if parent.class.name != 'Convention'
+    return false if parent.class.name != 'Convention' || revision_version?
     can_build_codification_field?(user) ||
-    (!codification_kind.present? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field]).any?)
+    (!codification_kind.present? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field], enabled: true).any?)
   end
 
   def should_have_document_field_values?
@@ -157,7 +158,7 @@ class DocumentField < ApplicationRecord
   end
 
   def codification_kind_as_text_field?
-    document_number? || revision_number? || revision_version?
+    document_number? || revision_number?
   end
 
   private
@@ -220,10 +221,10 @@ class DocumentField < ApplicationRecord
       elsif additional_information?
         # nothing, not required
       elsif value.blank?
-        errors.add(:value, :is_required)
+        errors.add(:value, :codification_kind_value_is_required)
       end
     elsif (text_field? || textarea_field? || date_field?)
-      errors.add(:value, :is_required) if value.blank?
+      errors.add(:value, :text_value_is_required) if value.blank?
     elsif (select_field? || project_phase_field?)
       if !document_field_values.select{ |i| i['selected'] == true }.any?
         errors.add(:document_field_values, :is_required)

@@ -89,7 +89,7 @@ describe DocumentFolder, type: :request do
       get "/api/v1/document_folders/#{document_folder.id}", headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json[0]['id']).to eql(document.id)
-      expect(json[0]['document_fields'].length).to eql(4)
+      expect(json[0]['document_fields'].length).to eql(9)
       expect(json[0]['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values'].length).to eql(1)
     end
   end
