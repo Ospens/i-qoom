@@ -192,7 +192,7 @@ button:disabled {
   display: inline-block;
 }
 
-.modal {
+.modal:not(#exampleModalLong) {
   left: auto !important;
   top: auto !important;
   margin: 1rem auto !important;
@@ -223,6 +223,7 @@ button:disabled {
     padding-right: 30px;
 
     &.terms-modal {
+      max-width: 490px;
       padding-left: 60px;
       padding-right: 60px;
 
@@ -300,6 +301,7 @@ button:disabled {
   }
 
   .new-project-modal {
+    max-width: 490px;
     h4 {
       padding-left: 30px;
       padding-top: 30px;
