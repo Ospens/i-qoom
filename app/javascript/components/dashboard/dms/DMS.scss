@@ -1127,14 +1127,18 @@ input.search-input {
   border-style: dashed;
   border-color: #fff;
 
+  .btn.btn-white-blue {
+    height: fit-content;
+  }
+
   &.dragging {
     border-color: lightblue;
 
     .form-group, .d-flex {
       background-color: lightblue;
 
-      div {
-        background-color: lightblue;
+      .btn.btn-white-blue {
+        background-color: lightblue !important;
       }
     }
   }
@@ -1146,15 +1150,13 @@ input.search-input {
     border-radius: 10px; 
     display: flex;
     flex-direction: column;
-    transition: 0s ease-in-out;
     margin: 5px;
 
     .form-group_drop-down, .d-flex {
-      transition: 0s ease-in-out;
       background-color: transparent;
+      height: fit-content;
 
       div, svg {
-        transition: 0s ease-in-out;
         background-color: transparent;
       }
     }
@@ -1169,13 +1171,12 @@ input.search-input {
     }
 
     &:hover {
-      transition: 0s ease-in-out;
       background-color:#f9f9f9;
       cursor: pointer;
 
-      .form-group_drop-down {
-        div {
-          background-color:#f9f9f9;
+      .form-group, .d-flex {
+        .btn.btn-white-blue {
+          background-color:#f9f9f9 !important;
         }
       }
     }

@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Draggable } from 'react-beautiful-dnd'
 import DropDown from '../../../../../elements/DropDown'
+import {
+  setInitialValuesField,
+  removeField
+} from '../../../../../actions/conventionActions'
 import { Field } from 'redux-form'
 import ReactSVG from 'react-svg'
 import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
 import DragAndDropField from '../../../../../elements/DragAndDropField'
-import ModalCreateField from './ModalCreateField'
 import trashIcon from '../../../../../images/trash_bucket'
 import fieldBelow from '../../../../../images/upload-menu1'
 import fieldAbove from '../../../../../images/upload-menu2'
@@ -14,30 +18,43 @@ import copyToFolderIcon from '../../../../../images/folder-empty'
 import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
 
-export default class DocFieldsElement extends Component {
+class DocFieldsElement extends Component {
 
-  state = {
-    codificationChange: false
+  editButton = row => {
+    const { setInitialValuesField, field, modalCreateField } = this.props
+    if (!field.codification_kind) {
+      const trigger =
+        <button
+          type='button'
+          className="btn edit-button"
+          onClick={() => setInitialValuesField(field)}
+        >
+          Edit
+        </button>
+      return (
+        modalCreateField(field.column, row, trigger, true)
+      )
+    } else {
+      return (
+        <Popup
+          trigger={<button type='button' className="btn edit-button">Edit</button>}
+          on='click'
+          position='left center'
+        >
+          <div className='tooltip-block'>
+            <span>
+              You try to make changes to the codification-section.
+              Do you want to jump to codification?
+            </span>
+            <div className="buttons-row">
+              <button className="btn btn-white">Cancel</button>
+              <a href="#" className='btn btn-purple'>Go</a>
+            </div>
+          </div>
+        </Popup>
+      )
+    }
   }
-
-  editButton = () => (
-    <Popup
-      trigger={<button type='button' className="btn edit-button">Edit</button>}
-      on='click'
-      position='left center'
-    >
-      <div className='tooltip-block'>
-        <span>
-          You try to make changes to the codification-section.
-          Do you want to jump to codification?
-        </span>
-        <div className="buttons-row">
-          <button className="btn btn-white">Cancel</button>
-          <a href="#" className='btn btn-purple'>Go</a>
-        </div>
-      </div>
-    </Popup>
-  )
 
   accessList = () => (
     <Popup
@@ -155,7 +172,7 @@ export default class DocFieldsElement extends Component {
           component={SelectField}
         />
       )
-    }  else if (field.kind === 'textarea_field') {
+    } else if (field.kind === 'textarea_field') {
       return (
         <Field
           name={uniqName}
@@ -187,28 +204,39 @@ export default class DocFieldsElement extends Component {
     }
   }
 
-  render() {
-    const { index, field, column } = this.props
-    const { formField } = this.state
+  renderMenuItem = (icon, title) => (
+    <li className='dropdown-item'>
+      <ReactSVG
+        svgStyle={{ height: 15, width: 15 }}
+        src={icon}
+      />
+      <span className='item-text'>{title}</span>
+    </li>
+  )
 
+  renderCopyElement = () => {
+    const { index, column, field, modalCreateField, setInitialValuesField } = this.props
+    const copyTrigger = this.renderMenuItem(copyToFolderIcon, 'Copy')
+    return (
+      <div onClick={() => setInitialValuesField(field)}>
+        {modalCreateField(column, index + 1, copyTrigger)}
+      </div>
+    )
+  }
+
+  render() {
+    const { index, field, column, modalCreateField, removeField } = this.props
 
     const actionConventions = [
       {
         title: 'New field above',
         icon: fieldAbove,
-        onClick: () => this.setState({ formField: true })
+        offset: index
       },
       {
         title: 'New field below',
-        icon: fieldBelow
-      },
-      {
-        title: 'Copy',
-        icon: copyToFolderIcon
-      },
-      {
-        title: 'Delete',
-        icon: trashIcon
+        icon: fieldBelow,
+        offset: index + 1
       }
     ]
 
@@ -221,41 +249,39 @@ export default class DocFieldsElement extends Component {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            {formField &&
-              <ModalCreateField
-                closeModal={() => this.setState({ formField: false })}
-                column={column}
-                row={index}
-              />
-            }
             {field.title === 'test'
               ? this.renderDocIdFields()
               : <div className='form-group'>
-                  <div className="d-flex">
-                    <DropDown
-                      dots={true}
-                      className='dropdown-with-icon form-group_drop-down'
+                <div className="d-flex">
+                  <DropDown
+                    dots={true}
+                    className='dropdown-with-icon form-group_drop-down'
+                  >
+                    {actionConventions.map(({ icon, title, offset }, i) => {
+                      const trigger = this.renderMenuItem(icon, title)
+                      return (
+                        <React.Fragment key={i}>
+                          {modalCreateField(column, offset, trigger)}
+                        </React.Fragment>
+                      )
+                    })}
+                    {this.renderCopyElement()}
+                    <li
+                      className='dropdown-item'
+                      onClick={() => removeField(column, index)}
                     >
-                    {actionConventions.map(({ icon, title, onClick }, i) => (
-                      <React.Fragment key={i}>
-                        <li
-                          className='dropdown-item'
-                          onClick={onClick}
-                        >
-                          <ReactSVG
-                            svgStyle={{ height: 15, width: 15 }}
-                            src={icon}
-                          />
-                          <span className='item-text'>{title}</span>
-                        </li>
-                      </React.Fragment>
-                    ))}
-                    </DropDown>
-                    <label htmlFor="document_title">{field.title}</label>
-                    {index === 3 && this.accessList()}
-                  </div>
-                  {this.renderInputByType(field, index)}
-                {this.editButton()}
+                      <ReactSVG
+                        svgStyle={{ height: 15, width: 15 }}
+                        src={trashIcon}
+                      />
+                      <span className='item-text'>Delete</span>
+                    </li>
+                  </DropDown>
+                  <label htmlFor="document_title">{field.title}</label>
+                  {index === 3 && this.accessList()}
+                </div>
+                {this.renderInputByType(field, index)}
+                {this.editButton(index)}
               </div>
               }
           </div>
@@ -264,3 +290,10 @@ export default class DocFieldsElement extends Component {
     )
   }
 }
+
+const mapDispatchToProps = dispatch => ({
+  setInitialValuesField: (field) => dispatch(setInitialValuesField(field)),
+  removeField: (column, row) => dispatch(removeField(column, row))
+})
+
+export default connect(null, mapDispatchToProps)(DocFieldsElement)

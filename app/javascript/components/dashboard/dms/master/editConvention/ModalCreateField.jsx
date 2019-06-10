@@ -4,9 +4,13 @@ import {
   getFormSubmitErrors,
   reduxForm,
   formValueSelector,
-  Field
+  Field,
+  destroy
 } from 'redux-form'
-import { startCreateField } from '../../../../../actions/conventionActions'
+import {
+  updateFields,
+  discardInitialValues
+} from '../../../../../actions/conventionActions'
 import DraggableDropDown from './DraggableDropDown'
 import InputField from '../../../../../elements/InputField'
 import NewModal from '../../../../../elements/Modal'
@@ -46,27 +50,35 @@ const typeVariants = [
   }
 ]
 
+const initState = {
+  sections: [],
+  newSection: '',
+  modalOpen: false 
+}
+
 class ModalCreateField extends Component {
 
-  state = {
-    sections: [],
-    newSection: '',
-    modalOpen: false 
+  state = initState
+
+  componentWillReceiveProps(newProps) {
+    const { initialValues: { document_field_values } } = newProps
+    this.setState({ sections: document_field_values || [] })
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => {
-    this.setState({ modalOpen: false })
-    this.props.closeUpdate()
+    const { destroyForm, discardInitialValues } = this.props
+    this.setState({ ...initState })
+    destroyForm()
+    discardInitialValues()
   }
+
   onDragEnd = result => {
     const { sections } = this.state
     const { destination, source } = result
 
-    if (!destination) {
-      return
-    }
+    if (!destination) return
 
     if (
       destination.droppableId === source.droppableId &&
@@ -91,15 +103,12 @@ class ModalCreateField extends Component {
     this.setState(newState)
   }
 
-  handleChange = e => {
-    this.setState({ newSection: e.target.value })
-  }
+  handleChange = e =>  this.setState({ newSection: e.target.value })
 
   addNewSection = index => {
     const { sections, newSection } = this.state
-    if (index === undefined && newSection.length < 1) {
-      return
-    }
+    if (index === undefined && newSection.length < 1) return
+
     const position = index > -1 ? index : sections.length
     const newValue = {
       id: null,
@@ -113,19 +122,18 @@ class ModalCreateField extends Component {
   }
 
   handleSubmit = field => {
-    const { startCreateField, column, row, closeModal } = this.props
+    const { updateFields, column, row, isEdit } = this.props
     const { sections } = this.state
     field['document_field_values'] = sections
-    field['codification_kind'] = row
     field['column'] = column
     field['row'] = row
     
-    startCreateField(field)
+    updateFields(field, isEdit)
     this.handleClose()
   }
 
   renderModalContent = () => {
-    const { closeModal, submitErrors, field_type } = this.props
+    const { field_type, isEdit } = this.props
     const { sections, newSection } = this.state
 
     return (
@@ -139,19 +147,19 @@ class ModalCreateField extends Component {
             <div className='form-group'>
               <InputField
                 type='text'
-                name='command'
-                id='command'
-                placeholder='Command (e.g. Select discipline)'
-                label='Type in command'
+                name='title'
+                id='title'
+                placeholder='Title (e.g. Discipline)'
+                label='Type in title'
               />
             </div>
             <div className='form-group'>
               <InputField
                 type='text'
-                name='title'
-                id='title'
-                placeholder='Title (e.g. Discipline)'
-                label='Type in title'
+                name='command'
+                id='command'
+                placeholder='Command (e.g. Select discipline)'
+                label='Type in command'
               />
             </div>
             <div className='form-group'>
@@ -215,30 +223,30 @@ class ModalCreateField extends Component {
           >
             Cancel
           </button>
-          <button type='submit' className='btn btn-purple'>Create</button>
+          <button type='submit' className='btn btn-purple'>
+            {isEdit ? 'Update' : 'Create' }
+          </button>
         </div>
       </form>
     )
   }
 
-  renderTrigger = () => {
+  renderTrigger = content => {
     return (
-      <button
-        type='button'
-        className="btn btn-create-new-field btn-purple my-4"
-        onClick={this.handleOpen}
-      >
-        Create new input field
-      </button>
+      <div onClick={this.handleOpen}>
+        {content}
+      </div>
     )
   }
 
   render() {
     const { modalOpen } = this.state
+    const { triggerContent } = this.props
+
     return (
       <NewModal
         content={this.renderModalContent()}
-        trigger={this.renderTrigger()}
+        trigger={this.renderTrigger(triggerContent)}
         modalOpen={modalOpen}
         handleClose={this.handleClose}
       />
@@ -246,14 +254,23 @@ class ModalCreateField extends Component {
   }
 }
 
-const selector = formValueSelector('new_input_form')
+const selector = formValueSelector('convention_input_form')
 
-const mapStateToProps = (state) => ({
-  submitErrors: getFormSubmitErrors('new_input_form')(state),
-  field_type: selector(state, 'kind')
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('convention_input_form')(state),
+  field_type: selector(state, 'kind'),
+  initialValues: state.conventions.editingField
 })
+
 const mapDispatchToProps = dispatch => ({
-  startCreateField: (section, column) => dispatch(startCreateField(section, column))
+  updateFields: (field, edit) => dispatch(updateFields(field, edit)),
+  destroyForm: () => dispatch(destroy('convention_input_form')),
+  discardInitialValues: () => dispatch(discardInitialValues(''))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'new_input_form' })(ModalCreateField))
+export default connect(
+  mapStateToProps, mapDispatchToProps
+  )(reduxForm({
+    form: 'convention_input_form',
+    enableReinitialize: true
+  })(ModalCreateField))

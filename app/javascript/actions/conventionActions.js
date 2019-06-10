@@ -1,8 +1,11 @@
 import axios from 'axios'
 import {
   EDITING_CONVENTION,
-  NEW_FIELD,
-  ORDER_FILEDS
+  UPDATED_FIELDS,
+  ORDER_FILEDS,
+  EDITING_FIELD,
+  REMOVE_FIELD,
+  DISCARD_EDIT_VALUES
 } from './types'
 import { errorNotify } from '../elements/Notices'
 
@@ -22,7 +25,17 @@ export const startEditConvention = () => (dispatch, getState) => {
       headers
     })
       .then(response => {
-        dispatch(editingConvention(response.data))
+        const { data } = response
+        const sorted = data.document_fields.reduce((accumulator, currentValue) => {
+          accumulator[currentValue.column].push(currentValue)
+          return accumulator
+        }, { 1: [], 2: [] })
+
+        sorted[1].sort((a, b) => a.row - b.row)
+        sorted[2].sort((a, b) => a.row - b.row)
+        data.grouped_fields = sorted
+
+        dispatch(editingConvention(data))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -30,24 +43,57 @@ export const startEditConvention = () => (dispatch, getState) => {
   )
 }
 
-export const startCreateField = field => (dispatch, getState) => {
+export const removeField = (column, row) => (dispatch, getState) => {
   const { conventions: { current: { grouped_fields } } } = getState()
-  grouped_fields[field.column].splice(field.row, 0, field)
+  const newColumn = new Array(...grouped_fields[column])
+  newColumn.splice(row, 1)
+
+  const newFields = {
+    ...grouped_fields,
+    [column]: newColumn
+  }
 
   return dispatch({
-    type: NEW_FIELD,
-    payload: grouped_fields
+    type: REMOVE_FIELD,
+    payload: newFields
   })
 }
 
-export const reorderFields = (result, fields) => (dispatch, getState) => {
+export const updateFields = (field, edit = false) => (dispatch, getState) => {
+  const { conventions: { current: { grouped_fields } } } = getState()
+  const { column, row } = field
+  const newColumn = new Array(...grouped_fields[column])
+
+  if (edit) {
+    newColumn[row] = field
+  } else {
+    newColumn.splice(row, 0, field)
+  }
+
+  const newFields = {
+    ...grouped_fields,
+    [column]: newColumn
+  }
+
+  return dispatch({
+    type: UPDATED_FIELDS,
+    payload: newFields
+  })
+}
+
+export const setInitialValuesField = field => dispatch => dispatch({
+  type: EDITING_FIELD,
+  payload: field
+})
+
+export const discardInitialValues = () => ({ type: DISCARD_EDIT_VALUES })
+
+export const reorderFields = (result, fields) => dispatch => {
   const { destination, source } = result
   let { draggableId } = result
   draggableId = draggableId.replace(/column_(.)_/g, '')
 
-  if (!destination) {
-    return
-  }
+  if (!destination) return
 
   if (
     destination.droppableId === source.droppableId

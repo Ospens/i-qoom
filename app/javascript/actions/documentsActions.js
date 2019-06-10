@@ -35,8 +35,8 @@ export const newDocument = () => (dispatch, getState) => {
     axios.get(`/api/v1/projects/${1}/documents/new`, {
       headers
     })
-      .then(response => {
-        console.log(response)
+      .then(() => {
+        // console.log(response)
       })
       .catch(() => {
         errorNotify('Something went wrong')

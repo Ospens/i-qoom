@@ -1,36 +1,17 @@
 import {
   EDITING_CONVENTION,
-  NEW_FIELD,
-  ORDER_FILEDS
+  UPDATED_FIELDS,
+  ORDER_FILEDS,
+  EDITING_FIELD,
+  REMOVE_FIELD,
+  DISCARD_EDIT_VALUES
 } from '../actions/types'
-
-const groupFields = fields => {
-  const sorted = fields.reduce((accumulator, currentValue) => {
-    accumulator[currentValue.column].push(currentValue)
-    return accumulator
-  }, { 1: [], 2: [] })
-
-  sorted[1].sort((a, b) => a.row - b.row)
-  sorted[2].sort((a, b) => a.row - b.row)
-  return sorted
-}
 
 const initialState = {
   conventions: [],
-  creating_field: {
-    parent_type: '',
-    parent_id: null,
-    kind: '',
-    codification_kind: '',
-    column: null,
-    row: null,
-    required: false,
-    multiselect: false,
-    title: '',
-    command: '',
-    document_field_values: []
-  },
+  editingField: {},
   current: {
+    document_field_values: [],
     grouped_fields: [{}]
   }
 }
@@ -41,16 +22,33 @@ const conventionReducer = (state = initialState, action) => {
     return {
       ...state,
       current: {
-        ...action.payload,
-        grouped_fields: groupFields(action.payload.document_fields)
+        ...action.payload
       }
     }
-  case NEW_FIELD:
+  case UPDATED_FIELDS:
+    return {
+      ...state,
+      current: {
+        grouped_fields: action.payload
+      },
+      editingField: {}
+    }
+  case REMOVE_FIELD:
     return {
       ...state,
       current: {
         grouped_fields: action.payload
       }
+    }
+  case EDITING_FIELD:
+    return {
+      ...state,
+      editingField: action.payload
+    }
+  case DISCARD_EDIT_VALUES:
+    return {
+      ...state,
+      editingField: {}
     }
   case ORDER_FILEDS:
     return {

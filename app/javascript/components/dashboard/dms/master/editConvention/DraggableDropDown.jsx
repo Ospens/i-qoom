@@ -129,7 +129,7 @@ class DropDownColumn extends Component {
   }
 }
 
-export default class DraggableDropDown extends Component {
+class DraggableDropDown extends Component {
 
   render() {
     const { sections, onDragEnd, addNewSection } = this.props
@@ -141,3 +141,5 @@ export default class DraggableDropDown extends Component {
     )
   }
 }
+
+export default DraggableDropDown 

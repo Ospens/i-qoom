@@ -62,8 +62,6 @@ class EditConvention extends Component {
   )
 
   renderTab = () => {
-    const { current: { grouped_fields } } = this.props
-
     return (
       <div className='dms-content bordered edit-convention'>
 
@@ -107,7 +105,7 @@ class EditConvention extends Component {
             </ul>
           </div>
         </div>
-        <DocumentFiledsTable fields={grouped_fields} />
+        <DocumentFiledsTable />
       </div>
     )
   }
@@ -139,8 +137,6 @@ class EditConvention extends Component {
     )
   }
 }
-
-const selector = formValueSelector('convention_form')
 
 const mapStateToProps = (state) => ({
   submitErrors: getFormSubmitErrors('convention_form')(state),
