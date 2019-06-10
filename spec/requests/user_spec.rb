@@ -3,6 +3,7 @@ require 'rails_helper'
 describe "User", type: :request do
   headers = { "CONTENT_TYPE" => "application/json" }
   let(:user) { FactoryBot.attributes_for(:user) }
+  let(:json) { JSON(response.body) }
 
   context "registration" do
     it 'should get a status "error"' do
@@ -10,7 +11,7 @@ describe "User", type: :request do
         params: { user: user.slice(:email) }.to_json,
         headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON(response.body)["status"]).to eq("error")
+      expect(json["status"]).to eq("error")
     end
 
     it 'should get a status "success"' do
@@ -18,7 +19,7 @@ describe "User", type: :request do
         params: { user: user }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
-      expect(JSON(response.body)["status"]).to eq("success")
+      expect(json["status"]).to eq("success")
     end
   end
 end

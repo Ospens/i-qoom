@@ -3,11 +3,6 @@ require 'rails_helper'
 describe DocumentFolder, type: :request do
   let(:json) { JSON(response.body) }
 
-  def credentials(user)
-    session = Session.new(login: user.email, password: user.password)
-    { 'Authorization' => session.auth_token }
-  end
-
   context '#create' do
     let(:title) { Faker::Lorem.sentence }
     let(:convention) { FactoryBot.create(:convention) }
