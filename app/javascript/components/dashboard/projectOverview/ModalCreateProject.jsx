@@ -16,8 +16,8 @@ import ModalBillingAddress from './ModalBillingAddress'
 class ModalCreateProject extends Component {
 
   state = {
-    modalOpen: true,
-    step: 5,
+    modalOpen: false,
+    step: 1,
     termsAccepted: false,
   }
 
