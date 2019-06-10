@@ -6,11 +6,6 @@ describe DocumentRight, type: :request do
   let(:project) { convention.project }
   let(:user) { FactoryBot.create(:user) }
 
-  def credentials(user)
-    session = Session.new(login: user.email, password: user.password)
-    { 'Authorization' => session.auth_token }
-  end
-
   before do
     originating_company =
       convention.document_fields.find_by(codification_kind: :originating_company)

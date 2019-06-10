@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="107.627" height="20.512" viewBox="0 0 107.627 20.512">
+  <g id="form_1" transform="translate(-1484 -1250.571)">
+    <g id="Form_1-2" data-name="Form_1" transform="translate(1484 1250.571)" fill="#fcffff" stroke="#e9f3f5" stroke-linejoin="round" stroke-width="1">
+      <rect width="107.627" height="20.512" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="106.627" height="19.512" rx="4.5" fill="none"/>
+    </g>
+    <path id="arrow-button-up" d="M7.385,3.98,3.97.1h0a.331.331,0,0,0-.479,0L.077,3.98a.307.307,0,0,0,.033.44L.686,4.9a.32.32,0,0,0,.447-.035L3.672,1.93a.078.078,0,0,1,.118,0L6.33,4.868a.317.317,0,0,0,.218.109.311.311,0,0,0,.23-.074l.576-.484a.308.308,0,0,0,.033-.44Z" transform="translate(1578.928 1263.3) rotate(180)" fill="#475759"/>
+  </g>
+</svg>

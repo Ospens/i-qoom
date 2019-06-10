@@ -1,11 +1,39 @@
 import React, { Component } from 'react'
+import ReactSVG from 'react-svg'
 import classnames from 'classnames'
+import dots from '../images/dots-horizontal'
 
 class DropDown extends Component {
 
   state = {
     isOpen: false
   }
+
+  renderDotsIcon = () => (
+    <ReactSVG
+      svgStyle={{ height: 15, width: 15 }}
+      src={dots}
+    />
+  )
+
+  renderDefaultItems = actionDDitems => (
+    actionDDitems.map(({ icon, title, onClick }, i) => (
+      <React.Fragment key={i}>
+        <li
+          className='dropdown-item'
+          onClick={onClick}
+        >
+          <ReactSVG
+            svgStyle={{ height: 15, width: 15 }}
+            src={icon}
+          />
+          <span className='item-text'>
+            {title}
+          </span>
+        </li>
+      </React.Fragment>
+    ))
+  )
 
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
@@ -26,7 +54,7 @@ class DropDown extends Component {
   }
 
   render() {
-    const { btnName, children, className, btnClass, btnComponent } = this.props
+    const { btnName, children, className, btnClass, btnComponent, dots, defaultValues } = this.props
     const { isOpen } = this.state
     const mainClass = classnames(className, 'btn-group', { 'show': isOpen })
     const ddClass = classnames('dropdown-menu', { 'show': isOpen })
@@ -44,17 +72,23 @@ class DropDown extends Component {
           aria-expanded={isOpen}
           onClick={() => this.setState({ isOpen: !isOpen })}
         >
-          {btnComponent ? (
-            btnComponent
-          ) : (
-            <React.Fragment>
-              <span className='mx-auto'>{btnName}</span>
-              <i className={iClass}/>
-            </React.Fragment>
-          )}
+          {(() => {
+            if (btnComponent) {
+              return btnComponent
+            } else if (dots) {
+              return this.renderDotsIcon()
+            } else {
+              return (
+                <React.Fragment>
+                  <span className='mx-auto'>{btnName}</span>
+                  <i className={iClass} />
+                </React.Fragment>
+              )
+            }
+          })()}
         </button>
         <ul className={ddClass}>
-          {children}
+          {defaultValues ? this.renderDefaultItems(defaultValues) : children}
         </ul>
       </div>
     )

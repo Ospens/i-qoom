@@ -2,18 +2,18 @@ require 'rails_helper'
 
 RSpec.describe DocumentRevision, type: :model do
   it 'has versions' do
-    rev = FactoryBot.create(:document_revision)
-    ver = FactoryBot.create(:document, revision: rev)
+    ver = FactoryBot.create(:document)
+    rev = ver.revision
     expect(ver.revision).to eq(rev)
     expect(rev.versions).to eq([ver])
   end
 
   it '#order_by_revision_number' do
-    main = FactoryBot.create(:document_main)
-    rev1 = FactoryBot.create(:document_revision, document_main: main)
-    doc1 = FactoryBot.create(:document, revision: rev1)
-    field = FactoryBot.build(:document_field, kind: :codification_field, codification_kind: :revision_number, value: 0)
-    doc1.document_fields << field
+    doc1 = FactoryBot.create(:document)
+    rev1 = doc1.revision
+    main = rev1.document_main
+    field = doc1.document_fields.find_by(codification_kind: :revision_number)
+    field.update!(value: 0)
     rev2 = FactoryBot.create(:document_revision, document_main: main)
     doc_attrs = doc1.attributes_for_edit
     doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }['value'] = '1'

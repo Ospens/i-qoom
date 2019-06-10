@@ -24,9 +24,36 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values,
            on: :update
 
+  validate :prevent_adding_or_deleting_fields_from_convention,
+           on: :create
+
+  validate :prevent_update_of_fields_from_convention,
+           on: :create
+
+  validate :prevent_update_of_values_from_convention,
+           on: :create
+
+  before_validation :assign_document_revision_version_field,
+                    unless: :document_revision_version_present?
+
   scope :first_version, -> { order(revision_version: :asc).first }
 
   scope :last_version, -> { order(revision_version: :asc).last }
+
+  scope :filter_by_codification_kind, -> (codification_kind, value) {
+    joins(:document_fields)
+      .where(document_fields: {
+              codification_kind: codification_kind,
+              value: value })
+  }
+
+  scope :filter_by_codification_kind_and_value, -> (codification_kind, value, selected = true) {
+    joins(document_fields: :document_field_values)
+      .where(document_fields: {
+              codification_kind: codification_kind,
+              document_field_values: {
+                value: value, selected: selected } })
+  }
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
@@ -55,7 +82,7 @@ class Document < ApplicationRecord
     # user cannot view document if he has no access to all values
     # for each field that can be limited by value
     !project.conventions.active.document_fields.limit_by_value.map do |field|
-      !field.document_field_values.map do |value|
+      !field.document_field_values.where(selected: true).map do |value|
         field.document_rights.where(user: user,
                                     limit_for: :value,
                                     enabled: true,
@@ -82,6 +109,7 @@ class Document < ApplicationRecord
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')
     doc['created_at'] = created_at
+    doc['additional_information'] = additional_information
     doc
   end
 
@@ -99,6 +127,14 @@ class Document < ApplicationRecord
     str << '-'
     str << document_fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
     str
+  end
+
+  def additional_information_field
+    document_fields.find_by(codification_kind: :additional_information)
+  end
+
+  def native_file
+    document_fields.find_by(codification_kind: :document_native_file).files.first
   end
 
   private
@@ -122,5 +158,93 @@ class Document < ApplicationRecord
         end.include?(true)
       end.include?(true)
     errors.add(:document_fields, :codification_field_changed) if error
+  end
+
+  def prevent_adding_or_deleting_fields_from_convention
+    convention = project.conventions.active
+    if convention.document_fields.length != document_fields.length
+      errors.add(:document_fields, :the_number_of_document_fields_is_wrong)
+    end
+  end
+
+  def prevent_update_of_fields_from_convention
+    convention = project.conventions.active
+    convention.document_fields.each do |field|
+      attrs = field.attributes.slice('kind',
+                                     'codification_kind',
+                                     'column',
+                                     'row',
+                                     'required',
+                                     'multiselect',
+                                     'title',
+                                     'command')
+      contains_field =
+        document_fields.detect do |i|
+          (attrs.to_a - i.attributes.to_a).empty?
+        end.present?
+      if !contains_field
+        errors.add(:document_fields, :wrong_field_added_to_document)
+      end
+    end
+  end
+
+  def prevent_update_of_values_from_convention
+    convention = project.conventions.active
+    convention.document_fields.where(kind: :select_field).each do |field|
+      attrs = field.attributes.slice('kind',
+                                     'codification_kind',
+                                     'title',
+                                     'command')
+      current_field =
+        document_fields.detect do |i|
+          (attrs.to_a - i.attributes.to_a).empty?
+        end
+      next if current_field.blank?
+      if field.document_field_values.length != current_field.document_field_values.length
+        errors.add(:document_fields, :wrong_number_of_values_in_field)
+      end
+      field.document_field_values.each do |value|
+        value_attrs = value.attributes.slice('value',
+                                             'title',
+                                             'position')
+        contains_value =
+          current_field.document_field_values.detect do |i|
+            (value_attrs.to_a - i.attributes.to_a).empty?
+          end.present?
+        if !contains_value
+          errors.add(:document_fields, :wrong_value_added_to_field)
+        end
+      end
+    end
+  end
+
+  def additional_information
+    return if additional_information_field.blank?
+    revisions = revision.document_main.revisions.order_by_revision_number
+    temporal_value = []
+    revisions.each do |rev|
+      val = rev.last_version.additional_information_field.value
+      next if val.blank?
+      temporal_value << { revision: rev.revision_number, value: val }
+    end
+    final_value = []
+    temporal_value.each_with_index do |val, index|
+      prev_val = temporal_value[index - 1]
+      if prev_val.present? && val[:value] == prev_val[:value] && !index.zero?
+        h = final_value.detect{ |i| i[:min] == prev_val[:revision] }
+        h[:max] = val[:revision]
+      else
+        final_value << { min: val[:revision], max: val[:revision], value: val[:value]}
+      end
+    end
+    final_value
+  end
+
+  def document_revision_version_present?
+    document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.present?
+  end
+
+  def assign_document_revision_version_field
+    document_fields.new(kind: :hidden_field, codification_kind: :revision_version, column: 1)
   end
 end

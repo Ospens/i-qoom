@@ -24,7 +24,7 @@ class AccessAndCommunication extends Component {
 
     return (
       <React.Fragment>
-        <div className='new-document__header p-4'>
+        <div className='dms-content__header p-4'>
           <h4>Access & communication</h4>
         </div>
 

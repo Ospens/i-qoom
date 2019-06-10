@@ -25,13 +25,6 @@
 
 /* Border-Box */
 
-*,
-*:before,
-*:after {
-  -webkit-box-sizing: inherit;
-  box-sizing: inherit;
-}
-
 html {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -32929,6 +32922,7 @@ select.ui.dropdown {
 
 .ui.dropdown .menu > .item:hover {
   z-index: 13;
+  color: #9cd6fc;
 }
 
 .ui.dropdown .menu>.item:hover * > path {
