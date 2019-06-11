@@ -113,22 +113,64 @@ class ModalCreateField extends Component {
     const newValue = {
       id: null,
       value: newSection,
-      label: newSection,
-      position
+      label: newSection
     }
 
     sections.splice(position, 0, newValue)
     this.setState({ sections, newSection: '' })
   }
 
+  removeSection = index => {
+    const { sections } = this.state
+    sections.splice(index, 1)
+    this.setState({ sections })
+  }
+
+  copySection = index => {
+    const { sections } = this.state
+
+    const newValue = sections[index]
+
+    sections.splice(index, 0, newValue)
+    this.setState({ sections })
+  }
+
+  changeDDSection = (newValue, index) => {
+    const { sections } = this.state
+
+    const updatedValue = {
+      ...sections[index],
+      value: newValue,
+      label: newValue
+    }
+
+    sections.splice(index, 1, updatedValue)
+
+    this.setState({
+      sections: [
+        ...sections
+      ]
+    })
+  }
+
   handleSubmit = field => {
     const { updateFields, column, row, isEdit } = this.props
     const { sections } = this.state
-    field['document_field_values'] = sections
+
+    // TODO: fields doesn't rerender after drag'n'drop
+    const newSections = sections.map((el, i) => {
+      const newEl = {
+        ...el,
+        'position': i
+      }
+      return newEl
+    })
+    field['document_field_values_attributes'] = newSections
     field['column'] = column
     field['row'] = row
-    
-    updateFields(field, isEdit)
+    const newField = new Array(field)
+
+    updateFields(...newField, isEdit)
     this.handleClose()
   }
 
@@ -196,6 +238,9 @@ class ModalCreateField extends Component {
                   sections={sections}
                   onDragEnd={this.onDragEnd}
                   addNewSection={this.addNewSection}
+                  removeSection={this.removeSection}
+                  copySection={this.copySection}
+                  changeDDSection={this.changeDDSection}
                 />
 
                 <div className="new-dropdown-section-block form-froup">

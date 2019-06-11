@@ -4,7 +4,8 @@ import {
   ORDER_FILEDS,
   EDITING_FIELD,
   REMOVE_FIELD,
-  DISCARD_EDIT_VALUES
+  DISCARD_EDIT_VALUES,
+  CONVENTION_UPDATED
 } from '../actions/types'
 
 const initialState = {
@@ -25,10 +26,19 @@ const conventionReducer = (state = initialState, action) => {
         ...action.payload
       }
     }
+  case CONVENTION_UPDATED:
+    return {
+      ...state,
+      current: {
+        ...state.current,
+        ...action.payload
+      }
+    }
   case UPDATED_FIELDS:
     return {
       ...state,
       current: {
+        ...state.current,
         grouped_fields: action.payload
       },
       editingField: {}
@@ -37,6 +47,7 @@ const conventionReducer = (state = initialState, action) => {
     return {
       ...state,
       current: {
+        ...state.current,
         grouped_fields: action.payload
       }
     }
@@ -54,6 +65,7 @@ const conventionReducer = (state = initialState, action) => {
     return {
       ...state,
       current: {
+        ...state.current,
         grouped_fields: action.payload
       }
     }

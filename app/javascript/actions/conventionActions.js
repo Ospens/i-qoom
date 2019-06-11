@@ -5,14 +5,73 @@ import {
   ORDER_FILEDS,
   EDITING_FIELD,
   REMOVE_FIELD,
-  DISCARD_EDIT_VALUES
+  DISCARD_EDIT_VALUES,
+  CONVENTION_UPDATED
 } from './types'
 import { errorNotify } from '../elements/Notices'
+
+
+const fieldByColumn = data => {
+  const sorted = data.document_fields.reduce((accumulator, currentValue) => {
+    accumulator[currentValue.column].push(currentValue)
+    return accumulator
+  }, { 1: [], 2: [] })
+
+  sorted[1].sort((a, b) => a.row - b.row)
+  sorted[2].sort((a, b) => a.row - b.row)
+  data.grouped_fields = sorted
+  return data
+}
 
 const editingConvention = payload => ({
   type: EDITING_CONVENTION,
   payload
 })
+
+const conventionUpdated = payload => ({
+  type: CONVENTION_UPDATED,
+  payload
+})
+
+export const startUpdateConvention = () => (dispatch, getState) => {
+  const { user: { token }, conventions: { current } } = getState()
+  const headers = {
+    Authorization: token
+  }
+  const docFields = []
+  console.log(current.grouped_fields)
+  Object.keys(current.grouped_fields).forEach(k => {
+    current.grouped_fields[k].forEach((row, i) => {
+      const newRow = {
+        ...row,
+        column: k,
+        row: i + 1
+      }
+      docFields.push(newRow)
+    })
+  })
+
+  const request = {
+    convention: {
+      document_fields_attributes: docFields
+    }
+  }
+
+  return (
+    axios.put(`/api/v1/projects/10/conventions/`, request, {
+      headers
+    })
+      .then(response => {
+        const { data } = response
+        const sortedData = fieldByColumn(data)
+
+        dispatch(conventionUpdated(sortedData))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
 
 export const startEditConvention = () => (dispatch, getState) => {
   const { user: { token }, projects: { current } } = getState()
@@ -26,16 +85,9 @@ export const startEditConvention = () => (dispatch, getState) => {
     })
       .then(response => {
         const { data } = response
-        const sorted = data.document_fields.reduce((accumulator, currentValue) => {
-          accumulator[currentValue.column].push(currentValue)
-          return accumulator
-        }, { 1: [], 2: [] })
-
-        sorted[1].sort((a, b) => a.row - b.row)
-        sorted[2].sort((a, b) => a.row - b.row)
-        data.grouped_fields = sorted
-
-        dispatch(editingConvention(data))
+        const sortedData = fieldByColumn(data)
+        console.log(sortedData)
+        dispatch(editingConvention(sortedData))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -65,7 +117,7 @@ export const updateFields = (field, edit = false) => (dispatch, getState) => {
   const newColumn = new Array(...grouped_fields[column])
 
   if (edit) {
-    newColumn[row] = field
+    newColumn.splice(row, 1, field)
   } else {
     newColumn.splice(row, 0, field)
   }

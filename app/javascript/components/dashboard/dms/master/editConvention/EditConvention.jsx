@@ -1,18 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  getFormSubmitErrors,
-  reduxForm,
-  formValueSelector
-} from 'redux-form'
-import { startEditConvention } from '../../../../../actions/conventionActions'
-import ReactSVG from 'react-svg'
 import SideBarItem from '../../SideBarItem'
 import DMSLayout from '../../DMSLayout'
 import overviewIcon from '../../../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../../../images/task-list-settings'
 import docPlanIcon from '../../../../../images/calendar-3'
-import lockIcon from '../../../../../images/Locked'
 import DocumentFiledsTable from './DocFiledsTable'
 import Tabs from '../../../../../elements/Tabs'
 
@@ -41,11 +33,6 @@ const menuItems = [
 
 class EditConvention extends Component {
 
-  componentWillMount() {
-    const { editConvention } = this.props
-    editConvention()
-  }
-
   renderSideBar = () => (
     <div className='dms-sidebar-menu'>
       <div className='dms-sidebar-menu__block'>
@@ -64,47 +51,6 @@ class EditConvention extends Component {
   renderTab = () => {
     return (
       <div className='dms-content bordered edit-convention'>
-
-        <div className='dms-content__header p-4'>
-          <div className="d-flex align-items-center">
-            <h4>Add documents data & files</h4>
-            <label className="rounded-label red ml-4">
-              Form version 0.1
-              <ReactSVG
-                svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-                src={lockIcon}
-              />
-            </label>
-          </div>
-          <div className='dms-content__project-phases'>
-            <span>Project phases</span>
-            <ul className='row mx-0 phases-row'>
-              <li className='col-3 active'>
-                <button>
-                  Planning
-                </button>
-              </li>
-              <li className='col-3'>
-                <button>
-                  Development
-                </button>
-              </li>
-              <li className='col-3'>
-                <button>
-                  Execution
-                </button>
-              </li>
-              <li className='col-3'>
-                <button>
-                  Operation
-                </button>
-              </li>
-              <button className="btn edit-button">
-                Edit
-              </button>
-            </ul>
-          </div>
-        </div>
         <DocumentFiledsTable />
       </div>
     )
@@ -113,10 +59,10 @@ class EditConvention extends Component {
   renderContent = () => {
     const { current: { grouped_fields } } = this.props
     // TODO: change this
-    grouped_fields[1][0].title === 'test'
+    /*grouped_fields[1][0].title === 'test'
       ? {}
       : grouped_fields[1].unshift({ column: 1, row: 1, title: 'test' })
-
+    */
     return (
       <Tabs className='conventios-tabs'>
         <div label='Convention - 1' >{this.renderTab()}</div>
@@ -139,11 +85,7 @@ class EditConvention extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  submitErrors: getFormSubmitErrors('convention_form')(state),
   current: state.conventions.current
 })
-const mapDispatchToProps = dispatch => ({
-  editConvention: () => dispatch(startEditConvention())
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'convention_form' })(EditConvention))
+export default connect(mapStateToProps)(EditConvention)
