@@ -21,21 +21,15 @@ RSpec.describe Document, type: :model do
   end
 
   it '#additional_information' do
-    field =
-      FactoryBot.attributes_for(:document_field,
-                                kind: :textarea_field,
-                                codification_kind: :additional_information,
-                                value: '111')
     doc1 = FactoryBot.create(:document)
     doc1.revision.update!(revision_number: '1')
-    doc1.document_fields.create(field)
+    doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
     doc2 = FactoryBot.create(:document)
     doc2.revision.update!(revision_number: '2')
-    doc2.document_fields.create(field)
+    doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
     doc3 = FactoryBot.create(:document)
     doc3.revision.update!(revision_number: '3')
-    field['value'] = '222'
-    doc3.document_fields.create(field)
+    doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
     doc2.revision.update_columns(document_main_id: doc1.revision.document_main.id)
     doc3.revision.update_columns(document_main_id: doc1.revision.document_main.id)
     attrs = doc3.attributes_for_show

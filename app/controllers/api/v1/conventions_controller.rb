@@ -7,12 +7,12 @@ class Api::V1::ConventionsController < ApplicationController
     if !@convention.document_fields.any?
       @convention.build_default_fields
     end
-    render json: @convention.as_json(include: { document_fields: { include: :document_field_values } })
+    render json: @convention.attributes_for_edit
   end
 
   def update
     if @convention.update(convention_params)
-      render json: @convention.as_json(include: { document_fields: { include: :document_field_values } })
+      render json: @convention.attributes_for_edit
     else
       render json: @convention.errors, status: :unprocessable_entity
     end

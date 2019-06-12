@@ -82,4 +82,24 @@ RSpec.describe Convention, type: :model do
       end
     end
   end
+
+  it 'attributes_for_edit' do
+    project = FactoryBot.create(:project)
+    convention = project.conventions.new(number: 1)
+    convention.build_default_fields
+    expect(convention).to_not be_valid
+    convention.document_fields.each do |field|
+      next unless field.select_field?
+      value =
+        field.document_field_values.new(value: Faker::Name.initials(3),
+                                        position: 1,
+                                        title: '')
+    end
+    expect(convention).to be_valid
+    convention.save
+    json = convention.attributes_for_edit
+    fields = json['document_fields']
+    version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
+    expect(version).to be_blank
+  end
 end

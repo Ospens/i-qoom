@@ -79,6 +79,14 @@ class Convention < ApplicationRecord
                         row: 4)
   end
 
+  def attributes_for_edit
+    json = as_json(include: { document_fields: { include: :document_field_values } })
+    fields = json['document_fields']
+    version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
+    fields.delete(version)
+    json
+  end
+
   private
 
   def assign_revision_version_field

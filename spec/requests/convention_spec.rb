@@ -20,7 +20,7 @@ describe Convention, type: :request do
       get "/api/v1/projects/#{convention.project.id}/conventions/edit", headers: credentials(convention.project.user)
       expect(response).to have_http_status(:success)
       expect(json['id']).to eql(convention.id)
-      expect(json['document_fields'].count).to eql(9)
+      expect(json['document_fields'].count).to eql(8)
       field = json['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
       expect(field['document_field_values'].length).to eql(1)
     end
