@@ -2,11 +2,12 @@ import axios from 'axios'
 import {
   EDITING_CONVENTION,
   UPDATED_FIELDS,
-  ORDER_FILEDS,
+  ORDER_FIELDS,
   EDITING_FIELD,
   REMOVE_FIELD,
   DISCARD_EDIT_VALUES,
-  CONVENTION_UPDATED
+  CONVENTION_UPDATED,
+  DISCARD_CONVENTION
 } from './types'
 import { errorNotify } from '../elements/Notices'
 
@@ -33,13 +34,17 @@ const conventionUpdated = payload => ({
   payload
 })
 
+export const discardConvention = () => ({
+  type: DISCARD_CONVENTION
+})
+
 export const startUpdateConvention = () => (dispatch, getState) => {
-  const { user: { token }, conventions: { current } } = getState()
+  const { user: { token }, conventions: { current }, projects } = getState()
+  const projectId = projects.current.id
   const headers = {
     Authorization: token
   }
   const docFields = []
-  console.log(current.grouped_fields)
   Object.keys(current.grouped_fields).forEach(k => {
     current.grouped_fields[k].forEach((row, i) => {
       const newRow = {
@@ -58,7 +63,7 @@ export const startUpdateConvention = () => (dispatch, getState) => {
   }
 
   return (
-    axios.put(`/api/v1/projects/10/conventions/`, request, {
+    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, {
       headers
     })
       .then(response => {
@@ -167,7 +172,7 @@ export const reorderFields = (result, fields) => dispatch => {
     }
 
     return dispatch({
-      type: ORDER_FILEDS,
+      type: ORDER_FIELDS,
       payload: orderedFields
     })
   }
@@ -188,7 +193,7 @@ export const reorderFields = (result, fields) => dispatch => {
   }
 
   return dispatch({
-    type: ORDER_FILEDS,
+    type: ORDER_FIELDS,
     payload: orderedFields
   })
 }

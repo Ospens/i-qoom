@@ -74,83 +74,6 @@ class DocFieldsElement extends Component {
     </Popup>
   )
 
-  renderDocIdFields = () => (
-    <React.Fragment>
-      <div className="draggable-container">
-        <div className='form-group'>
-          <label>Pleace select or generate Document ID</label>
-
-          <div className='input-container'>
-            <div className="document-id-code">
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='MWP'
-                disabled
-              />
-            </div>
-            <div className="document-id-code">
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='STX'
-                disabled
-              />
-            </div>
-            <div className="document-id-code">
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='EOS'
-                disabled
-              />
-            </div>
-            <div className="document-id-code">
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='XXX'
-                disabled
-              />
-            </div>
-            <div className="document-id-code">
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='XXXX'
-                disabled
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="draggable-container">
-        <div className='form-group'>
-          <div className='checkbox-field justify-content-center'>
-            <input
-              name='generate_id'
-              id='generate_id'
-              type='checkbox'
-              className='form-check-input'
-            />
-            <label className='form-check-label mr-2' htmlFor='generate_id' />
-            <span>Generate Document ID through file code</span>
-          </div>
-        </div>
-      </div>
-    </React.Fragment>
-  )
-
   renderInputByType = field => {
     const uniqName = `${field.column}_${field.row}`
     if (field.kind === 'upload_field') {
@@ -174,22 +97,20 @@ class DocFieldsElement extends Component {
       )
     } else if (field.kind === 'textarea_field') {
       return (
-        <Field
+        <InputField
+          type='text'
           name={uniqName}
           id={uniqName}
-          value={{}}
-          newValue={{}}
-          options={[]}
-          component={SelectField}
+          placeholder={field.command}
         />
       )
     } else if (field.kind === 'date_field') {
       return (
-        <Field
+        <InputField
+          type='text'
           name={uniqName}
           id={uniqName}
-          options={[]}
-          component={SelectField}
+          placeholder={field.command}
         />
       )
     } else {
@@ -249,22 +170,22 @@ class DocFieldsElement extends Component {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            {field.title === 'test'
-              ? this.renderDocIdFields()
-              : <div className='form-group'>
-                <div className="d-flex">
-                  <DropDown
-                    dots={true}
-                    className='dropdown-with-icon form-group_drop-down'
-                  >
-                    {actionConventions.map(({ icon, title, offset }, i) => {
-                      const trigger = this.renderMenuItem(icon, title)
-                      return (
-                        <React.Fragment key={i}>
-                          {modalCreateField(column, offset, trigger)}
-                        </React.Fragment>
-                      )
-                    })}
+            <div className='form-group'>
+              <div className="d-flex">
+                <DropDown
+                  dots={true}
+                  className='dropdown-with-icon form-group_drop-down'
+                >
+                  {actionConventions.map(({ icon, title, offset }, i) => {
+                    const trigger = this.renderMenuItem(icon, title)
+                    return (
+                      <React.Fragment key={i}>
+                        {modalCreateField(column, offset, trigger)}
+                      </React.Fragment>
+                    )
+                  })}
+                  {!field.codification_kind &&
+                  <React.Fragment>
                     {this.renderCopyElement()}
                     <li
                       className='dropdown-item'
@@ -276,14 +197,15 @@ class DocFieldsElement extends Component {
                       />
                       <span className='item-text'>Delete</span>
                     </li>
-                  </DropDown>
-                  <label htmlFor="document_title">{field.title}</label>
-                  {index === 3 && this.accessList()}
-                </div>
-                {this.renderInputByType(field, index)}
-                {this.editButton(index)}
+                  </React.Fragment>
+                  }
+                </DropDown>
+                <label htmlFor="document_title">{field.title}</label>
+                {index === 3 && this.accessList()}
               </div>
-              }
+              {this.renderInputByType(field, index)}
+              {this.editButton(index)}
+            </div>
           </div>
         )}
       </Draggable>

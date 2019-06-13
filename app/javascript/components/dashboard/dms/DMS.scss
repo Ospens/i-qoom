@@ -1295,10 +1295,4 @@ input.search-input {
   display: flex;
   padding: 10px;
   border-top: 1px solid lightgray;
-
-  &:hover {
-    transition: 0s ease-in-out;
-    background-color:#f9f9f9;
-    cursor: pointer;
-  }
 }

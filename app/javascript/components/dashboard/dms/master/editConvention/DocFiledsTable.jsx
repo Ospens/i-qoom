@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
-import {
-  getFormSubmitErrors,
-  reduxForm,
-} from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import {
   startEditConvention,
-  startUpdateConvention
+  startUpdateConvention,
+  discardConvention
 } from '../../../../../actions/conventionActions'
 import ReactSVG from 'react-svg'
 import lockIcon from '../../../../../images/Locked'
@@ -17,10 +15,9 @@ import ModalCreateField from './ModalCreateField'
 
 class DocFiledsTable extends Component {
 
-  handleSubmit = values => {
+  handleSubmit = () => {
     const { startUpdateConvention } = this.props
     startUpdateConvention()
-    console.log(values)
   }
 
   componentWillMount() {
@@ -51,8 +48,85 @@ class DocFiledsTable extends Component {
     />
   )
 
+  renderDocIdFields = () => (
+    <React.Fragment>
+      <div className="draggable-container">
+        <div className='form-group'>
+          <label>Pleace select or generate Document ID</label>
+
+          <div className='input-container'>
+            <div className="document-id-code">
+              <input
+                className='form-control'
+                type='text'
+                name='document_id'
+                id='document_id'
+                placeholder='MWP'
+                disabled
+              />
+            </div>
+            <div className="document-id-code">
+              <input
+                className='form-control'
+                type='text'
+                name='document_id'
+                id='document_id'
+                placeholder='STX'
+                disabled
+              />
+            </div>
+            <div className="document-id-code">
+              <input
+                className='form-control'
+                type='text'
+                name='document_id'
+                id='document_id'
+                placeholder='EOS'
+                disabled
+              />
+            </div>
+            <div className="document-id-code">
+              <input
+                className='form-control'
+                type='text'
+                name='document_id'
+                id='document_id'
+                placeholder='XXX'
+                disabled
+              />
+            </div>
+            <div className="document-id-code">
+              <input
+                className='form-control'
+                type='text'
+                name='document_id'
+                id='document_id'
+                placeholder='XXXX'
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="draggable-container">
+        <div className='form-group'>
+          <div className='checkbox-field justify-content-center'>
+            <input
+              name='generate_id'
+              id='generate_id'
+              type='checkbox'
+              className='form-check-input'
+            />
+            <label className='form-check-label mr-2' htmlFor='generate_id' />
+            <span>Generate Document ID through file code</span>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  )
+
   render() {
-    const { fields, handleSubmit } = this.props
+    const { fields, handleSubmit, changed, discardConvention } = this.props
     const fieldsKeys = Object.keys(fields)
 
     return (
@@ -105,26 +179,35 @@ class DocFiledsTable extends Component {
             <div className="p-4">
               <div className='row'>
                 {fieldsKeys.map((key, i) => (
-                  <DocFieldsColumn
-                    column={i + 1}
-                    fields={fields[key]}
-                    key={i}
-                    modalCreateField={this.renderModalCreateField}
-                  />
+                  <div className='col-6' key={i}>
+                    {i === 0 && this.renderDocIdFields()}
+                    <DocFieldsColumn
+                      column={i + 1}
+                      fields={fields[key]}
+                      modalCreateField={this.renderModalCreateField}
+                    />
+                  </div>
                 ))}
               </div>
               {this.renderModalCreateField(2, fields[2].length + 1, this.renderModalButton())}
             </div>
+            {changed && 
             <div className='dms-footer edit-convetion-footer'>
               <div className='changes-description'>
                 You made changes to the upload <b>form 1.0 of convention 2 (not applied)</b>.
                 Do you want to save all changes to update this form to <b>version 1.1</b>?
               </div>
               <div className="d-flex">
-                <button type='button' className='btn btn-white'>Discard</button>
+                <button
+                  type='button'
+                  className='btn btn-white'
+                  onClick={discardConvention}
+                >
+                  Discard
+                </button>
                 <button type='submit' className='btn btn-purple'>Save all changes</button>
               </div>
-            </div>
+            </div>}
           </form>
         </ DragDropContext>
       </React.Fragment>
@@ -132,15 +215,16 @@ class DocFiledsTable extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  submitErrors: getFormSubmitErrors('convention_form')(state),
-  fields: state.conventions.current.grouped_fields
+const mapStateToProps = ({ conventions }) => ({
+  fields: conventions.current.grouped_fields,
+  changed: conventions.changed
 })
 
 const mapDispatchToProps = dispatch => ({
   reorderFields: (result, fields) => dispatch(reorderFields(result, fields)),
   editConvention: () => dispatch(startEditConvention()),
-  startUpdateConvention: (values) => dispatch(startUpdateConvention(values))
+  startUpdateConvention: (values) => dispatch(startUpdateConvention(values)),
+  discardConvention: () => dispatch(discardConvention())
 })
 
 export default connect(

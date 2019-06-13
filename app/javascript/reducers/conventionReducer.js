@@ -1,11 +1,12 @@
 import {
   EDITING_CONVENTION,
   UPDATED_FIELDS,
-  ORDER_FILEDS,
+  ORDER_FIELDS,
   EDITING_FIELD,
   REMOVE_FIELD,
   DISCARD_EDIT_VALUES,
-  CONVENTION_UPDATED
+  CONVENTION_UPDATED,
+  DISCARD_CONVENTION
 } from '../actions/types'
 
 const initialState = {
@@ -14,7 +15,9 @@ const initialState = {
   current: {
     document_field_values: [],
     grouped_fields: [{}]
-  }
+  },
+  currentDefault: {},
+  changed: false
 }
 
 const conventionReducer = (state = initialState, action) => {
@@ -24,6 +27,9 @@ const conventionReducer = (state = initialState, action) => {
       ...state,
       current: {
         ...action.payload
+      },
+      currentDefault: {
+        ...action.payload
       }
     }
   case CONVENTION_UPDATED:
@@ -32,7 +38,20 @@ const conventionReducer = (state = initialState, action) => {
       current: {
         ...state.current,
         ...action.payload
-      }
+      },
+      currentDefault: {
+        ...state.current,
+        ...action.payload
+      },
+      changed: false
+    }
+  case DISCARD_CONVENTION:
+    return {
+      ...state,
+      current: {
+        ...state.currentDefault
+      },
+      changed: false
     }
   case UPDATED_FIELDS:
     return {
@@ -41,7 +60,8 @@ const conventionReducer = (state = initialState, action) => {
         ...state.current,
         grouped_fields: action.payload
       },
-      editingField: {}
+      editingField: {},
+      changed: true
     }
   case REMOVE_FIELD:
     return {
@@ -49,7 +69,8 @@ const conventionReducer = (state = initialState, action) => {
       current: {
         ...state.current,
         grouped_fields: action.payload
-      }
+      },
+      changed: true
     }
   case EDITING_FIELD:
     return {
@@ -61,13 +82,14 @@ const conventionReducer = (state = initialState, action) => {
       ...state,
       editingField: {}
     }
-  case ORDER_FILEDS:
+  case ORDER_FIELDS:
     return {
       ...state,
       current: {
         ...state.current,
         grouped_fields: action.payload
-      }
+      },
+      changed: true
     }
   default:
     return state

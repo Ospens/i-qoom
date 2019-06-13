@@ -7,7 +7,6 @@ export const DocFieldsColumn = ({ fields, column, modalCreateField }) => {
     <Droppable droppableId={column}>
       {(provided) => (
         <div
-          className='col-6'
           ref={provided.innerRef}
           style={{  }}
           {...provided.droppableProps}

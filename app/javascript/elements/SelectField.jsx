@@ -53,7 +53,7 @@ const colourStyles = errorInfo => {
   return colourStyles
 }
 
-function SelectField({ input, options, newValue, errorField, id, label, placeholder }) {
+function SelectField({ input, options, errorField, id, label, placeholder }) {
   const errorInfo = errorField ? errorField[id] : false
 
   return (
