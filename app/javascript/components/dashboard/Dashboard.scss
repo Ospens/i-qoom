@@ -696,6 +696,7 @@ input[type=checkbox]:checked+label {
 
     &.table-checkbox {
       min-width: 20px !important;
+      vertical-align: middle;
     }
 
     &.member-id {
@@ -1001,10 +1002,6 @@ span.tab-description {
   }
 }
 
-.date-input {
-  text-align: center;
-}
-
 .react-datepicker-wrapper,
 .react-datepicker__input-container {
   width: 100%;
@@ -1243,7 +1240,7 @@ i.arrow {
   }
 }
 
-.drag-and-drop-area {
+.drop-zone-area {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1293,4 +1290,14 @@ i.arrow {
       margin-bottom: 5px;
     }
   }
+
+  &.disabled {
+    color: '#2fa7f9';
+    background-color: #e9ecef;
+    cursor: default;
+  }
+}
+
+.color-blue {
+  color: #0096FA !important;
 }

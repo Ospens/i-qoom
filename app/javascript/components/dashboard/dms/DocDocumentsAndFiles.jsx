@@ -3,7 +3,7 @@ import { Field } from 'redux-form'
 import SelectField from '../../../elements/SelectField'
 import CheckboxField from '../../../elements/CheckboxField'
 import DatePickerField from '../../../elements/DatePickerField'
-import DragAndDropField from '../../../elements/DragAndDropField'
+import DropZoneField from '../../../elements/DropZoneField'
 import InputField from '../../../elements/InputField'
 import TextAreaField from '../../../elements/TextAreaField'
 
@@ -243,7 +243,7 @@ class DocDocumentsAndFiles extends Component {
                 name='native_file'
                 id='native_file'
                 label='Add native file here*'
-                component={DragAndDropField}
+                component={DropZoneField}
               />
             </div>
             <div className='col-6'>
@@ -252,7 +252,7 @@ class DocDocumentsAndFiles extends Component {
                 name='other_file'
                 id='other_file'
                 label='Add other file here'
-                component={DragAndDropField}
+                component={DropZoneField}
               />
             </div>
           </div>

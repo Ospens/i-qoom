@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import DragAndDropField from '../../../elements/DragAndDropField'
+import DropZoneField from '../../../elements/DropZoneField'
 import InputField from '../../../elements/InputField'
 import overviewIcon from '../../../images/task-checklist-check'
 import revisionIcon from '../../../images/Revise_2'
@@ -251,7 +251,7 @@ class AddRevision extends Component {
                       name='native_file'
                       id='native_file'
                       label='Replace the document file to update revision*'
-                      component={DragAndDropField}
+                      component={DropZoneField}
                     />
                   </div>
                   <div className='col-6'>
@@ -260,7 +260,7 @@ class AddRevision extends Component {
                       name='other_file'
                       id='other_file'
                       label='Add other file here'
-                      component={DragAndDropField}
+                      component={DropZoneField}
                     />
                   </div>
                 </div>

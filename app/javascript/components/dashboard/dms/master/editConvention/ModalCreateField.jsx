@@ -22,6 +22,7 @@ import textIcon from '../../../../../images/form_2'
 import textareaIcon from '../../../../../images/form_3'
 import uploadIcon from '../../../../../images/form_4'
 import dateIcon from '../../../../../images/form_5'
+import ModalLimitAccess from './ModalLimitAccess'
 
 const typeVariants = [
   {
@@ -52,6 +53,7 @@ const typeVariants = [
 ]
 
 const initState = {
+  limitAccess: false,
   newSection: '',
   modalOpen: false 
 }
@@ -185,7 +187,7 @@ class ModalCreateField extends Component {
     this.handleClose()
   }
 
-  renderModalContent = () => {
+  renderFieldForm = () => {
     const {
       field_type,
       isEdit,
@@ -201,7 +203,13 @@ class ModalCreateField extends Component {
         <div className='modal-container'>
           <div className="modal-container__title-block">
             <h4>{title || 'New input field'}</h4>
-            <span className='info'>Limit access</span>
+            <button
+              type='button'
+              className='btn color-blue p-0 ml-auto'
+              onClick={() => this.setState({ limitAccess: true })}
+            >
+              Limit access
+            </button>
           </div>
           <div className="modal-container__content-block">
             <div className='form-group'>
@@ -254,33 +262,33 @@ class ModalCreateField extends Component {
               }
             </div>
             {field_type === 'select_field' &&
-            <div>
-              <div><label>Define selections</label></div>
-              <div><label>Selections</label></div>
-              <DraggableDropDown
-                sections={document_field_values}
-                onDragEnd={this.onDragEnd}
-                addNewSection={this.addNewSection}
-                removeSection={this.removeSection}
-                copySection={this.copySection}
-                changeDDSection={this.changeDDSection}
-              />
+              <div>
+                <div><label>Define selections</label></div>
+                <div><label>Selections</label></div>
+                <DraggableDropDown
+                  sections={document_field_values}
+                  onDragEnd={this.onDragEnd}
+                  addNewSection={this.addNewSection}
+                  removeSection={this.removeSection}
+                  copySection={this.copySection}
+                  changeDDSection={this.changeDDSection}
+                />
 
-              <div className="new-dropdown-section-block form-froup">
-                <div className="new-dropdown-section">
-                  <input
-                    id='new-section'
-                    name='new-section'
-                    type='text'
-                    className='form-control'
-                    value={newSection}
-                    placeholder={`Section ${document_field_values.length + 1}`}
-                    onChange={(e) => this.handleChange(e)}
-                    onBlur={() => this.addNewSection()}
-                  />
+                <div className="new-dropdown-section-block form-froup">
+                  <div className="new-dropdown-section">
+                    <input
+                      id='new-section'
+                      name='new-section'
+                      type='text'
+                      className='form-control'
+                      value={newSection}
+                      placeholder={`Section ${document_field_values.length + 1}`}
+                      onChange={(e) => this.handleChange(e)}
+                      onBlur={() => this.addNewSection()}
+                    />
+                  </div>
                 </div>
-              </div>
-            </div>}
+              </div>}
           </div>
         </div>
         <div className='modal-footer'>
@@ -292,11 +300,25 @@ class ModalCreateField extends Component {
             Cancel
           </button>
           <button type='submit' className='btn btn-purple'>
-            {isEdit ? 'Update' : 'Create' }
+            {isEdit ? 'Update' : 'Create'}
           </button>
         </div>
       </form>
     )
+  }
+
+  renderModalContent = () => {
+    const { limitAccess } = this.state
+    const { initialValues: { title } } = this.props
+    if (limitAccess) return (
+      <ModalLimitAccess
+        handleBack={() => this.setState({ limitAccess: false })}
+        handleClose={this.handleClose}
+        title={title}
+      />
+    )
+
+    return this.renderFieldForm()
   }
 
   renderTrigger = content => {

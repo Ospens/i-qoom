@@ -43,8 +43,24 @@ const colourStyles = errorInfo => {
   const borderWidth = errorInfo ? '2px' : '1px'
   const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow, zIndex: '4', minHeight: '33.5px' }),
-    menu: styles => ({ ...styles, marginTop: '0', zIndex: '5' }),
+    control: (styles, state) => ({
+      ...styles,
+      borderColor,
+      borderWidth,
+      boxShadow,
+      zIndex: '4',
+      minHeight: '33.5px',
+      backgroundColor: state.isDisabled ? '#e9ecef' : 'inherit'
+    }),
+    menu: styles => ({
+      ...styles,
+      marginTop: '0',
+      zIndex: '5'
+    }),
+    placeholder: (styles, state) => ({
+      ...styles,
+      color: state.isDisabled ? '#c8d8da' : 'inherit'
+    }),
     option: (styles, { isFocused }) => ({
       ...styles,
       color: isFocused ? '#2fa7f9' : 'lightgray'
@@ -53,7 +69,7 @@ const colourStyles = errorInfo => {
   return colourStyles
 }
 
-function SelectField({ input, options, errorField, id, label, placeholder }) {
+function SelectField({ input, options, errorField, id, label, placeholder, isDisabled = false }) {
   const errorInfo = errorField ? errorField[id] : false
 
   return (
@@ -71,6 +87,7 @@ function SelectField({ input, options, errorField, id, label, placeholder }) {
         onBlur={value => input.onBlur(value.value)}
         placeholder={placeholder ? placeholder : 'Select...'}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
+        isDisabled={isDisabled}
       />
       <div className='invalid-feedback'>
         {errorInfo ? errorInfo[0] : ''}

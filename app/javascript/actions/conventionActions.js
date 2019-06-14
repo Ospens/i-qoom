@@ -7,7 +7,8 @@ import {
   REMOVE_FIELD,
   DISCARD_EDIT_VALUES,
   CONVENTION_UPDATED,
-  DISCARD_CONVENTION
+  DISCARD_CONVENTION,
+  NEW_INPUT_RIGHTS
 } from './types'
 import { errorNotify } from '../elements/Notices'
 
@@ -91,7 +92,6 @@ export const startEditConvention = () => (dispatch, getState) => {
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-        console.log(sortedData)
         dispatch(editingConvention(sortedData))
       })
       .catch(() => {
@@ -196,4 +196,26 @@ export const reorderFields = (result, fields) => dispatch => {
     type: ORDER_FIELDS,
     payload: orderedFields
   })
+}
+
+export const startAddInputRights = () => (dispatch, getState) => {
+  const { user: { token }, projects: { current } } = getState()
+  const headers = {
+    Authorization: token
+  }
+  // TODO: connect with backend
+
+  /*
+  return (
+    axios.get(`/api/v1/projects/${current.id}/document_rights/new`, {
+      headers
+    })
+      .then(response => {
+        console.log(response)
+        // dispatch(editingConvention(sortedData))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  ) */
 }

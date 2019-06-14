@@ -57,12 +57,6 @@ class EditConvention extends Component {
   }
 
   renderContent = () => {
-    const { current: { grouped_fields } } = this.props
-    // TODO: change this
-    /*grouped_fields[1][0].title === 'test'
-      ? {}
-      : grouped_fields[1].unshift({ column: 1, row: 1, title: 'test' })
-    */
     return (
       <Tabs className='conventios-tabs'>
         <div label='Convention - 1' >{this.renderTab()}</div>

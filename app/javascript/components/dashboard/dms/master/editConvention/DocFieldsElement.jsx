@@ -10,7 +10,8 @@ import { Field } from 'redux-form'
 import ReactSVG from 'react-svg'
 import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
-import DragAndDropField from '../../../../../elements/DragAndDropField'
+import DatePickerField from '../../../../../elements/DatePickerField'
+import DropZoneField from '../../../../../elements/DropZoneField'
 import trashIcon from '../../../../../images/trash_bucket'
 import fieldBelow from '../../../../../images/upload-menu1'
 import fieldAbove from '../../../../../images/upload-menu2'
@@ -82,7 +83,8 @@ class DocFieldsElement extends Component {
           type='file'
           name={uniqName}
           id={uniqName}
-          component={DragAndDropField}
+          component={DropZoneField}
+          isDisabled={true}
         />
       )
     } else if (field.kind === 'select_field') {
@@ -93,6 +95,7 @@ class DocFieldsElement extends Component {
           options={field.document_field_values}
           placeholder={field.command}
           component={SelectField}
+          isDisabled={true}
         />
       )
     } else if (field.kind === 'textarea_field') {
@@ -102,15 +105,18 @@ class DocFieldsElement extends Component {
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
+          readOnly={true}
         />
       )
     } else if (field.kind === 'date_field') {
       return (
-        <InputField
+        <Field
           type='text'
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
+          component={DatePickerField}
+          readOnly={true}
         />
       )
     } else {
@@ -120,6 +126,7 @@ class DocFieldsElement extends Component {
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
+          readOnly={true}
         />
       )
     }
