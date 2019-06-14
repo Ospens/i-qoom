@@ -1,5 +1,7 @@
 import React from 'react'
 
+// TODO: Change this component to Modal everywhere
+
 function ModalComponent({ children }) {
   return (
     <div>
@@ -10,7 +12,7 @@ function ModalComponent({ children }) {
         role='dialog'
         aria-modal='true'
       >
-        <div className='modal-dialog' role='document'>
+        <div className='modal-window' role='document'>
           <div className='modal-content'>
             {children}
           </div>

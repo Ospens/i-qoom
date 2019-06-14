@@ -26,9 +26,9 @@ class DocDocumentsAndFiles extends Component {
 
     return (
       <React.Fragment>
-        <div className='new-document__header p-4'>
+        <div className='dms-content__header p-4'>
           <h4>Add documents data & files</h4>
-          <div className='new-project__project-phases'>
+          <div className='dms-content__project-phases'>
             <span>Project phases</span>
             <ul className='row mx-0'>
               <li className='col-3 active'>
@@ -104,7 +104,7 @@ class DocDocumentsAndFiles extends Component {
                 </div>
               </div>
 
-              <div className='form-group generate-id-checkbox'>
+              <div className='form-group'>
                 <CheckboxField
                   name='generate_id'
                   checkBoxId='generate_id'
