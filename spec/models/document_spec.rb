@@ -203,4 +203,14 @@ RSpec.describe Document, type: :model do
       end
     end
   end
+
+  it 'assign convention' do
+    user = FactoryBot.create(:user)
+    document = document_attributes(user)
+    document['convention_id'] = nil
+    doc = Document.new(document)
+    expect(doc.convention).to be_blank
+    doc.valid?
+    expect(doc.convention).to be_present
+  end
 end

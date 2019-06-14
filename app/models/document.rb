@@ -5,6 +5,8 @@ class Document < ApplicationRecord
 
   belongs_to :project
 
+  belongs_to :convention
+
   belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
 
   has_one :document_main, through: :revision
@@ -35,6 +37,8 @@ class Document < ApplicationRecord
 
   before_validation :assign_document_revision_version_field,
                     unless: :document_revision_version_present?
+
+  before_validation :assign_convention
 
   scope :first_version, -> { order(revision_version: :asc).first }
 
@@ -69,7 +73,8 @@ class Document < ApplicationRecord
 
   def can_create?(user)
     # user cannot create document if he has no access to at least one value
-    # for each field that can be limited by value
+    # for each field that can be limited by value.
+    # when creating document we check current active convention
     !project.conventions.active.document_fields.limit_by_value.map do |field|
       field.document_rights.where(user: user,
                                   limit_for: :value,
@@ -80,8 +85,9 @@ class Document < ApplicationRecord
 
   def can_view?(user)
     # user cannot view document if he has no access to all values
-    # for each field that can be limited by value
-    !project.conventions.active.document_fields.limit_by_value.map do |field|
+    # for each field that can be limited by value.
+    # when viewing document we check saved convention
+    !convention.document_fields.limit_by_value.map do |field|
       !field.document_field_values.where(selected: true).map do |value|
         field.document_rights.where(user: user,
                                     limit_for: :value,
@@ -161,14 +167,12 @@ class Document < ApplicationRecord
   end
 
   def prevent_adding_or_deleting_fields_from_convention
-    convention = project.conventions.active
     if convention.document_fields.length != document_fields.length
       errors.add(:document_fields, :the_number_of_document_fields_is_wrong)
     end
   end
 
   def prevent_update_of_fields_from_convention
-    convention = project.conventions.active
     convention.document_fields.each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -189,7 +193,6 @@ class Document < ApplicationRecord
   end
 
   def prevent_update_of_values_from_convention
-    convention = project.conventions.active
     convention.document_fields.where(kind: :select_field).each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -246,5 +249,9 @@ class Document < ApplicationRecord
 
   def assign_document_revision_version_field
     document_fields.new(kind: :hidden_field, codification_kind: :revision_version, column: 1)
+  end
+
+  def assign_convention
+    self.convention = project.conventions.active
   end
 end

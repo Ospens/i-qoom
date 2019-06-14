@@ -102,4 +102,71 @@ RSpec.describe Convention, type: :model do
     version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
     expect(version).to be_blank
   end
+
+  it 'updates convention version' do
+    project = FactoryBot.create(:project)
+    convention = project.conventions.new(number: 1)
+    convention.build_default_fields
+    expect(convention).to_not be_valid
+    expect(convention.version).to eql(1)
+    convention.document_fields.each do |field|
+      next unless field.select_field?
+      value =
+        field.document_field_values.new(value: Faker::Name.initials(3),
+                                        position: 1,
+                                        title: '')
+    end
+    expect(convention).to be_valid
+    convention.save
+    convention = project.conventions.new(number: 1)
+    convention.valid?
+    expect(convention.version).to eql(2)
+  end
+
+  context 'validates old convention document_fields' do
+    let(:project) { FactoryBot.create(:project) }
+    let!(:convention1) do
+      convention = project.conventions.new(number: 1)
+      convention.build_default_fields
+      convention.document_fields.each do |field|
+        next unless field.select_field?
+        value =
+          field.document_field_values.new(value: Faker::Name.initials(3),
+                                          position: 1,
+                                          title: '')
+      end
+      convention.save!
+      convention
+    end
+    let(:convention2) do
+      convention = project.conventions.new(number: 1)
+      convention.build_default_fields
+      convention.document_fields.each do |field|
+        next unless field.select_field?
+        value =
+          field.document_field_values.new(value: Faker::Name.initials(3),
+                                          position: 1,
+                                          title: '')
+      end
+      convention
+    end
+
+    it { expect(convention2).to be_valid }
+
+    it 'add one field' do
+      convention2.document_fields.new(FactoryBot.attributes_for(:document_field))
+      expect(convention2).to_not be_valid
+    end
+
+    it 'remove one field' do
+      convention2.document_fields.delete(convention2.document_fields.last)
+      expect(convention2).to_not be_valid
+    end
+
+    it 'remove one field and add another' do
+      convention2.document_fields.delete(convention2.document_fields.last)
+      convention2.document_fields.new(FactoryBot.attributes_for(:document_field))
+      expect(convention2).to_not be_valid
+    end
+  end
 end

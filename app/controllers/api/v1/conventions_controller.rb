@@ -1,6 +1,6 @@
 class Api::V1::ConventionsController < ApplicationController
   load_resource :project, id_param: :project_id
-  before_action :set_convention
+  before_action :set_convention, only: :edit
   authorize_resource :convention
 
   def edit
@@ -11,7 +11,8 @@ class Api::V1::ConventionsController < ApplicationController
   end
 
   def update
-    if @convention.update(convention_params)
+    @convention = @project.conventions.new(convention_params.merge(number: 1))
+    if @convention.save
       render json: @convention.attributes_for_edit
     else
       render json: @convention.errors, status: :unprocessable_entity
@@ -27,8 +28,7 @@ class Api::V1::ConventionsController < ApplicationController
 
   def convention_params
     params.require(:convention).permit(document_fields_attributes:
-                                        [ :id,
-                                          :kind,
+                                        [ :kind,
                                           :codification_kind,
                                           :column,
                                           :row,
@@ -36,10 +36,7 @@ class Api::V1::ConventionsController < ApplicationController
                                           :multiselect,
                                           :title,
                                           :command,
-                                          :value,
-                                          files: [],
                                           document_field_values_attributes: [
-                                            :id,
                                             :value,
                                             :title,
                                             :position

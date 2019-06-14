@@ -24,6 +24,7 @@ module DocumentHelpers
     doc_attrs = Document.build_from_convention(convention, user)
     doc_attrs['user_id'] = user.id
     doc_attrs['project_id'] = project.id
+    doc_attrs['convention_id'] = convention.id
     doc_attrs['document_fields_attributes'].each do |field|
       if field['kind'] == 'select_field'
         value = field['document_field_values_attributes'].first
