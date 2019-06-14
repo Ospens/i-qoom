@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import DropDown from '../../../elements/DropDown'
@@ -13,24 +14,6 @@ import pdfIcon from '../../../images/office-file-pdf'
 import DocumentPopup from './DocumentPopup'
 import { actionDDitems, reviewStatuses, foldersItems, SideBarItem } from './constants'
 
-const menuItems = [
-  {
-    title: 'Overview',
-    icon: overviewIcon,
-    path: '/dashboard/documents/overview/'
-  },
-  {
-    title: 'DMS Settings',
-    icon: dmsSettingsIcon,
-    path: '/dashboard/documents/settings/'
-  },
-  {
-    title: 'Document planning',
-    icon: docPlanIcon,
-    path: '/dashboard/documents/planning/'
-  }
-]
-
 class DmsSideBar extends Component {
 
   state = {
@@ -40,10 +23,33 @@ class DmsSideBar extends Component {
   }
 
   render() {
-    const { checkedDocs, renderDropDownItems } = this.props
+    const { checkedDocs, renderDropDownItems, projectId } = this.props
     const { myReview, allReview, popup } = this.state
-    const allReviewulClass = classnames({ 'hidden': !allReview })
-    const myReviewulClass = classnames({ 'hidden': !myReview })
+    const allReviewlClass = classnames({ 'hidden': !allReview })
+    const myReviewlClass = classnames({ 'hidden': !myReview })
+
+    const menuItems = [
+      {
+        title: 'Overview',
+        icon: overviewIcon,
+        path: `/dashboard/projects/${projectId}/documents/`
+      },
+      {
+        title: 'DMS Settings',
+        icon: dmsSettingsIcon,
+        path: `/dashboard/projects/${projectId}/documents/settings/`
+      },
+      {
+        title: 'Document planning',
+        icon: docPlanIcon,
+        path: `/dashboard/projects/${projectId}/documents/planning/`
+      },
+      {
+        title: 'Master settings',
+        icon: docPlanIcon,
+        path: `/dashboard/projects/${projectId}/documents/edit_convetion/`
+      }
+    ]
 
     return (
       <React.Fragment>
@@ -182,7 +188,7 @@ class DmsSideBar extends Component {
                 </button>
                 <div className='red-rounded-info'>3</div>
               </div>
-              <ul className={myReviewulClass}>
+              <ul className={myReviewlClass}>
                 {reviewStatuses.map(({ title, color, count }, i) => (
                   <li className='dms-sidebar-menu__item' key={i}>
                     <span className={`${color}-dot`} />
@@ -204,7 +210,7 @@ class DmsSideBar extends Component {
                     </button>
                 <div className='red-rounded-info'>1</div>
               </div>
-              <ul className={allReviewulClass}>
+              <ul className={allReviewlClass}>
                 {reviewStatuses.map(({ title, color, count }, i) => (
                   <li className='dms-sidebar-menu__item' key={i}>
                     <span className={`${color}-dot`} />
@@ -221,5 +227,9 @@ class DmsSideBar extends Component {
     )
   }
 }
- 
-export default DmsSideBar
+
+const mapStateToProps = ({ projects }) => ({
+  projectId: projects.current.id
+})
+
+export default connect(mapStateToProps)(DmsSideBar)

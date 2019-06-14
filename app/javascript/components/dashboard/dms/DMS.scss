@@ -150,6 +150,7 @@
       color: lightgrey;
       font-size: 16px;
       padding: 10px;
+      margin-bottom: 0;
     }
 
     .dms-sidebar-menu__list {
@@ -482,7 +483,8 @@ div.selected-info-block {
   font-size: 16px;
   padding: 10px;
   margin-bottom: 0.5rem;
-  line-height: 1.2;
+  line-height: 1.28571429em;
+  margin-bottom: 0;
 
   span {
     color: #0096FA

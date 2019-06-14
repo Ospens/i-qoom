@@ -86,9 +86,13 @@ class SideBar extends Component {
           <li className='nav-item'>
             <span className='light-grey'>Frequently used</span>
           </li>
-          <SideBarItem path='/dashboard/' label='Resources' />
+          <SideBarItem path='/dashboard/' label='Dashboard' />
           <SideBarItem path='/dashboard/' label='Contracts' />
-          <SideBarItem path={`/dashboard/projects/${currentProject.id}/documents/overview/`} label='Documents' />
+          <SideBarItem
+            path={`/dashboard/projects/${currentProject.id}/documents/`}
+            root={`/dashboard/projects/${currentProject.id}/documents/`}
+            label='Documents'
+          />
         </ul>
         <ul className='nav flex-column nav-items'>
           <li className='nav-item'>
