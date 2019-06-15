@@ -5,6 +5,8 @@ class Document < ApplicationRecord
 
   belongs_to :project
 
+  belongs_to :convention
+
   belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
 
   has_one :document_main, through: :revision
@@ -24,8 +26,19 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values,
            on: :update
 
-  validate :prevent_update_of_fields_and_values_from_convention,
+  validate :prevent_adding_or_deleting_fields_from_convention,
            on: :create
+
+  validate :prevent_update_of_fields_from_convention,
+           on: :create
+
+  validate :prevent_update_of_values_from_convention,
+           on: :create
+
+  before_validation :assign_document_revision_version_field,
+                    unless: :document_revision_version_present?
+
+  before_validation :assign_convention
 
   scope :first_version, -> { order(revision_version: :asc).first }
 
@@ -60,7 +73,8 @@ class Document < ApplicationRecord
 
   def can_create?(user)
     # user cannot create document if he has no access to at least one value
-    # for each field that can be limited by value
+    # for each field that can be limited by value.
+    # when creating document we check current active convention
     !project.conventions.active.document_fields.limit_by_value.map do |field|
       field.document_rights.where(user: user,
                                   limit_for: :value,
@@ -71,8 +85,9 @@ class Document < ApplicationRecord
 
   def can_view?(user)
     # user cannot view document if he has no access to all values
-    # for each field that can be limited by value
-    !project.conventions.active.document_fields.limit_by_value.map do |field|
+    # for each field that can be limited by value.
+    # when viewing document we check saved convention
+    !convention.document_fields.limit_by_value.map do |field|
       !field.document_field_values.where(selected: true).map do |value|
         field.document_rights.where(user: user,
                                     limit_for: :value,
@@ -151,11 +166,59 @@ class Document < ApplicationRecord
     errors.add(:document_fields, :codification_field_changed) if error
   end
 
-  def prevent_update_of_fields_and_values_from_convention
-    # there should be check if document_fields or document_field_values got
-    # updated or changed from same fields and values from convetion
-    # currently document uploader can change, remove or add any fields or
-    # values to document regardless of what fields and values exist in convention
+  def prevent_adding_or_deleting_fields_from_convention
+    if convention.document_fields.length != document_fields.length
+      errors.add(:document_fields, :the_number_of_document_fields_is_wrong)
+    end
+  end
+
+  def prevent_update_of_fields_from_convention
+    convention.document_fields.each do |field|
+      attrs = field.attributes.slice('kind',
+                                     'codification_kind',
+                                     'column',
+                                     'row',
+                                     'required',
+                                     'multiselect',
+                                     'title',
+                                     'command')
+      contains_field =
+        document_fields.detect do |i|
+          (attrs.to_a - i.attributes.to_a).empty?
+        end.present?
+      if !contains_field
+        errors.add(:document_fields, :wrong_field_added_to_document)
+      end
+    end
+  end
+
+  def prevent_update_of_values_from_convention
+    convention.document_fields.where(kind: :select_field).each do |field|
+      attrs = field.attributes.slice('kind',
+                                     'codification_kind',
+                                     'title',
+                                     'command')
+      current_field =
+        document_fields.detect do |i|
+          (attrs.to_a - i.attributes.to_a).empty?
+        end
+      next if current_field.blank?
+      if field.document_field_values.length != current_field.document_field_values.length
+        errors.add(:document_fields, :wrong_number_of_values_in_field)
+      end
+      field.document_field_values.each do |value|
+        value_attrs = value.attributes.slice('value',
+                                             'title',
+                                             'position')
+        contains_value =
+          current_field.document_field_values.detect do |i|
+            (value_attrs.to_a - i.attributes.to_a).empty?
+          end.present?
+        if !contains_value
+          errors.add(:document_fields, :wrong_value_added_to_field)
+        end
+      end
+    end
   end
 
   def additional_information
@@ -170,7 +233,7 @@ class Document < ApplicationRecord
     final_value = []
     temporal_value.each_with_index do |val, index|
       prev_val = temporal_value[index - 1]
-      if prev_val.present? && val[:value] == prev_val[:value]
+      if prev_val.present? && val[:value] == prev_val[:value] && !index.zero?
         h = final_value.detect{ |i| i[:min] == prev_val[:revision] }
         h[:max] = val[:revision]
       else
@@ -178,5 +241,17 @@ class Document < ApplicationRecord
       end
     end
     final_value
+  end
+
+  def document_revision_version_present?
+    document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.present?
+  end
+
+  def assign_document_revision_version_field
+    document_fields.new(kind: :hidden_field, codification_kind: :revision_version, column: 1)
+  end
+
+  def assign_convention
+    self.convention = project.conventions.active
   end
 end

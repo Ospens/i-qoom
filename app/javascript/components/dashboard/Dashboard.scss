@@ -192,12 +192,18 @@ button:disabled {
   display: inline-block;
 }
 
-.modal {
-  overflow: auto !important;
+.modal:not(#exampleModalLong) {
+  left: auto !important;
+  top: auto !important;
+  margin: 1rem auto !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: inherit !important;
 }
 
-.modal-dialog {
-  margin-top: 25vh !important;
+.modal-window {
+  min-width: 500px;
+  will-change: top, left, margin, opacity !important;
   line-height: 1.5;
 
   h4 {
@@ -207,7 +213,7 @@ button:disabled {
     margin-bottom: 40px;
   }
 
-  .modal-body{
+  .modal-body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -217,6 +223,7 @@ button:disabled {
     padding-right: 30px;
 
     &.terms-modal {
+      max-width: 490px;
       padding-left: 60px;
       padding-right: 60px;
 
@@ -286,6 +293,7 @@ button:disabled {
       margin-bottom: 0px;
     }
   }
+
   .project-admin {
     display: flex;
     color: lightgrey;
@@ -293,12 +301,13 @@ button:disabled {
   }
 
   .new-project-modal {
-
+    max-width: 490px;
     h4 {
       padding-left: 30px;
       padding-top: 30px;
       font-weight: 600;
     }
+
     h6 {
       align-self: flex-start;
       margin-bottom: 40px;
@@ -322,6 +331,7 @@ button:disabled {
       padding-right: 100px !important;
     }
   }
+
   .form-check-label {
     display: inline-block !important;
   }
@@ -332,9 +342,11 @@ button:disabled {
   margin-top: 30px;
   border-bottom: 2px solid lightgrey;
   display: flex;
+
   .nav-bar-item {
     display: inline-flex;
     margin-bottom: -2px;
+
     .nav-bar-element {
       text-decoration: none;
       border: none;
@@ -345,6 +357,12 @@ button:disabled {
       padding-bottom: 15px;
       padding-top: 15px;
       border-bottom: 2px solid transparent;
+
+      &:hover {
+        color:  #0096FA;
+        border-bottom: 2px solid  #0096FA;
+      }
+
       &.active {
         color: black;
         border-bottom: 2px solid black;
@@ -719,11 +737,15 @@ input[type=checkbox]:checked+label {
     }
 
     .master-icon {
+      display: flex;
+      width: 23px;
+      height: 23px;
+      justify-content: center;
+      align-content: center;
       position: absolute;
       border: 1px solid white;
       background-color: #4b5b5d;
       color: white;
-      padding: 5px;
       border-radius: 100%;
       left: 0;
       top: 20px;
@@ -786,6 +808,8 @@ span.divider {
 }
 
 .dropdown-with-icon {
+  display: flex !important;
+
   button {
     border: none !important;
     padding: 0;

@@ -200,7 +200,7 @@ export default connect(
   )(reduxForm(
     {
       form: 'company_form',
-      destroyOnUnmount: false,
+      // destroyOnUnmount: false,
       enableReinitialize: true
     })
   (CompanyForm))

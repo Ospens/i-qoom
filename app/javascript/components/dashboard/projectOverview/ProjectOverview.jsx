@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import ReactSVG from 'react-svg'
-import plus from '../../../images/add_1'
+import ReactSVG from 'react-svg'  
 import cogs from '../../../images/cog-double'
 import WelcomeModal from './ModalWelcome'
 import ModalCreateProject from './ModalCreateProject'
@@ -64,15 +63,7 @@ class ProjectOverview extends Component {
             </div>
           ))}
           {allProjects.length < 4 && [...Array(3 - allProjects.length)].map((e, i) => (
-            <div className='col-sm-4' key={i}>
-              <div className='project-card blank' onClick={this.openCreateProjectModal}>
-                <ReactSVG
-                  svgStyle={{ height: 20, width: 20 }}
-                  src={plus}
-                />
-                <label>Create a new project</label>
-              </div>
-            </div>
+            <ModalCreateProject key={i} />
           ))}
         </div>
         <div className='statuses'>
@@ -89,7 +80,6 @@ class ProjectOverview extends Component {
           </ul>
         </div>
         <WelcomeModal />
-        <ModalCreateProject isOpen={projectModal} closeModal={this.closeCreateProjectModal}/>
       </div>
     )
   }

@@ -6,20 +6,9 @@ RSpec.describe Document, type: :model do
   it { should be_valid }
 
   it '#build_from_convention' do
-    convention = FactoryBot.create(:convention)
     user = FactoryBot.create(:user)
-    convention.document_fields.each do |field|
-      if field.can_limit_by_value?
-        field.document_rights.create(user: user,
-                                     document_field_value:
-                                      field.document_field_values.first,
-                                     limit_for: :value,
-                                     enabled: true)
-      else
-        field.document_rights.create(user: user, limit_for: :field)
-      end
-    end
-    document = Document.build_from_convention(convention, user)
+    document = document_attributes(user)
+    expect(Document.new(document)).to be_valid
     expect(document['document_fields_attributes'].length).to eql(8)
     expect(document['document_fields_attributes'].first['document_field_values_attributes'].length).to eql(1)
   end
@@ -32,23 +21,17 @@ RSpec.describe Document, type: :model do
   end
 
   it '#additional_information' do
-    field =
-      FactoryBot.attributes_for(:document_field,
-                                kind: :textarea_field,
-                                codification_kind: :additional_information,
-                                value: '111')
-    rev1 = FactoryBot.create(:document_revision, revision_number: '1')
-    doc1 = FactoryBot.create(:document, revision: rev1)
-    doc1.document_fields.create(field)
-    rev2 = FactoryBot.create(:document_revision, revision_number: '2')
-    doc2 = FactoryBot.create(:document, revision: rev2)
-    doc2.document_fields.create(field)
-    rev3 = FactoryBot.create(:document_revision, revision_number: '3')
-    doc3 = FactoryBot.create(:document, revision: rev3)
-    field['value'] = '222'
-    doc3.document_fields.create(field)
-    rev2.update_columns(document_main_id: rev1.document_main.id)
-    rev3.update_columns(document_main_id: rev1.document_main.id)
+    doc1 = FactoryBot.create(:document)
+    doc1.revision.update!(revision_number: '1')
+    doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+    doc2 = FactoryBot.create(:document)
+    doc2.revision.update!(revision_number: '2')
+    doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+    doc3 = FactoryBot.create(:document)
+    doc3.revision.update!(revision_number: '3')
+    doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
+    doc2.revision.update_columns(document_main_id: doc1.revision.document_main.id)
+    doc3.revision.update_columns(document_main_id: doc1.revision.document_main.id)
     attrs = doc3.attributes_for_show
     info = attrs['additional_information']
     expect(info.length).to eql(2)
@@ -75,19 +58,159 @@ RSpec.describe Document, type: :model do
   end
 
   it 'can_view?' do
-    convention = FactoryBot.create(:convention)
     user = FactoryBot.create(:user)
-    convention.document_fields.limit_by_value.each do |field|
-      value = field.document_field_values.create!(value: '111', position: 1)
-      target_value = field.document_field_values.where.not(id: value.id).first
-      target_value.update!(selected: true)
-      field.document_rights.create(user: user,
-                                   document_field_value: target_value,
-                                   limit_for: :value,
-                                   enabled: true)
-    end
-    document = Document.build_from_convention(convention, user)
-    doc = Document.new(document.merge(project: convention.project))
+    document = document_attributes(user)
+    doc = Document.new(document)
     expect(doc.can_view?(user)).to eql(true)
+  end
+
+  it 'can_create?' do
+    user = FactoryBot.create(:user)
+    document = document_attributes(user)
+    doc = Document.new(document)
+    expect(doc.can_create?(user)).to eql(true)
+  end
+
+  context 'prevent update of fields and values from convention' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:doc_attrs) do
+      document_attributes(user)
+    end
+
+    it 'expect document to be valid' do
+      doc = Document.new(doc_attrs)
+      expect(doc).to be_valid
+    end
+
+    it 'removes one field' do
+      attrs = doc_attrs
+      attrs['document_fields_attributes'].delete_at(1)
+      doc = Document.new(attrs)
+      expect(doc).to_not be_valid
+      expect(doc.errors.count).to eql(2)
+    end
+
+    it 'adds one field' do
+      attrs = doc_attrs
+      attrs['document_fields_attributes'] << FactoryBot.attributes_for(:document_field)
+      doc = Document.new(attrs)
+      expect(doc).to_not be_valid
+      expect(doc.errors.count).to eql(1)
+    end
+
+    it 'removes valid field and adds invalid field' do
+      attrs = doc_attrs
+      attrs['document_fields_attributes'].delete_at(1)
+      attrs['document_fields_attributes'] << FactoryBot.attributes_for(:document_field)
+      doc = Document.new(attrs)
+      expect(doc).to_not be_valid
+      expect(doc.errors.count).to eql(1)
+    end
+
+    context 'changes attribute of field' do
+      attrs =
+        [ 'kind', 'codification_kind', 'column', 'row',
+          'required', 'multiselect', 'title', 'command' ]
+
+      let!(:field) do
+        doc = Document.create(doc_attrs)
+        value = Faker::Name.initials(3)
+        field = FactoryBot.build(:document_field, kind: :text_field, title: value)
+        @attrs = doc_attrs
+        Project.find(@attrs['project_id']).conventions.active.document_fields << field
+        field.document_rights.create!(user: user, limit_for: :field, enabled: true)
+        fields = @attrs['document_fields_attributes'] << field.build_for_new_document(user)
+        fields.detect{ |i| i['kind'] == 'text_field' && i['title'] == value }
+      end
+
+      attrs.each do |attribute|
+        it attribute do
+          doc = Document.new(@attrs)
+          expect(doc).to be_valid
+          old_value = field[attribute]
+          field[attribute] =
+            if attribute == 'kind'
+              'textarea_field'
+            elsif attribute == 'codification_kind'
+              'document_number'
+            elsif attribute == 'column' || attribute == 'row'
+              if field[attribute] == 1
+                '2'
+              elsif field[attribute] == 2
+                '1'
+              else
+                rand(100..999)
+              end
+            elsif attribute == 'required'
+              !field[attribute]
+            else
+              Faker::Name.initials(9)
+            end
+          expect(field[attribute]).to_not eql(old_value)
+          doc = Document.new(@attrs)
+          expect(doc).to_not be_valid
+          expect(doc.errors.count).to eql(1)
+        end
+      end
+    end
+
+    it 'adds value to field' do
+      attrs = doc_attrs
+      fields = attrs['document_fields_attributes']
+      field = fields.detect{ |i| i['kind'] == 'select_field' }
+      field['document_field_values_attributes'] << FactoryBot.attributes_for(:document_field_value)
+      doc = Document.new(attrs)
+      expect(doc).to_not be_valid
+      expect(doc.errors.count).to eql(1)
+    end
+
+    it 'replaces value with wrong value' do
+      attrs = doc_attrs
+      fields = attrs['document_fields_attributes']
+      field = fields.detect{ |i| i['kind'] == 'select_field' }
+      field['document_field_values_attributes'] = [FactoryBot.attributes_for(:document_field_value, selected: true)]
+      doc = Document.new(attrs)
+      expect(doc).to_not be_valid
+      expect(doc.errors.count).to eql(1)
+    end
+
+    context 'changes attribute of field value' do
+      attrs = [ 'value', 'title', 'position' ]
+
+      let!(:field_value) do
+        @attrs = doc_attrs
+        fields = @attrs['document_fields_attributes']
+        field = fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+        field['document_field_values_attributes'].first
+      end
+
+      attrs.each do |attribute|
+        it attribute do
+          doc = Document.new(@attrs)
+          expect(doc).to be_valid
+          old_value = field_value[attribute]
+          field_value[attribute] =
+            if attribute == 'position'
+              rand(100..999)
+            else
+              Faker::Name.initials(9)
+            end
+          expect(field_value[attribute]).to_not eql(old_value)
+          doc = Document.new(@attrs)
+          expect(doc).to_not be_valid
+          expect(doc.errors.count).to eql(1)
+        end
+      end
+    end
+  end
+
+  it 'assign convention' do
+    user = FactoryBot.create(:user)
+    document = document_attributes(user)
+    document['convention_id'] = nil
+    doc = Document.new(document)
+    expect(doc.convention).to be_blank
+    doc.valid?
+    expect(doc.convention).to be_present
   end
 end

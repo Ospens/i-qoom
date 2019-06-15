@@ -277,7 +277,7 @@ class ProjectDetails extends Component {
     const firstAdminFields = admins
       ? this.changeKeys(admins[0], 'administrator_form_1_')
       : {}
-    const billingInit = company_datum
+    const billingInit = company_datum && company_datum.billing_address
       ? this.changeKeys(company_datum.billing_address, 'billing_')
       : {}
 
