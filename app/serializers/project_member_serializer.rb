@@ -1,0 +1,3 @@
+class ProjectMemberSerializer < ApplicationSerializer
+
+end

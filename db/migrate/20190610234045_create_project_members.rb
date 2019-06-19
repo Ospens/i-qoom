@@ -11,6 +11,7 @@ class CreateProjectMembers < ActiveRecord::Migration[5.2]
       t.string  :member_id
       t.integer :project_id
       t.integer :user_id
+      t.integer :creation_step
       t.timestamps
     end
   end

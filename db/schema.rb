@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 2019_06_13_162550) do
     t.string "member_id"
     t.integer "project_id"
     t.integer "user_id"
+    t.integer "creation_step"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
