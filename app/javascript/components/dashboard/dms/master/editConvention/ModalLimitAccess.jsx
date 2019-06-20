@@ -1,48 +1,43 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  SubmissionError,
-  getFormSubmitErrors,
-  reduxForm,
-  formValueSelector,
-  Field,
-  destroy
-} from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import Tabs from '../../../../../elements/Tabs'
-import { startAddInputRights } from '../../../../../actions/conventionActions'
+import {
+  getGrantAccessMembers,
+  getGrandedAccessMembers,
+  startUpdateAccessMembers
+} from '../../../../../actions/accessRightsActions'
 
 const columns = [
   { title: 'Name', divider: false },
   { title: 'Member-ID', divider: true },
   { title: 'E-mail', divider: true },
-  { title: 'Role', divider: true },
-]
-
-const tableData = [
-  { name: 'Anna', member_id: 'FyteTest12dsf345', employment: 2 },
-  { name: 'Anna Danielson', member_id: 'ArandomnameTest12345', employment: 1 }
+  { title: 'Company', divider: true },
 ]
 
 class ModalLimitAccess extends Component {
 
   state = {
     column: null,
-    data: tableData,
+    newMembers: this.props.newMembers || [],
+    oldMembers: this.props.oldMembers || [],
     direction: null,
     grantAccess: [],
     grandedAccess: []
   }
 
   componentWillMount() {
-    const { startAddInputRights } = this.props
-    startAddInputRights()
+    const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
+    // TODO: doesn't release on backend now
+    getGrandedAccessMembers()
+    getGrantAccessMembers()
   }
 
   handleCheckUser = (value, type) => {
     const values = this.state[type] || []
-
+    const { change } = this.props
     const indexElement = values.indexOf(value)
     if (indexElement > -1) {
       values.splice(indexElement, 1)
@@ -51,11 +46,13 @@ class ModalLimitAccess extends Component {
     }
 
     this.setState({ [type]: values })
+    change([type], values)
   }
 
-  renderGrantAccess = (type) => {
-    const { column, data, direction } = this.state
+  renderGrantAccess = (type, users) => {
+    const { column, direction } = this.state
     const checked = this.state[type]
+    // TODO: now this users list is only for all fields
 
     return (
       <div className="modal-container__content-block">
@@ -71,7 +68,7 @@ class ModalLimitAccess extends Component {
           </button>
         </div>
         <div className='table-block'>
-          <Table sortable className='mamber-managment-table'>
+          <Table sortable className='main-table-block'>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className='table-checkbox'>
@@ -94,31 +91,35 @@ class ModalLimitAccess extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {data.map(({ member_id, name, employment }) => (
-                <Table.Row key={name}>
+              {users.map((user, i) => (
+                <Table.Row key={i}>
                   <Table.Cell className='table-checkbox'>
                     <div>
                       <input
                         type='checkbox'
-                        id={member_id}
-                        checked={checked.includes(member_id)}
-                        onChange={() => this.handleCheckUser(member_id, type)}
+                        id={user.id}
+                        checked={checked.includes(user.id)}
+                        onChange={() => this.handleCheckUser(user.id, type)}
                       />
-                      <label htmlFor={member_id} />
+                      <label htmlFor={user.id} />
                     </div>
                   </Table.Cell>
                   <Table.Cell className='name-column'>
-                    <div>
-                      <UserAvatar size='24' name={name} />
-                    </div>
+                    <div><UserAvatar size='24' name={user.first_name} /></div>
                     <div className='ml-2'>
-                      <span>{name}</span>
-                      <div>
-                        <label>test</label>
-                      </div>
+                      <span>{`${user.first_name} ${user.last_name}`}</span>
+                      <div><label>Company</label></div>
                     </div>
                   </Table.Cell>
-                  <Table.Cell className='member-id'><span>{member_id}</span></Table.Cell>
+                  <Table.Cell className='member-id'>
+                    <span>{`${user.username}_${user.id}`}</span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span>{user.email}</span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span>{`Comapny: ${user.first_name}`}</span>
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </ Table.Body>
@@ -131,13 +132,13 @@ class ModalLimitAccess extends Component {
   handleSubmit = (field, e) => {
     e.preventDefault()
     e.stopPropagation()
-    const { handleBack } = this.props
+    const { handleBack, startUpdateAccessMembers } = this.props
     handleBack()
   }
 
   render() {
     const { handleClose, handleBack, title, handleSubmit } = this.props
-    const { grantAccess, grandedAccess } = this.state
+    const { grantAccess, grandedAccess, newMembers, oldMembers } = this.state
     let submitText = 'Add'
     if (grantAccess.length && grandedAccess.length) {
       submitText = `Add ${grantAccess.length} member(s) and remove ${grandedAccess.length} member(s)`
@@ -164,8 +165,8 @@ class ModalLimitAccess extends Component {
             </div>
           </div>
           <Tabs>
-            <div label='Grant access'>{this.renderGrantAccess('grantAccess')}</div>
-            <div label='Granded access'>{this.renderGrantAccess('grandedAccess')}</div>
+            <div label='Grant access'>{this.renderGrantAccess('grantAccess', newMembers)}</div>
+            <div label='Granded access'>{this.renderGrantAccess('grandedAccess', oldMembers)}</div>
           </Tabs>
         </div>
         <div className='modal-footer justify-content-center'>
@@ -192,15 +193,17 @@ class ModalLimitAccess extends Component {
   }
 }
 
-const mapStateToProps = state => ({ })
+const mapStateToProps = ({ accessRights }) => ({
+  newMembers: accessRights.newMembers.users,
+  oldMembers: accessRights.oldMembers.users
+})
 
 const mapDispatchToProps = dispatch => ({
-  startAddInputRights: () => dispatch(startAddInputRights())
+  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
+  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers()),
+  startUpdateAccessMembers: (newUsers, removeUsers) => dispatch(startUpdateAccessMembers(newUsers, removeUsers))
 })
 
 export default connect(
   mapStateToProps, mapDispatchToProps
-)(reduxForm({
-  form: 'input_access_rights_form',
-  enableReinitialize: true
-})(ModalLimitAccess))
+)(reduxForm({form: 'input_access_rights_form'})(ModalLimitAccess))

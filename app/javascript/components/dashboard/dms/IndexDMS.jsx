@@ -6,22 +6,26 @@ import ReactSVG from 'react-svg'
 import classnames from 'classnames'
 import { Table } from 'semantic-ui-react'
 import DropDown from '../../../elements/DropDown'
+import xlsIcon from '../../../images/office-file-xls'
+import xmlIcon from '../../../images/xml-1'
+import csvIcon from '../../../images/csv-1'
+import downloadDetailsIcon from '../../../images/download-button'
+import pdfIcon from '../../../images/office-file-pdf'
+import DocumentPopup from './DocumentPopup'
+import { actionDDitems, reviewStatuses, foldersItems, columns, DtOptions } from './constants'
 import DmsSideBar from './DmsSideBar'
 import blueCheck from '../../../images/add_1'
 import revisionIcon from '../../../images/Revise_2'
 import editDocIcon from '../../../images/common-file-edit'
 import dlIcon from '../../../images/common-file-text_gary'
 import nativeIcon from '../../../images/common-file-text-1'
-import pdfIcon from '../../../images/office-file-pdf'
 import dots from '../../../images/dots-horizontal'
 import DMSLayout from './DMSLayout'
-import { actionDDitems, columns, DtOptions } from './constants'
 
 class IndexDMS extends Component {
 
   state = {
-    column: null,
-    direction: null,
+    popup: false,
     checkedDocs: [],
     checkedDocTypes: []
   }
@@ -217,7 +221,7 @@ class IndexDMS extends Component {
     return (
       <div>
         { this.renderTableHeader() }
-        <Table sortable className='mamber-managment-table'>
+        <Table sortable className='main-table-block'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell />
@@ -257,11 +261,13 @@ class IndexDMS extends Component {
 
                 <Table.Cell className='table-checkbox'>
                   <div>
-                    <input
-                      type='checkbox'
-                      id={doc.id}
+                    <input type='checkbox' id={doc.id} />
+                    <label
+                      htmlFor={doc.id}
+                      onClick={
+                        () => this.checkItem('checkedDocs', checkedDocs, doc.id)
+                      }
                     />
-                    <label htmlFor={doc.id} onClick={() => this.checkItem('checkedDocs', checkedDocs, doc.id)}/>
                   </div>
                 </Table.Cell>
 
@@ -315,19 +321,182 @@ class IndexDMS extends Component {
     )
   }
 
+  renderSideBar = () => {
+    const { myReview, allReview, checkedDocs, popup } = this.state
+    const allReviewlClass = classnames({ 'hidden': !allReview })
+    const myReviewlClass = classnames({ 'hidden': !myReview })
+
+    return (
+      <DmsSideBar>
+        {popup &&
+          <DocumentPopup closePopup={() => this.setState({ popup: false })} />
+        }
+        <div className='dms-sidebar-menu__block'>
+          {checkedDocs.length !== 0
+            ? <div className='selected-info-block'><span>{checkedDocs.length}</span> selected Doc</div>
+            : <h4>Actions</h4>}
+          <DropDown
+            btnName='Action'
+            className='dms-sidebar-menu__dropdown'
+          >
+            {actionDDitems.map(({ icon, title }, i) => (
+              <React.Fragment key={i}>
+                {this.renderDropDownItems(icon, title)}
+              </React.Fragment>
+            ))}
+            <DropDown
+              className='dropdown-submenu dropdown-item show'
+              btnClass='dropdown-submenu'
+              btnComponent={
+                <React.Fragment>
+                  <ReactSVG
+                    svgStyle={{ height: 20, width: 20 }}
+                    src={downloadDetailsIcon}
+                  />
+                  <span className='dropdown-item'>
+                    Download as list
+                        </span>
+                </React.Fragment>
+              }
+            >
+              <div className='download-files-dropdown'>
+                <div className='download-files-dropdown__title'>
+                  <span>Choose format</span>
+                </div>
+                <div className='row'>
+                  <div className='col-6'>
+                    <input
+                      type='checkbox'
+                      id='download_csv'
+                    />
+                    <label htmlFor='download_csv' />
+                    <ReactSVG
+                      svgStyle={{ height: 20, width: 20 }}
+                      src={csvIcon}
+                    />
+                    <span>CSV</span>
+                  </div>
+                  <div className='col-6'>
+                    <input
+                      type='checkbox'
+                      id='download_xls'
+                    />
+                    <label htmlFor='download_xls' />
+                    <ReactSVG
+                      svgStyle={{ height: 20, width: 20 }}
+                      src={xlsIcon}
+                    />
+                    <span>XLS</span>
+                  </div>
+                </div>
+                <div className='row mb-3'>
+                  <div className='col-6'>
+                    <input
+                      type='checkbox'
+                      id='download_xml'
+                    />
+                    <label htmlFor='download_xml' />
+                    <ReactSVG
+                      svgStyle={{ height: 20, width: 20 }}
+                      src={xmlIcon}
+                    />
+                    <span>XML</span>
+                  </div>
+                  <div className='col-6'>
+                    <input
+                      type='checkbox'
+                      id='download_pdf'
+                    />
+                    <label htmlFor='download_pdf' />
+                    <ReactSVG
+                      svgStyle={{ height: 20, width: 20 }}
+                      src={pdfIcon}
+                    />
+                    <span>PDF</span>
+                  </div>
+                </div>
+                <div className='button-block'>
+                  <button type='button' className='btn btn-white'>Cancel</button>
+                  <button type='button' className='btn btn-white-blue'>Download files</button>
+                </div>
+              </div>
+            </DropDown>
+          </DropDown>
+        </div>
+        <div className='dms-sidebar-menu__block'>
+          <h4>My Folders</h4>
+          <ul className='dms-sidebar-menu__list'>
+            {foldersItems.map(({ title, icon }, i) => (
+              <li className='dms-sidebar-menu__item' key={i}>
+                <button type='button' className='btn'>
+                  <ReactSVG
+                    svgStyle={{ height: 20, width: 20, marginRight: 10 }}
+                    src={icon}
+                  />
+                  <span className='head-button__gray-text'>{title}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className='dms-sidebar-menu__block'>
+          <h4>Review process</h4>
+          <div className='dms-sidebar-menu__reviews-list'>
+            <div className='dms-sidebar-menu__reviews-button'>
+              <i className='arrow down' />
+              <button
+                className='btn'
+                onClick={() => this.setState({ myReview: !myReview })}
+              >
+                My review (owned)
+                </button>
+              <div className='red-rounded-info'>3</div>
+            </div>
+            <ul className={myReviewlClass}>
+              {reviewStatuses.map(({ title, color, count }, i) => (
+                <li className='dms-sidebar-menu__item' key={i}>
+                  <span className={`${color}-dot`} />
+                  <span className='status-name'>{title}</span>
+                  <span className='dms-sidebar-menu__item_count'>{count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className='dms-sidebar-menu__reviews-list'>
+            <div className='dms-sidebar-menu__reviews-button'>
+              <i className='arrow down' />
+              <button
+                className='btn'
+                onClick={() => this.setState({ allReview: !allReview })}
+              >
+                All review
+                    </button>
+              <div className='red-rounded-info'>1</div>
+            </div>
+            <ul className={allReviewlClass}>
+              {reviewStatuses.map(({ title, color, count }, i) => (
+                <li className='dms-sidebar-menu__item' key={i}>
+                  <span className={`${color}-dot`} />
+                  <span className='status-name'>{title}</span>
+                  <span className='dms-sidebar-menu__item_count'>{count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+      </DmsSideBar>
+    )
+
+  }
+
   render() {
-    const { myReview, allReview, checkedDocs } = this.state
     return (
       <DMSLayout
         header={this.renderHeader()}
-        sidebar={
-          <DmsSideBar
-            myReview={myReview}
-            allReview={allReview}
-            checkedDocs={checkedDocs}
-            renderDropDownItems={(icon, title) => this.renderDropDownItems(icon, title)}
-          />
-        }
+        sidebar={this.renderSideBar()}
         content={this.renderTable()}
       />
     )

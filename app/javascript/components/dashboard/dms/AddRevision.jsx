@@ -13,7 +13,7 @@ import dmsSettingsIcon from '../../../images/task-list-settings'
 import editIcon from '../../../images/pencil-write'
 import lockIcon from '../../../images/Locked'
 import checkIcon from '../../../images/check_1'
-import SideBarItem from './SideBarItem'
+import { DmsSideBarItem } from './DmsSideBar'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -159,7 +159,7 @@ class AddRevision extends Component {
                   <ul className='dms-sidebar-menu__list'>
                     {menuItems.map(({ path, title, icon }, i) => (
                       <React.Fragment key={i}>
-                        <SideBarItem path={path} label={title} icon={icon} />
+                        <DmsSideBarItem path={path} label={title} icon={icon} />
                       </React.Fragment>
                     ))}
                   </ul>

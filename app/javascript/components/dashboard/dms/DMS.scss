@@ -157,7 +157,7 @@
       .dms-sidebar-menu__item {
         width: 100%;
 
-        button, a {
+        button, a.btn {
           display: flex;
           padding: 10px;
           width: 100%;
@@ -170,6 +170,21 @@
 
         path {
           fill: black;
+        }
+
+        .dms-sidebar-menu__sublitem {
+          padding: 10px;
+          margin-left: 30px;
+
+          .dms-sidebar-menu__sublink {
+            a {
+              font-size:1em;
+
+              &.active {
+                font-weight: 700;
+              }
+            }
+          }
         }
       }
     }
@@ -1189,7 +1204,7 @@ input.search-input {
   margin-right: 10px;
 }
 
-.tabs.conventios-tabs {
+.tabs.big-tabs {
   .nav-bar {
     margin-top: 0;
   }
@@ -1325,5 +1340,21 @@ input.search-input {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     font-weight: 600;
     border: 2px solid #fff;
+  }
+}
+
+.access-rights-table-block {
+  width: 100%;
+  overflow: auto;
+  min-height: 800px;
+
+  .UserAvatar--inner {
+    font-size: 1.2em;
+  }
+
+  .main-table-block {
+    th:not(.table-checkbox) {
+      min-width: 180px;
+    }
   }
 }

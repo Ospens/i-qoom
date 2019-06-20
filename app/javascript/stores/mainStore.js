@@ -9,6 +9,7 @@ import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
 import documentsReducer from '../reducers/documentsReducer'
 import conventionReducer from '../reducers/conventionReducer'
+import accessRightsReducer from '../reducers/accessRightsReducer'
 import { loadState, saveState } from './localStorage'
 
 const rootReducer = combineReducers({
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   documents: documentsReducer,
   projects: projectReducer,
   conventions: conventionReducer,
+  accessRights: accessRightsReducer,
   form: reduxFormReducer
 })
 

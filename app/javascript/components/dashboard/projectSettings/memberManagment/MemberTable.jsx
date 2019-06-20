@@ -100,7 +100,7 @@ class MemberTable extends Component {
 
     return (
       <div className='table-block'>
-        <Table sortable className='mamber-managment-table'>
+        <Table sortable className='main-table-block'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className='table-checkbox'>

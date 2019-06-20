@@ -7,8 +7,7 @@ import {
   REMOVE_FIELD,
   DISCARD_EDIT_VALUES,
   CONVENTION_UPDATED,
-  DISCARD_CONVENTION,
-  NEW_INPUT_RIGHTS
+  DISCARD_CONVENTION
 } from './types'
 import { errorNotify } from '../elements/Notices'
 
@@ -21,8 +20,13 @@ const fieldByColumn = data => {
 
   sorted[1].sort((a, b) => a.row - b.row)
   sorted[2].sort((a, b) => a.row - b.row)
-  data.grouped_fields = sorted
-  return data
+  const newData = {
+    ...data,
+    grouped_fields: {
+      ...sorted
+    }
+  }
+  return newData
 }
 
 const editingConvention = payload => ({
@@ -171,10 +175,11 @@ export const reorderFields = (result, fields) => dispatch => {
       [source.droppableId]: newFields
     }
 
-    return dispatch({
+    dispatch({
       type: ORDER_FIELDS,
       payload: orderedFields
     })
+    return
   }
 
   const startColumn = fields[source.droppableId]
@@ -192,30 +197,8 @@ export const reorderFields = (result, fields) => dispatch => {
     [destination.droppableId]: finishFields
   }
 
-  return dispatch({
+  dispatch({
     type: ORDER_FIELDS,
     payload: orderedFields
   })
-}
-
-export const startAddInputRights = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
-  }
-  // TODO: connect with backend
-
-  /*
-  return (
-    axios.get(`/api/v1/projects/${current.id}/document_rights/new`, {
-      headers
-    })
-      .then(response => {
-        console.log(response)
-        // dispatch(editingConvention(sortedData))
-      })
-      .catch(() => {
-        errorNotify('Something went wrong')
-      })
-  ) */
 }

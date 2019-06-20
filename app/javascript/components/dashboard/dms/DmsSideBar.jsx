@@ -1,33 +1,52 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import classnames from 'classnames'
+import { Link, Route } from 'react-router-dom'
 import ReactSVG from 'react-svg'
-import DropDown from '../../../elements/DropDown'
-import xlsIcon from '../../../images/office-file-xls'
-import xmlIcon from '../../../images/xml-1'
-import csvIcon from '../../../images/csv-1'
 import overviewIcon from '../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../images/task-list-settings'
 import docPlanIcon from '../../../images/calendar-3'
-import downloadDetailsIcon from '../../../images/download-button'
-import pdfIcon from '../../../images/office-file-pdf'
-import DocumentPopup from './DocumentPopup'
-import { actionDDitems, reviewStatuses, foldersItems, SideBarItem } from './constants'
+import classnames from 'classnames'
+
+export const DmsSideBarItem = ({ path, label, icon, root, nested}) => (
+  <Route path={path} exact>
+    {({ match, location }) => {
+      const matched = match || location.pathname.indexOf(root) > -1
+      return (
+        <li className="dms-sidebar-menu__item">
+          <Link className={classnames('btn', { 'active': matched })} to={path}>
+            <ReactSVG
+              svgStyle={{ height: 20, width: 20, marginRight: 10 }}
+              src={icon}
+            />
+            <span className="head-button__gray-text">{label}</span>
+          </Link>
+          {matched && nested &&
+          <ul className='dms-sidebar-menu__sublitem'>
+            {nested.map((subItem, i) => (
+              <li
+                key={i}
+                className='dms-sidebar-menu__sublink'
+              >
+                <Link
+                  className={classnames({ 'active': location.pathname.indexOf(subItem.path) > -1})}
+                  to={subItem.path}
+                >
+                  {subItem.title}
+                </Link>
+              </li>
+            ))}
+          </ul>}
+        </li>
+      )}}
+  </Route>
+)
 
 class DmsSideBar extends Component {
 
-  state = {
-    myReview: false,
-    allReview: false,
-    popup: false
-  }
+  renderMainItems = () => {
+    const { projectId } = this.props
 
-  render() {
-    const { checkedDocs, renderDropDownItems, projectId } = this.props
-    const { myReview, allReview, popup } = this.state
-    const allReviewlClass = classnames({ 'hidden': !allReview })
-    const myReviewlClass = classnames({ 'hidden': !myReview })
-
+    // TODO: Need check for master's permit
     const menuItems = [
       {
         title: 'Overview',
@@ -47,181 +66,97 @@ class DmsSideBar extends Component {
       {
         title: 'Master settings',
         icon: docPlanIcon,
-        path: `/dashboard/projects/${projectId}/documents/edit_convetion/`
+        path: `/dashboard/projects/${projectId}/documents/master/edit_convention`,
+        root: `/dashboard/projects/${projectId}/documents/master/`
+      }
+    ]
+
+    const masterMenu = [
+      {
+        title: 'Upload form',
+        icon: overviewIcon,
+        path: `/dashboard/projects/${projectId}/documents/master/edit_convention/`
+      },
+      {
+        title: 'Access rights',
+        icon: dmsSettingsIcon,
+        path: `/dashboard/projects/${projectId}/documents/master/access_rights/members/`,
+        root: `/dashboard/projects/${projectId}/documents/master/access_rights/`,
+        nested: [
+          {
+            title: 'Members',
+            path: `/dashboard/projects/${projectId}/documents/master/access_rights/members/`
+          },
+          {
+            title: 'Teams',
+            path: `/dashboard/projects/${projectId}/documents/master/access_rights/teams/`
+          },
+        ]
+      },
+      {
+        title: 'Quick search',
+        icon: docPlanIcon,
+        path: '/dashboard/documents/master/planning/'
+      },
+      {
+        title: 'Codification',
+        icon: dmsSettingsIcon,
+        path: '/dashboard/documents/master/planning/'
+      },
+      {
+        title: 'Distribution groups',
+        icon: dmsSettingsIcon,
+        path: '/dashboard/documents/master/planning/'
+      },
+      {
+        title: 'Review managment',
+        icon: dmsSettingsIcon,
+        path: '/dashboard/documents/master/planning/'
       }
     ]
 
     return (
+      <div className='dms-sidebar-menu__block'>
+        <h4>DMS menu</h4>
+        <ul className='dms-sidebar-menu__list'>
+          {menuItems.map(({ path, title, icon, root }, i) => (
+            <React.Fragment key={i}>
+              <DmsSideBarItem
+                path={path}
+                label={title}
+                icon={icon}
+                root={root}
+              />
+            </React.Fragment>
+          ))}
+        </ul>
+        <h4>Master settings</h4>
+        <ul className='dms-sidebar-menu__list'>
+          {masterMenu.map(({ path, title, icon, root, nested }, i) => (
+            <React.Fragment key={i}>
+              <DmsSideBarItem
+                path={path}
+                label={title}
+                icon={icon}
+                root={root}
+                nested={nested}
+              />
+            </React.Fragment>
+          ))}
+        </ul>
+      </div>
+    )
+
+  }
+
+  render() {
+    const { children } = this.props
+
+    return (
       <React.Fragment>
-        {popup && <DocumentPopup closePopup={() => this.setState({ popup: false })} />}
         <div className='dms-sidebar-menu'>
-          <div className='dms-sidebar-menu__block'>
-            <h4>DMS menu</h4>
-            <ul className='dms-sidebar-menu__list'>
-                {menuItems.map(({ path, title, icon }, i) => (
-                <React.Fragment key={i}>
-                  <SideBarItem path={path} label={title} icon={icon} />
-                </React.Fragment>
-              ))}
-            </ul>
-          </div>
-          <div className='dms-sidebar-menu__block'>
-            {checkedDocs.length !== 0
-              ? <div className='selected-info-block'><span>{checkedDocs.length}</span> selected Doc</div>
-              : <h4>Actions</h4>}
-            <DropDown
-              btnName='Action'
-              className='dms-sidebar-menu__dropdown'
-            >
-              {actionDDitems.map(({ icon, title }, i) => (
-                <React.Fragment key={i}>
-                  {renderDropDownItems(icon, title)}
-                </React.Fragment>
-              ))}
-              <DropDown
-                className='dropdown-submenu dropdown-item show'
-                btnClass='dropdown-submenu'
-                btnComponent={
-                  <React.Fragment>
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20 }}
-                      src={downloadDetailsIcon}
-                    />
-                    <span className='dropdown-item'>
-                      Download as list
-                        </span>
-                  </React.Fragment>
-                }
-              >
-                <div className='download-files-dropdown'>
-                  <div className='download-files-dropdown__title'>
-                    <span>Choose format</span>
-                  </div>
-                  <div className='row'>
-                    <div className='col-6'>
-                      <input
-                        type='checkbox'
-                        id='download_csv'
-                      />
-                      <label htmlFor='download_csv' />
-                      <ReactSVG
-                        svgStyle={{ height: 20, width: 20 }}
-                        src={csvIcon}
-                      />
-                      <span>CSV</span>
-                    </div>
-                    <div className='col-6'>
-                      <input
-                        type='checkbox'
-                        id='download_xls'
-                      />
-                      <label htmlFor='download_xls' />
-                      <ReactSVG
-                        svgStyle={{ height: 20, width: 20 }}
-                        src={xlsIcon}
-                      />
-                      <span>XLS</span>
-                    </div>
-                  </div>
-                  <div className='row mb-3'>
-                    <div className='col-6'>
-                      <input
-                        type='checkbox'
-                        id='download_xml'
-                      />
-                      <label htmlFor='download_xml' />
-                      <ReactSVG
-                        svgStyle={{ height: 20, width: 20 }}
-                        src={xmlIcon}
-                      />
-                      <span>XML</span>
-                    </div>
-                    <div className='col-6'>
-                      <input
-                        type='checkbox'
-                        id='download_pdf'
-                      />
-                      <label htmlFor='download_pdf' />
-                      <ReactSVG
-                        svgStyle={{ height: 20, width: 20 }}
-                        src={pdfIcon}
-                      />
-                      <span>PDF</span>
-                    </div>
-                  </div>
-                  <div className='button-block'>
-                    <button type='button' className='btn btn-white'>Cancel</button>
-                    <button type='button' className='btn btn-white-blue'>Download files</button>
-                  </div>
-                </div>
-              </DropDown>
-            </DropDown>
-          </div>
-
-          <div className='dms-sidebar-menu__block'>
-            <h4>My Folders</h4>
-            <ul className='dms-sidebar-menu__list'>
-              {foldersItems.map(({ title, icon }, i) => (
-                <li className='dms-sidebar-menu__item' key={i}>
-                  <button type='button' className='btn'>
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-                      src={icon}
-                    />
-                    <span className='head-button__gray-text'>{title}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className='dms-sidebar-menu__block'>
-            <h4>Review process</h4>
-            <div className='dms-sidebar-menu__reviews-list'>
-              <div className='dms-sidebar-menu__reviews-button'>
-                <i className='arrow down' />
-                <button
-                  className='btn'
-                  onClick={() => this.setState({ myReview: !myReview })}
-                >
-                  My review (owned)
-                </button>
-                <div className='red-rounded-info'>3</div>
-              </div>
-              <ul className={myReviewlClass}>
-                {reviewStatuses.map(({ title, color, count }, i) => (
-                  <li className='dms-sidebar-menu__item' key={i}>
-                    <span className={`${color}-dot`} />
-                    <span className='status-name'>{title}</span>
-                    <span className='dms-sidebar-menu__item_count'>{count}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className='dms-sidebar-menu__reviews-list'>
-              <div className='dms-sidebar-menu__reviews-button'>
-                <i className='arrow down' />
-                <button
-                  className='btn'
-                  onClick={() => this.setState({ allReview: !allReview })}
-                >
-                  All review
-                    </button>
-                <div className='red-rounded-info'>1</div>
-              </div>
-              <ul className={allReviewlClass}>
-                {reviewStatuses.map(({ title, color, count }, i) => (
-                  <li className='dms-sidebar-menu__item' key={i}>
-                    <span className={`${color}-dot`} />
-                    <span className='status-name'>{title}</span>
-                    <span className='dms-sidebar-menu__item_count'>{count}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
+          {this.renderMainItems()}
+          {children}
         </div>
       </React.Fragment>
     )

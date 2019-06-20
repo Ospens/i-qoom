@@ -14,7 +14,7 @@ import DocDocumentsAndFiles from './DocDocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
 import DocIdModal from './DocIdModal'
 import AddRevisionModal from './AddRevisionModal'
-import SideBarItem from './SideBarItem'
+import { DmsSideBarItem } from './DmsSideBar'
 import DMSLayout from './DMSLayout'
 
 const menuItems = [
@@ -71,7 +71,7 @@ class NewDocument extends Component {
         <ul className='dms-sidebar-menu__list'>
           {menuItems.map(({ path, title, icon }, i) => (
             <React.Fragment key={i}>
-              <SideBarItem path={path} label={title} icon={icon} />
+              <DmsSideBarItem path={path} label={title} icon={icon} />
             </React.Fragment>
           ))}
         </ul>

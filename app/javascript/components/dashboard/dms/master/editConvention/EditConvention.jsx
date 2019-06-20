@@ -1,52 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import SideBarItem from '../../SideBarItem'
+import { setInitialValuesField } from '../../../../../actions/conventionActions'
 import DMSLayout from '../../DMSLayout'
-import overviewIcon from '../../../../../images/task-checklist-check'
-import dmsSettingsIcon from '../../../../../images/task-list-settings'
-import docPlanIcon from '../../../../../images/calendar-3'
 import DocumentFiledsTable from './DocFiledsTable'
 import Tabs from '../../../../../elements/Tabs'
-
-const menuItems = [
-  {
-    title: 'Overview',
-    icon: overviewIcon,
-    path: '/dashboard/documents/overview/'
-  },
-  {
-    title: 'DMS Settings',
-    icon: dmsSettingsIcon,
-    path: '/dashboard/documents/settings/'
-  },
-  {
-    title: 'Document planning',
-    icon: docPlanIcon,
-    path: '/dashboard/documents/planning/'
-  },
-  {
-    title: 'Master setting',
-    icon: dmsSettingsIcon,
-    path: '/dashboard/documents/planning/'
-  }
-]
+import DmsSideBar from '../../DmsSideBar'
 
 class EditConvention extends Component {
 
-  renderSideBar = () => (
-    <div className='dms-sidebar-menu'>
-      <div className='dms-sidebar-menu__block'>
-        <h4>DMS menu</h4>
-        <ul className='dms-sidebar-menu__list'>
-          {menuItems.map(({ path, title, icon }, i) => (
-            <React.Fragment key={i}>
-              <SideBarItem path={path} label={title} icon={icon} />
-            </React.Fragment>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
+  componentWillMount() {
+    const { setInitialValuesField } = this.props
+    setInitialValuesField({})
+  }
 
   renderTab = () => {
     return (
@@ -58,7 +23,7 @@ class EditConvention extends Component {
 
   renderContent = () => {
     return (
-      <Tabs className='conventios-tabs'>
+      <Tabs className='big-tabs'>
         <div label='Convention - 1' >{this.renderTab()}</div>
         <div label='Convention - 2' >{this.renderTab()}</div>
         <div label='Convention - 3' >{this.renderTab()}</div>
@@ -70,7 +35,7 @@ class EditConvention extends Component {
     return (
       <React.Fragment>
         <DMSLayout
-          sidebar={this.renderSideBar()}
+          sidebar={<DmsSideBar />}
           content={this.renderContent()}
         />
       </React.Fragment>
@@ -79,7 +44,12 @@ class EditConvention extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  current: state.conventions.current
+  current: state.conventions.current,
+  projectId: state.projects.current.id
 })
 
-export default connect(mapStateToProps)(EditConvention)
+const mapDispatchToProps = dispatch => ({
+  setInitialValuesField: (field) => dispatch(setInitialValuesField(field))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditConvention)

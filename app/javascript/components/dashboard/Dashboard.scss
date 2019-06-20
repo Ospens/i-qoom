@@ -610,7 +610,7 @@ button:disabled {
   }
 }
 
-.mamber-managment-table, .rect-checkbox {
+.main-table-block, .rect-checkbox {
 
   input[type=checkbox]+label {
     background-color: #e8f3f4;
@@ -653,7 +653,7 @@ input[type=checkbox]:checked+label {
   background-size: 100%;
 }
 
-.mamber-managment-table {
+.main-table-block {
   border: none !important;
   font-size: 12px !important;
   border-collapse: collapse !important;
@@ -705,7 +705,7 @@ input[type=checkbox]:checked+label {
     }
 
     &.access-column {
-      min-width: 80px !important;
+      min-width: 180px !important;
     }
 
     &.td-files {
@@ -766,11 +766,16 @@ span.divider {
 }
 
 .dropdown-menu {
-  min-width: 160px !important;
+  min-width: fit-content;
+  width: 100%;
+  margin-top: -1px; 
+  z-index: 9;
+  padding: 0;
   padding-left: 5px !important;
   padding-right: 5px !important;
 
   .dropdown-item {
+    min-width: fit-content;
     color: grey;
     display: flex;
     align-items: center;
@@ -1065,13 +1070,6 @@ input:checked+.slider:before {
 }
 
 .dropdown-with-switch {
-  min-width: 170px;
-
-  .dropdown-menu {
-    margin-top: -5px; 
-    z-index: 9;
-    padding: 0;
-  }
   .dropdown-item {
     padding: 5px;
     color: #475859;
@@ -1116,6 +1114,8 @@ input:checked+.slider:before {
     display: flex !important;
     align-items: center;
     line-height: 1.25 !important;
+    width: 100%;
+    font-size: 1em;
 
     &::after {
       padding: 3px;
@@ -1300,4 +1300,16 @@ i.arrow {
 
 .color-blue {
   color: #0096FA !important;
+}
+
+.acceess-rights__drop-down {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  .acceess-rights__drop-down-row {
+    display: flex;
+    flex-direction: row;
+  }
 }

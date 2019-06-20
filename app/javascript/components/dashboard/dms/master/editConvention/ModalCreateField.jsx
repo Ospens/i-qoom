@@ -113,20 +113,20 @@ class ModalCreateField extends Component {
   }
 
   removeSection = index => {
-    const { document_field_values } = this.props
+    const { document_field_values, change } = this.props
     document_field_values.splice(index, 1)
-    this.props.change('document_field_values', document_field_values)
+    change('document_field_values', document_field_values)
   }
 
   copySection = index => {
-    const { document_field_values } = this.props
+    const { document_field_values, change } = this.props
     const newValue = document_field_values[index]
     document_field_values.splice(index, 0, newValue)
-    this.props.change('document_field_values', document_field_values)
+    change('document_field_values', document_field_values)
   }
 
   changeDDSection = (newValue, index) => {
-    const { document_field_values } = this.props
+    const { document_field_values, change } = this.props
     const updatedValue = {
       ...document_field_values[index],
       value: newValue,
@@ -134,7 +134,7 @@ class ModalCreateField extends Component {
     }
     document_field_values.splice(index, 1, updatedValue)
     
-    this.props.change('document_field_values', document_field_values)
+    change('document_field_values', document_field_values)
   }
 
   validations = field => {
@@ -193,23 +193,24 @@ class ModalCreateField extends Component {
       isEdit,
       handleSubmit,
       submitErrors,
-      initialValues: { title }
+      initialValues: { title, id }
     } = this.props
     const { document_field_values } = this.props
     const { newSection } = this.state
 
+    // TODO: Change limit access for new field to
     return (
       <form onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
         <div className='modal-container'>
           <div className="modal-container__title-block">
             <h4>{title || 'New input field'}</h4>
-            <button
+            {id && <button
               type='button'
               className='btn color-blue p-0 ml-auto'
               onClick={() => this.setState({ limitAccess: true })}
             >
               Limit access
-            </button>
+            </button>}
           </div>
           <div className="modal-container__content-block">
             <div className='form-group'>
@@ -310,14 +311,16 @@ class ModalCreateField extends Component {
   renderModalContent = () => {
     const { limitAccess } = this.state
     const { initialValues: { title } } = this.props
-    if (limitAccess) return (
-      <ModalLimitAccess
-        handleBack={() => this.setState({ limitAccess: false })}
-        handleClose={this.handleClose}
-        title={title}
-      />
-    )
-
+    if (limitAccess) {
+      return (
+        <ModalLimitAccess
+          handleBack={() => this.setState({ limitAccess: false })}
+          handleClose={this.handleClose}
+          title={title}
+        />
+      )
+    }
+    
     return this.renderFieldForm()
   }
 

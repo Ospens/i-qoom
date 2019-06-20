@@ -8,6 +8,7 @@ class Tab extends Component {
     return (
       <li className='nav-bar-item'>
         <button
+          type='button'
           className={classnames('nav-bar-element', { 'active': activeTab === label })}
           onClick={() => onClick(label)}
         >

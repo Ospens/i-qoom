@@ -10,6 +10,7 @@ import AddRevision from './AddRevision'
 import ShowDocument from './ShowDocument'
 import IndexDMS from './IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
+import AccessRights from './master/accessRights/AccessRights'
 
 class DMS extends Component {
 
@@ -20,8 +21,16 @@ class DMS extends Component {
       <Switch>
         <Route path={`${match.path}/new/`} component={NewDocument} />
         <Route
-          path={`${match.path}/edit_convention/`}
+          path={`${match.path}/master/edit_convention/`}
           component={EditConvention}
+        />
+        <Route
+          path={`${match.path}/master/access_rights/members`}
+          component={AccessRights}
+        />
+        <Route
+          path={`${match.path}/master/access_rights/teams`}
+          component={AccessRights}
         />
         <Route
           path={`${match.path}/:document_id/`}
