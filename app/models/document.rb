@@ -84,16 +84,21 @@ class Document < ApplicationRecord
   end
 
   def can_view?(user)
-    # user cannot view document if he has no access to all values
-    # for each field that can be limited by value.
+    # user cannot view document if he has no access to all
+    # selected values of document for each field that can be limited by value.
     # when viewing document we check saved convention
     !convention.document_fields.limit_by_value.map do |field|
-      !field.document_field_values.where(selected: true).map do |value|
-        field.document_rights.where(user: user,
-                                    limit_for: :value,
-                                    enabled: true,
-                                    document_field_value: value).any?
-      end.include?(false)
+      selected_field =
+        document_fields
+          .find_by(codification_kind: field.codification_kind)
+      selected_value =
+        selected_field.document_field_values.find_by(selected: true)
+      field.document_rights
+           .joins(:document_field_value)
+           .where(user: user,
+                  limit_for: :value,
+                  enabled: true,
+                  document_field_values: { value: selected_value.value }).any?
     end.include?(false)
   end
 

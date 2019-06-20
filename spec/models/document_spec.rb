@@ -60,8 +60,25 @@ RSpec.describe Document, type: :model do
   it 'can_view?' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)
+    convention = Convention.find(document['convention_id'])
+    con_field =
+      convention.document_fields.find_by(codification_kind: :originating_company)
+    con_value =
+      con_field.document_field_values
+               .create(value: Faker::Name.initials(3),
+                       position: 1,
+                       title: '')
+    field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
+    field['document_field_values_attributes'] << con_value.attributes.except('id')
     doc = Document.new(document)
+    doc.save!
     expect(doc.can_view?(user)).to eql(true)
+    field = doc.document_fields.find_by(codification_kind: :originating_company)
+    field_true = field.document_field_values.find_by(selected: true)
+    field_false = field.document_field_values.find_by(selected: false)
+    field_true.update_columns(selected: false)
+    field_false.update_columns(selected: true)
+    expect(doc.reload.can_view?(user)).to eql(false)
   end
 
   it 'can_create?' do
