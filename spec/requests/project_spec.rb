@@ -4,6 +4,9 @@ describe "Project", type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:second_user) { FactoryBot.create(:user) }
+  let(:different_project) { FactoryBot.create(:project,
+                                              user_id: second_user.id) }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
