@@ -35,9 +35,8 @@ export default class Tabs extends Component {
     const mainClass = classnames('tabs', className)
     
     return (
-
       <div className={mainClass}>
-        <ol className="nav-bar">
+        <ol className='nav-bar'>
           {children.map((child) => {
             const { label } = child.props
             return (
@@ -50,7 +49,7 @@ export default class Tabs extends Component {
             )
           })}
         </ol>
-        <div className="tab-content">
+        <div className='tab-content'>
           {children.map((child) => {
             if (child.props.label !== activeTab) return undefined
             return child

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import './DMS.scss'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
-import classnames from 'classnames'
 import { startFetchDocuments } from '../../../actions/documentsActions'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import NewDocument from './NewDocument'
@@ -10,7 +8,8 @@ import AddRevision from './AddRevision'
 import ShowDocument from './ShowDocument'
 import IndexDMS from './IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
-import AccessRights from './master/accessRights/AccessRights'
+import MembersAccessRights from './master/accessRights/MembersAccessRights'
+import TeamsAccessRights from './master/accessRights/TeamsAccessRights'
 
 class DMS extends Component {
 
@@ -26,11 +25,11 @@ class DMS extends Component {
         />
         <Route
           path={`${match.path}/master/access_rights/members`}
-          component={AccessRights}
+          component={MembersAccessRights}
         />
         <Route
           path={`${match.path}/master/access_rights/teams`}
-          component={AccessRights}
+          component={TeamsAccessRights}
         />
         <Route
           path={`${match.path}/:document_id/`}

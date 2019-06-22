@@ -4,11 +4,6 @@ import { reduxForm } from 'redux-form'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import Tabs from '../../../../../elements/Tabs'
-import {
-  getGrantAccessMembers,
-  getGrandedAccessMembers,
-  startUpdateAccessMembers
-} from '../../../../../actions/accessRightsActions'
 
 const columns = [
   { title: 'Name', divider: false },
@@ -29,10 +24,10 @@ class ModalLimitAccess extends Component {
   }
 
   componentWillMount() {
-    const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
+    // const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
     // TODO: doesn't release on backend now
-    getGrandedAccessMembers()
-    getGrantAccessMembers()
+    // getGrandedAccessMembers()
+    // getGrantAccessMembers()
   }
 
   handleCheckUser = (value, type) => {
@@ -199,9 +194,10 @@ const mapStateToProps = ({ accessRights }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+  /*
   getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
-  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers()),
-  startUpdateAccessMembers: (newUsers, removeUsers) => dispatch(startUpdateAccessMembers(newUsers, removeUsers))
+  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
+  */
 })
 
 export default connect(

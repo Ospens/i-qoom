@@ -1348,13 +1348,59 @@ input.search-input {
   overflow: auto;
   min-height: 800px;
 
-  .UserAvatar--inner {
-    font-size: 1.2em;
-  }
-
   .main-table-block {
     th:not(.table-checkbox) {
       min-width: 180px;
     }
+  }
+}
+
+.show-members-popup {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  min-width: 340px;
+
+  .popup-team-member-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 220px;
+    padding-left: 10px;
+
+    &:has(.show) {
+      .UserAvatar {
+          .UserAvatar--inner {
+            background: black;
+          }
+        }
+      }
+  }
+
+  .avatar-with-dropdown {
+    background-color: transparent;
+  }
+
+  .UserAvatar--inner {
+    margin-right: -10px; 
+  }
+}
+
+.popup-add-team-member {
+  display: flex;
+  align-items: baseline;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+.popup-toggle-members-btn {
+  margin-left: auto;
+
+  &.hider {
+    align-self: flex-end; 
+  }
+
+  &.shower {
+    align-self: center; 
   }
 }

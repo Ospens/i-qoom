@@ -720,7 +720,15 @@ input[type=checkbox]:checked+label {
     }
   }
 
-  .name-column {
+  .team-title-column {
+    min-width: 300px;
+
+    .btn {
+      color: #0095f9;
+    }
+  }
+
+  .name-column, .team-title-column {
     position: relative;
     flex-direction: row;
     display: flex;

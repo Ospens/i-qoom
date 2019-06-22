@@ -64,6 +64,8 @@ class DocumentRight < ApplicationRecord
         last_name: user.last_name,
         username: user.username,
         email: user.email,
+        # TODO: change this
+        team: user.id == 3 ? { name: 'Workgroup Team', members: 12 } : nil,
         document_rights_attributes: rights_attrs
       }
     end

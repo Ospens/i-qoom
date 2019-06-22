@@ -934,20 +934,61 @@ input[type=checkbox] {
   }
 }
 
+.UserAvatar--inner {
+  background: rgba(244, 167, 0, 1);
+  background: -moz-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(244, 167, 0, 1)), color-stop(100%, rgba(209, 216, 13, 1)));
+  background: -webkit-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -o-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -ms-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: linear-gradient(135deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  border: 2px solid #fff;
+  line-height: 38px !important;
+}
+
 .user-info-avatar {
-    .UserAvatar--inner {
-        background: rgba(244, 167, 0, 1);
-        background: -moz-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(244, 167, 0, 1)), color-stop(100%, rgba(209, 216, 13, 1)));
-        background: -webkit-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -o-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -ms-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: linear-gradient(135deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-        font-weight: 600;
-        border: 2px solid #fff;
-        line-height: 38px !important;
+  display: flex;
+  margin-bottom: 5px;
+
+  .UserAvatar {
+    z-index: 1;
+  }
+
+  .team-icon {
+    position: relative;
+    display: flex;
+
+    &.with-avatar{
+      .UserAvatar {
+        z-index: 0;
+        margin-right: -10px !important;
+      }
     }
+
+    .UserAvatar--inner {
+      background: rgb(44, 62, 80);
+      background-color: rgb(44, 62, 80) !important;
+    }
+
+    .team-length {
+      position: absolute;
+      bottom: -13px;
+      left: calc(50% - 8px);
+      background: black;
+      padding: 3px;
+      width: 25px;
+      height: 25px;
+      font-size: 1em;
+      color: white;
+      border-radius: 100%;
+      text-align: center;
+      line-height: 1.1;
+      vertical-align: middle;
+      border: 2px solid white;
+    }
+  }
 }
 
 .user-profile {

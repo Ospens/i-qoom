@@ -9,6 +9,13 @@ class DropDown extends Component {
     isOpen: false
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    const { openState } = this.props
+    if (openState) {
+      openState(nextState.isOpen)
+    }
+  }
+
   renderDotsIcon = () => (
     <ReactSVG
       svgStyle={{ height: 15, width: 15 }}

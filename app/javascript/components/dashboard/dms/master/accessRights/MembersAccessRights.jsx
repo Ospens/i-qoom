@@ -4,11 +4,14 @@ import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 import ReactSVG from 'react-svg'
 import UserAvatar from 'react-user-avatar'
+import {
+  getGrantAccessMembers,
+  getGrandedAccessMembers
+} from '../../../../../actions/accessRightsActions'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 import Tabs from '../../../../../elements/Tabs'
 import DropDown from '../../../../../elements/DropDown'
-import pencilIcon from '../../../../../images/pencil-write'
 import accessRightsIcon from '../../../../../images/common-file-share'
 import showProfileIcon from '../../../../../images/single-neutral-actions-text'
 import messageIcon from '../../../../../images/email-action-unread'
@@ -94,22 +97,30 @@ const optionBtn = [
   }
 ]
 
-class AccessRights extends Component {
+class MembersAccessRights extends Component {
 
   state = {
-    checkedMembers: []
+    checkedMembers: [],
+    checkedNewMembers: []
   }
 
-  checkItem = (stateItems, value) => {
+  componentWillMount() {
+    const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
+    getGrandedAccessMembers()
+    getGrantAccessMembers()
+  }
+
+  checkItem = (type, value) => {
+    const checked = this.state[type]
     let newVal
 
-    if (stateItems.includes(value)) {
-      newVal = stateItems.filter(el => el !== value)
+    if (checked.includes(value)) {
+      newVal = checked.filter(el => el !== value)
     } else {
-      stateItems.push(value)
+      checked.push(value)
     }
 
-    this.setState({ checkedMembers: newVal || stateItems })
+    this.setState({ [type]: newVal || checked })
   }
 
   toogleUsersRights = () => {
@@ -176,12 +187,12 @@ class AccessRights extends Component {
     )
   }
 
-  renderMemberTable = () => {
-    const { users } = this.props
-    const { checkedMembers } = this.state
+  renderMemberTable = (type, data) => {
+    const checked = this.state[type]
     let optionsText = 'Options'
-    if (checkedMembers.length) {
-      optionsText += `: ${checkedMembers.length} members selected` 
+
+    if (checked.length) {
+      optionsText += `: ${checked.length} members selected` 
     }
 
     return (
@@ -231,21 +242,28 @@ class AccessRights extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {users.map((user, i) => (
+              {data.map((user, i) => (
                 <Table.Row key={i}>
                   <Table.Cell className='table-checkbox'>
                     <div>
-                      <input type='checkbox' id={user.id}/>
-                      <label
-                        htmlFor={user.id}
-                        onClick={() => this.checkItem(checkedMembers, user.id)}
+                      <input
+                        type='checkbox'
+                        id={user.id}
+                        checked={checked.includes(user.id)}
+                        onChange={() => this.checkItem(type, user.id)}
                       />
+                      <label htmlFor={user.id} />
                     </div>
                   </Table.Cell>
                   <Table.Cell className='name-column user-info-avatar d-flex'>
-                    <button type='button' className='nav-link btn-transparent user-info-avatar'>
+                    <div className='user-info-avatar'>
+                      {user.team &&
+                      <div className="team-icon with-avatar">
+                        <UserAvatar size='42' name='T' />
+                        <span className='team-length'>{user.team.members || 0}</span>
+                      </div>}
                       <UserAvatar size='42' name={`${user.first_name} ${user.last_name}`} />
-                    </button>
+                    </div>
                     <div className='user-and-conpany'>
                       <span>{`${user.first_name} ${user.last_name}`}</span>
                       <span className='text-secondary'>Company</span>
@@ -277,10 +295,12 @@ class AccessRights extends Component {
   }
 
   renderContent = () => {
+    const { newMembers, oldMembers } = this.props
+
     return (
       <Tabs className='big-tabs'>
-        <div label='Members'>{this.renderMemberTable()}</div>
-        <div label='New members'>New members</div>
+        <div label='Members'>{this.renderMemberTable('checkedMembers', oldMembers)}</div>
+        <div label='New members'>{this.renderMemberTable('checkedNewMembers', newMembers)}</div>
       </Tabs>
     )
   }
@@ -295,12 +315,19 @@ class AccessRights extends Component {
   }
 }
 const mapStateToProps = ({ accessRights }) => ({
-  users: accessRights.oldMembers.users
+  newMembers: accessRights.newMembers.users,
+  oldMembers: accessRights.oldMembers.users
+})
+
+const mapDispatchToProps = dispatch => ({
+  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
+  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
 })
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(reduxForm({
   form: 'members_access_rights_form'
-})(AccessRights))
+})(MembersAccessRights))
 
