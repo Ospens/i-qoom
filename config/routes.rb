@@ -42,7 +42,8 @@ Rails.application.routes.draw do
         resources :project_administrators,
                   only: [ :show,
                           :index,
-                          :destroy ] do
+                          :destroy ],
+                  path: :admins do
           member do
             get :resend_confirmation
           end
