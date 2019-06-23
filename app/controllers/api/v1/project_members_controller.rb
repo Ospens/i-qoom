@@ -1,9 +1,11 @@
 class Api::V1::ProjectMembersController < ApplicationController
   load_and_authorize_resource :project
-  load_and_authorize_resource :project_member, through: :project
+  load_and_authorize_resource :project_member,
+                              through: :project,
+                              through_association: :members
 
   def index
-    render json: @project.project_members,
+    render json: @project.members,
                  each_serializer: ProjectMemberSerializer,
            status: :ok
   end

@@ -20,7 +20,7 @@ class ProjectMember < ApplicationRecord
   # before_create :add_user
 
   belongs_to :project,
-    inverse_of: :project_members
+    inverse_of: :members
 
   belongs_to :user, required: false
 
