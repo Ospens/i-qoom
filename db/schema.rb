@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(version: 2019_06_23_155757) do
     t.integer "creation_step"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "member_company_address_id"
+    t.integer "company_address_id"
   end
 
   create_table "projects", force: :cascade do |t|

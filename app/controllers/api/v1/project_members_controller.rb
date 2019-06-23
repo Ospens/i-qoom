@@ -48,7 +48,7 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :employment_type,
                              :company_type,
                              :email,
-                             member_company_address_attributes: Address.column_names)
+                             company_address_attributes: Address.column_names)
   end
 
 end

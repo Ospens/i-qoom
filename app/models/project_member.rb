@@ -24,11 +24,11 @@ class ProjectMember < ApplicationRecord
 
   belongs_to :user, required: false
 
-  belongs_to :member_company_address,
+  belongs_to :company_address,
              class_name: "Address",
              required: false
 
-  accepts_nested_attributes_for :member_company_address,
+  accepts_nested_attributes_for :company_address,
                                 update_only: true
   # validates :email,
   #           email: true,
@@ -44,7 +44,7 @@ class ProjectMember < ApplicationRecord
             unless: :creation_step_employment_type?
 
   # company_data third step
-  validates :member_company_address,
+  validates :company_address,
             presence: true,
             unless: -> { creation_step_employment_type? ||
                          creation_step_company_type? }

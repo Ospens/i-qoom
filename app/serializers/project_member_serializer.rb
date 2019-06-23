@@ -1,3 +1,3 @@
 class ProjectMemberSerializer < ApplicationSerializer
-  belongs_to :member_company_address
+  belongs_to :company_address
 end
