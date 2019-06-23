@@ -47,7 +47,8 @@ class Api::V1::ProjectMembersController < ApplicationController
                  { }).permit(:creation_step,
                              :employment_type,
                              :company_type,
-                             :email)
+                             :email,
+                             member_company_address_attributes: Address.column_names)
   end
 
 end
