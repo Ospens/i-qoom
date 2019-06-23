@@ -13,7 +13,7 @@ class ProjectMember < ApplicationRecord
                       _prefix: true
 
   enum company_type: [ :project_company,
-                       :parent_compny,
+                       :parent_company,
                        :joint_venture_company],
                       _prefix: true
 
@@ -28,9 +28,14 @@ class ProjectMember < ApplicationRecord
   #           email: true,
   #           presence: true
 
+  # employment_type first step
   validates :employment_type,
             presence: true
 
+  # company_type second step
+  validates :company_type,
+            presence: true,
+            unless: :creation_step_employment_type?
 
   protected
 

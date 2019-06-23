@@ -28,8 +28,8 @@ class Api::V1::ProjectMembersController < ApplicationController
     end
   end
 
-  def update
-    if @project_member.update
+  def update   
+    if @project_member.update(project_member_params)
       render json: { status: "success",
                      message: t(".success_message"),
                      project_member: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
@@ -46,6 +46,7 @@ class Api::V1::ProjectMembersController < ApplicationController
     params.fetch(:project_member,
                  { }).permit(:creation_step,
                              :employment_type,
+                             :company_type,
                              :email)
   end
 
