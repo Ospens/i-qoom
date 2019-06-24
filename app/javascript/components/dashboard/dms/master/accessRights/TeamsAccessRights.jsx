@@ -19,14 +19,18 @@ import messageIcon from '../../../../../images/email-action-unread'
 import trashIcon from '../../../../../images/trash_bucket'
 import plusIcon from '../../../../../images/add_1'
 import ShowMembersPopup from './ShowMembersPopup'
+import NewTeamModal from './ModalTeamForm'
+import ModalBulkAccessRights from './ModalBulkAccessRights'
+import rightsDropDown from './RightsDropDown'
 
-export const columns = [
+const columns = [
   { title: 'Name', divider: true },
   { title: 'Member-ID', divider: true },
   { title: 'Originating Company', divider: true },
   { title: 'Discipline', divider: true },
   { title: 'Document type', divider: true },
-  { title: 'Timelimit', divider: true }
+  { title: 'Timelimit', divider: true },
+  { title: '', divider: true }
 ]
 
 const disciplineList = [
@@ -86,7 +90,7 @@ const optionBtn = [
     icon: messageIcon
   },
   {
-    title: 'Delete teams',
+    title: 'Delete team',
     icon: trashIcon
   }
 ]
@@ -127,7 +131,13 @@ class TeamsAccessRights extends Component {
     return (
       <Popup
         trigger={
-          <button type='button' className='btn ml-auto' onClick={() => this.setState({ showMore: false })}>Show members</button>
+          <button
+            type='button'
+            className='btn ml-{this.renderModal()}auto'
+            onClick={() => this.setState({ showMore: false })}
+          >
+            Show members
+          </button>
         }
         on='click'
       >
@@ -181,66 +191,6 @@ class TeamsAccessRights extends Component {
     )
   }
 
-  renderDropDownItems = ({ label, enable, view_only }, index) => {
-    return (
-      <div className='acceess-rights__drop-down-row' key={index}>
-        <div className='col-4'>
-          <label>{label}</label>
-        </div>
-        <div className='col-4'>
-          <div className='d-flex'>
-            <input
-              type='checkbox'
-              id={`enable_${index}`}
-              checked={enable}
-              onChange={() => toogleUsersRights()}
-            />
-            <label htmlFor={`enable_${index}`} />
-          </div>
-        </div>
-        <div className='col-4'>
-          <div className='d-flex'>
-            <input
-              type='checkbox'
-              id={`view_${index}`}
-              checked={view_only}
-              onChange={() => toogleUsersRights()}
-            />
-            <label htmlFor={`view_${index}`} />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  renderDropDown = (btnTitle, columnTitle, values) => {
-    return (
-      <DropDown
-        className='dropdown-with-switch'
-        btnName={btnTitle}
-        btnClass='btn btn-for-switch'
-      >
-        <div className='acceess-rights__drop-down'>
-          <div className='acceess-rights__drop-down-row'>
-            <div className='col-4'>
-              <label>{columnTitle}</label>
-            </div>
-            <div className='col-4'>
-              <label>Enable</label>
-            </div>
-            <div className='col-4'>
-              <label>Disable</label>
-            </div>
-          </div>
-          {/* TODO: There should be user.doucment_rights_attributes[0].document_field_value_ids.map((... */}
-          {disciplineList.map((element, index) => (
-            this.renderDropDownItems(element, index)
-          ))}
-        </div>
-      </DropDown>
-    )
-  }
-
   renderMemberTable = (type, data) => {
     const checked = this.state[type]
     let optionsText = 'Options'
@@ -251,9 +201,17 @@ class TeamsAccessRights extends Component {
 
     return (
       <React.Fragment>
-        <div><label>Select Access rights for teams</label></div>
+        <div className='d-flex my-4'>
+          <label>Select Access rights for teams</label>
+          <input
+            type='text'
+            className='search-input ml-auto'
+            placeholder='Search'
+          />
+        </div>
         <div className='d-flex my-4'>
           <DropDown btnName={optionsText}>
+            <ModalBulkAccessRights users={[]} />
             {optionBtn.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <ReactSVG
@@ -266,11 +224,7 @@ class TeamsAccessRights extends Component {
               </button>
             ))}
           </DropDown>
-          <input
-            type='text'
-            className='search-input ml-auto'
-            placeholder='Search'
-          />
+          <NewTeamModal />
         </div>
         <div className='access-rights-table-block'>
           <Table sortable className='main-table-block'>
@@ -286,9 +240,7 @@ class TeamsAccessRights extends Component {
                   </div>
                 </Table.HeaderCell>
                 {columns.map(({ title, divider }) => (
-                  <Table.HeaderCell
-                    key={title}
-                  >
+                  <Table.HeaderCell key={title} >
                     {divider && <span className='divider' />}
                     <span>{title}</span>
                   </Table.HeaderCell>
@@ -327,16 +279,36 @@ class TeamsAccessRights extends Component {
                     <span>{`${user.first_name} Member id`}</span>
                   </Table.Cell>
                   <Table.Cell>
-                    {this.renderDropDown('FOU', 'Originating company')}
+                    {rightsDropDown('FOU', 'Originating company')}
                   </Table.Cell>
                   <Table.Cell>
-                    {this.renderDropDown('HSE', 'Discipline')}
+                    {rightsDropDown('HSE', 'Discipline')}
                   </Table.Cell>
                   <Table.Cell>
-                    {this.renderDropDown('LOG', 'Document type')}
+                    {rightsDropDown('LOG', 'Document type')}
                   </Table.Cell>
                   <Table.Cell>
                     <span>{user.email}</span>
+                  </Table.Cell>
+
+                  <Table.Cell className='column-for-dropdown'>
+                    <DropDown
+                      dots={true}
+                      className='dropdown-with-icon'
+                      ulClass='left'
+                    >
+                      {optionBtn.map(({ title, icon }, i) => (
+                        <button type='button' className='dropdown-item btn' key={i}>
+                          <ReactSVG
+                            svgStyle={{ height: 13, width: 13 }}
+                            src={icon}
+                          />
+                          <span className='item-text'>
+                            {title}
+                          </span>
+                        </button>
+                      ))}
+                  </DropDown>
                   </Table.Cell>
                 </Table.Row>
               ))}

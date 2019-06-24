@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
+import NewModal from '../../../../../elements/Modal'
+import plusIcon from '../../../../../images/add_1'
+import InputField from '../../../../../elements/InputField'
 import Tabs from '../../../../../elements/Tabs'
 
 const columns = [
@@ -12,22 +16,36 @@ const columns = [
   { title: 'Company', divider: true },
 ]
 
-class ModalLimitAccess extends Component {
+const initState = {
+  modalOpen: false,
+  step: 1,
+  checkedNewMembers: [],
+  checkedCurrentMembers: []
+}
+
+class ModalTeamForm extends Component {
 
   state = {
-    column: null,
+    ...initState,
     newMembers: this.props.newMembers || [],
-    oldMembers: this.props.oldMembers || [],
-    direction: null,
-    grantAccess: [],
-    grandedAccess: []
+    currentMembers: this.props.oldMembers || [],
   }
 
-  componentWillMount() {
-    // const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
-    // TODO: doesn't release on backend now
-    // getGrandedAccessMembers()
-    // getGrantAccessMembers()
+  handleOpen = () => this.setState({ modalOpen: true })
+
+  handleClose = () => {
+    //const { destroyForm, discardInitialValues } = this.props
+    this.setState({ ...initState })
+    //destroyForm()
+    //discardInitialValues()
+  }
+
+  handleStep = step => this.setState({ step })
+
+  handleSubmit = (field, e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // this.handleClose()
   }
 
   handleCheckUser = (value, type) => {
@@ -44,10 +62,37 @@ class ModalLimitAccess extends Component {
     change([type], values)
   }
 
-  renderGrantAccess = (type, users) => {
+  renderModalTrigger = () => (
+    <button
+      className='ml-auto btn d-flex align-items-center with-icon'
+      onClick={this.handleOpen}
+    >
+      <ReactSVG
+        svgStyle={{ height: 15, width: 15, marginRight: 5 }}
+        src={plusIcon}
+        className='svg-icon'
+      />
+      <span>Create new Document</span>
+    </button>
+  )
+
+  renderNameField = () => {
+    return (
+      <div className='modal-container__content-block'>
+        <InputField
+          type='text'
+          name='team_title'
+          id='team_title'
+          placeholder='Team title'
+          label='Type in team title'
+        />
+      </div>
+    )
+  }
+
+  renderNewMembers = (type, users) => {
     const { column, direction } = this.state
     const checked = this.state[type]
-    // TODO: now this users list is only for all fields
 
     return (
       <div className='modal-container__content-block'>
@@ -100,7 +145,7 @@ class ModalLimitAccess extends Component {
                     </div>
                   </Table.Cell>
                   <Table.Cell className='name-column'>
-                    <div><UserAvatar size='24' name={user.first_name} /></div>
+                    <div><UserAvatar size='42' name={user.first_name} /></div>
                     <div className='ml-2'>
                       <span>{`${user.first_name} ${user.last_name}`}</span>
                       <div><label>Company</label></div>
@@ -124,82 +169,107 @@ class ModalLimitAccess extends Component {
     )
   }
 
-  handleSubmit = (field, e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const { handleBack, startUpdateAccessMembers } = this.props
-    handleBack()
+  renderMembersTable = () => {
+    const { grantAccess, checkedCurrentMembers, newMembers, checkedNewMembers } = this.state
+    return (
+      <Tabs>
+        <div label='Add members'>{this.renderNewMembers('checkedNewMembers', newMembers)}</div>
+        <div/>
+        {/* <div label='Team members'>{this.currentMembers('currentMembers', currentMembers)}</div> */}
+      </Tabs>
+    )
   }
 
-  render() {
-    const { handleClose, handleBack, title, handleSubmit } = this.props
-    const { grantAccess, grandedAccess, newMembers, oldMembers } = this.state
-    let submitText = 'Add'
-    if (grantAccess.length && grandedAccess.length) {
-      submitText = `Add ${grantAccess.length} member(s) and remove ${grandedAccess.length} member(s)`
-    } else if (grantAccess.length) {
-      submitText = `Add ${grantAccess.length} member(s)`
-    } else if (grandedAccess.length) {
-      submitText = `Remove ${grandedAccess.length} member(s)`
-    }
-
-    return (
-      <form
-        className='modal-limit-access-form'
-        onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}
-      >
-        <div className='modal-container'>
-          <div className='modal-container__title-block'>
-            <div>
-              <h4>Limit access to input field</h4>
-              <span>{title || 'New input field'}</span>
-            </div>
-            <div className='info-block'>
-              <p>No member selected everyone has access</p>
-              <p>One member selected: no one except one has access</p>
-            </div>
-          </div>
-          <Tabs>
-            <div label='Grant access'>{this.renderGrantAccess('grantAccess', newMembers)}</div>
-            <div label='Granded access'>{this.renderGrantAccess('grandedAccess', oldMembers)}</div>
-          </Tabs>
-        </div>
+  renderFooter = () => {
+    const { step } = this.state
+    if (step === 1) {
+      return (
         <div className='modal-footer justify-content-center'>
           <button
             type='button'
             className='btn btn-white'
-            onClick={handleClose}
+            onClick={this.handleClose}
           >
             Close
           </button>
           <button
             type='button'
-            className='btn btn-white'
-            onClick={handleBack}
+            className='btn btn-purple'
+            onClick={() => this.handleStep(2)}
           >
-            Cancel
-          </button>
-          <button type='submit' className='btn btn-purple'>
-            {submitText}
+            Next
           </button>
         </div>
+      )
+    } else if (step === 2) {
+      const { checkedNewMembers, checkedCurrentMembers } = this.state
+      let submitText = 'Add'
+      if (checkedNewMembers.length && checkedCurrentMembers.length) {
+        submitText = `Add ${checkedNewMembers.length} member(s) and remove ${checkedCurrentMembers.length} member(s)`
+      } else if (checkedNewMembers.length) {
+        submitText = `Add ${checkedNewMembers.length} member(s)`
+      } else if (checkedCurrentMembers.length) {
+        submitText = `Remove ${checkedCurrentMembers.length} member(s)`
+      }
+      return (
+        <div className='modal-footer justify-content-center'>
+          <button
+            type='button'
+            className='btn btn-white'
+            onClick={() => this.handleStep(1)}
+          >
+            Back
+          </button>
+          <button type='button' className='btn btn-purple'>
+            {submitText}
+          </button>
+          <button type='submit' className='btn btn-purple'>
+            Change members list & redefine access rights
+          </button>
+        </div>
+      )
+    }
+  }
+
+  renderContent = () => {
+    const { step } = this.state
+    const { handleSubmit } = this.props
+
+    return (
+      <form onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
+        <div className='modal-container'>
+          <div className='modal-container__title-block'>
+            <h4>New team</h4>
+          </div>
+          {step === 1 && this.renderNameField()}
+          {step === 2 && this.renderMembersTable()}          
+        </div>
+        {this.renderFooter()}
       </form>
+    )
+  }
+
+  render() {
+    const { modalOpen } = this.state
+
+    return (
+      <NewModal
+        content={this.renderContent()}
+        trigger={this.renderModalTrigger()}
+        modalOpen={modalOpen}
+        handleClose={this.handleClose}
+      />
     )
   }
 }
 
 const mapStateToProps = ({ accessRights }) => ({
-  newMembers: accessRights.newMembers.users,
-  oldMembers: accessRights.oldMembers.users
+  newMembers: accessRights.newMembers.users
 })
 
 const mapDispatchToProps = dispatch => ({
-  /*
-  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
-  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
-  */
 })
 
 export default connect(
   mapStateToProps, mapDispatchToProps
-)(reduxForm({form: 'input_access_rights_form'})(ModalLimitAccess))
+)(reduxForm({ form: 'team_form' })(ModalTeamForm))

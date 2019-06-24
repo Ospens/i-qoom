@@ -22,7 +22,7 @@ class Tab extends Component {
 export default class Tabs extends Component {
 
   state = {
-    activeTab: this.props.children[0].props.label
+    activeTab: this.children || this.props.children[0].props.label
   }
 
   onClickTabItem = (tab) => {
@@ -37,12 +37,12 @@ export default class Tabs extends Component {
     return (
       <div className={mainClass}>
         <ol className='nav-bar'>
-          {children.map((child) => {
+          {children.map((child, i) => {
             const { label } = child.props
             return (
               <Tab
                 activeTab={activeTab}
-                key={label}
+                key={i}
                 label={label}
                 onClick={() => this.onClickTabItem(label)}
               />

@@ -54,9 +54,11 @@ export const startUpdateConvention = () => (dispatch, getState) => {
     current.grouped_fields[k].forEach((row, i) => {
       const newRow = {
         ...row,
+        document_field_values_attributes: row.document_field_values,
         column: k,
         row: i + 1
       }
+      delete newRow.document_field_values
       docFields.push(newRow)
     })
   })

@@ -14,7 +14,10 @@ const initialState = {
   editingField: {},
   current: {
     document_field_values: [],
-    grouped_fields: [{}]
+    grouped_fields: {
+      1:{},
+      2: {}
+    }
   },
   currentDefault: {},
   changed: false

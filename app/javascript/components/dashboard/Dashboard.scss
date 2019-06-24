@@ -536,7 +536,7 @@ button:disabled {
     left: 30px;
   }
 
-  &:hover {
+  &:hover:not(.with-dots) {
     background-color: rgba(0, 150, 250, 0.685) !important;
     color: #fff !important;
   }
@@ -721,7 +721,7 @@ input[type=checkbox]:checked+label {
   }
 
   .team-title-column {
-    min-width: 300px;
+    min-width: 350px;
 
     .btn {
       color: #0095f9;
@@ -779,8 +779,7 @@ span.divider {
   margin-top: -1px; 
   z-index: 9;
   padding: 0;
-  padding-left: 5px !important;
-  padding-right: 5px !important;
+  padding: 5px !important;
 
   .dropdown-item {
     min-width: fit-content;
@@ -796,6 +795,11 @@ span.divider {
       align-items: center;
       font-size: 14px;
     }
+  }
+
+  &.left {
+    right: 0 !important;
+    left: auto !important;
   }
 
   .dropdown-item:not(.dropdown-submenu) {
@@ -830,7 +834,7 @@ span.divider {
     padding: 0;
 
     &:hover, &:active {
-      background: none !important;
+      // background: none !important;
 
       circle {
         fill: #0096FA !important;
@@ -843,6 +847,7 @@ span.divider {
   min-height: 300px;
   overflow: auto;
   margin-top: 10px;
+  max-height: 60vh;
 }
 
 .with-icon {
@@ -850,7 +855,7 @@ span.divider {
   span {
     font-weight: 500;
     color: #0095f9;
-    height: 19px;
+    // height: 19px;
     align-items: flex-end;
     align-self: flex-end;
     text-align: left;

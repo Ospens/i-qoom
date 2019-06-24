@@ -1347,6 +1347,7 @@ input.search-input {
   width: 100%;
   overflow: auto;
   min-height: 800px;
+  margin-bottom: 100px;
 
   .main-table-block {
     th:not(.table-checkbox) {
@@ -1368,13 +1369,13 @@ input.search-input {
     max-width: 220px;
     padding-left: 10px;
 
-    &:has(.show) {
-      .UserAvatar {
-          .UserAvatar--inner {
-            background: black;
-          }
+    &.opened {
+      .dropdown-with-icon:not(.show) {
+        * {
+          opacity: 0.6;
         }
       }
+    }
   }
 
   .avatar-with-dropdown {
@@ -1402,5 +1403,27 @@ input.search-input {
 
   &.shower {
     align-self: center; 
+  }
+}
+
+.master-star-icon {
+  position: absolute;
+  background: url('../../../images/leader.svg');
+  background-size: 20px;
+  background-repeat: no-repeat;
+  min-width: 20px;
+  height: 20px;
+  top: 30px;
+  left: 10px;
+}
+
+.users-row-margin-left {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  min-width: 340px;
+  
+  .UserAvatar--inner {
+    margin-right: -10px;
   }
 }

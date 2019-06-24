@@ -208,7 +208,8 @@ class DocFieldsElement extends Component {
                   }
                 </DropDown>
                 <label htmlFor="document_title">{field.title}</label>
-                {index === 3 && this.accessList()}
+                {/* TODO: disabled on the backed for now */}
+                {/* this.accessList() */}
               </div>
               {this.renderInputByType(field, index)}
               {this.editButton(index)}

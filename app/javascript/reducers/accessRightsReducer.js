@@ -5,12 +5,12 @@ import {
 
 const initialState = {
   newMembers: {
-    fields: {},
-    users: {}
+    fields: [],
+    users: []
   },
   oldMembers: {
-    fields: {},
-    users: {}
+    fields: [],
+    users: []
   }
 }
 
