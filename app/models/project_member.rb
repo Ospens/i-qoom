@@ -30,9 +30,6 @@ class ProjectMember < ApplicationRecord
 
   accepts_nested_attributes_for :company_address,
                                 update_only: true
-  # validates :email,
-  #           email: true,
-  #           presence: true
 
   # employment_type first step
   validates :employment_type,
@@ -46,8 +43,25 @@ class ProjectMember < ApplicationRecord
   # company_data third step
   validates :company_address,
             presence: true,
-            unless: -> { creation_step_employment_type? ||
-                         creation_step_company_type? }
+            unless: -> {
+              creation_step_employment_type? ||
+              creation_step_company_type?
+            }
+  # details
+  with_options if: -> {
+                 creation_step_details? ||
+                 creation_step_completed?
+               } do
+    validates :email,
+              email: true,
+              presence: true
+
+    validates :first_name,
+              :last_name,
+              presence: true,
+              length: { minimum: 3,
+                        maximum: 255 }
+  end
 
   protected
 

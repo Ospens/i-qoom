@@ -48,6 +48,10 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :employment_type,
                              :company_type,
                              :email,
+                             :first_name,
+                             :last_name,
+                             :phone_code,
+                             :phone_number,
                              company_address_attributes: Address.column_names)
   end
 
