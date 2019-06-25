@@ -17,6 +17,8 @@ class ProjectMember < ApplicationRecord
                        :joint_venture_company],
                       _prefix: true
 
+  after_save :update_creation_step_to_completed, unless: :creation_step_completed?
+
   # before_create :add_user
 
   belongs_to :project,
@@ -63,7 +65,11 @@ class ProjectMember < ApplicationRecord
                         maximum: 255 }
   end
 
-  protected
+  private
+
+  def update_creation_step_to_completed
+    update(creation_step: "completed")
+  end
 
   # # adds a user only when it is being created,
   # # then a user can be changed only by confirmation
