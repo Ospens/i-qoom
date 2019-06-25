@@ -10,6 +10,7 @@ import IndexDMS from './IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
 import MembersAccessRights from './master/accessRights/MembersAccessRights'
 import TeamsAccessRights from './master/accessRights/TeamsAccessRights'
+import QuickSearch from './master/quickSearch/QuickSearch'
 
 class DMS extends Component {
 
@@ -30,6 +31,10 @@ class DMS extends Component {
         <Route
           path={`${match.path}/master/access_rights/teams`}
           component={TeamsAccessRights}
+        />
+        <Route
+          path={`${match.path}/master/quick_search/`}
+          component={QuickSearch}
         />
         <Route
           path={`${match.path}/:document_id/`}

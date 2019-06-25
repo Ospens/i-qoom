@@ -15,7 +15,7 @@ const initialState = {
   current: {
     document_field_values: [],
     grouped_fields: {
-      1:{},
+      1: {},
       2: {}
     }
   },

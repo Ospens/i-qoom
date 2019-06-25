@@ -107,12 +107,12 @@ export const startEditConvention = () => (dispatch, getState) => {
 }
 
 export const removeField = (column, row) => (dispatch, getState) => {
-  const { conventions: { current: { grouped_fields } } } = getState()
-  const newColumn = new Array(...grouped_fields[column])
+  const groupedFields = getState().conventions.current.grouped_fields
+  const newColumn = new Array(...groupedFields[column])
   newColumn.splice(row, 1)
 
   const newFields = {
-    ...grouped_fields,
+    ...groupedFields,
     [column]: newColumn
   }
 
@@ -123,9 +123,9 @@ export const removeField = (column, row) => (dispatch, getState) => {
 }
 
 export const updateFields = (field, edit = false) => (dispatch, getState) => {
-  const { conventions: { current: { grouped_fields } } } = getState()
+  const groupedFields = getState().conventions.current.grouped_fields
   const { column, row } = field
-  const newColumn = new Array(...grouped_fields[column])
+  const newColumn = new Array(...groupedFields[column])
 
   if (edit) {
     newColumn.splice(row, 1, field)
@@ -134,7 +134,7 @@ export const updateFields = (field, edit = false) => (dispatch, getState) => {
   }
 
   const newFields = {
-    ...grouped_fields,
+    ...groupedFields,
     [column]: newColumn
   }
 

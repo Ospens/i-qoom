@@ -9,13 +9,12 @@ const documentsFetched = payload => ({
   payload
 })
 
-export const startFetchDocuments = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
-  }
+export const startFetchDocuments = id => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token }
+
   return (
-    axios.get(`/api/v1/projects/${current.id}/documents`, {
+    axios.get(`/api/v1/projects/${id}/documents`, {
       headers
     })
       .then(response => {

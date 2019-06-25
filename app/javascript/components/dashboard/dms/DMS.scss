@@ -1138,11 +1138,15 @@ input.search-input {
 }
 
 .draggable-container {
-  transition: 0s ease-in-out;
+  transition: 0s;
   border-radius: 10px;
   border-width: 1px;
   border-style: dashed;
   border-color: #fff;
+
+  &:not(:hover) * {
+    transition: 0s !important;
+  }
 
   .btn.btn-white-blue {
     height: fit-content;
@@ -1187,6 +1191,7 @@ input.search-input {
       margin-left: auto;
     }
 
+
     &:hover {
       background-color:#f9f9f9;
       cursor: pointer;
@@ -1197,6 +1202,11 @@ input.search-input {
         }
       }
     }
+  }
+
+  &.undraggable .form-group {
+    background-color: #fff !important;
+    cursor: auto !important;
   }
 }
 
@@ -1425,5 +1435,94 @@ input.search-input {
   
   .UserAvatar--inner {
     margin-right: -10px;
+  }
+}
+
+.filter-grid {
+  display: grid;
+  padding: 24px !important;
+  padding: 1.5rem !important;
+  // grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2vw;
+
+  .filter-grid-column {
+
+    label {
+      cursor: pointer;
+      color: rgba(0, 0, 0, .87);
+      margin-bottom: 0;
+    }
+
+    .filter-grid-row {
+      display: flex;
+      flex-direction: column;
+      padding-top: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid lightgray;
+      
+      .common-row {
+        display: flex;
+        margin-right: 30px;
+      }
+
+      .filter-grid-subcolumn {
+        padding-left: 3em;
+        -webkit-transition: max-height .3s ease,
+                            border .3s ease,
+                            margin .3s ease,
+                            padding .3s ease;
+        max-height: 0;
+        overflow: hidden;
+        margin-bottom: 0;
+        
+        .filter-grid-subrow {
+          display: flex;
+          padding-top: 0.5em;
+          padding-bottom: 0.5em;
+          margin-right: 30px;
+        }
+      }
+
+      label.filter-grid-row-opener {
+        margin-bottom: 0rem;
+        margin-left: 10px;
+        margin-right: 10px;
+        -webkit-transition: margin .3s ease;
+        width: 10px;
+
+        i {
+          border-style: solid;
+          border-width: 0 3px 3px 0;
+          display: inline-block;
+          padding: 3px;
+          border-color: #475859;
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+          margin-bottom: 4px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+
+      #grid-row-opener:checked~.filter-grid-subcolumn {
+        max-height: 600px;
+        overflow: auto;
+        -webkit-transition: overflow .5s;
+        border-top: 1px solid lightgray;
+        margin-top: 15px;
+        padding-top: 15px;
+      }
+
+      #grid-row-opener:checked~.d-flex .filter-grid-row-opener {
+        i {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+          margin-bottom: 0;
+        }
+      }
+    }
   }
 }

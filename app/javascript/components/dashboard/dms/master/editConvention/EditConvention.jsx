@@ -33,12 +33,10 @@ class EditConvention extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <DMSLayout
-          sidebar={<DmsSideBar />}
-          content={this.renderContent()}
-        />
-      </React.Fragment>
+      <DMSLayout
+        sidebar={<DmsSideBar />}
+        content={this.renderContent()}
+      />
     )
   }
 }

@@ -61,7 +61,7 @@ export const startUpdateAccessMembers = (newUsers, removeUsers) => (dispatch, ge
   } = getState()
   const headers = { Authorization: token }
   let users = newMembers.filter(member => newUsers.includes(member.id))
-  users = users.map(user => user.enabled = true)
+  users = users.map(user => user.enabled === true)
   const request = { newUsers, removeUsers }
 
   return (

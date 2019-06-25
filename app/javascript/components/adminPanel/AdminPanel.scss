@@ -76,10 +76,12 @@
 .sidebar {
   z-index: 20;
   display: none;
+  min-width: 280px;
   
   &.sidebar-admin-panel {
     background-color: #383838;
   }
+  
   &.is-visible {
     display: flex !important;
   }

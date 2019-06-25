@@ -31,8 +31,8 @@ class IndexDMS extends Component {
   }
 
   componentWillMount() {
-    const { startFetchDocuments } = this.props
-    startFetchDocuments()
+    const { startFetchDocuments, match: { params: { project_id } } } = this.props
+    startFetchDocuments(project_id)
   }
 
   renderHeader = () => {
@@ -504,7 +504,7 @@ class IndexDMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: () => dispatch(startFetchDocuments())
+  startFetchDocuments: (projectId) => dispatch(startFetchDocuments(projectId))
 })
 
 const mapStateToProps = ({ documents }) => ({

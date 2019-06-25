@@ -96,22 +96,22 @@ class DmsSideBar extends Component {
       {
         title: 'Quick search',
         icon: docPlanIcon,
-        path: '/dashboard/documents/master/planning/'
+        path: `/dashboard/projects/${projectId}/documents/master/quick_search/`
       },
       {
         title: 'Codification',
         icon: dmsSettingsIcon,
-        path: '/dashboard/documents/master/planning/'
+        path: `/dashboard/projects/${projectId}/documents/master/planning/`
       },
       {
         title: 'Distribution groups',
         icon: dmsSettingsIcon,
-        path: '/dashboard/documents/master/planning/'
+        path: `/dashboard/projects/${projectId}/documents/master/planning/`
       },
       {
         title: 'Review managment',
         icon: dmsSettingsIcon,
-        path: '/dashboard/documents/master/planning/'
+        path: `/dashboard/projects/${projectId}/documents/master/planning/`
       }
     ]
 

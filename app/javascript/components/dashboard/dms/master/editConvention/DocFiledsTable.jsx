@@ -50,7 +50,7 @@ class DocFiledsTable extends Component {
 
   renderDocIdFields = () => (
     <React.Fragment>
-      <div className="draggable-container">
+      <div className="draggable-container undraggable">
         <div className='form-group'>
           <label>Pleace select or generate Document ID</label>
 
@@ -108,7 +108,7 @@ class DocFiledsTable extends Component {
           </div>
         </div>
       </div>
-      <div className="draggable-container">
+      <div className="draggable-container undraggable">
         <div className='form-group'>
           <div className='checkbox-field justify-content-center'>
             <input

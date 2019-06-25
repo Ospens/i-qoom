@@ -340,6 +340,7 @@ class TeamsAccessRights extends Component {
     )
   }
 }
+
 const mapStateToProps = ({ accessRights }) => ({
   // TODO: change it for teams
   newTeams: accessRights.newMembers.users,
