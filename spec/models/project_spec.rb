@@ -38,6 +38,8 @@ RSpec.describe Project, type: :model do
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_many(:admins).class_name('ProjectAdministrator') }
   it { is_expected.to accept_nested_attributes_for(:admins) }
+  it { is_expected.to accept_nested_attributes_for(:company_datum)
+                        .update_only(true) }
   it { is_expected.to validate_presence_of(:admins) }
 
 
