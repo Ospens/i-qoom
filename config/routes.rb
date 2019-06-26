@@ -35,6 +35,7 @@ Rails.application.routes.draw do
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
+            get :download_list
           end
         end
         resource :dms_settings, only: [:edit, :update]

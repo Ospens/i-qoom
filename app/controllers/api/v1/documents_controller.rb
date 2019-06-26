@@ -127,6 +127,35 @@ class Api::V1::DocumentsController < ApplicationController
     send_zip(files, filename: "#{@project.name.underscore}.zip")
   end
 
+  def download_list
+    documents =
+      @project.document_mains
+              .documents_available_for(signed_in_user)
+              .select{ |i| params[:document_ids].include?(i.id.to_s) }
+    documents = Document.where(id: documents.map(&:id))
+
+    filename = "documents_#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}"
+
+    respond_to do |format|
+      format.csv do
+        stream = documents.to_csv
+        send_data(stream, type: 'text/csv', filename: "#{filename}.csv")
+      end
+      format.xls do
+        stream = documents.to_xlsx
+        send_data(stream, type: 'application/xlsx', filename: "#{filename}.xlsx")
+      end
+      format.xml do
+        stream = render_to_string
+        send_data(stream, type: 'text/xml', filename: "#{filename}.xml")
+      end
+      format.pdf do
+        stream = render_to_string
+        send_data(stream, type: 'text/xml', filename: "#{filename}.xml")
+      end
+    end
+  end
+
   private
 
   def document_params

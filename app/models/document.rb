@@ -1,3 +1,5 @@
+require 'csv'
+
 class Document < ApplicationRecord
   enum issued_for: [ :information, :review ], _prefix: true
 
@@ -146,6 +148,35 @@ class Document < ApplicationRecord
 
   def native_file
     document_fields.find_by(codification_kind: :document_native_file).files.first
+  end
+
+  def self.assign_rows(array)
+    records = all.load
+    return array if records.length == 0
+    columns = ['codification_string', 'revision_date', 'revision_version']
+    array << columns.map do |column|
+      I18n.t("documents.list.#{column}")
+    end
+    records.each do |record|
+      line = []
+      columns.each do |column|
+        line.push(record.send(column))
+      end
+      array << line
+    end
+    array
+  end
+
+  def self.to_csv
+    # For UTF-8 characters
+    head = 'EF BB BF'.split(' ').map { |a| a.hex.chr }.join
+    CSV.generate(head) do |csv|
+      assign_rows(csv)
+    end
+  end
+
+  def revision_date
+    document_fields.find_by(codification_kind: :revision_date).value
   end
 
   private

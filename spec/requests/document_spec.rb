@@ -321,6 +321,24 @@ describe Document, type: :request do
       #   f.write(response.body)
       # end
     end
+
+    context 'download_list' do
+      it 'csv' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = CSV.parse(response.body.force_encoding('utf-8'))
+        expect(sheet[0][0]).to eql("\xEF\xBB\xBFDoc-ID")
+        expect(sheet[0][1]).to eql('Revision')
+        expect(sheet[0][2]).to eql('Version')
+        expect(sheet[1][0]).to eql(document.codification_string)
+        expect(sheet[1][1]).to eql(document.revision_date)
+        expect(sheet[1][2]).to eql(document.revision_version)
+        # File.open('public/document.csv', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
+    end
   end
 
   context '#index' do
