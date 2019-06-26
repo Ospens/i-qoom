@@ -45,7 +45,8 @@ class DmsSideBar extends Component {
 
   renderMainItems = () => {
     const { projectId } = this.props
-
+    const masterPath = `/dashboard/projects/${projectId}/documents/master`
+    
     // TODO: Need check for master's permit
     const menuItems = [
       {
@@ -66,8 +67,8 @@ class DmsSideBar extends Component {
       {
         title: 'Master settings',
         icon: docPlanIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/edit_convention`,
-        root: `/dashboard/projects/${projectId}/documents/master/`
+        path: `${masterPath}/edit_convention`,
+        root: `${masterPath}/`
       }
     ]
 
@@ -75,43 +76,62 @@ class DmsSideBar extends Component {
       {
         title: 'Upload form',
         icon: overviewIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/edit_convention/`
+        path: `${masterPath}/edit_convention/`
       },
       {
         title: 'Access rights',
         icon: dmsSettingsIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/access_rights/members/`,
-        root: `/dashboard/projects/${projectId}/documents/master/access_rights/`,
+        path: `${masterPath}/access_rights/members/`,
+        root: `${masterPath}/access_rights/`,
         nested: [
           {
             title: 'Members',
-            path: `/dashboard/projects/${projectId}/documents/master/access_rights/members/`
+            path: `${masterPath}/access_rights/members/`
           },
           {
             title: 'Teams',
-            path: `/dashboard/projects/${projectId}/documents/master/access_rights/teams/`
+            path: `${masterPath}/access_rights/teams/`
           },
         ]
       },
       {
         title: 'Quick search',
         icon: docPlanIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/quick_search/`
+        path: `${masterPath}/quick_search/`
       },
       {
         title: 'Codification',
         icon: dmsSettingsIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/planning/`
+        path: `${masterPath}/codifications/1/`,
+        root: `${masterPath}/codifications/`,
+        nested: [
+          {
+            title: 'Codification 1',
+            path: `${masterPath}/codifications/1/`
+          },
+          {
+            title: 'Codification 2',
+            path: `${masterPath}/codifications/2/`
+          },
+          {
+            title: 'Codification 3',
+            path: `${masterPath}/codifications/3/`
+          },
+          {
+            title: 'Settings',
+            path: `${masterPath}/codifications/settings/`
+          },
+        ]
       },
       {
         title: 'Distribution groups',
         icon: dmsSettingsIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/planning/`
+        path: `${masterPath}/planning/`
       },
       {
         title: 'Review managment',
         icon: dmsSettingsIcon,
-        path: `/dashboard/projects/${projectId}/documents/master/planning/`
+        path: `${masterPath}/planning/`
       }
     ]
 

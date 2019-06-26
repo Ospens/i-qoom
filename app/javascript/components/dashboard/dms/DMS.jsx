@@ -11,12 +11,14 @@ import EditConvention from './master/editConvention/EditConvention'
 import MembersAccessRights from './master/accessRights/MembersAccessRights'
 import TeamsAccessRights from './master/accessRights/TeamsAccessRights'
 import QuickSearch from './master/quickSearch/QuickSearch'
+import Codifications from './master/codifications/Codifications'
 
 class DMS extends Component {
 
   render() {
     const { match } = this.props
-
+    const codificationId = 1
+    
     return (
       <Switch>
         <Route path={`${match.path}/new/`} component={NewDocument} />
@@ -35,6 +37,10 @@ class DMS extends Component {
         <Route
           path={`${match.path}/master/quick_search/`}
           component={QuickSearch}
+        />
+        <Route
+          path={`${match.path}/master/codifications/${codificationId}`}
+          component={Codifications}
         />
         <Route
           path={`${match.path}/:document_id/`}
