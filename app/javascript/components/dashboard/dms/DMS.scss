@@ -1228,6 +1228,18 @@ input.search-input {
   }
 }
 
+.dark-tooltip-container {
+  background-color: #475759 !important;
+  
+  .tooltip-text-block {
+    color: #fff;
+  }
+  
+  &:before {
+    background-color: #475759 !important;
+  }
+}
+
 .tooltip-block {
   min-width: 180px;
 
