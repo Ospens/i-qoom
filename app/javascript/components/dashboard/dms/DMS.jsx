@@ -12,6 +12,7 @@ import MembersAccessRights from './master/accessRights/MembersAccessRights'
 import TeamsAccessRights from './master/accessRights/TeamsAccessRights'
 import QuickSearch from './master/quickSearch/QuickSearch'
 import Codifications from './master/codifications/Codifications'
+import CodificationSettings from './master/codifications/CodificationSettings'
 
 class DMS extends Component {
 
@@ -41,6 +42,10 @@ class DMS extends Component {
         <Route
           path={`${match.path}/master/codifications/${codificationId}`}
           component={Codifications}
+        />
+        <Route
+          path={`${match.path}/master/codifications/settings/`}
+          component={CodificationSettings}
         />
         <Route
           path={`${match.path}/:document_id/`}

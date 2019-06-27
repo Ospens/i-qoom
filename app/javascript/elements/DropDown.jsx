@@ -16,12 +16,23 @@ class DropDown extends Component {
     }
   }
 
-  renderDotsIcon = () => (
-    <ReactSVG
-      svgStyle={{ height: 15, width: 15 }}
-      src={dots}
-    />
-  )
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  renderDotsIcon = () => {
+    const { dotsStyles } = this.props
+    return (
+      <ReactSVG
+        svgStyle={dotsStyles ? dotsStyles : { height: 15, width: 15 }}
+        src={dots}
+      />
+    )
+  }
 
   renderDefaultItems = actionDDitems => (
     actionDDitems.map(({ icon, title, onClick }, i) => (
@@ -41,14 +52,6 @@ class DropDown extends Component {
       </React.Fragment>
     ))
   )
-
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handleClickOutside);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
-  }
 
   setWrapperRef = node => {
     this.wrapperRef = node

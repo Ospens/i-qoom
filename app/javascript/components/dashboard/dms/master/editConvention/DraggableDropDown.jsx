@@ -62,13 +62,8 @@ class DropDownElement extends Component {
                   onChange={(e) => changeDDSection(e.target.value, index)}
                 />
                 <DropDown
-                  btnComponent={
-                    <ReactSVG
-                      className='svg-container'
-                      svgStyle={{ height: 25, width: 25, marginLeft: 10 }}
-                      src={dots}
-                    />
-                  }
+                  dots={true}
+                  dotsStyles={{ height: 25, width: 25, marginLeft: 10 }}
                   className='dropdown-with-icon dropleft'
                 >
                   {newDDElementOtions.map(({icon, title, onClick }, i) => (

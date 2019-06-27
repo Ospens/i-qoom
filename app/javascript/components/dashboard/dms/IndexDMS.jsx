@@ -196,13 +196,6 @@ class IndexDMS extends Component {
     )
   }
 
-  renderDropDownIcon = () => (
-    <ReactSVG
-      svgStyle={{ height: 20, width: 20 }}
-      src={dots}
-    />
-  )
-
   checkItem = (stateName, stateItems, value) => {
     let newVal
 
@@ -248,7 +241,7 @@ class IndexDMS extends Component {
 
                 <Table.Cell>
                   <DropDown
-                    btnComponent={this.renderDropDownIcon()}
+                    dots={true}
                     className='dropdown-with-icon'
                   >
                     {actionDDitems.map(({ icon, title }, i) => (

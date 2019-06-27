@@ -953,6 +953,14 @@ input[type=checkbox] {
   line-height: 38px !important;
 }
 
+.UserAvatar.middle {
+  .UserAvatar--inner {
+    line-height: 28px !important;
+    font-size: 11px !important;
+    color: #fff;
+  }
+}
+
 .user-info-avatar {
   display: flex;
   margin-bottom: 5px;

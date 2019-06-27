@@ -179,6 +179,7 @@
           .dms-sidebar-menu__sublink {
             a {
               font-size:1em;
+              color: #0096FA;
 
               &.active {
                 font-weight: 700;
@@ -1710,6 +1711,96 @@ input.search-input {
     .codification-codes-values-row {
       display: grid;
       grid-template-rows: 1fr 1fr 1fr;
+    }
+  }
+}
+
+.conventions-settings-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5vh;
+
+  .conventions-settings-block {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+  }
+
+  .conventions-settings-card {
+    display: grid;
+    grid-template-rows: 1fr 4fr 1fr;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin-bottom: 20px;
+
+    .check-icon {
+      display: flex;
+      justify-items: flex-end;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .conventions-settings-title-card {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr;
+      justify-items: center;
+      justify-content: center;
+
+      .conventions-settings-card__title {
+        display: flex;
+        align-items: flex-end;
+        align-content: flex-end;
+        font-size: 1.3em;
+      }
+    }
+
+    .conventions-settings-btn-edit {
+      background-color: #0096FA !important;
+      color: #fff;
+      border-top-left-radius: 0; 
+      border-top-right-radius: 0; 
+    }
+
+    &.active {
+      background-color: #f2f7f7;
+
+      .card-active {
+        color: #19b84f;
+      }
+    }
+  }
+
+  .conventions-settings-conv-info {
+    display: grid;
+    grid-template-rows: 30px 45px 30px;
+    grid-gap: 1vh;
+
+    .conventions-settings-conv-info__row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      grid-gap: 2vh;
+      align-items: center;
+
+      label {
+        margin: 0;
+      }
+
+      .changed-by {
+        display: grid;
+        grid-template-columns: 45px 3fr;
+        grid-template-rows: 45px;
+        grid-gap: 10px;
+
+        .UserAvatar {
+          display: flex;
+          align-items: center;
+        }
+
+        .changed-by__user-info {
+          display: grid;
+          grid-template-rows: 1fr 1fr;
+        }
+      }
     }
   }
 }
