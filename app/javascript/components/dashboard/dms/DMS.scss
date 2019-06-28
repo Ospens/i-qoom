@@ -1379,13 +1379,13 @@ input.search-input {
   }
 }
 
-.show-members-popup {
+.opened-members-block {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   min-width: 340px;
 
-  .popup-team-member-list {
+  .team-member-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -1401,13 +1401,13 @@ input.search-input {
     }
   }
 
-  .avatar-with-dropdown {
-    background-color: transparent;
-  }
-
   .UserAvatar--inner {
     margin-right: -10px; 
   }
+}
+
+.avatar-with-dropdown {
+  background-color: transparent;
 }
 
 .popup-add-team-member {
@@ -1844,4 +1844,9 @@ input.search-input {
       }
     }
   }
+}
+
+.dg-members {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
 }

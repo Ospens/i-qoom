@@ -126,7 +126,7 @@ class DmsSideBar extends Component {
       {
         title: 'Distribution groups',
         icon: dmsSettingsIcon,
-        path: `${masterPath}/planning/`
+        path: `${masterPath}/distribution_group/`
       },
       {
         title: 'Review managment',

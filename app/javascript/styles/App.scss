@@ -968,39 +968,40 @@ input[type=checkbox] {
   .UserAvatar {
     z-index: 1;
   }
+}
 
-  .team-icon {
-    position: relative;
-    display: flex;
+.team-icon {
+  position: relative;
+  display: flex;
 
-    &.with-avatar{
-      .UserAvatar {
-        z-index: 0;
-        margin-right: -10px !important;
-      }
+  &.with-avatar{
+    .UserAvatar {
+      z-index: 0;
+      margin-right: -10px !important;
     }
+  }
 
-    .UserAvatar--inner {
-      background: rgb(44, 62, 80);
-      background-color: rgb(44, 62, 80) !important;
-    }
+  .UserAvatar--inner {
+    background: rgb(44, 62, 80);
+    background-color: rgb(44, 62, 80) !important;
+    color: #fff;
+  }
 
-    .team-length {
-      position: absolute;
-      bottom: -13px;
-      left: calc(50% - 7px);
-      background: black;
-      padding: 3px;
-      width: 25px;
-      height: 25px;
-      font-size: 1em;
-      color: white;
-      border-radius: 100%;
-      text-align: center;
-      line-height: 1.1;
-      vertical-align: middle;
-      border: 2px solid white;
-    }
+  .team-length {
+    position: absolute;
+    bottom: -13px;
+    left: calc(50% - 7px);
+    background: black;
+    padding: 3px;
+    width: 25px;
+    height: 25px;
+    font-size: 1em;
+    color: white;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 1.1;
+    vertical-align: middle;
+    border: 2px solid white;
   }
 }
 
