@@ -175,6 +175,13 @@ class Document < ApplicationRecord
     end
   end
 
+  def self.to_xlsx
+    p = Axlsx::Package.new
+    sheet = p.workbook.add_worksheet(name: 'Documents')
+    assign_rows(sheet)
+    p.to_stream.read
+  end
+
   def revision_date
     document_fields.find_by(codification_kind: :revision_date).value
   end

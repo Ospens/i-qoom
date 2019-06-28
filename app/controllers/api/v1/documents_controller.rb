@@ -141,7 +141,7 @@ class Api::V1::DocumentsController < ApplicationController
         stream = documents.to_csv
         send_data(stream, type: 'text/csv', filename: "#{filename}.csv")
       end
-      format.xls do
+      format.xlsx do
         stream = documents.to_xlsx
         send_data(stream, type: 'application/xlsx', filename: "#{filename}.xlsx")
       end
@@ -151,7 +151,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
       format.pdf do
         stream = render_to_string
-        send_data(stream, type: 'text/xml', filename: "#{filename}.xml")
+        send_data(stream, type: 'application/pdf', filename: "#{filename}.pdf")
       end
     end
   end
