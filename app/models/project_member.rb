@@ -9,15 +9,16 @@ class ProjectMember < ApplicationRecord
 
   enum employment_type: [ :employee,
                           :internal_contractor,
-                          :external_contractor],
+                          :external_contractor ],
                       _prefix: true
 
   enum company_type: [ :project_company,
                        :parent_company,
-                       :joint_venture_company],
+                       :joint_venture_company ],
                       _prefix: true
 
-  after_save :update_creation_step_to_completed, unless: :creation_step_completed?
+  after_save :update_creation_step_to_completed,
+             unless: :creation_step_completed?
 
   # before_create :add_user
 
@@ -28,7 +29,8 @@ class ProjectMember < ApplicationRecord
 
   belongs_to :company_address,
              class_name: "Address",
-             required: false
+             required: false,
+             inverse_of: :project_member
 
   accepts_nested_attributes_for :company_address,
                                 update_only: true
@@ -40,16 +42,18 @@ class ProjectMember < ApplicationRecord
   # company_type second step
   validates :company_type,
             presence: true,
-            unless: :creation_step_employment_type?
+            unless: -> { creation_step.nil? ||
+                         creation_step_employment_type? }
 
   # company_data third step
   validates :company_address,
             presence: true,
-            unless: -> {
-              creation_step_employment_type? ||
-              creation_step_company_type?
+            if: -> {
+              creation_step_company_data? ||
+              creation_step_details? ||
+              creation_step_completed?
             }
-  # details
+  # details fourth step
   with_options if: -> {
                  creation_step_details? ||
                  creation_step_completed?
@@ -69,6 +73,7 @@ class ProjectMember < ApplicationRecord
 
   def update_creation_step_to_completed
     update(creation_step: "completed")
+    self.reload if creation_step_completed?
   end
 
   # # adds a user only when it is being created,

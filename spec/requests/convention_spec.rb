@@ -5,7 +5,7 @@ describe Convention, type: :request do
   let(:json) { JSON(response.body) }
 
   it '#new' do
-    project = FactoryBot.create(:project)
+    project = FactoryBot.create(:project_done_step)
     get "/api/v1/projects/#{project.id}/conventions/edit", headers: credentials(project.user)
     expect(response).to have_http_status(:success)
     expect(json['id']).to be_nil
@@ -13,7 +13,7 @@ describe Convention, type: :request do
   end
 
   context do
-    let(:project) { FactoryBot.create(:project) }
+    let(:project) { FactoryBot.create(:project_done_step) }
     let!(:convention) do
       convention = project.conventions.new(number: 1)
       convention.build_default_fields

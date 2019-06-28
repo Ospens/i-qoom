@@ -22,7 +22,8 @@ class Address < ApplicationRecord
                           project_company_datum.present? ||
                           project_company_billing_datum.present? ||
                           (project_member.present? &&
-                            (!project_member.creation_step_employment_type? &&
-                             !project_member.creation_step_company_type?))
+                            (project_member.creation_step_company_data? ||
+                             project_member.creation_step_details? ||
+                             project_member.creation_step_completed?))
                         }
 end

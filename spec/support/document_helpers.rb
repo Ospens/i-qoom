@@ -4,7 +4,7 @@ module DocumentHelpers
   # if you want to use project.user from this method in request specs
   # you need to assign password to user like: project.user.password = 'password1'
   def document_attributes(user)
-    project = FactoryBot.create(:project)
+    project = FactoryBot.create(:project_done_step)
     main = project.document_mains.create
     rev = main.revisions.create
     convention = project.conventions.new

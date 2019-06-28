@@ -45,7 +45,7 @@ RSpec.describe Project, type: :model do
 
   context "update_creation_step_to_done" do
     context "when is not ready" do
-      subject { FactoryBot.build(:project, creation_step: :company_datum,
+      subject { FactoryBot.create(:project, creation_step: :company_datum,
                 company_datum: FactoryBot.build(:project_company_datum_without_billing_address)) }
       it { expect(subject.creation_step).not_to eq("done") }
     end

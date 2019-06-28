@@ -45,6 +45,7 @@ class Project < ApplicationRecord
 
   def update_creation_step_to_done
     update(creation_step: "done")
+    self.reload if creation_step_done?
   end
 
   def send_confirmation_emails
