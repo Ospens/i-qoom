@@ -1542,11 +1542,11 @@ input.search-input {
 
 .codification-codes-title-row {
   display: grid;
-  grid-template-columns: 1fr 0.7fr repeat(5, 1fr 0.3fr) 1fr;
+  grid-template-columns: 130px 0.7fr repeat(5, 1fr 0.3fr) 1fr;
   
   .codification-codes-title-column {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 2fr 1fr 2fr;
 
     & > label {
       white-space: nowrap;
@@ -1566,7 +1566,6 @@ input.search-input {
     
     .codification-codes-title-column__title {
       border-bottom: 2px solid lightgray;
-      padding-bottom: 10px;
       white-space: nowrap;
       overflow: visible;
       white-space: nowrap;
@@ -1635,26 +1634,26 @@ input.search-input {
         border-color: #4d5c5d;
       }
     }
+  }
+}
 
-    .codification-codes-title-column__code {
-      display: grid;
-      grid-template-rows: 1fr;
-      grid-template-columns: 1fr 1fr 1fr;
-      align-items: center;
-      justify-items: center;
-      padding-top: 10px;
-      
-      .form-control {
-        padding-right: 0;
-        padding-left: 0;
-        text-align: center;
-      }
+.codification-codes-title-column__code {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  padding-top: 10px;
+  
+  .form-control {
+    padding-right: 0;
+    padding-left: 0;
+    text-align: center;
+  }
 
-      span {
-        color: lightgray;
-        font-size: 1.5em;
-      }
-    }
+  span {
+    color: lightgray;
+    font-size: 1.5em;
   }
 }
 
@@ -1800,6 +1799,48 @@ input.search-input {
           display: grid;
           grid-template-rows: 1fr 1fr;
         }
+      }
+    }
+  }
+}
+
+.codification-second-conv {
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+
+  .codification-second-conv__project-block {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    grid-gap: 50px;
+    max-width: 60%;
+
+    .codification-second-conv__left-block {
+      display: grid;
+      grid-template-rows: 1fr 2fr;
+
+      .codification-codes-title-column__title {
+        border-bottom: 2px solid rgba(0, 0, 0, .87);
+        white-space: nowrap;
+        overflow: visible;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .codification-codes-title-column__code {
+      grid-gap: 1vh;
+    }
+
+    .codification-second-conv__right-block {
+      display: grid;
+      grid-template-rows: 2fr 1fr;
+      grid-gap: 1vh;
+
+      .codification-second-conv__right-block_buttons {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 3vh;
       }
     }
   }

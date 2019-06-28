@@ -68,21 +68,75 @@ export class Codifications extends Component {
     </React.Fragment>
   )
 
-  renderContent = () => {
+  renderCodeStructure = () => {
     return (
-      <div className='dms-content bordered'>
-        <div className='dms-content__header p-4'>
-          <h4>Convention 1 - active</h4>
-          <label>Administration codes for document codification</label>
-        </div>
+      <div className='codification-codes-title-row p-4'>
+        {fields.map((el, i) => {
+          const labelText = i === 0
+            ? 'Change project code'
+            : i === 1
+              ? 'Code structure'
+              : ''
+          return (
+            <React.Fragment key={i}>
+              <div className={classnames('codification-codes-title-column', el.className)}>
+                <label>{labelText}</label>
+                <span className='codification-codes-title-column__title'>
+                  {el.title}
+                </span>
+                <div className='codification-codes-title-column__code'>
+                  {i === 0 && this.renderProjectInputs()}
+                  {i !== 0 && this.renderPlaceholders(el)}
+                  {i === 6 && this.renderFreeTextPlaceholders()}
+                </div>
+              </div>
+              {i !== 6 &&
+                <div className='codification-codes-title-column'>
+                  <div />
+                  <div className='codification-codes-title-column__title' />
+                  <span className='dash-symbol'>&mdash;</span>
+                </div>}
+            </React.Fragment>
+          )
+        })}
+      </div>
+    )
+  }
 
-        <div className='codification-codes-title-row p-4'>
+  renderSecondCodeStructure = () => {
+    return (
+      <div className='codification-second-conv'>
+        <div className='codification-second-conv__project-block px-4'>
+          <div className='codification-second-conv__left-block'>
+            <span className='codification-codes-title-column__title'>
+              Project
+            </span>
+            <div className='codification-codes-title-column__code'>
+              {this.renderProjectInputs()}
+            </div>
+          </div>
+          <div className='codification-second-conv__right-block'>
+            <span>
+              You made changes to the project codification. This will influence
+              all future documents. Are you sure?
+            </span>
+            <div className="codification-second-conv__right-block_buttons">
+              <button className="btn btn-white-blue">
+                Discard
+              </button>
+              <button className="btn btn-purple">
+                Apply changes
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className='codification-codes-title-row second-convention p-4'>
           {fields.map((el, i) => {
             const labelText = i === 0
               ? 'Change project code'
               : i === 1
                 ? 'Code structure'
-                : '' 
+                : ''
             return (
               <React.Fragment key={i}>
                 <div className={classnames('codification-codes-title-column', el.className)}>
@@ -97,15 +151,28 @@ export class Codifications extends Component {
                   </div>
                 </div>
                 {i !== 6 &&
-                <div className='codification-codes-title-column'>
-                  <div />
-                  <div className='codification-codes-title-column__title' />
-                  <span className='dash-symbol'>&mdash;</span>
-                </div>}
+                  <div className='codification-codes-title-column'>
+                    <div />
+                    <div className='codification-codes-title-column__title' />
+                    <span className='dash-symbol'>&mdash;</span>
+                  </div>}
               </React.Fragment>
             )
           })}
+        </div>        
+      </div>
+    )
+  }
+
+  renderContent = () => {
+    return (
+      <div className='dms-content bordered'>
+        <div className='dms-content__header p-4'>
+          <h4>Convention 1 - active</h4>
+          <label>Administration codes for document codification</label>
         </div>
+          {/* TODO: make switch for number of convention */}
+        {this.renderSecondCodeStructure()}
         <CodificationTable />
       </div>
     )

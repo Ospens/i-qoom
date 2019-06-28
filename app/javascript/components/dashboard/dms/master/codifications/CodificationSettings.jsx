@@ -7,6 +7,7 @@ import DmsSideBar from '../../DmsSideBar'
 import checkIcon from '../../../../../images/choose_2'
 
 export class CodificationSettings extends Component {
+
   renderContent = () => {
     return (
       <div className='dms-content bordered'>
