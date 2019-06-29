@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import CompanyForm from '../../../elements/forms/CompanyForm'
 import { connect } from 'react-redux'
+import NewModal from '../../../elements/Modal'
 import AdministratorForm from '../../../elements/forms/AdministratorForm'
 import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
 import ModalFirstAdmin from '../projectOverview/ModalFirstAdmin'
@@ -10,7 +11,6 @@ import trashBucket from '../../../images/trash_bucket'
 import pencil from '../../../images/pencil-write'
 import searchIcon from '../../../images/search-alternate'
 import emailSend from '../../../images/email-action-send-2'
-import ModalComponent from '../../../elements/ModalComponent'
 import DropDownMenu, { trigger, renderItem } from '../../../elements/DropDownMenu'
 
 
@@ -103,7 +103,7 @@ class ProjectDetails extends Component {
     const options = 
       {
         key: 'check_status',
-        text: renderItem(searchIcon, 'Check status'),
+        content: renderItem(searchIcon, 'Check status'),
         onClick: () => this.toggleModals('adminInspectModal', true)
       }
 
@@ -112,13 +112,13 @@ class ProjectDetails extends Component {
 
     if (admins) {
       Object.keys(admins[1]).forEach(k => {
-        secondAdminFields[`administrator_form_2_${k}`] = admins[1][k]
+        secondAdminFields[`${k}`] = admins[1][k]
       })
     }
 
     const confirmMsg = (
       <div className='msg-card'>
-        Do you really want to resend this invitation?
+        <span>Do you really want to resend this invitation?</span>
         <button className='btn btn-white-grey'>
           Cancel
         </button>
@@ -130,13 +130,9 @@ class ProjectDetails extends Component {
 
     const confirmMsgDel = (
       <div className='msg-card'>
-        Do you really want to delete the administrator?
-        <button className='btn btn-white-grey'>
-          Cancel
-        </button>
-        <button className='btn btn-white-red'>
-          Delete
-        </button>
+        <span>Do you really want to delete the administrator?</span>
+        <button className='btn btn-white-grey'>Cancel</button>
+        <button className='btn btn-white-red'>Delete</button>
       </div>
     )
     return (
@@ -181,7 +177,7 @@ class ProjectDetails extends Component {
         {(() => {
           if (!pristine) {
             return (
-              <button type='button'
+              <button
                 type='submit'
                 className='btn btn-purple wide-button mb-2'
                 onClick={() => this.setState({ formSaved: name })}
@@ -201,8 +197,8 @@ class ProjectDetails extends Component {
     )
   }
 
-  openAdminErrorModal = () => (
-    <ModalComponent>
+  renderAdminErrorModal = () => (
+    <React.Fragment>
       <div className='modal-body terms-modal'>
         <h4>Sorry, you can't do that yet</h4>
         <p>
@@ -221,11 +217,11 @@ class ProjectDetails extends Component {
           Done
         </button>
       </div>
-    </ModalComponent>
+    </React.Fragment>
   )
 
-  openAdminInspectModal = () => (
-    <ModalComponent>
+  renderAdminInspectModal = () => (
+    <React.Fragment>
       <div className='modal-body terms-modal'>
         <h4>Awaiting confirmation</h4>
         <p>
@@ -243,20 +239,17 @@ class ProjectDetails extends Component {
           Done
         </button>
       </div>
-    </ModalComponent>
+    </React.Fragment>
   )
 
   submitFormByType = (values, type) => {
     const { updateProject, id, startFetchProject } = this.props
 
-    updateProject(values, id, type)
+    return updateProject(values, id, type)
       .then(() => {
         this.toggleModals('adminForm', false)
         this.toggleModals('billingForm', false)
         startFetchProject(id)
-      })
-      .catch(err => {
-        console.log(err)
       })
   }
 
@@ -275,7 +268,7 @@ class ProjectDetails extends Component {
       ? { ...company_datum.company_address, ...company_datum }
       : {}
     const firstAdminFields = admins
-      ? this.changeKeys(admins[0], 'administrator_form_1_')
+      ? admins[0]
       : {}
     const billingInit = company_datum && company_datum.billing_address
       ? this.changeKeys(company_datum.billing_address, 'billing_')
@@ -316,7 +309,7 @@ class ProjectDetails extends Component {
             </div>
             <AdministratorForm
               initialValues={firstAdminFields}
-              form='administrator_form_1'
+              form='administrator_form'
               customButtons={(pristine) => this.renderSaveButtons(pristine, 'first_admin')}
               customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
             />
@@ -328,24 +321,40 @@ class ProjectDetails extends Component {
             }
           </div>
         </div>
-        {adminErrorModal && this.openAdminErrorModal()}
-        {adminInspectModal && this.openAdminInspectModal()}
-        {billingForm &&
-        <ModalBillingAddress
-          closeModal={() => this.toggleModals('billingForm', false)}
-          customButtons={this.modalButtons}
-          modalTitle='Billing address'
-          customSubmit={(values) => this.submitFormByType(values, 'billing_address')}
-          initialValues={billingInit}
-        />}
-        {adminForm &&
-        <ModalFirstAdmin
-          closeModal={() => this.toggleModals('adminForm', false)}
-          customButtons={this.modalButtonsAdmin}
-          modalTitle='New project administrator'
-          form='administrator_form_2'
-          customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
-        />}
+        <NewModal
+          content={this.renderAdminErrorModal()}
+          modalOpen={adminErrorModal}
+          handleClose={() => this.toggleModals('adminErrorModal', false)}
+        />
+        <NewModal
+          content={this.renderAdminInspectModal()}
+          modalOpen={adminInspectModal}
+          handleClose={() => this.toggleModals('adminInspectModal', false)}
+        />
+        <NewModal
+          content={
+            <ModalBillingAddress
+              customButtons={this.modalButtons}
+              modalTitle='Billing address'
+              initialValues={billingInit}
+              customSubmit={(values) => this.submitFormByType(values, 'billing_address')}
+            />
+          }
+          modalOpen={billingForm}
+          handleClose={() => this.toggleModals('billingForm', false)}
+        />
+        <NewModal
+        content={
+          <ModalFirstAdmin
+            customButtons={this.modalButtonsAdmin}
+            modalTitle='New project administrator'
+            form='administrator_form_2'
+            customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
+          />
+        }
+        modalOpen={adminForm}
+        handleClose={() => this.toggleModals('adminForm', false)}
+        />
       </React.Fragment>
       )
   }

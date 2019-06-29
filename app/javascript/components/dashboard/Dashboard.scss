@@ -31,9 +31,16 @@ body {
   color: #777696e1;
 }
 
+.form-group {
+  &:hover, &:active {
+    z-index: 2;                                                                                                                                                                                                                                                                                                                                               
+  }
+}
+
 button:disabled {
   cursor: not-allowed;
 }
+
 .project-card {
   display: flex;
   flex-direction: column;
@@ -357,6 +364,8 @@ button:disabled {
       padding-bottom: 15px;
       padding-top: 15px;
       border-bottom: 2px solid transparent;
+      align-items: center;
+      align-content: center;
 
       &:hover {
         color:  #0096FA;
@@ -370,6 +379,7 @@ button:disabled {
     }
   }
 }
+
 .project-settings {
   height: 100%;
   display: block;
@@ -382,6 +392,14 @@ button:disabled {
 
   .col-lg-4 {
     margin-bottom: 5em;
+  }
+}
+
+.manage-members-actions-button {
+  max-width: 15em;
+
+  & > button {
+    width: 100%;
   }
 }
 
@@ -900,10 +918,27 @@ span.tab-description {
   background-color: #475759 !important;
 
   .msg-card {
+    display: grid;
+    grid-template-areas:
+      "text text"
+      "cancel delete";
+    grid-gap: 10px;
     color: white;
     width: 150px;
     white-space: normal;
     line-height: 1.2;
+
+    span {
+      grid-area: text;
+    }
+
+    .btn-white-grey {
+      grid-area: cancel;
+    }
+
+    .btn-white-red {
+      grid-area: delete;
+    }
   }
 
   &::after {
@@ -915,8 +950,6 @@ span.tab-description {
     padding-right: 7px;
     padding-top: 0px;
     padding-bottom: 2px;
-    margin-top: 10px;
-    margin-left: 10px;
 
     &:hover {
       opacity: 0.8;

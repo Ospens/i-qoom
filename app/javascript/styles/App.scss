@@ -273,18 +273,21 @@ header {
   width: max-content;
   margin-top: 0px;
   background-color: #fd0944;
-  padding: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 0 0 10px 10px;
   color: white;
-  font-size: 12px;
+  font-size: 10px;
   margin-bottom: -32px;
   text-transform: uppercase;
   max-width: 95%;
   z-index: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .form-control.is-invalid {

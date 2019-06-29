@@ -14,7 +14,6 @@ import Left from '../../images/arrow-button-left'
 import SelectField from '../SelectField'
 import countryList from '../../components/landing/countriesCodes'
 
-
 class CompanyForm extends Component {
 
   handleSubmit = (values) => {
@@ -70,7 +69,7 @@ class CompanyForm extends Component {
                     <InputField
                       type='text'
                       name='company_name'
-                      id='company_name'
+                      id='company_datum.company_address.company_name'
                       errorField={submitErrors}
                       placeholder='Company name'
                     />
@@ -81,7 +80,7 @@ class CompanyForm extends Component {
                     <InputField
                       type='text'
                       name='registration_number'
-                      id='registration_number'
+                      id='company_datum.registration_number'
                       errorField={submitErrors}
                       placeholder='Registration number'
                     />
@@ -90,7 +89,7 @@ class CompanyForm extends Component {
                     <InputField
                       type='text'
                       name='vat_id'
-                      id='vat_id'
+                      id='company_datum.vat_id'
                       errorField={submitErrors}
                       placeholder='VAT-ID'
                     />
@@ -103,7 +102,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='street'
-                  id='street'
+                  id='company_datum.company_address.street'
                   errorField={submitErrors}
                   placeholder='Street name'
                 />
@@ -112,7 +111,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='house_number'
-                  id='house_number'
+                  id='company_datum.company_address.house_number'
                   errorField={submitErrors}
                   placeholder='No.'
                 />
@@ -123,7 +122,7 @@ class CompanyForm extends Component {
                 <InputField
                   type='text'
                   name='city'
-                  id='city'
+                  id='company_datum.company_address.city'
                   errorField={submitErrors}
                   placeholder='City'
                 />
@@ -141,7 +140,7 @@ class CompanyForm extends Component {
             <div className='form-group'>
               <Field
                 name='country'
-                id='country'
+                id='company_datum.company_address.country'
                 options={countryList}
                 value={country}
                 newValue={country}

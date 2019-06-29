@@ -138,7 +138,7 @@ class MemberTable extends Component {
                 </Table.Cell>
                 <Table.Cell className='name-column'>
                   <div>
-                    <UserAvatar size='24' name={name} />
+                    <UserAvatar size='42' name={name} />
                     <span className='master-icon'>M</span>
                   </div>
                   <span>{name}</span>

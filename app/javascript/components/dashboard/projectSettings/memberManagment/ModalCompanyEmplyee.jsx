@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, getFormSubmitErrors, reduxForm, formValueSelector } from 'redux-form'
-import ModalComponent from '../../../../elements/ModalComponent'
 import SelectField from '../../../../elements/SelectField'
 
 const options = [
@@ -21,36 +20,34 @@ class ModalCompanyEmplyee extends Component {
   render() {
     const { submitErrors, closeModal, pristine, employment_type } = this.props
     return (
-      <ModalComponent>
-        <div className='new-project-modal'>
-          <h4>New member</h4>
-          <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-            <div className='modal-body project-name'>
-              <h6>From which company is the employee?</h6>
-              <div className='form-group'>
-                <Field
-                  name='employment_type'
-                  id='employment_type'
-                  options={options}
-                  defaultValue={options.filter(option => option.value === employment_type)[0]}
-                  errorField={submitErrors}
-                  component={SelectField}
-                />
-              </div>
+      <div className='new-project-modal'>
+        <h4>New member</h4>
+        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+          <div className='modal-body project-name'>
+            <h6>From which company is the employee?</h6>
+            <div className='form-group'>
+              <Field
+                name='employment_type'
+                id='employment_type'
+                options={options}
+                defaultValue={options.filter(option => option.value === employment_type)[0]}
+                errorField={submitErrors}
+                component={SelectField}
+              />
             </div>
-            <div className='modal-footer'>
-              <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
-              <button
-                type='submit'
-                className='btn btn-purple'
-                disabled={pristine}
-              >
-                Next
-            </button>
-            </div>
-          </form>
-        </div>
-      </ModalComponent>
+          </div>
+          <div className='modal-footer'>
+            <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
+            <button
+              type='submit'
+              className='btn btn-purple'
+              disabled={pristine}
+            >
+              Next
+          </button>
+          </div>
+        </form>
+      </div>
     )
   }
 }
