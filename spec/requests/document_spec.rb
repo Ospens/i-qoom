@@ -4,7 +4,7 @@ require 'zip'
 describe Document, type: :request do
   let(:json) { JSON(response.body) }
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_done_step) }
+  let(:project) { FactoryBot.create(:project) }
   let!(:convention) do
     convention = FactoryBot.create(:convention, project: project)
     convention.document_fields.limit_by_value.each do |field|

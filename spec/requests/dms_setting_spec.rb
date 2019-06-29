@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe DmsSetting, type: :request do
   let(:json) { JSON(response.body) }
-  let(:project) { FactoryBot.create(:project_done_step) }
+  let(:project) { FactoryBot.create(:project) }
 
   it '#edit' do
     get "/api/v1/projects/#{project.id}/dms_settings/edit", headers: credentials(project.user)

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Project", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_admins_step, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_user) { FactoryBot.create(:user) }
   let(:different_project) { FactoryBot.create(:project,
@@ -197,7 +197,7 @@ describe "Project", type: :request do
 
     context "destroy" do
       it "should be destroyed" do
-        third_project = FactoryBot.create(:project, user_id: user.id)
+        third_project = FactoryBot.create(:project_admins_step, user_id: user.id)
         delete "/api/v1/projects/#{third_project.id}",
               headers: headers
         expect(response).to have_http_status(:success)
@@ -208,7 +208,7 @@ describe "Project", type: :request do
     context "confirm_admin" do
       it "should confirm an admin" do
         project_admin =
-          FactoryBot.create(:project_done_step,
+          FactoryBot.create(:project,
                             user_id: user.id).admins.first
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
@@ -218,7 +218,7 @@ describe "Project", type: :request do
       end
       it "shouldn't confirm an admin with wrong user" do
         project_admin =
-          FactoryBot.create(:project_done_step,
+          FactoryBot.create(:project,
                             user_id: user.id).admins.first
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
@@ -259,7 +259,7 @@ describe "Project", type: :request do
     end
 
     it 'confirm_account' do
-      project_admin = FactoryBot.create(:project_done_step).admins.first
+      project_admin = FactoryBot.create(:project).admins.first
       get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
       expect(response).to have_http_status(:forbidden)

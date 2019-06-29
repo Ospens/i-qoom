@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Project, type: :model do
   context "creation_step" do
-    subject { FactoryBot.build(:project_done_step) }
+    subject { FactoryBot.build(:project) }
     it { is_expected.to define_enum_for(:creation_step)
             .with_values([ :admins,
                            :name,
@@ -13,14 +13,13 @@ RSpec.describe Project, type: :model do
   end
 
   context "creation step is admins" do
-    subject { FactoryBot.build(:project,
-                               creation_step: :admins) }
+    subject { FactoryBot.build(:project_admins_step) }
     it { is_expected.not_to validate_presence_of(:name) }
     it { is_expected.not_to validate_length_of(:name).is_at_least(3).is_at_most(255) }
   end
 
   context "creation step is not admins" do
-    subject { FactoryBot.build(:project,
+    subject { FactoryBot.build(:project_admins_step,
                                creation_step: [ :name,
                                                 :company_datum,
                                                 :billing_address,
@@ -31,7 +30,7 @@ RSpec.describe Project, type: :model do
   end
 
   context "creation_step is company_datum" do
-    subject { FactoryBot.build(:project, creation_step: :company_datum) }
+    subject { FactoryBot.build(:project_company_datum_step) }
     it { is_expected.to validate_presence_of(:company_datum) }
   end
 
@@ -45,7 +44,7 @@ RSpec.describe Project, type: :model do
 
   context "update_creation_step_to_done" do
     context "when is not ready" do
-      subject { FactoryBot.create(:project, creation_step: :company_datum,
+      subject { FactoryBot.create(:project_company_datum_step,
                 company_datum: FactoryBot.build(:project_company_datum_without_billing_address)) }
       it { expect(subject.creation_step).not_to eq("done") }
     end

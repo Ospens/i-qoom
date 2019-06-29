@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :project_member_employment_type, class: "ProjectMember" do
-    association :project, factory: :project_done_step
+    project
     creation_step { "employment_type" }
     employment_type { [ :employee,
                         :internal_contractor,

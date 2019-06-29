@@ -32,7 +32,7 @@ RSpec.describe ProjectAdministrator, type: :model do
   end
 
   context "remove admin" do
-    let(:project) { FactoryBot.create(:project_done_step) }
+    let(:project) { FactoryBot.create(:project) }
     it "admin should be removed" do
       project.admins << FactoryBot.build(:project_administrator)
       project.save

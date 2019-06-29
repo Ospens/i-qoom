@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :convention do
-    association :project, factory: :project_done_step
+    project
 
     before(:create) do |instance|
       instance.build_default_fields
