@@ -150,7 +150,7 @@ class Api::V1::DocumentsController < ApplicationController
         send_data(stream, type: 'text/xml', filename: "#{filename}.xml")
       end
       format.pdf do
-        stream = render_to_string
+        stream = document_list_render(@documents)
         send_data(stream, type: 'application/pdf', filename: "#{filename}.pdf")
       end
     end

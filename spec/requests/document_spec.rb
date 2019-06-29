@@ -363,6 +363,15 @@ describe Document, type: :request do
         expect(sheet.search('revision').text).to eql(document.revision_date)
         expect(sheet.search('version').text).to eql(document.revision_version)
       end
+
+      it 'pdf' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.pdf", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        # File.open('./tmp/document.pdf', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
     end
   end
 
