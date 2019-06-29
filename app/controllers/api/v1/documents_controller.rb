@@ -128,21 +128,21 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def download_list
-    documents =
+    @documents =
       @project.document_mains
               .documents_available_for(signed_in_user)
               .select{ |i| params[:document_ids].include?(i.id.to_s) }
-    documents = Document.where(id: documents.map(&:id))
+    @documents = Document.where(id: @documents.map(&:id))
 
     filename = "documents_#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}"
 
     respond_to do |format|
       format.csv do
-        stream = documents.to_csv
+        stream = @documents.to_csv
         send_data(stream, type: 'text/csv', filename: "#{filename}.csv")
       end
       format.xlsx do
-        stream = documents.to_xlsx
+        stream = @documents.to_xlsx
         send_data(stream, type: 'application/xlsx', filename: "#{filename}.xlsx")
       end
       format.xml do

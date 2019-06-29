@@ -354,6 +354,15 @@ describe Document, type: :request do
         expect(row2[2].to_s).to eql(document.revision_version)
         File.delete('./tmp/documents.xlsx')
       end
+
+      it 'xml' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.xml", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = Nokogiri::XML(response.body).search('documents').search('document')
+        expect(sheet.search('doc_id').text).to eql(document.codification_string)
+        expect(sheet.search('revision').text).to eql(document.revision_date)
+        expect(sheet.search('version').text).to eql(document.revision_version)
+      end
     end
   end
 

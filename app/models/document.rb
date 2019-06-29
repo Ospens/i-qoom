@@ -150,10 +150,14 @@ class Document < ApplicationRecord
     document_fields.find_by(codification_kind: :document_native_file).files.first
   end
 
+  def self.visible_columns
+    ['codification_string', 'revision_date', 'revision_version']
+  end
+
   def self.assign_rows(array)
     records = all.load
     return array if records.length == 0
-    columns = ['codification_string', 'revision_date', 'revision_version']
+    columns = visible_columns
     array << columns.map do |column|
       I18n.t("documents.list.#{column}")
     end
