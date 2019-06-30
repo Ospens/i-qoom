@@ -28,7 +28,7 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values,
            on: :update
 
-  validate :prevent_adding_or_deleting_fields_from_convention,
+  validate :prevent_adding_more_fields_than_in_convention,
            on: :create
 
   validate :prevent_update_of_fields_from_convention,
@@ -213,8 +213,11 @@ class Document < ApplicationRecord
     errors.add(:document_fields, :codification_field_changed) if error
   end
 
-  def prevent_adding_or_deleting_fields_from_convention
-    if convention.document_fields.length != document_fields.length
+  def prevent_adding_more_fields_than_in_convention
+    # adding more fields than in convention is not allowed
+    # but removing some fields is allowed
+    # since some fields could be hidden from user
+    if convention.document_fields.length < document_fields.length
       errors.add(:document_fields, :the_number_of_document_fields_is_wrong)
     end
   end

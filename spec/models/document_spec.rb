@@ -99,13 +99,13 @@ RSpec.describe Document, type: :model do
       expect(doc).to be_valid
     end
 
-    it 'removes one field' do
-      attrs = doc_attrs
-      attrs['document_fields_attributes'].delete_at(1)
-      doc = Document.new(attrs)
-      expect(doc).to_not be_valid
-      expect(doc.errors.count).to eql(2)
-    end
+    # it 'removes one field' do
+    #   attrs = doc_attrs
+    #   attrs['document_fields_attributes'].delete_at(1)
+    #   doc = Document.new(attrs)
+    #   expect(doc).to_not be_valid
+    #   expect(doc.errors.count).to eql(2)
+    # end
 
     it 'adds one field' do
       attrs = doc_attrs
@@ -136,8 +136,10 @@ RSpec.describe Document, type: :model do
         @attrs = doc_attrs
         Project.find(@attrs['project_id']).conventions.active.document_fields << field
         field.document_rights.create!(user: user, limit_for: :field, enabled: true)
-        fields = @attrs['document_fields_attributes'] << field.build_for_new_document(user)
-        fields.detect{ |i| i['kind'] == 'text_field' && i['title'] == value }
+        field_attrs = field.build_for_new_document(user)
+        @attrs['document_fields_attributes'] << field_attrs
+        fields = @attrs['document_fields_attributes']
+        fields.compact.detect{ |i| i['kind'] == 'text_field' && i['title'] == value }
       end
 
       attrs.each do |attribute|

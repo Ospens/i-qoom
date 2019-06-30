@@ -51,12 +51,12 @@ RSpec.describe DocumentField, type: :model do
                                        user: user,
                                        enabled: true)
       end
-
-      it do
-        expect(subject).to_not be_select_field
-        expect(subject.parent.class.name).to eql('Convention')
-        expect(subject.can_build?(user)).to eql(true)
-      end
+      # limitation by field is temporarily disabled
+      # it do
+      #   expect(subject).to_not be_select_field
+      #   expect(subject.parent.class.name).to eql('Convention')
+      #   expect(subject.can_build?(user)).to eql(true)
+      # end
 
       it do
         subject.parent = FactoryBot.create(:document_main)
