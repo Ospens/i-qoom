@@ -321,6 +321,58 @@ describe Document, type: :request do
       #   f.write(response.body)
       # end
     end
+
+    context 'download_list' do
+      it 'csv' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = CSV.parse(response.body.force_encoding('utf-8'))
+        expect(sheet[0][0]).to eql("\xEF\xBB\xBFDoc-ID")
+        expect(sheet[0][1]).to eql('Revision')
+        expect(sheet[0][2]).to eql('Version')
+        expect(sheet[1][0]).to eql(document.codification_string)
+        expect(sheet[1][1]).to eql(document.revision_date)
+        expect(sheet[1][2]).to eql(document.revision_version)
+        # File.open('public/document.csv', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
+
+      it 'xlsx' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.xlsx", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        File.open('./tmp/documents.xlsx', 'w') { |file| file.write(response.body) }
+        sheet = Roo::Spreadsheet.open('./tmp/documents.xlsx').sheet(0)
+        row1 = sheet.row(1)
+        row2 = sheet.row(2)
+        expect(row1[0]).to eql('Doc-ID')
+        expect(row1[1]).to eql('Revision')
+        expect(row1[2]).to eql('Version')
+        expect(row2[0]).to eql(document.codification_string)
+        expect(row2[1].to_s).to eql(document.revision_date)
+        expect(row2[2].to_s).to eql(document.revision_version)
+        File.delete('./tmp/documents.xlsx')
+      end
+
+      it 'xml' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.xml", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = Nokogiri::XML(response.body).search('documents').search('document')
+        expect(sheet.search('doc_id').text).to eql(document.codification_string)
+        expect(sheet.search('revision').text).to eql(document.revision_date)
+        expect(sheet.search('version').text).to eql(document.revision_version)
+      end
+
+      it 'pdf' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.pdf", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        # File.open('./tmp/document.pdf', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
+    end
   end
 
   context '#index' do
