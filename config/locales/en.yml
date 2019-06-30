@@ -48,5 +48,8 @@ en:
               project_admin_is_not_found:
                 "problem: the project admin is not found"
               emails_do_not_match: "problem: Emails do not match"
-
-
+  documents:
+    list:
+      codification_string: Doc-ID
+      revision_date: Revision
+      revision_version: Version
