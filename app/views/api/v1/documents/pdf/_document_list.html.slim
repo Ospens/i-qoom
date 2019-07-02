@@ -1,0 +1,17 @@
+sass:
+  table
+    width: 100%
+    font-size: 16px
+    margin-bottom: 15px
+    th, td
+      text-align: left
+table
+  thead
+    tr
+      - Document.visible_columns.each do |column|
+        th = t("documents.list.#{column}")
+  tbody
+    - documents.each do |document|
+      tr
+        - Document.visible_columns.each do |column|
+          td = document.send(column)

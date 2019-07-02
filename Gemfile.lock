@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/randym/axlsx.git
+  revision: c8ac844572b25fda358cc01d2104720c4c42f450
+  ref: c8ac844
+  specs:
+    axlsx (2.1.0.pre)
+      htmlentities (~> 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (>= 1.6.6)
+      rubyzip (>= 1.2.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -55,6 +66,9 @@ GEM
     airbrussh (1.3.1)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
+    axlsx_rails (0.5.2)
+      actionpack (>= 3.1)
+      axlsx (>= 2.0.1)
     babel-source (5.8.35)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -132,6 +146,7 @@ GEM
       thor (~> 0.14)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    htmlentities (4.3.4)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     i18n_data (0.8.0)
@@ -210,6 +225,9 @@ GEM
     responders (2.4.1)
       actionpack (>= 4.2.0, < 6.0)
       railties (>= 4.2.0, < 6.0)
+    roo (2.8.2)
+      nokogiri (~> 1)
+      rubyzip (>= 1.2.1, < 2.0.0)
     rspec-core (3.8.1)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.4)
@@ -304,6 +322,8 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   active_storage-send_zip (~> 0.3, >= 0.3.2)
+  axlsx!
+  axlsx_rails
   bootsnap (>= 1.1.0)
   byebug
   cancancan (~> 2.0)
@@ -327,7 +347,9 @@ DEPENDENCIES
   puma (~> 3.11)
   rails (~> 5.2.2)
   react-rails
+  roo
   rspec-rails (~> 3.8)
+  rubyzip (>= 1.2.1)
   sassc-rails
   selenium-webdriver
   shoulda-matchers
