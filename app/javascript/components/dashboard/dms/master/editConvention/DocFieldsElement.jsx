@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Popup } from 'semantic-ui-react'
 import { Draggable } from 'react-beautiful-dnd'
+import classnames from 'classnames'
+import { Field } from 'redux-form'
+import ReactSVG from 'react-svg'
 import DropDown from '../../../../../elements/DropDown'
 import {
   setInitialValuesField,
   removeField
 } from '../../../../../actions/conventionActions'
-import { Field } from 'redux-form'
-import ReactSVG from 'react-svg'
 import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
 import DatePickerField from '../../../../../elements/DatePickerField'
@@ -16,8 +18,6 @@ import trashIcon from '../../../../../images/trash_bucket'
 import fieldBelow from '../../../../../images/upload-menu1'
 import fieldAbove from '../../../../../images/upload-menu2'
 import copyToFolderIcon from '../../../../../images/folder-empty'
-import { Popup } from 'semantic-ui-react'
-import classnames from 'classnames'
 
 class DocFieldsElement extends Component {
 

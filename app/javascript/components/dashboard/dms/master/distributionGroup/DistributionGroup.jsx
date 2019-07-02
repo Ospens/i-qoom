@@ -1,31 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
+import ReactSVG from 'react-svg'
+import ModalCopyToDG from './ModalCopyToDG'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
+import DropDown from '../../../../../elements/DropDown'
+import accessRightsIcon from '../../../../../images/common-file-share'
 import { RenderTeamlist } from '../accessRights/ShowMembersPopup'
 
-const rows = [
-  {
-    title: 'Work group Lorem Ipsum Dolor'
-  },
-  {
-    title: 'Work group Lorem Ipsum Dolor'
-  },
-  {
-    title: 'Work group Lorem Ipsum Dolor'
-  },
-  {
-    title: 'Work group Lorem Ipsum Dolor'
-  },
-  {
-    title: 'Work group Lorem Ipsum Dolor'
-  }
-]
-
 export class DistributionGroup extends Component {
-
+  
   renderContent = () => {
+    const { groups } = this.props
+
     return (
       <div className='dms-content bordered'>
         <div className='dms-content__header p-4'>
@@ -46,19 +35,39 @@ export class DistributionGroup extends Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {rows.map((el, i) => (
+              {groups.map((group, i) => (
                 <Table.Row key={i}>
                   <Table.Cell>
                     <div className="d-flex align-items-center">
                       <div className='team-icon'>
                         <UserAvatar size='42' name='D G' className='group-avatar' />
                       </div>
-                      <span className='ml-4'>{el.title}</span>
+                      <span className='ml-4'>{group.title}</span>
                     </div>
                   </Table.Cell>
                   <Table.Cell>
                     <div className="dg-members">
-                      <RenderTeamlist/>
+                      <RenderTeamlist users={group.members}/>
+                      <DropDown
+                        dots={true}
+                        className='dropdown-with-icon'
+                        ulClass='left'
+                      >
+                        <button
+                          type='button'
+                          className='dropdown-item btn'
+                          // onClick={this.handleOpen}
+                        >
+                          <ReactSVG
+                            svgStyle={{ height: 13, width: 13 }}
+                            src={accessRightsIcon}
+                          />
+                          <span className='item-text'>
+                            Edit DG / add DG-members
+                          </span>
+                        </button>
+                        <ModalCopyToDG groupId={group.id}/>
+                      </DropDown>
                     </div>
                   </Table.Cell>
                 </Table.Row>
@@ -80,4 +89,15 @@ export class DistributionGroup extends Component {
   }
 }
 
-export default DistributionGroup
+const mapStateToProps = ({ distributionGroups }) => ({
+  groups: distributionGroups.dgGroups
+})
+
+const mapDispatchToProps = dispatch => ({
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DistributionGroup)
+

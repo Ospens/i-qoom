@@ -64,10 +64,6 @@ const initialState = {
 
 const filterReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'sdfsdfs':
-    return {
-      ...initialState
-    }
   default:
     return state
   }

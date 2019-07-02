@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 import ReactSVG from 'react-svg'
 import UserAvatar from 'react-user-avatar'
-import { Popup } from 'semantic-ui-react'
 import {
   getGrantAccessMembers,
   getGrandedAccessMembers
@@ -17,7 +16,6 @@ import accessRightsIcon from '../../../../../images/common-file-share'
 import showProfileIcon from '../../../../../images/single-neutral-actions-text'
 import messageIcon from '../../../../../images/email-action-unread'
 import trashIcon from '../../../../../images/trash_bucket'
-import plusIcon from '../../../../../images/add_1'
 import ShowMembersPopup from './ShowMembersPopup'
 import NewTeamModal from './ModalTeamForm'
 import ModalBulkAccessRights from './ModalBulkAccessRights'
@@ -243,7 +241,7 @@ class TeamsAccessRights extends Component {
                           </span>
                         </button>
                       ))}
-                  </DropDown>
+                    </DropDown>
                   </Table.Cell>
                 </Table.Row>
               ))}

@@ -29,10 +29,10 @@ const ddOPtions = [
   },
 ]
 
-export const RenderTeamlist = () => {
+export const RenderTeamlist = ({ users = [] }) => {
   const [showMore, toggleShowMore] = useState(false)
   const [checkedUser, toggleCheckedUser] = useState(0)
-  const tmpUsers = showMore ? [...Array(15)] : [...Array(3)]
+  const tmpUsers = showMore ? users : users.slice(0, 3)
   const btnTitle = showMore ? 'Show less' : 'Show 12 more'
 
   const toggleCheck = (open, i) => {
@@ -53,15 +53,15 @@ export const RenderTeamlist = () => {
         />
         <React.Fragment>
           <div className={classnames('team-member-list', { 'opened': checkedUser })}>
-            {tmpUsers.map((el, i) => (
+            {tmpUsers.map((user, index) => (
               <DropDown
-                key={i}
+                key={index}
                 btnClass='avatar-with-dropdown'
-                openState={(open) => toggleCheck(open, i)}
+                openState={open => toggleCheck(open, user.id)}
                 btnComponent={
                   <div className='d-flex'>
-                    < UserAvatar size='42' name={`${i}${i}`} />
-                    {i == 1 && <span className="master-star-icon" />}
+                    <UserAvatar size='42' name={user.name} />
+                    {user.master && <span className="master-star-icon" />}
                   </div>
                 }
                 className='dropdown-with-icon'
@@ -80,13 +80,14 @@ export const RenderTeamlist = () => {
               </DropDown>
             ))}
           </div>
+          {users.length > 3 &&
           <button
             type='button'
             className='btn popup-toggle-members-btn shower btn-white-blue'
             onClick={() => toggleShowMore(!showMore)}
           >
             {btnTitle}
-          </button>
+          </button>}
         </React.Fragment>
       </div>
     </React.Fragment>
@@ -109,7 +110,7 @@ const ShowMembersPopup = users => {
       on='click'
     >
       <div className='tooltip-block'>
-        {RenderTeamlist()}
+        {RenderTeamlist({})}
       </div>
     </Popup>
   )

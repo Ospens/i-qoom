@@ -1380,17 +1380,16 @@ input.search-input {
 }
 
 .opened-members-block {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  min-width: 340px;
+  display: grid;
+  grid-template-columns: 25px max-content 125px;
+  grid-gap: 20px;
 
   .team-member-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     max-width: 220px;
-    padding-left: 10px;
+    padding-right: 10px;
 
     &.opened {
       .dropdown-with-icon:not(.show) {
@@ -1418,8 +1417,6 @@ input.search-input {
 }
 
 .popup-toggle-members-btn {
-  margin-left: auto;
-
   &.hider {
     align-self: flex-end; 
   }
@@ -1849,4 +1846,73 @@ input.search-input {
 .dg-members {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
+
+  .btn-white-blue.with-dots {
+    justify-content: flex-end;
+    margin-right: 10px;
+  }
+}
+
+.copy-team-to-dg-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 3em;
+
+  .selected-count {
+    color: #0096FA;
+  }
+
+  .table-contaniner {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 55vh;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .dg-name {
+    font-size: 18px;
+    align-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  .copy-team-to-dg-tables_column {
+    display: grid;
+    grid-template-rows: 80px 50px 5fr;
+  }
+}
+
+
+.draggable-table-row {
+  transition: 0s;
+  border-radius: 10px;
+  border-width: 1px;
+  border-style: dashed;
+  border-color: #fff;
+
+  .name-column {
+    display: table-cell !important;
+  }
+
+  &:not(:hover) * {
+    transition: 0s !important;
+  }
+
+  .btn.btn-white-blue {
+    height: fit-content;
+  }
+
+  &.dragging {
+    border-color: lightblue;
+    background-color: lightblue;
+
+    .form-group, .d-flex {
+      background-color: lightblue;
+
+      .btn.btn-white-blue {
+        background-color: lightblue !important;
+      }
+    }
+  }
 }

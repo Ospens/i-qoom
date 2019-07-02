@@ -693,7 +693,7 @@ input[type=checkbox]:checked+label {
 
     &.table-checkbox {
       padding-left: 16.8px !important;
-
+      
       label {
         margin-bottom: 0;
       }
@@ -715,6 +715,12 @@ input[type=checkbox]:checked+label {
     &.table-checkbox {
       min-width: 20px !important;
       vertical-align: middle;
+
+      & > div {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+      }
     }
 
     &.member-id {
@@ -1359,3 +1365,38 @@ i.arrow {
     flex-direction: row;
   }
 }
+
+.close-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  background: lightgrey;
+  border-radius: 100%;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:before, &:after {
+    position: absolute;
+    content: ' ';
+    height: 10px;
+    width: 2px;
+    background-color: #333;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+}
+
