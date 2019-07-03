@@ -10,6 +10,7 @@ class Api::V1::DocumentsController < ApplicationController
                                    :download_native_file,
                                    :download_details ]
   load_resource :document, through: :project, only: [ :new, :create ]
+  before_action :check_convention
   authorize_resource :document
 
   def new
@@ -157,6 +158,30 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   private
+
+  def check_convention
+    if @project.present?
+      if @project.conventions.active.blank?
+        if @project.user == signed_in_user
+          redirect_to edit_api_v1_project_conventions_path
+        else
+          dms_is_unavailable
+        end
+      end
+    elsif @document.present? && @document.project.present?
+      if @document.project.conventions.active.blank?
+        if @document.project.user == signed_in_user
+          redirect_to edit_api_v1_project_conventions_path(project_id: @document.project.id)
+        else
+          dms_is_unavailable
+        end
+      end
+    end
+  end
+
+  def dms_is_unavailable
+    render json: { message: 'DMS is not available yet' }, status: :unprocessable_entity
+  end
 
   def document_params
     params.require(:document).permit(:issued_for,

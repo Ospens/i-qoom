@@ -20,7 +20,8 @@ class DocumentField < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  has_many :document_rights
+  has_many :document_rights,
+           dependent: :destroy
 
   has_many :document_field_values,
            dependent: :destroy

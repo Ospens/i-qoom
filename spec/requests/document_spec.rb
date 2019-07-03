@@ -18,6 +18,27 @@ describe Document, type: :request do
   end
 
   context '#new' do
+    context 'no convention' do
+      before { convention.destroy }
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents/new"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'user with rights' do
+        get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
+        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
     it 'anon' do
       get "/api/v1/projects/#{project.id}/documents/new"
       expect(response).to have_http_status(:forbidden)
@@ -49,6 +70,27 @@ describe Document, type: :request do
       @project_id = @params[:document]['project_id']
       @project_user = Project.find(@project_id).user
       @project_user.password = 'password1'
+    end
+
+    context 'no convention' do
+      before { Project.find(@project_id).conventions.active.destroy }
+
+      it 'anon' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'user with rights' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
+        expect(response).to redirect_to("/api/v1/projects/#{@project_id}/conventions/edit")
+      end
     end
 
     it 'anon' do
@@ -129,6 +171,30 @@ describe Document, type: :request do
         attrs
       end
 
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
         expect(response).to have_http_status(:forbidden)
@@ -158,6 +224,30 @@ describe Document, type: :request do
     end
 
     context '#edit' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/edit"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/edit", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}/edit"
         expect(response).to have_http_status(:forbidden)
@@ -189,6 +279,30 @@ describe Document, type: :request do
     context '#update' do
       let(:attrs) { document.attributes_for_edit }
 
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
         expect(response).to have_http_status(:forbidden)
@@ -219,6 +333,30 @@ describe Document, type: :request do
     end
 
     context '#show' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}"
         expect(response).to have_http_status(:forbidden)
@@ -249,6 +387,30 @@ describe Document, type: :request do
     end
 
     context '#download_native_file' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/download_native_file"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}/download_native_file"
         expect(response).to have_http_status(:forbidden)
@@ -278,6 +440,30 @@ describe Document, type: :request do
     end
 
     context '#download_native_files' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/projects/#{project.id}/documents/download_native_files"
         expect(response).to have_http_status(:forbidden)
@@ -310,19 +496,57 @@ describe Document, type: :request do
       end
     end
 
-    it 'download_details' do
-      document.update(email_title: Faker::Internet.email)
-      document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
-      get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
-      expect(response).to have_http_status(:success)
-      expect(response.header['Content-Disposition']).to include(document.codification_string)
-      # File.open('public/document.pdf', 'w+') do |f|
-      #   f.binmode
-      #   f.write(response.body)
-      # end
+    context 'download_details' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/download_details"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/download_details", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
+      it do
+        document.update(email_title: Faker::Internet.email)
+        document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
+        get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(response.header['Content-Disposition']).to include(document.codification_string)
+        # File.open('public/document.pdf', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
     end
 
     context 'download_list' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'csv' do
         get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
@@ -376,6 +600,23 @@ describe Document, type: :request do
   end
 
   context '#index' do
+    context 'no convention' do
+      before do
+        convention.destroy
+      end
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents", headers: credentials(project.user)
+        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
     it 'no documents' do
       get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
       expect(response).to have_http_status(:success)
