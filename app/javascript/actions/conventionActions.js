@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { SubmissionError } from 'redux-form'
 import {
   EDITING_CONVENTION,
   UPDATED_FIELDS,
@@ -50,8 +51,16 @@ export const startUpdateConvention = () => (dispatch, getState) => {
     Authorization: token
   }
   const docFields = []
+  const errors = {}
   Object.keys(current.grouped_fields).forEach(k => {
     current.grouped_fields[k].forEach((row, i) => {
+      if (row.kind === 'select_field' && row.document_field_values.length < 1) {
+        errors[`${k}${i}`] = {
+          field: row.title,
+          error: 'Please add values'
+        }
+      }
+
       const newRow = {
         ...row,
         document_field_values_attributes: row.document_field_values,
@@ -62,6 +71,10 @@ export const startUpdateConvention = () => (dispatch, getState) => {
       docFields.push(newRow)
     })
   })
+
+  if (Object.entries(errors).length > 0) {
+    throw new SubmissionError(errors)
+  }
 
   const request = {
     convention: {

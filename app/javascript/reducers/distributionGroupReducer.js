@@ -68,12 +68,12 @@ const initialState = {
 
 const distributionGroupReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'D_G_TEST':
-      return {
-        ...initialState
-      }
-    default:
-      return state
+  case 'D_G_TEST':
+    return {
+      ...initialState
+    }
+  default:
+    return state
   }
 }
 

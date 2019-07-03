@@ -16,7 +16,14 @@ portal.classList.add('draggable-portal')
 class DropDownElement extends Component {
 
   render() {
-    const { index, field, addNewSection, changeDDSection, copySection, removeSection } = this.props
+    const {
+      index,
+      field,
+      addNewSection,
+      changeDDSection,
+      copySection,
+      removeSection
+    } = this.props
 
     const newDDElementOtions = [
       {
@@ -96,7 +103,14 @@ class DropDownElement extends Component {
 
 class DropDownColumn extends Component {
   render() {
-    const { sections, column, addNewSection, changeDDSection, removeSection, copySection } = this.props
+    const {
+      sections,
+      column,
+      addNewSection,
+      changeDDSection,
+      removeSection,
+      copySection
+    } = this.props
 
     return (
       <Droppable droppableId='column_1'>
@@ -132,7 +146,14 @@ class DropDownColumn extends Component {
 class DraggableDropDown extends Component {
 
   render() {
-    const { sections, onDragEnd, addNewSection, changeDDSection, removeSection, copySection } = this.props
+    const {
+      sections,
+      onDragEnd,
+      addNewSection,
+      changeDDSection,
+      removeSection,
+      copySection
+    } = this.props
 
     return (
       <DragDropContext onDragEnd={onDragEnd}>

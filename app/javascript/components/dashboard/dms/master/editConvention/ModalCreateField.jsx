@@ -54,19 +54,18 @@ const typeVariants = [
 
 const initState = {
   limitAccess: false,
-  newSection: '',
-  modalOpen: false 
+  newSection: ''
 }
 
 class ModalCreateField extends Component {
 
   state = initState
 
-  handleOpen = () => this.setState({ modalOpen: true })
-
   handleClose = () => {
-    const { destroyForm, discardInitialValues } = this.props
+    const { destroyForm, discardInitialValues, change, handleClose } = this.props
+    handleClose()
     this.setState({ ...initState })
+    change('document_field_values', [])
     destroyForm()
     discardInitialValues()
   }
@@ -116,6 +115,7 @@ class ModalCreateField extends Component {
     const { document_field_values, change } = this.props
     document_field_values.splice(index, 1)
     change('document_field_values', document_field_values)
+    this.forceUpdate()
   }
 
   copySection = index => {
@@ -123,6 +123,7 @@ class ModalCreateField extends Component {
     const newValue = document_field_values[index]
     document_field_values.splice(index, 0, newValue)
     change('document_field_values', document_field_values)
+    this.forceUpdate()
   }
 
   changeDDSection = (newValue, index) => {
@@ -150,8 +151,9 @@ class ModalCreateField extends Component {
     if (!field.kind) {
       errors['kind'] = ['Required']
     }
-    if (field.kind === 'select_field'
-        && document_field_values.length < 1
+    if (field.kind === 'select_field' &&
+        !field.codification_kind &&
+        document_field_values.length < 1
         ) {
         errors['kind'] = ['Add some value']
       }
@@ -193,18 +195,19 @@ class ModalCreateField extends Component {
       isEdit,
       handleSubmit,
       submitErrors,
-      initialValues: { title, id }
+      initialValues: { title, codification_kind }
     } = this.props
     const { document_field_values } = this.props
     const { newSection } = this.state
 
     // TODO: Change limit access for new field to
+    
     return (
       <form onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
         <div className='modal-container'>
           <div className="modal-container__title-block">
             <h4>{title || 'New input field'}</h4>
-            {id && <button
+            {false && <button
               type='button'
               className='btn color-blue p-0 ml-auto'
               onClick={() => this.setState({ limitAccess: true })}
@@ -221,6 +224,7 @@ class ModalCreateField extends Component {
                 placeholder='Title (e.g. Discipline)'
                 label='Type in title'
                 errorField={submitErrors}
+                disabled={codification_kind}
               />
             </div>
             <div className='form-group'>
@@ -231,6 +235,7 @@ class ModalCreateField extends Component {
                 placeholder='Command (e.g. Select discipline)'
                 label='Type in command'
                 errorField={submitErrors}
+                disabled={codification_kind}
               />
             </div>
             <div className='form-group'>
@@ -243,6 +248,7 @@ class ModalCreateField extends Component {
                 options={typeVariants}
                 component={SelectField}
                 errorField={submitErrors}
+                isDisabled={codification_kind}
               />
             </div>
             <div className='form-group d-flex'>
@@ -251,8 +257,9 @@ class ModalCreateField extends Component {
                 checkBoxId='required'
                 labelClass='form-check-label mr-2'
                 text='Required field'
+                disabled={codification_kind}
               />
-              {field_type === 'select_field' &&
+              {field_type === 'select_field' && !codification_kind &&
               <CheckboxField
                 name='enable_multi_selections'
                 name='enable_multi_selections'
@@ -333,13 +340,12 @@ class ModalCreateField extends Component {
   }
 
   render() {
-    const { modalOpen } = this.state
-    const { triggerContent } = this.props
+    const { modalOpen } = this.props
 
     return (
       <NewModal
         content={this.renderModalContent()}
-        trigger={this.renderTrigger(triggerContent)}
+        // trigger={this.renderTrigger(triggerContent)}
         modalOpen={modalOpen}
         handleClose={this.handleClose}
       />

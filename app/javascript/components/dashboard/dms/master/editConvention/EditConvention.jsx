@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { setInitialValuesField } from '../../../../../actions/conventionActions'
 import DMSLayout from '../../DMSLayout'
-import DocumentFiledsTable from './DocFiledsTable'
+import DocFieldsTable from './DocFieldsTable'
 import Tabs from '../../../../../elements/Tabs'
 import DmsSideBar from '../../DmsSideBar'
 
@@ -16,7 +16,7 @@ class EditConvention extends Component {
   renderTab = () => {
     return (
       <div className='dms-content bordered edit-convention'>
-        <DocumentFiledsTable />
+        <DocFieldsTable />
       </div>
     )
   }

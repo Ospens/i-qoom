@@ -13,11 +13,24 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import { DocFieldsColumn } from './DocFieldsColumn'
 import ModalCreateField from './ModalCreateField'
 
-class DocFiledsTable extends Component {
+const initState = {
+  modalOpen: false,
+  column: 0,
+  row: 0,
+  isEdit: false
+}
+
+class DocFieldsTable extends Component {
+
+  state = initState
+
+  handleOpen = (column, row, isEdit) => this.setState({ modalOpen: true, column, row, isEdit })
+
+  handleClose = () => this.setState({ ...initState })
 
   handleSubmit = () => {
     const { startUpdateConvention } = this.props
-    startUpdateConvention()
+    return startUpdateConvention()
   }
 
   componentWillMount() {
@@ -30,32 +43,37 @@ class DocFiledsTable extends Component {
     reorderFields(result, fields)
   }
 
-  renderModalButton = () => (
+  renderModalButton = (column, row) => (
     <button
       type='button'
-      className="btn btn-create-new-field btn-purple my-4"
+      className='btn btn-create-new-field btn-purple my-4'
+      onClick={() => this.handleOpen(column, row)}
     >
       Create new input field
     </button>
   )
 
-  renderModalCreateField = (column, row, trigger, isEdit) => (
-    <ModalCreateField
-      column={column}
-      row={row}
-      triggerContent={trigger}
-      isEdit={isEdit}
-    />
-  )
+  renderModalCreateField = () => {
+    const { column, row, modalOpen, isEdit } = this.state
+    return (
+      <ModalCreateField
+        column={column}
+        row={row}
+        isEdit={isEdit}
+        modalOpen={modalOpen}
+        handleClose={this.handleClose}
+      />
+    )
+  }
 
   renderDocIdFields = () => (
     <React.Fragment>
-      <div className="draggable-container undraggable">
+      <div className='draggable-container undraggable'>
         <div className='form-group'>
           <label>Pleace select or generate Document ID</label>
 
           <div className='input-container'>
-            <div className="document-id-code">
+            <div className='document-id-code'>
               <input
                 className='form-control'
                 type='text'
@@ -65,7 +83,7 @@ class DocFiledsTable extends Component {
                 disabled
               />
             </div>
-            <div className="document-id-code">
+            <div className='document-id-code'>
               <input
                 className='form-control'
                 type='text'
@@ -75,7 +93,7 @@ class DocFiledsTable extends Component {
                 disabled
               />
             </div>
-            <div className="document-id-code">
+            <div className='document-id-code'>
               <input
                 className='form-control'
                 type='text'
@@ -85,7 +103,7 @@ class DocFiledsTable extends Component {
                 disabled
               />
             </div>
-            <div className="document-id-code">
+            <div className='document-id-code'>
               <input
                 className='form-control'
                 type='text'
@@ -95,7 +113,7 @@ class DocFiledsTable extends Component {
                 disabled
               />
             </div>
-            <div className="document-id-code">
+            <div className='document-id-code'>
               <input
                 className='form-control'
                 type='text'
@@ -108,7 +126,7 @@ class DocFiledsTable extends Component {
           </div>
         </div>
       </div>
-      <div className="draggable-container undraggable">
+      <div className='draggable-container undraggable'>
         <div className='form-group'>
           <div className='checkbox-field justify-content-center'>
             <input
@@ -125,16 +143,64 @@ class DocFiledsTable extends Component {
     </React.Fragment>
   )
 
+  resetForm = () => {
+    const { discardConvention, reset } = this.props
+    reset()
+    discardConvention()
+  }
+
+  renerFooter = () => {
+    return (
+      <div className='dms-footer edit-convetion-footer'>
+        <div className='changes-description'>
+          You made changes to the upload <b>form 1.0 of convention 2 (not applied)</b>.
+          Do you want to save all changes to update this form to <b>version 1.1</b>?
+        </div>
+        <div className='d-flex'>
+          <button
+            type='button'
+            className='btn btn-white'
+            onClick={this.resetForm}
+          >
+            Discard
+          </button>
+          <button type='submit' className='btn btn-purple'>
+            Save all changes
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  renerFooterForNewConv = () => {
+    return (
+      <div className='dms-footer edit-convetion-footer'>
+        <div className='d-flex'>
+          <button
+            type='button'
+            className='btn btn-white'
+            onClick={this.resetForm}
+          >
+            Discard
+          </button>
+          <button type='submit' className='btn btn-purple'>
+            Create convention
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   render() {
-    const { fields, handleSubmit, changed, discardConvention } = this.props
+    const { fields, handleSubmit, changed, id } = this.props
     const fieldsKeys = Object.keys(fields)
 
     return (
       <React.Fragment>
         <div className='dms-content__header p-4'>
-          <div className="d-flex align-items-center">
+          <div className='d-flex align-items-center'>
             <h4>Add documents data & files</h4>
-            <label className="rounded-label red ml-4">
+            <label className='rounded-label red ml-4'>
               Form version 0.1
               <ReactSVG
                 svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
@@ -165,18 +231,19 @@ class DocFiledsTable extends Component {
                   Operation
                 </button>
               </li>
-              <button className="btn edit-button">
+              <button className='btn edit-button'>
                 Edit
               </button>
             </ul>
           </div>
         </div>
+        {this.renderModalCreateField()}
         <DragDropContext onDragEnd={this.onDragEnd}>
           <form
             className='form-body'
             onSubmit={handleSubmit(this.handleSubmit)}
           >
-            <div className="p-4">
+            <div className='p-4'>
               <div className='row'>
                 {fieldsKeys.map((key, i) => (
                   <div className='col-6' key={i}>
@@ -184,30 +251,24 @@ class DocFiledsTable extends Component {
                     <DocFieldsColumn
                       column={i + 1}
                       fields={fields[key]}
-                      modalCreateField={this.renderModalCreateField}
+                      openInputForm={this.handleOpen}
                     />
                   </div>
                 ))}
               </div>
-              {this.renderModalCreateField(2, fields[2].length + 1, this.renderModalButton())}
+              {this.renderModalButton(2, fields[2].length + 1)}
             </div>
-            {changed && 
-            <div className='dms-footer edit-convetion-footer'>
-              <div className='changes-description'>
-                You made changes to the upload <b>form 1.0 of convention 2 (not applied)</b>.
-                Do you want to save all changes to update this form to <b>version 1.1</b>?
-              </div>
-              <div className="d-flex">
-                <button
-                  type='button'
-                  className='btn btn-white'
-                  onClick={discardConvention}
-                >
-                  Discard
-                </button>
-                <button type='submit' className='btn btn-purple'>Save all changes</button>
-              </div>
-            </div>}
+            {(() => {
+              if (!id) {
+                return (
+                  this.renerFooterForNewConv()
+                )
+              } else if (changed) {
+                return (
+                  this.renerFooter()
+                )
+              }
+            })()}
           </form>
         </ DragDropContext>
       </React.Fragment>
@@ -216,6 +277,7 @@ class DocFiledsTable extends Component {
 }
 
 const mapStateToProps = ({ conventions }) => ({
+  id: conventions.current.id,
   fields: conventions.current.grouped_fields,
   changed: conventions.changed
 })
@@ -231,4 +293,4 @@ export default connect(
   mapStateToProps, mapDispatchToProps
   )(reduxForm({
     form: 'convention_form'
-  })(DocFiledsTable))
+  })(DocFieldsTable))

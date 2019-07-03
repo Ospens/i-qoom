@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import { Popup } from 'semantic-ui-react'
 import { Draggable } from 'react-beautiful-dnd'
 import classnames from 'classnames'
-import { Field } from 'redux-form'
+import {
+  getFormSubmitErrors,
+  Field
+} from 'redux-form'
 import ReactSVG from 'react-svg'
 import DropDown from '../../../../../elements/DropDown'
 import {
@@ -22,39 +25,19 @@ import copyToFolderIcon from '../../../../../images/folder-empty'
 class DocFieldsElement extends Component {
 
   editButton = row => {
-    const { setInitialValuesField, field, modalCreateField } = this.props
-    if (!field.codification_kind) {
-      const trigger =
-        <button
-          type='button'
-          className="btn edit-button"
-          onClick={() => setInitialValuesField(field)}
-        >
-          Edit
-        </button>
-      return (
-        modalCreateField(field.column, row, trigger, true)
-      )
-    } else {
-      return (
-        <Popup
-          trigger={<button type='button' className="btn edit-button">Edit</button>}
-          on='click'
-          position='left center'
-        >
-          <div className='tooltip-block'>
-            <span>
-              You try to make changes to the codification-section.
-              Do you want to jump to codification?
-            </span>
-            <div className="buttons-row">
-              <button className="btn btn-white">Cancel</button>
-              <a href="#" className='btn btn-purple'>Go</a>
-            </div>
-          </div>
-        </Popup>
-      )
-    }
+    const { setInitialValuesField, field, openInputForm } = this.props
+    return (
+      <button
+        type='button'
+        className='btn edit-button'
+        onClick={() => {
+          setInitialValuesField(field)
+          openInputForm(field.column, row, true)
+        }}
+      >
+        Edit
+      </button>
+    )
   }
 
   accessList = () => (
@@ -63,7 +46,7 @@ class DocFieldsElement extends Component {
       on='click'
     >
       <div className='tooltip-block'>
-        <div className="tooltip-block-title">
+        <div className='tooltip-block-title'>
           <label className=''>Access limited to</label>
           <button className='btn p-0'>Edit</button>
         </div>
@@ -132,28 +115,40 @@ class DocFieldsElement extends Component {
     }
   }
 
-  renderMenuItem = (icon, title) => (
-    <li className='dropdown-item'>
-      <ReactSVG
-        svgStyle={{ height: 15, width: 15 }}
-        src={icon}
-      />
-      <span className='item-text'>{title}</span>
-    </li>
-  )
+  renderMenuItem = (icon, title, col, row) => {
+    const { openInputForm } = this.props
+
+    return (
+      <li
+        className='dropdown-item'
+        onClick={() => openInputForm(col, row)}
+      >
+        <ReactSVG
+          svgStyle={{ height: 15, width: 15 }}
+          src={icon}
+        />
+        <span className='item-text'>{title}</span>
+      </li>
+    )
+  }
 
   renderCopyElement = () => {
-    const { index, column, field, modalCreateField, setInitialValuesField } = this.props
-    const copyTrigger = this.renderMenuItem(copyToFolderIcon, 'Copy')
+    const { index, column, field, setInitialValuesField } = this.props
     return (
       <div onClick={() => setInitialValuesField(field)}>
-        {modalCreateField(column, index + 1, copyTrigger)}
+        {this.renderMenuItem(copyToFolderIcon, 'Copy', column, index + 1)}
       </div>
     )
   }
 
   render() {
-    const { index, field, column, modalCreateField, removeField } = this.props
+    const {
+      index,
+      field,
+      column,
+      removeField,
+      submitErrors
+    } = this.props
 
     const actionConventions = [
       {
@@ -168,26 +163,27 @@ class DocFieldsElement extends Component {
       }
     ]
 
+    const fieldErrors = submitErrors[`${column}${index}`]
+
     return (
       <Draggable draggableId={`column_${column}_${index}`} index={index}>
         {(provided, snapshot) => (
           <div
-            className={classnames("draggable-container", { 'dragging': snapshot.isDragging })}
+            className={classnames('draggable-container', { 'dragging': snapshot.isDragging })}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
             <div className='form-group'>
-              <div className="d-flex">
+              <div className='d-flex'>
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon form-group_drop-down'
                 >
                   {actionConventions.map(({ icon, title, offset }, i) => {
-                    const trigger = this.renderMenuItem(icon, title)
                     return (
                       <React.Fragment key={i}>
-                        {modalCreateField(column, offset, trigger)}
+                        {this.renderMenuItem(icon, title, column, offset)}
                       </React.Fragment>
                     )
                   })}
@@ -207,12 +203,18 @@ class DocFieldsElement extends Component {
                   </React.Fragment>
                   }
                 </DropDown>
-                <label htmlFor="document_title">{field.title}</label>
-                {/* TODO: disabled on the backed for now */}
+                <label htmlFor='document_title'>{field.title}</label>
+                {/* TODO: disable on the backed now */}
                 {/* this.accessList() */}
               </div>
               {this.renderInputByType(field, index)}
-              {this.editButton(index)}
+              <div>
+                {fieldErrors && 
+                <div className='invalid-feedback convention-feedback'>
+                  {fieldErrors.error}
+                </div>}
+                {this.editButton(index)}
+              </div>
             </div>
           </div>
         )}
@@ -226,4 +228,8 @@ const mapDispatchToProps = dispatch => ({
   removeField: (column, row) => dispatch(removeField(column, row))
 })
 
-export default connect(null, mapDispatchToProps)(DocFieldsElement)
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('convention_form')(state)
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DocFieldsElement)
