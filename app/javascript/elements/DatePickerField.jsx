@@ -3,9 +3,9 @@ import React from 'react'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 
-const DatePickerField = ({ labelText, input, placeholder, readOnly = false,  meta: { touched, error } }) => (
+const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => (
   <div>
-    {labelText && <label>{labelText}</label>}
+    {label && <label>{label}</label>}
     <DatePicker
       {...input}
       dateForm='MM-DD-YYYY'

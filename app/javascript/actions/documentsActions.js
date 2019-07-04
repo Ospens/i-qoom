@@ -1,7 +1,9 @@
 import axios from 'axios'
 import {
-  DOCUMENTS_FETCH_SUCCESS
+  DOCUMENTS_FETCH_SUCCESS,
+  CREATING_DOCUMENT
 } from './types'
+import { fieldByColumn } from './conventionActions'
 import { errorNotify } from '../elements/Notices'
 
 const documentsFetched = payload => ({
@@ -9,12 +11,17 @@ const documentsFetched = payload => ({
   payload
 })
 
-export const startFetchDocuments = id => (dispatch, getState) => {
+const creatingDocument = payload => ({
+  type: CREATING_DOCUMENT,
+  payload
+})
+
+export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${id}/documents`, {
+    axios.get(`/api/v1/projects/${projectId}/documents`, {
       headers
     })
       .then(response => {
@@ -26,16 +33,18 @@ export const startFetchDocuments = id => (dispatch, getState) => {
   )
 }
 
-export const newDocument = () => (dispatch, getState) => {
+export const newDocument = projectId => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${1}/documents/new`, {
+    axios.get(`/api/v1/projects/${projectId}/documents/new`, {
       headers
     })
-      .then(() => {
-        // console.log(response)
+      .then(response => {
+        const { data } = response
+        const sortedData = fieldByColumn(data)
+        dispatch(creatingDocument(sortedData))
       })
       .catch(() => {
         errorNotify('Something went wrong')

@@ -13,8 +13,9 @@ import {
 import { errorNotify } from '../elements/Notices'
 
 
-const fieldByColumn = data => {
-  const sorted = data.document_fields.reduce((accumulator, currentValue) => {
+export const fieldByColumn = data => {
+  const fields = data.document_fields_attributes || data.document_fields
+  const sorted = fields.reduce((accumulator, currentValue) => {
     accumulator[currentValue.column].push(currentValue)
     return accumulator
   }, { 1: [], 2: [] })

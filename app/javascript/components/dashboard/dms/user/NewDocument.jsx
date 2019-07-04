@@ -6,16 +6,17 @@ import {
   reduxForm,
   formValueSelector
 } from 'redux-form'
-import overviewIcon from '../../../images/task-checklist-check'
-import dmsSettingsIcon from '../../../images/task-list-settings'
-import editIcon from '../../../images/pencil-write'
-import checkIcon from '../../../images/check_1'
+import { newDocument } from '../../../../actions/documentsActions'
+import overviewIcon from '../../../../images/task-checklist-check'
+import dmsSettingsIcon from '../../../../images/task-list-settings'
+import editIcon from '../../../../images/pencil-write'
+import checkIcon from '../../../../images/check_1'
 import DocDocumentsAndFiles from './DocDocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
-import DocIdModal from './DocIdModal'
-import AddRevisionModal from './AddRevisionModal'
-import { DmsSideBarItem } from './DmsSideBar'
-import DMSLayout from './DMSLayout'
+import DocIdModal from '../DocIdModal'
+import AddRevisionModal from '../AddRevisionModal'
+import { DmsSideBarItem } from '../DmsSideBar'
+import DMSLayout from '../DMSLayout'
 
 const menuItems = [
   {
@@ -33,8 +34,13 @@ const menuItems = [
 class NewDocument extends Component {
 
   state = { 
-    step: 1,
+    step: 2,
     modal: 0
+  }
+
+  componentWillMount() {
+    const { getNewDocument } = this.props
+    getNewDocument(24)
   }
 
   renderSideBar = () => (
@@ -109,13 +115,10 @@ class NewDocument extends Component {
 
 const selector = formValueSelector('document_form')
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('document_form')(state),
-  orig_company: selector(state, 'orig_company')
-})
+const mapStateToProps = state => ({ })
 
 const mapDispatchToProps = dispatch => ({
-  
+  getNewDocument: (projectId) => dispatch(newDocument(projectId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'document_form' })(NewDocument))

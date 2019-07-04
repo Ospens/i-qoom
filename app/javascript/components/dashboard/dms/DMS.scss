@@ -36,6 +36,7 @@
       align-items: center;
       margin-left: auto;
       margin-right: auto;
+      z-index: 4 !important;
     }
 
     .ck-sticky-panel__content {
@@ -77,6 +78,10 @@
 
       .document-id-code {
         max-width: 20%;
+
+      input {
+        text-transform: uppercase !important;
+      }
 
         &:not(:last-of-type) {
           padding-right: 15px;
@@ -1913,6 +1918,18 @@ input.search-input {
       .btn.btn-white-blue {
         background-color: lightblue !important;
       }
+    }
+  }
+}
+
+.new-document-table {
+  .form-group {
+    min-height: 70px;
+
+    textarea {
+      min-height: 120px !important;
+      height: 120px !important;
+      max-height: 120px;
     }
   }
 }

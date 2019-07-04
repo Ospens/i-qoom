@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import { Field } from 'redux-form'
-import SelectField from '../../../elements/SelectField'
-import CheckboxField from '../../../elements/CheckboxField'
-import InputField from '../../../elements/InputField'
-import DocumentTextEditor from '../../../elements/DocumentTextEditor'
+import SelectField from '../../../../elements/SelectField'
+import CheckboxField from '../../../../elements/CheckboxField'
+import InputField from '../../../../elements/InputField'
+import DocumentTextEditor from '../../../../elements/DocumentTextEditor'
 
 const ddItems = [
   {
     value: 'STX',
-    label: 'STX'
+    title: 'STX'
   },
   {
     value: 'EOS',
-    label: 'EOS'
+    title: 'EOS'
   }
 ]
 
@@ -33,21 +33,20 @@ class AccessAndCommunication extends Component {
             <div className='form-group'>
               <InputField
                 type='text'
-                name='revision_number'
-                id='revision_number'
+                name='email_addresses'
+                id='email_addresses'
                 placeholder='E-mail'
                 label='Enter E-mail addresses*'
               />
             </div>
             <div className='form-group'>
               <Field
-                name='document_type'
-                id='document_type'
-                value={orig_company}
-                newValue={orig_company}
+                name='сс'
+                id='сс'
                 options={ddItems}
                 errorField={submitErrors}
                 component={SelectField}
+                isMulti={true}
                 placeholder='E-mail'
                 label='CC'
               />
@@ -58,9 +57,10 @@ class AccessAndCommunication extends Component {
                 <div className='form-group'>
                   <InputField
                     type='text'
-                    name='revision_number'
-                    id='revision_number'
-                    label='Define a mail subject'
+                    name='mail_subject'
+                    id='mail_subject'
+                    label='Mail subject'
+                    placeholder='Define a mail subject'
                   />
                 </div>
               </div>
@@ -83,8 +83,6 @@ class AccessAndCommunication extends Component {
                   <Field
                     name='isssued_for'
                     id='isssued_for'
-                    value={orig_company}
-                    newValue={orig_company}
                     options={ddItems}
                     errorField={submitErrors}
                     component={SelectField}
@@ -100,26 +98,25 @@ class AccessAndCommunication extends Component {
                 <div className='form-group'>
                   <Field
                     name='select_reviewers'
-                    id='isssued_for'
-                    value={orig_company}
-                    newValue={orig_company}
+                    id='select_reviewers'
                     options={ddItems}
                     errorField={submitErrors}
                     component={SelectField}
-                    label='Select reviewers*'
+                    label='Reviewers*'
+                    placeholder='Select reviwers'
                   />
                 </div>
               </div>
               <div className='col-6'>
                 <div className='form-group'>
                   <Field
-                    name='select_reviewers'
-                    id='isssued_for'
-                    value={orig_company}
+                    name='isssuers_review'
+                    id='isssuers_review'
                     options={ddItems}
                     errorField={submitErrors}
                     component={SelectField}
-                    label='Define issuers review issuer*'
+                    label='Issuers review issuer*'
+                    placeholder='Define Issuers review issuer'
                   />
                 </div>
               </div>

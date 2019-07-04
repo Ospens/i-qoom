@@ -115,7 +115,7 @@ class AddRevisionModal extends Component {
                   <Field
                     type='text'
                     name='employment_type'
-                    labelText='Revision Date*'
+                    label='Revision Date*'
                     id='employment_type'
                     defaultValue='04/23/2019'
                     errorField={submitErrors}

@@ -28,9 +28,27 @@ const Option = props => {
     )
   } else {
     return (
-      <components.Option {...props} />
+      <components.Option {...props} >
+        <span>{props.data.value}</span>
+      </ components.Option>
     )
   }
+}
+
+const SingleValue = props => {
+  return (
+    <components.SingleValue {...props}>
+      {props.data.title}
+    </components.SingleValue>
+  )
+}
+
+const MultiValueLabel = props => {
+  return (
+    <components.MultiValueLabel {...props}>
+      {props.data.title}
+    </components.MultiValueLabel>
+  )
 }
 
 const IndicatorSeparator = ({ innerProps }) => {
@@ -38,6 +56,7 @@ const IndicatorSeparator = ({ innerProps }) => {
     <span style={{display: 'none'}} {...innerProps} />
   )
 }
+
 const colourStyles = errorInfo => {
   const borderColor = errorInfo ? '#fd0944' : '#ced4da'
   const borderWidth = errorInfo ? '2px' : '1px'
@@ -59,7 +78,7 @@ const colourStyles = errorInfo => {
     }),
     placeholder: (styles, state) => ({
       ...styles,
-      color: state.isDisabled ? '#c8d8da' : 'inherit'
+      color: '#c8d8da'
     }),
     option: (styles, { isFocused }) => ({
       ...styles,
@@ -69,7 +88,7 @@ const colourStyles = errorInfo => {
   return colourStyles
 }
 
-function SelectField({ input, options, errorField, id, label, placeholder, isDisabled = false }) {
+function SelectField({ input, options, errorField, id, label, placeholder, isDisabled = false, isMulti= false }) {
   const errorInfo = errorField ? errorField[id] : false
 
   return (
@@ -77,12 +96,14 @@ function SelectField({ input, options, errorField, id, label, placeholder, isDis
       {label && <label htmlFor={input.name}>{label}</label>}
       <Select
         {...input}
-        components={{ DropdownIndicator, IndicatorSeparator, Option }}
+        isMulti={isMulti}
+        components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
         options={options}
-        value={options.filter(option => option.value === input.value)}
+        value={options.filter(option => input.value === option.value || input.value.includes(option.value))}
+        // value={options}
         autoFocus={false}
         styles={colourStyles(errorInfo)}
-        onChange={value => input.onChange(value.value)}
+        onChange={v => { input.onChange(v.value || v.map(val => val.value))  }}
         maxMenuHeight='180'
         onBlur={value => input.onBlur(value.value)}
         placeholder={placeholder ? placeholder : 'Select...'}
