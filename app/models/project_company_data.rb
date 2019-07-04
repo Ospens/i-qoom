@@ -1,4 +1,4 @@
-class ProjectCompanyDatum < ApplicationRecord
+class ProjectCompanyData < ApplicationRecord
   attr_accessor :same_for_billing_address
 
   has_one_attached :logo
@@ -9,10 +9,10 @@ class ProjectCompanyDatum < ApplicationRecord
 
   belongs_to :company_address,
     class_name: "Address",
-    inverse_of: :project_company_datum
+    inverse_of: :project_company_data
   belongs_to :billing_address,
     class_name: "Address",
-    inverse_of: :project_company_billing_datum,
+    inverse_of: :project_company_billing_data,
     required: false
 
   accepts_nested_attributes_for :company_address,

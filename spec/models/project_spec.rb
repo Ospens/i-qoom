@@ -6,7 +6,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to define_enum_for(:creation_step)
             .with_values([ :admins,
                            :name,
-                           :company_datum,
+                           :company_data,
                            :billing_address,
                            :done ])
             .with_prefix(:creation_step) }
@@ -21,7 +21,7 @@ RSpec.describe Project, type: :model do
   context "creation step is not admins" do
     subject { FactoryBot.build(:project_admins_step,
                                creation_step: [ :name,
-                                                :company_datum,
+                                                :company_data,
                                                 :billing_address,
                                                 :done ].sample) }
     it { is_expected.to validate_presence_of(:name) }
@@ -29,27 +29,27 @@ RSpec.describe Project, type: :model do
                                                  .is_at_most(255) }
   end
 
-  context "creation_step is company_datum" do
-    subject { FactoryBot.build(:project_company_datum_step) }
-    it { is_expected.to validate_presence_of(:company_datum) }
+  context "creation_step is company_data" do
+    subject { FactoryBot.build(:project_company_data_step) }
+    it { is_expected.to validate_presence_of(:company_data) }
   end
 
   it { is_expected.to belong_to(:user) }
   it { is_expected.to have_many(:admins).class_name('ProjectAdministrator') }
   it { is_expected.to accept_nested_attributes_for(:admins) }
-  it { is_expected.to accept_nested_attributes_for(:company_datum)
+  it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
   it { is_expected.to validate_presence_of(:admins) }
 
 
   context "update_creation_step_to_done" do
     context "when is not ready" do
-      subject { FactoryBot.create(:project_company_datum_step,
-                company_datum: FactoryBot.build(:project_company_datum_without_billing_address)) }
+      subject { FactoryBot.create(:project_company_data_step,
+                company_data: FactoryBot.build(:project_company_data_without_billing_address)) }
       it { expect(subject.creation_step).not_to eq("done") }
     end
     context "when is ready" do
-      subject { FactoryBot.create(:project_company_datum_step) }
+      subject { FactoryBot.create(:project_company_data_step) }
 
       it { expect(subject.creation_step).to eq("done") }
     end

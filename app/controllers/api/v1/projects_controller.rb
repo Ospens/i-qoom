@@ -91,7 +91,7 @@ class Api::V1::ProjectsController < ApplicationController
                                :phone_code,
                                :phone_number
                              ],
-                             company_datum_attributes: [
+                             company_data_attributes: [
                                :logo,
                                :registration_number,
                                :vat_id,
