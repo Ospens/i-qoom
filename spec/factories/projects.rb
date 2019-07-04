@@ -10,7 +10,7 @@ FactoryBot.define do
       name { Faker::Lorem.sentence }
       factory :project_company_datum_step do
         creation_step { "company_datum" }
-        company_datum { FactoryBot.build(:project_company_datum_for_project) }
+        company_datum { FactoryBot.build(:project_company_datum) }
         factory :project_pre_billing_address_step do
           association :company_datum,
             factory: :project_company_datum_without_billing_address
