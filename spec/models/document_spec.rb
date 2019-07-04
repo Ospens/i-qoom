@@ -13,6 +13,16 @@ RSpec.describe Document, type: :model do
     expect(document['document_fields_attributes'].first['document_field_values_attributes'].length).to eql(1)
   end
 
+  it 'project creator should have access to all fields and values even without rights' do
+    user = FactoryBot.create(:user)
+    document = document_attributes(user)
+    project = Project.find(document['project_id'])
+    document = Document.build_from_convention(project.conventions.active, project.user)
+    field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
+    expect(field).to be_present
+    expect(field['document_field_values_attributes'].length).to eql(1)
+  end
+
   it 'upload field' do
     doc = FactoryBot.create(:document)
     field = doc.document_fields.create(kind: :upload_field)

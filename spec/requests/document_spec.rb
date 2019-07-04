@@ -58,6 +58,7 @@ describe Document, type: :request do
     it 'project user' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
+      expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
   end
 
@@ -107,6 +108,7 @@ describe Document, type: :request do
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
+      expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
     it 'project user' do
@@ -262,6 +264,7 @@ describe Document, type: :request do
         document.update!(email_title: title)
         get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
         expect(response).to have_http_status(:success)
+        expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(json['email_title']).to eql(title)
       end
 
@@ -320,9 +323,12 @@ describe Document, type: :request do
 
       it 'owner' do
         attrs['email_title'] = title
-        patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(owner)
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: attrs },\
+          headers: credentials(owner)
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
+        expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(document.revision.versions.length).to eql(2)
       end
 
