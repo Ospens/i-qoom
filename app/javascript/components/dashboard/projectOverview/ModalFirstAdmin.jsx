@@ -1,23 +1,57 @@
 import React, { Component } from 'react'
-import AdministratorForm from '../../../elements/forms/AdministratorForm'
+import { connect } from 'react-redux'
+import { getFormSubmitErrors, formValueSelector } from 'redux-form'
+import AdministratorFields from '../../../elements/forms/AdministratorFields'
 
-class ModalFirstAdmin extends Component {
-
-  render() {
-    const { modalTitle, form } = this.props 
-    return (
-      <div className='new-project-modal'>
-        <h4>{modalTitle || 'New project'}</h4>
-        <AdministratorForm
-          {...this.props}
-          titleModal='Who is the project administrator?'
-          label='Project administrator'
-          form={form ||'administrator_form'}
-          mainClass='modal-body'
-        />
-      </div>
-    )
-  }
+const renderSubmitButtons = ({
+  closeModal,
+  nextStep,
+  username,
+  last_name,
+  first_name,
+  email
+}) => {
+  const hasEmptyFields = !username || !last_name || !first_name || !email
+  return (
+    <div className='modal-footer'>
+      <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
+      <button
+        type='button'
+        className='btn btn-purple'
+        disabled={hasEmptyFields}
+        onClick={nextStep}
+      >
+        Next
+      </button>
+    </div>
+  )
 }
 
-export default ModalFirstAdmin
+const ModalFirstAdmin = ({ submitErrors, fields, ...props }) => {
+  if (fields.length < 1) fields.push({})
+
+  return (
+    <div className='new-project-modal'>
+      <h4>New project</h4>
+      <div className='modal-body'>
+        <h6>Who is the project administrator?</h6>
+        <label className='project-admin'>Project administrator</label>
+        <AdministratorFields submitErrors={submitErrors} admin={'admins_attributes[0]'} />
+      </div>
+      {renderSubmitButtons(props)}
+    </div>
+  )
+}
+
+const selector = formValueSelector('project_form')
+
+const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('project_form')(state),
+  username: selector(state, 'admins_attributes[0].username'),
+  last_name: selector(state, 'admins_attributes[0].last_name'),
+  first_name: selector(state, 'admins_attributes[0].first_name'),
+  email: selector(state, 'admins_attributes[0].email')
+})
+
+export default connect(mapStateToProps)(ModalFirstAdmin)
+

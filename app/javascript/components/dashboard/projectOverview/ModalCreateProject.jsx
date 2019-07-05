@@ -1,11 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { reset } from 'redux-form'
+import { reset, reduxForm, formValueSelector, FieldArray } from 'redux-form'
 import NewModal from '../../../elements/Modal'
 import ReactSVG from 'react-svg'
 import plus from '../../../images/add_1'
 import ModalTerms from './ModalTerms'
-import { startCreateProject, startFetchProjects } from '../../../actions/projectActions'
+import {
+  startCreateProject,
+  startFetchProjects,
+  startUpdateProject,
+} from '../../../actions/projectActions'
 import ModalFirstAdmin from './ModalFirstAdmin'
 import ModalSecondAdmin from './ModalSecondAdmin'
 import ModalProjectName from './ModalProjectName'
@@ -17,16 +21,25 @@ class ModalCreateProject extends Component {
 
   state = {
     modalOpen: false,
-    step: 1,
-    termsAccepted: false,
+    step: 1
   }
-
+  
   handleOpen = () => this.setState({ modalOpen: true })
 
-  handleClose = () => this.setState({ modalOpen: false })
+  handleClose = () => {
+    const { resetForm, startFetchProjects } = this.props
+    this.setState({
+      step: 1,
+      modalOpen: false
+    })
+    resetForm('project_form')
+    startFetchProjects()
+  }
 
   changeStep = (increase) => {
     const { step } = this.state
+    const { change } = this.props
+
     this.setState({ step: step + increase })
   }
 
@@ -34,78 +47,103 @@ class ModalCreateProject extends Component {
     const { startCreateProject } = this.props
     startCreateProject()
     .then(() => this.setState({ step: 5 }))
-    .catch(() => ({}))
   }
 
-  toogleTerms = () => {
-    const { termsAccepted } = this.state
-    this.setState({ termsAccepted: !termsAccepted })
+  handleSubmit = (values) => {
+    const { step } = this.state
+    const {
+      startCreateProject,
+      updateProject,
+      sameBillingAddress,
+      projectId,
+      initialize
+    } = this.props
+
+    console.log(step, projectId)
+    console.log(step < 5 && !projectId)
+    if (step < 5 && !projectId) {
+      startCreateProject(values, (val) => initialize(val))
+      this.setState({ step: 5 })
+    } else if (sameBillingAddress && step === 5) {
+      updateProject(values)
+      this.setState({ step: 7 })
+    } else if (!sameBillingAddress && step === 5) {
+      updateProject(values)
+      this.setState({ step: 6 })
+    } else if (step === 6) {
+      updateProject(values)
+      this.setState({ step: 7 })
+    } else {
+      updateProject(values)
+    }
   }
 
-  closeModalAndDiscardSteps = () => {
-    const { resetForm, startFetchProjects } = this.props
-    this.setState({
-      step: 1,
-      termsAccepted: false,
-      modalOpen: false
-    })
-    resetForm('project_form')
-    resetForm('administrator_form')
-    startFetchProjects()
-  }
+  renderModalFirstAdmin = props => (
+    <ModalFirstAdmin
+      {...props}
+      closeModal={this.handleClose}
+      nextStep={() => this.changeStep(1)}
+    />
+  )
+
+  renderModalSecondAdmin = props => (
+    <ModalSecondAdmin
+      {...props}
+      closeModal={this.handleClose}
+      changeStep={(val) => this.changeStep(val)}
+    />
+  )
 
   renderModalContent = () => {
-    const { termsAccepted, step } = this.state
+    const { step } = this.state
+    const { terms } = this.props
     return (
-      <React.Fragment>
+      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         {step === 1 &&
-          <ModalTerms
-            toogleTerms={this.toogleTerms}
-            closeModal={this.closeModalAndDiscardSteps}
-            termsAccepted={termsAccepted}
-            nextStep={() => this.changeStep(1)}
-          />
+        <ModalTerms
+          closeModal={this.handleClose}
+          termsAccepted={terms}
+          nextStep={() => this.changeStep(1)}
+        />
         }
         {step === 2 &&
-          <ModalFirstAdmin
-            closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={() => this.changeStep(1)}
-          />
+        <FieldArray
+          name='admins_attributes'
+          component={props => this.renderModalFirstAdmin(props)}
+        />
         }
         {step === 3 &&
-          <ModalSecondAdmin
-            closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={() => this.changeStep(1)}
-            changeStep={(val) => this.changeStep(val)}
-          />
+        <FieldArray
+          name='admins_attributes'
+          component={props => this.renderModalSecondAdmin(props)}
+        />
         }
         {step === 4 &&
-          <ModalProjectName
-            closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={() => this.submitChanges()}
-            changeStep={(val) => this.changeStep(val)}
-          />
+        <ModalProjectName
+          closeModal={this.handleClose}
+          customSubmit={() => this.submitChanges()}
+          changeStep={(val) => this.changeStep(val)}
+        />
         }
         {step === 5 &&
-          <ModalCompanyData
-            closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={(increase) => this.changeStep(increase)}
-            changeStep={(val) => this.changeStep(val)}
-          />
+        <ModalCompanyData
+          closeModal={this.handleClose}
+          changeStep={(val) => this.changeStep(val)}
+        />
         }
         {step === 6 &&
-          <ModalBillingAddress
-            closeModal={this.closeModalAndDiscardSteps}
-            customSubmit={() => this.changeStep(1)}
-            changeStep={(val) => this.changeStep(val)}
-          />
+        <ModalBillingAddress
+          closeModal={this.handleClose}
+          customSubmit={() => this.changeStep(1)}
+          changeStep={(val) => this.changeStep(val)}
+        />
         }
         {step === 7 &&
-          <ModalSuccessfull
-            closeModal={this.closeModalAndDiscardSteps}
-          />
+        <ModalSuccessfull
+          closeModal={this.handleClose}
+        />
         }
-      </React.Fragment>
+      </form>
     )
   }
 
@@ -135,10 +173,23 @@ class ModalCreateProject extends Component {
   }
 }
 
+const selector = formValueSelector('project_form')
+
+const mapStateToProps = state => ({
+  projectId: selector(state, 'id'),
+  terms: selector(state, 'terms'),
+  sameBillingAddress: selector(state, 'same_for_billing_address')
+})
+
 const mapDispatchToProps = dispatch => ({
   resetForm: (formName) => dispatch(reset(formName)),
-  startCreateProject: () => dispatch(startCreateProject()),
+  startCreateProject: (values, initialize) => dispatch(startCreateProject(values, initialize)),
+  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step)),
   startFetchProjects: () => dispatch(startFetchProjects())
 })
 
-export default connect(null, mapDispatchToProps)(ModalCreateProject)
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+  form: 'project_form',
+  enableReinitialize: true
+})(ModalCreateProject))
+

@@ -107,36 +107,24 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   )
 }
 
-export const startCreateProject = () => (dispatch, getState) => {
-  const { user: { token }, form } = getState()
+export const startCreateProject = (values, initialize) => (dispatch, getState) => {
+  const { user: { token } } = getState()
 
   const headers = {
     Authorization: token
   }
-
-  const newValues = {}
-  const { values } = form.administrator_form
-  Object.keys(values).forEach(k => {
-    const key = k.replace('administrator_form_', '')
-    newValues[key] = values[k]
-  })
-
-  const adminsAttributes = {
-    id: '',
-    ...newValues
-  }
-
+  
   const request = {
     project: {
-      creation_step: 'admins',
-      name: form.project_form.values.project_title,
-      admins_attributes: adminsAttributes
+      ...values,
+      creation_step: 'admins'
     }
   }
 
   return (
     axios.post('/api/v1/projects', request, { headers })
       .then(response => {
+        initialize({ ...response.data.project[0] })
         dispatch(projectCreated(response.data))
       })
       .catch(() => {

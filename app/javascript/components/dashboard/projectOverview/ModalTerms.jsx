@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import CheckboxField from '../../../elements/CheckboxField'
 
-const ModalTerms = ({ toogleTerms, closeModal, termsAccepted, nextStep}) => {
+const ModalTerms = ({ closeModal, termsAccepted, nextStep}) => {
   return (
     <div>
       <div className='modal-body terms-modal'>
@@ -10,18 +11,30 @@ const ModalTerms = ({ toogleTerms, closeModal, termsAccepted, nextStep}) => {
         </h5>
 
         <div className='checkbox-terms rect-checkbox'>
-          <input
-            type='checkbox'
-            id='terms'
-            onClick={toogleTerms}
+          <CheckboxField
+            name='terms'
+            checkBoxId='terms'
+            labelClass='mr-2'
+            text='I have read and agree to the Terms'
           />
-          <label htmlFor='terms' className='mr-2'/>
-          <span>I have read and agree to the Terms</span>
         </div>
       </div>
       <div className='modal-footer'>
-        <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
-        <button type='button' className='btn btn-purple' disabled={!termsAccepted} onClick={nextStep}>Next</button>
+        <button
+          type='button'
+          className='btn btn-white'
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+        <button
+          type='button'
+          className='btn btn-purple'
+          disabled={!termsAccepted}
+          onClick={nextStep}
+        >
+          Next
+        </button>
       </div>
     </div>
   )
