@@ -1,10 +1,12 @@
 class Address < ApplicationRecord
-  has_one :project_company_datum,
-    class_name: "ProjectCompanyDatum",
+  has_one :project_company_data,
+    class_name: "ProjectCompanyData",
     foreign_key: :company_address_id
-  has_one :project_company_billing_datum,
-    class_name: "ProjectCompanyDatum",
+  has_one :project_company_billing_data,
+    class_name: "ProjectCompanyData",
     foreign_key: :billing_address_id
+  has_one :project_member,
+          foreign_key: :company_address_id
 
   validates_inclusion_of :country,
       in: ISO3166::Country.codes,
@@ -17,7 +19,11 @@ class Address < ApplicationRecord
                         :postcode,
                         :country,
                         if: -> {
-                          project_company_datum.present? ||
-                          project_company_billing_datum.present?
+                          project_company_data.present? ||
+                          project_company_billing_data.present? ||
+                          (project_member.present? &&
+                            (project_member.creation_step_company_data? ||
+                             project_member.creation_step_details? ||
+                             project_member.creation_step_completed?))
                         }
 end

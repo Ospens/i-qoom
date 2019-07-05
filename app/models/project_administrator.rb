@@ -43,9 +43,8 @@ class ProjectAdministrator < ApplicationRecord
 
   private
 
-  # adds a user only when admin is being created,
+  # adds a user only when it is being created,
   # then a user can be changed only by confirmation
-
   def add_user
     self.user = User.find_by(email: email) if user.nil?
   end

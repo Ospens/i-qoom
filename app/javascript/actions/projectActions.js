@@ -41,8 +41,8 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   }
 
   const data = {}
-  if (step === 'company_datum') {
-    data.company_datum_attributes = {
+  if (step === 'company_data') {
+    data.company_data_attributes = {
       id: values.id || '',
       logo: values.logo,
       registration_number: values.registration_number,
@@ -62,7 +62,7 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   }
 
   if (step === 'billing_address') {
-    data.company_datum_attributes = {
+    data.company_data_attributes = {
       billing_address_attributes: {
         id: values.id || '',
         company_name: values.billing_company_name,

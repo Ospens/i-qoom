@@ -2,8 +2,11 @@ require 'rails_helper'
 
 describe "Project", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_admins_step, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:second_user) { FactoryBot.create(:user) }
+  let(:different_project) { FactoryBot.create(:project,
+                                              user_id: second_user.id) }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -102,42 +105,42 @@ describe "Project", type: :request do
           expect(json["status"]).to eq("error")
         end
       end
-      context "creation_step 'company_datum'" do
-        it 'should get a status "success" and add a company datum to the project' do
+      context "creation_step 'company_data'" do
+        it 'should get a status "success" and add a company data to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: {
-              project: FactoryBot.attributes_for(:project_company_datum_step,
-                company_datum_attributes: FactoryBot.attributes_for(:project_company_datum,
+              project: FactoryBot.attributes_for(:project_company_data_step,
+                company_data_attributes: FactoryBot.attributes_for(:project_company_data,
                   company_address_attributes: FactoryBot.attributes_for(:address)))
             }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).company_datum).to be_present
-          expect(Project.find_by(id: project.id).company_datum.billing_address).not_to be_present
+          expect(Project.find_by(id: project.id).company_data).to be_present
+          expect(Project.find_by(id: project.id).company_data.billing_address).not_to be_present
           expect(json["status"]).to eq("success")
         end
         it 'should get a status "success" and add billing address to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: {
-              project: FactoryBot.attributes_for(:project_company_datum_step,
-                company_datum_attributes: FactoryBot.attributes_for(:project_company_datum,
+              project: FactoryBot.attributes_for(:project_company_data_step,
+                company_data_attributes: FactoryBot.attributes_for(:project_company_data,
                   same_for_billing_address: "1",
                   company_address_attributes: FactoryBot.attributes_for(:address)))
             }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).company_datum.billing_address).to be_present
+          expect(Project.find_by(id: project.id).company_data.billing_address).to be_present
           expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
-            add a company datum to the project' do
+            add a company data to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: {
-              project: FactoryBot.attributes_for(:project_company_datum_step)
+              project: FactoryBot.attributes_for(:project_company_data_step)
             }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(Project.find_by(id: project.id).company_datum).not_to be_present
+          expect(Project.find_by(id: project.id).company_data).not_to be_present
           expect(json["status"]).to eq("error")
         end
       end
@@ -150,7 +153,7 @@ describe "Project", type: :request do
             params: {
               project: {
                 creation_step: "billing_address",
-                company_datum_attributes: {
+                company_data_attributes: {
                   billing_address_attributes: FactoryBot.attributes_for(:address)
                 }
               }
@@ -159,7 +162,7 @@ describe "Project", type: :request do
 
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project_without_billing_address.id)
-                                .company_datum.billing_address).to be_present
+                                .company_data.billing_address).to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).to eq("done")
           expect(ActionMailer::Base.deliveries.count).to eq(1)
@@ -174,7 +177,7 @@ describe "Project", type: :request do
             params: {
               project: {
                 creation_step: "billing_address",
-                company_datum_attributes: {
+                company_data_attributes: {
                   billing_address_attributes: { street: "unknown" }
                 }
               }
@@ -183,7 +186,7 @@ describe "Project", type: :request do
 
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project_without_billing_address.id)
-                                       .company_datum
+                                       .company_data
                                        .billing_address).not_to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).not_to eq("done")
@@ -194,7 +197,7 @@ describe "Project", type: :request do
 
     context "destroy" do
       it "should be destroyed" do
-        third_project = FactoryBot.create(:project, user_id: user.id)
+        third_project = FactoryBot.create(:project_admins_step, user_id: user.id)
         delete "/api/v1/projects/#{third_project.id}",
               headers: headers
         expect(response).to have_http_status(:success)
@@ -205,7 +208,7 @@ describe "Project", type: :request do
     context "confirm_admin" do
       it "should confirm an admin" do
         project_admin =
-          FactoryBot.create(:project_done_step,
+          FactoryBot.create(:project,
                             user_id: user.id).admins.first
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
@@ -215,7 +218,7 @@ describe "Project", type: :request do
       end
       it "shouldn't confirm an admin with wrong user" do
         project_admin =
-          FactoryBot.create(:project_done_step,
+          FactoryBot.create(:project,
                             user_id: user.id).admins.first
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
@@ -256,7 +259,7 @@ describe "Project", type: :request do
     end
 
     it 'confirm_account' do
-      project_admin = FactoryBot.create(:project_done_step).admins.first
+      project_admin = FactoryBot.create(:project).admins.first
       get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
       expect(response).to have_http_status(:forbidden)

@@ -35,6 +35,10 @@ class Ability
       can :manage, ProjectAdministrator do |project_admin|
         project_admin.project.user_id == user.id
       end
+      # ProjectMember
+      can :manage, ProjectMember do |project_member|
+        project_member.project.user_id == user.id
+      end
       # Convention
       can :manage, Convention do |convention|
         convention.project.user == user

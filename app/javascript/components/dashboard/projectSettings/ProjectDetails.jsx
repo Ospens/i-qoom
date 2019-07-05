@@ -70,7 +70,7 @@ class ProjectDetails extends Component {
   renderCompanyDataButtons = pristine => {
     return (
       <div>
-        {this.renderSaveButtons(pristine, 'company_datum')}
+        {this.renderSaveButtons(pristine, 'company_data')}
         <button
           type='button'
           className='btn btn-white-blue wide-button mt-2'
@@ -263,15 +263,15 @@ class ProjectDetails extends Component {
 
   render() {
     const { billingForm, adminForm, adminErrorModal, adminInspectModal } = this.state
-    const { admins, company_datum } = this.props
-    const companyInitial = company_datum
-      ? { ...company_datum.company_address, ...company_datum }
+    const { admins, company_data } = this.props
+    const companyInitial = company_data
+      ? { ...company_data.company_address, ...company_data }
       : {}
     const firstAdminFields = admins
       ? admins[0]
       : {}
-    const billingInit = company_datum && company_datum.billing_address
-      ? this.changeKeys(company_datum.billing_address, 'billing_')
+    const billingInit = company_data && company_data.billing_address
+      ? this.changeKeys(company_data.billing_address, 'billing_')
       : {}
 
     const options = [
@@ -298,7 +298,7 @@ class ProjectDetails extends Component {
             <CompanyForm
               initialValues={companyInitial}
               customButtons={this.renderCompanyDataButtons}
-              customSubmit={(values) => this.submitFormByType(values, 'company_datum')}
+              customSubmit={(values) => this.submitFormByType(values, 'company_data')}
             />
           </div>
           <div className='col-lg-4'>

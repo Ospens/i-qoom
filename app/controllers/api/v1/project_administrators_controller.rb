@@ -1,6 +1,8 @@
 class Api::V1::ProjectAdministratorsController < ApplicationController
   load_and_authorize_resource :project
-  load_and_authorize_resource :project_administrator
+  load_and_authorize_resource :project_administrator,
+                              through: :project,
+                              through_association: :admins
 
   # inspect
   def show

@@ -20,7 +20,8 @@ class DocumentField < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  has_many :document_rights
+  has_many :document_rights,
+           dependent: :destroy
 
   has_many :document_field_values,
            dependent: :destroy
@@ -143,6 +144,7 @@ class DocumentField < ApplicationRecord
 
   def can_build?(user)
     return false if parent.class.name != 'Convention' || revision_version?
+    return true if user == parent.project.user
     can_build_codification_field?(user) ||
       # limitation by field is temporarily disabled
       (!codification_kind.present? && true
@@ -171,6 +173,7 @@ class DocumentField < ApplicationRecord
   end
 
   def has_access_for_limit_by_value_value?(user, value)
+    return true if user == parent.project.user
     document_rights.find_by(user: user,
                             document_field_value: value,
                             enabled: true,
