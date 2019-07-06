@@ -111,6 +111,15 @@ describe Document, type: :request do
       expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
+    it 'emails' do
+      @params[:document]['emails'] = [Faker::Internet.email]
+      dbl = double
+      expect(ApplicationMailer).to receive(:new_document).and_return(dbl)
+      expect(dbl).to receive(:deliver_later)
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:success)
+    end
+
     it 'project user' do
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
       expect(response).to have_http_status(:success)
