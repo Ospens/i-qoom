@@ -3,6 +3,8 @@ require 'csv'
 class Document < ApplicationRecord
   enum issued_for: [ :information, :review ], _prefix: true
 
+  serialize :emails
+
   belongs_to :user
 
   belongs_to :project
@@ -41,6 +43,8 @@ class Document < ApplicationRecord
                     unless: :document_revision_version_present?
 
   before_validation :assign_convention
+
+  after_create :send_emails, if: -> { emails.try(:any?) }
 
   scope :first_version, -> { order(revision_version: :asc).first }
 
@@ -303,5 +307,11 @@ class Document < ApplicationRecord
 
   def assign_convention
     self.convention = project.conventions.active
+  end
+
+  def send_emails
+    emails.each do |email|
+      ApplicationMailer.new_document(self, email).deliver_later
+    end
   end
 end

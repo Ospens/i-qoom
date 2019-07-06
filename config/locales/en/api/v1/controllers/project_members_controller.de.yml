@@ -1,0 +1,14 @@
+en:
+  api:
+    v1:
+      project_members:
+        create:
+          success_message:
+            Successfully added
+          error_message:
+            Something went wrong
+        update:
+          success_message:
+            Successfully added
+          error_message:
+            Something went wrong

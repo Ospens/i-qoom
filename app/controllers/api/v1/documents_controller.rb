@@ -188,6 +188,7 @@ class Api::V1::DocumentsController < ApplicationController
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,
+                                     emails: [],
                                      document_fields_attributes:
                                       [ :kind,
                                         :codification_kind,

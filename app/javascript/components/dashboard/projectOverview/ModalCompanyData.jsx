@@ -11,7 +11,7 @@ class ModalCompanyData extends Component {
     const step = values.same_for_billing_address ? 2 : 1
 
     if (step === 2) {
-      return updateProject(values, project.id, 'company_datum')
+      return updateProject(values, project.id, 'company_data')
         .then(() => changeStep(step))
     } else {
       changeStep(step)

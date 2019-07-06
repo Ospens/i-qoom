@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ProjectAdministratorConfirmation, type: :model do
   let(:user) { FactoryBot.create(:user) }
-  let(:project_admin) { FactoryBot.create(:project_done_step).admins.first }
+  let(:project_admin) { FactoryBot.create(:project).admins.first }
 
   it "should confirm a user" do
     project_admin.update(email: user.email)

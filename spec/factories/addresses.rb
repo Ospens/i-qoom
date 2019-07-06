@@ -6,11 +6,11 @@ FactoryBot.define do
     sequence(:city)           { Faker::Address.city }
     sequence(:postcode)       { Faker::Address.zip_code }
     sequence(:country)        { ISO3166::Country.codes.sample }
-    factory :address_with_project_company_datum do
-      association :project_company_datum
+    factory :address_with_project_company_data do
+      association :project_company_data
     end
-    factory :address_with_project_company_billing_datum do
-      association :project_company_datum
+    factory :address_with_project_company_billing_data do
+      association :project_company_data
     end
   end
 end
