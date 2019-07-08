@@ -1,23 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { formValueSelector } from 'redux-form'
+import { formValueSelector, getFormSubmitErrors } from 'redux-form'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
 import CompanyFields from '../../../elements/forms/CompanyFields'
 import CheckboxField from '../../../elements/CheckboxField'
-import { startUpdateProject } from '../../../actions/projectActions'
 
 class ModalCompanyData extends Component {
 
-  handleNext = () => {
-    const { changeStep, sameBillingAddress } = this.props
-
-    const step = sameBillingAddress ? 2 : 1
-    changeStep(step)
-  }
-
   renderSubmitButtons = () => {
-    const { closeModal, changeStep, companyName, sameBillingAddress } = this.props
+    const { closeModal, changeStep, companyName } = this.props
     return (
       <div className='modal-footer'>
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
@@ -29,10 +21,9 @@ class ModalCompanyData extends Component {
         </button>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
         <button
-          type={sameBillingAddress ? 'submit' : 'button'}
+          type='submit'
           className='btn btn-purple'
           disabled={!companyName}
-          onClick={this.handleNext}
         >
           Next
         </button>
@@ -41,14 +32,15 @@ class ModalCompanyData extends Component {
   }
 
   render() {
-    const { submitErrors } = this.props 
+    const { submitErrors } = this.props
+
     return (
       <div className='new-project-modal'>
         <h4>New project</h4>
 
         <div className='modal-body company-data'>
           <h6>Please enter company data</h6>
-          <CompanyFields />
+          <CompanyFields submitErrors={submitErrors}/>
           <div className='form-group text-left rect-checkbox'>
             <CheckboxField
               name='same_for_billing_address'
@@ -60,14 +52,6 @@ class ModalCompanyData extends Component {
           </div>
         </div>
         {this.renderSubmitButtons()}
-
-        {/* <CompanyForm
-          {...this.props}
-          mainClassName='modal-body company-data'
-          customSubmit={(values) => this.handleSubmit(values)}
-          headerForm='Please enter company data'
-          creating={true}
-        />*/}
       </div>
     )
   }
@@ -76,13 +60,8 @@ class ModalCompanyData extends Component {
 const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
-  project: state.projects.project,
-  companyName: selector(state, 'company_name'),
-  sameBillingAddress: selector(state, 'same_for_billing_address'),
+  submitErrors: getFormSubmitErrors('project_form')(state),
+  companyName: selector(state, 'company_data_attributes.company_address_attributes.company_name')
 })
 
-const mapDispatchToProps = dispatch => ({
-  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ModalCompanyData)
+export default connect(mapStateToProps)(ModalCompanyData)

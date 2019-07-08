@@ -346,8 +346,8 @@ class ModalCreateField extends Component {
       <NewModal
         content={this.renderModalContent()}
         // trigger={this.renderTrigger(triggerContent)}
-        modalOpen={modalOpen}
-        handleClose={this.handleClose}
+        open={modalOpen}
+        onClose={this.handleClose}
       />
     )
   }

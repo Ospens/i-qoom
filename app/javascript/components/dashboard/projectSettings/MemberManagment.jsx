@@ -76,8 +76,8 @@ class MemberManagment extends Component {
                   </button>
                 </div>
               }
-              modalOpen={addMemberModal}
-              handleClose={() => this.setState({ addMemberModal: false })}
+              open={addMemberModal}
+              onClose={() => this.setState({ addMemberModal: false })}
             />
           </div>
         </div>

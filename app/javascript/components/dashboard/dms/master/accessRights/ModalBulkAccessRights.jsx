@@ -90,8 +90,8 @@ export class ModalBulkAccessRights extends Component {
       <NewModal
         content={this.renderContent()}
         trigger={this.renderModalTrigger()}
-        modalOpen={modalOpen}
-        handleClose={this.handleClose}
+        open={modalOpen}
+        onClose={this.handleClose}
       />
     )
   }

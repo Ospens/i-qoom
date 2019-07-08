@@ -1,50 +1,34 @@
 import React, { Component } from 'react'
-import CompanyForm from '../../../elements/forms/CompanyForm'
 import { connect } from 'react-redux'
-import NewModal from '../../../elements/Modal'
-import AdministratorForm from '../../../elements/forms/AdministratorForm'
-import ModalBillingAddress from '../projectOverview/ModalBillingAddress'
-import ModalFirstAdmin from '../projectOverview/ModalFirstAdmin'
+import { resetSection } from 'redux-form'
 import { Dropdown } from 'semantic-ui-react'
-import { startUpdateProject, startFetchProject } from '../../../actions/projectActions'
-import trashBucket from '../../../images/trash_bucket'
-import pencil from '../../../images/pencil-write'
-import searchIcon from '../../../images/search-alternate'
-import emailSend from '../../../images/email-action-send-2'
-import DropDownMenu, { trigger, renderItem } from '../../../elements/DropDownMenu'
+import NewModal from '../../../../elements/Modal'
+import AdministratorFields from '../../../../elements/forms/AdministratorFields'
+import AdministratorForm from '../../../../elements/forms/AdministratorForm'
+import ModalFirstAdmin from '../../projectOverview/ModalFirstAdmin'
+import { startUpdateProject, startFetchProject } from '../../../../actions/projectActions'
+import trashBucket from '../../../../images/trash_bucket'
+import pencil from '../../../../images/pencil-write'
+import searchIcon from '../../../../images/search-alternate'
+import emailSend from '../../../../images/email-action-send-2'
+import DropDownMenu, { trigger, renderItem } from '../../../../elements/DropDownMenu'
+import CompanyBlock from './CompanyBlock'
+import AdminBlock from './AdminBlock'
 
 
 class ProjectDetails extends Component {
+  nodeRef = React.createRef()
 
   state = {
-    billingForm: false,
     adminForm: false,
     adminErrorModal: false,
     adminInspectModal: false,
     formSaved: '',
     confirm: false
   }
-  
+    
   toggleModals = (key, val) => {
     this.setState({ [key]: val })
-  }
-
-  modalButtons = props => {
-    return (
-      <div className='modal-footer'>
-        <button type='button' className='btn btn-white-blue clear-form' onClick={props.reset}>
-          Clear form
-        </button>
-        <button
-          type='button'
-          className='btn btn-white'
-          onClick={() => this.toggleModals('billingForm', false)}
-        >
-          Cancel
-        </button>
-        <button type='submit' className='btn btn-purple'>Save</button>
-      </div>
-    )
   }
 
   modalButtonsAdmin = () => {
@@ -62,21 +46,6 @@ class ProjectDetails extends Component {
           className='btn btn-purple'
           >
           Invite
-        </button>
-      </div>
-    )
-  }
-
-  renderCompanyDataButtons = pristine => {
-    return (
-      <div>
-        {this.renderSaveButtons(pristine, 'company_data')}
-        <button
-          type='button'
-          className='btn btn-white-blue wide-button mt-2'
-          onClick={() => this.toggleModals('billingForm', true)}
-        >
-          Billing address
         </button>
       </div>
     )
@@ -163,29 +132,33 @@ class ProjectDetails extends Component {
         <AdministratorForm
           initialValues={secondAdminFields}
           form='administrator_form_2'
-          customButtons={(pristine) => this.renderSaveButtons(pristine, 'second_admin')}
+          customButtons={(pristine) => this.renderSaveButtons('admins[1]')}
           customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
         />
       </React.Fragment>
     )
   }
 
-  renderSaveButtons = (pristine, name) => {
-    const { formSaved } = this.state
+  renderSaveButtons = type => {
+    const { getFormMeta } = this.props
+    if (type !== 'company_data') return
+    console.log(getFormMeta)
+    const sectionChanged = getFormMeta && getFormMeta[type]
+
     return (
       <div>
         {(() => {
-          if (!pristine) {
+          if (sectionChanged) {
             return (
               <button
                 type='submit'
                 className='btn btn-purple wide-button mb-2'
-                onClick={() => this.setState({ formSaved: name })}
+                onClick={() => this.setState({ formSaved: type })}
               >
                 Save changes
               </button>
             )
-          } else if (formSaved === name) {
+          } else if (sectionChanged) {
             return (
               <span className='text-success'>
                 The changes were successfully saved!
@@ -248,7 +221,6 @@ class ProjectDetails extends Component {
     return updateProject(values, id, type)
       .then(() => {
         this.toggleModals('adminForm', false)
-        this.toggleModals('billingForm', false)
         startFetchProject(id)
       })
   }
@@ -261,18 +233,14 @@ class ProjectDetails extends Component {
     return val
   }
 
-  render() {
-    const { billingForm, adminForm, adminErrorModal, adminInspectModal } = this.state
-    const { admins, company_data } = this.props
-    const companyInitial = company_data
-      ? { ...company_data.company_address, ...company_data }
-      : {}
-    const firstAdminFields = admins
-      ? admins[0]
-      : {}
-    const billingInit = company_data && company_data.billing_address
-      ? this.changeKeys(company_data.billing_address, 'billing_')
-      : {}
+  handleSubmit = values => {
+    const { formSaved } = this.state
+    console.log(formSaved)
+    console.log(values)
+  }
+
+  renderAdmins = ({ fields, ...props }) => {
+    const { submitErrors } = this.props
 
     const options = [
       {
@@ -288,81 +256,79 @@ class ProjectDetails extends Component {
         onClick: () => this.toggleModals('adminInspectModal', true)
       }
     ]
-
+    
     return (
       <React.Fragment>
-        <h5 className='tab-title'>Project details</h5>
-        <div className='row'>
-          <div className='col-lg-4'>
-            <span className='block-title'>Company data</span>
-            <CompanyForm
-              initialValues={companyInitial}
-              customButtons={this.renderCompanyDataButtons}
-              customSubmit={(values) => this.submitFormByType(values, 'company_data')}
-            />
-          </div>
-          <div className='col-lg-4'>
-            <div className='block-title'> 
+        {fields.map((field, i) => (
+          <div className='col-lg-4' key={i}>
+            <div className='block-title'>
               <span>Project administrator 1</span>
               <span className='active-admin'>Active</span>
-              <DropDownMenu options={options}/>
+              <DropDownMenu options={options} />
             </div>
-            <AdministratorForm
-              initialValues={firstAdminFields}
-              form='administrator_form'
-              customButtons={(pristine) => this.renderSaveButtons(pristine, 'first_admin')}
-              customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
+            <AdministratorFields
+              submitErrors={submitErrors}
+              admin={field}
             />
-          </div>
+            {this.renderSaveButtons('admins.0')}
+          </div>)
+        )}
+        {fields.length < 2 &&
           <div className='col-lg-4'>
-            {admins && admins.length > 1
-              ? this.renderFormSecondAdminColumn()
-              : this.renderNewSecondAdminColumn()
-            }
-          </div>
+          {this.renderNewSecondAdminColumn()}
+        </div>}
+      </React.Fragment>
+    )
+  }
+
+  render() {
+    const { adminForm, adminErrorModal, adminInspectModal } = this.state
+    const { current } = this.props
+    return (
+      <div>
+        <h5 className='tab-title'>Project details</h5>
+        <div className='row'>
+          <CompanyBlock />
+          <AdminBlock index={0} admin={current.admins[0]} formName='first_admin_form' />
+          <AdminBlock index={1} admin={current.admins[1]} formName='second_admin_form'  />
+          {/*<SecondAdminBlock />*/}
         </div>
         <NewModal
           content={this.renderAdminErrorModal()}
-          modalOpen={adminErrorModal}
-          handleClose={() => this.toggleModals('adminErrorModal', false)}
+          open={adminErrorModal}
+          onClose={() => this.toggleModals('adminErrorModal', false)}
         />
         <NewModal
           content={this.renderAdminInspectModal()}
-          modalOpen={adminInspectModal}
-          handleClose={() => this.toggleModals('adminInspectModal', false)}
+          open={adminInspectModal}
+          onClose={() => this.toggleModals('adminInspectModal', false)}
         />
         <NewModal
           content={
-            <ModalBillingAddress
-              customButtons={this.modalButtons}
-              modalTitle='Billing address'
-              initialValues={billingInit}
-              customSubmit={(values) => this.submitFormByType(values, 'billing_address')}
+            <ModalFirstAdmin
+              customButtons={this.modalButtonsAdmin}
+              modalTitle='New project administrator'
+              form='administrator_form_2'
+              customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
             />
           }
-          modalOpen={billingForm}
-          handleClose={() => this.toggleModals('billingForm', false)}
+          open={adminForm}
+          onClose={() => this.toggleModals('adminForm', false)}
         />
-        <NewModal
-        content={
-          <ModalFirstAdmin
-            customButtons={this.modalButtonsAdmin}
-            modalTitle='New project administrator'
-            form='administrator_form_2'
-            customSubmit={(values) => this.submitFormByType(values, 'project_admins')}
-          />
-        }
-        modalOpen={adminForm}
-        handleClose={() => this.toggleModals('adminForm', false)}
-        />
-      </React.Fragment>
-      )
+      </div>
+    )
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step)),
-  startFetchProject: (id) => dispatch(startFetchProject(id))  
+const mapStateToProps = ({ projects }) => ({
+  current: projects.current
 })
 
-export default connect(null, mapDispatchToProps)(ProjectDetails)
+const mapDispatchToProps = dispatch => ({
+  resetSection: () => dispatch(resetSection('company_data_attributes')),
+  startCreateProject: (values, afterCreate) => dispatch(startCreateProject(values, afterCreate)),
+  updateProject: (values, afterUpdate) => dispatch(startUpdateProject(values, afterUpdate)),
+  startFetchProject: id => dispatch(startFetchProject(id))  
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetails)

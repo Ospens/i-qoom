@@ -98,8 +98,8 @@ export class ModalCopyToDG extends Component {
       <NewModal
         content={this.renderModalContent()}
         trigger={this.renderTrigger()}
-        modalOpen={copyingToDG}
-        handleClose={this.handleClose}
+        open={copyingToDG}
+        onClose={this.handleClose}
       />
     )
   }

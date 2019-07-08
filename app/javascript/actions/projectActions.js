@@ -33,72 +33,24 @@ export const exitProject = payload => ({
   payload
 })
 
-export const startUpdateProject = (values, id, step) => (dispatch, getState) => {
+export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
   const headers = {
     Authorization: token
   }
 
-  const data = {}
-  if (step === 'company_data') {
-    data.company_data_attributes = {
-      id: values.id || '',
-      logo: values.logo,
-      registration_number: values.registration_number,
-      vat_id: values.vat_id,
-      same_for_billing_address: values.same_for_billing_address,
-      company_address_attributes: {
-        company_name: values.company_name,
-        street: values.street,
-        house_number: values.house_number,
-        city: values.city,
-        postcode: values.postcode,
-        country: values.country,
-        district: values.district,
-        district_court: values.district_court
-      }
-    }
-  }
-
-  if (step === 'billing_address') {
-    data.company_data_attributes = {
-      billing_address_attributes: {
-        id: values.id || '',
-        company_name: values.billing_company_name,
-        street: values.billing_street,
-        house_number: values.billing_house_number,
-        city: values.billing_city,
-        postcode: values.billing_postcode,
-        country: values.billing_country,
-        district: values.billing_district,
-        district_court: values.billing_district_court
-      }
-    }
-  }
-
-  if (step === 'project_admins') {
-    data.admins_attributes = {
-      id: values.id || '',
-      username: values.username,
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      phone_code: values.phone_code,
-      phone_number: values.phone_number
-    }
-  }
-
   const request = {
     project: {
-      ...data
+      ...values
     }
   }
 
   return (
-    axios.put(`/api/v1/projects/${id}`, request, { headers })
+    axios.put(`/api/v1/projects/${values.id}`, request, { headers })
       .then(response => {
         dispatch(projectUpdated(response.data))
+        if (afterUpdate) afterUpdate({ ...response.data.project[0] })
       })
       .catch(({ response }) => {
         errorNotify('Something went wrong')
@@ -107,13 +59,13 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   )
 }
 
-export const startCreateProject = (values, initialize) => (dispatch, getState) => {
+export const startCreateProject = (values, afterCreate) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
   const headers = {
     Authorization: token
   }
-  
+
   const request = {
     project: {
       ...values,
@@ -124,8 +76,8 @@ export const startCreateProject = (values, initialize) => (dispatch, getState) =
   return (
     axios.post('/api/v1/projects', request, { headers })
       .then(response => {
-        initialize({ ...response.data.project[0] })
         dispatch(projectCreated(response.data))
+        afterCreate({ ...response.data.project[0] })
       })
       .catch(() => {
         errorNotify('Something went wrong')

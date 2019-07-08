@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { reset, reduxForm, formValueSelector, FieldArray } from 'redux-form'
+import { destroy, reduxForm, formValueSelector, FieldArray, FormSection } from 'redux-form'
 import NewModal from '../../../elements/Modal'
 import ReactSVG from 'react-svg'
 import plus from '../../../images/add_1'
@@ -20,19 +20,19 @@ import ModalBillingAddress from './ModalBillingAddress'
 class ModalCreateProject extends Component {
 
   state = {
-    modalOpen: false,
+    modalOpen: true,
     step: 1
   }
   
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => {
-    const { resetForm, startFetchProjects } = this.props
+    const { destroyForm, startFetchProjects } = this.props
     this.setState({
       step: 1,
       modalOpen: false
     })
-    resetForm('project_form')
+    destroyForm()
     startFetchProjects()
   }
 
@@ -49,32 +49,37 @@ class ModalCreateProject extends Component {
     .then(() => this.setState({ step: 5 }))
   }
 
-  handleSubmit = (values) => {
+  afterCreate = values => {
+    const { initialize } = this.props
+    initialize(values)
+    this.setState({ step: 5 })
+  }
+
+  afterUpdate = (values, step) => {
+    const { initialize } = this.props
+    initialize(values)
+    this.setState({ step })
+  }
+
+  handleSubmit = values => {
     const { step } = this.state
     const {
       startCreateProject,
       updateProject,
       sameBillingAddress,
-      projectId,
-      initialize
+      projectId
     } = this.props
 
-    console.log(step, projectId)
-    console.log(step < 5 && !projectId)
     if (step < 5 && !projectId) {
-      startCreateProject(values, (val) => initialize(val))
-      this.setState({ step: 5 })
+      return startCreateProject(values, (val) => this.afterCreate(val))
     } else if (sameBillingAddress && step === 5) {
-      updateProject(values)
-      this.setState({ step: 7 })
+      return updateProject(values, (val) => this.afterUpdate(val, 7))
     } else if (!sameBillingAddress && step === 5) {
-      updateProject(values)
-      this.setState({ step: 6 })
+      return updateProject(values, (val) => this.afterUpdate(val, 6))
     } else if (step === 6) {
-      updateProject(values)
-      this.setState({ step: 7 })
+      return updateProject(values, (val) => this.afterUpdate(val, 7))
     } else {
-      updateProject(values)
+      return updateProject(values)
     }
   }
 
@@ -121,22 +126,24 @@ class ModalCreateProject extends Component {
         {step === 4 &&
         <ModalProjectName
           closeModal={this.handleClose}
-          customSubmit={() => this.submitChanges()}
           changeStep={(val) => this.changeStep(val)}
         />
         }
         {step === 5 &&
-        <ModalCompanyData
-          closeModal={this.handleClose}
-          changeStep={(val) => this.changeStep(val)}
-        />
+        <FormSection name='company_data_attributes'>
+          <ModalCompanyData
+            closeModal={this.handleClose}
+            changeStep={(val) => this.changeStep(val)}
+          />
+        </FormSection>
         }
         {step === 6 &&
-        <ModalBillingAddress
-          closeModal={this.handleClose}
-          customSubmit={() => this.changeStep(1)}
-          changeStep={(val) => this.changeStep(val)}
-        />
+        <FormSection name='company_data_attributes'>
+          <ModalBillingAddress
+            closeModal={this.handleClose}
+            changeStep={(val) => this.changeStep(val)}
+          />
+        </FormSection>
         }
         {step === 7 &&
         <ModalSuccessfull
@@ -166,8 +173,8 @@ class ModalCreateProject extends Component {
       <NewModal
         content={this.renderModalContent()}
         trigger={this.renderTrigger()}
-        modalOpen={modalOpen}
-        handleClose={this.handleClose}
+        open={modalOpen}
+        onClose={this.handleClose}
       />
     )
   }
@@ -178,18 +185,17 @@ const selector = formValueSelector('project_form')
 const mapStateToProps = state => ({
   projectId: selector(state, 'id'),
   terms: selector(state, 'terms'),
-  sameBillingAddress: selector(state, 'same_for_billing_address')
+  sameBillingAddress: selector(state, 'company_data_attributes.same_for_billing_address')
 })
 
 const mapDispatchToProps = dispatch => ({
-  resetForm: (formName) => dispatch(reset(formName)),
-  startCreateProject: (values, initialize) => dispatch(startCreateProject(values, initialize)),
-  updateProject: (values, id, step) => dispatch(startUpdateProject(values, id, step)),
+  destroyForm: () => dispatch(destroy('project_form')),
+  startCreateProject: (values, afterCreate) => dispatch(startCreateProject(values, afterCreate)),
+  updateProject: (values, afterUpdate) => dispatch(startUpdateProject(values, afterUpdate)),
   startFetchProjects: () => dispatch(startFetchProjects())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'project_form',
-  enableReinitialize: true
+  form: 'project_form'
 })(ModalCreateProject))
 
