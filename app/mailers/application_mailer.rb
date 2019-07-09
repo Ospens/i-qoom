@@ -13,4 +13,9 @@ class ApplicationMailer < ActionMailer::Base
     mail to: @project_admin.email,
          subject: t(".title")
   end
+
+  def new_document(document, email)
+    @document = document
+    mail to: email, subject: document.email_title
+  end
 end

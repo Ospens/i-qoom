@@ -242,4 +242,18 @@ RSpec.describe Document, type: :model do
     doc.valid?
     expect(doc.convention).to be_present
   end
+
+  it 'send emails' do
+    email1 = Faker::Internet.email
+    email2 = Faker::Internet.email
+    subject.emails = [email1, email2]
+    dbl = double
+    expect(ApplicationMailer).to\
+      receive(:new_document).with(instance_of(Document), email1).and_return(dbl)
+    expect(dbl).to receive(:deliver_later)
+    expect(ApplicationMailer).to\
+      receive(:new_document).with(instance_of(Document), email2).and_return(dbl)
+    expect(dbl).to receive(:deliver_later)
+    subject.save!
+  end
 end
