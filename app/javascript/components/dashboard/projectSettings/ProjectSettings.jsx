@@ -11,10 +11,6 @@ import arrowLeft from '../../../images/Arrow_2_left'
 
 class ProjectSettings extends Component {
 
-  changeTab = val => {
-    this.setState({tab: val})
-  }
-
   renderProjectStatus = (color, text) => (
     <React.Fragment>
       <span className='green-dot' />

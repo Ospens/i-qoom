@@ -7,6 +7,7 @@ import thunk from 'redux-thunk'
 import userReducer from '../reducers/userReducer'
 import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
+import projectMembersReducer from '../reducers/projectMembersReducer'
 import documentsReducer from '../reducers/documentsReducer'
 import conventionReducer from '../reducers/conventionReducer'
 import accessRightsReducer from '../reducers/accessRightsReducer'
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   landing: landingReducer,
   documents: documentsReducer,
   projects: projectReducer,
+  projectMembers: projectMembersReducer,
   conventions: conventionReducer,
   accessRights: accessRightsReducer,
   filters: filterReducer,

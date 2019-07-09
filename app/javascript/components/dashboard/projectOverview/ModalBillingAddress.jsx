@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { formValueSelector, getFormSubmitErrors } from 'redux-form'
+import { formValueSelector, getFormSubmitErrors, FormSection } from 'redux-form'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
-import BillingAddressFields from '../../../elements/forms/BillingAddressFields'
+import AddressFields from '../../.../../../elements/forms/AddressFields'
 
 class ModalBillingAddress extends Component {
 
@@ -32,7 +32,9 @@ class ModalBillingAddress extends Component {
         <h4>{modalTitle ? modalTitle : 'New project'}</h4>
         <div className='modal-body company-data'>
           <h6>Please enter the billing address</h6>
-          <BillingAddressFields submitErrors={submitErrors} />
+          <FormSection name='billing_address'>
+            <AddressFields submitErrors={submitErrors} />
+          </FormSection>
         </div>
         {submitButtons ? submitButtons() : this.renderSubmitButtons()}
       </div>

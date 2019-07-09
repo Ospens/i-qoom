@@ -17,14 +17,10 @@ const currentMembersFetched = payload => ({
 
 export const getGrantAccessMembers = () => (dispatch, getState) => {
   const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/document_rights/new`, {
-      headers
-    })
+    axios.get(`/api/v1/projects/${current.id}/document_rights/new`, headers)
       .then(response => {
         dispatch(newMembersFetched(response.data))
       })
@@ -36,14 +32,10 @@ export const getGrantAccessMembers = () => (dispatch, getState) => {
 
 export const getGrandedAccessMembers = () => (dispatch, getState) => {
   const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/document_rights/edit`, {
-      headers
-    })
+    axios.get(`/api/v1/projects/${current.id}/document_rights/edit`, headers)
       .then(response => {
         dispatch(currentMembersFetched(response.data))
       })
@@ -59,15 +51,13 @@ export const startUpdateAccessMembers = (newUsers, removeUsers) => (dispatch, ge
     projects: { current },
     accessRights: { newMembers }
   } = getState()
-  const headers = { Authorization: token }
+  const headers = { headers: { Authorization: token } }
   let users = newMembers.filter(member => newUsers.includes(member.id))
   users = users.map(user => user.enabled === true)
   const request = { newUsers, removeUsers }
 
   return (
-    axios.put(`/api/v1/projects/${current.id}/document_rights/`, request, {
-      headers
-    })
+    axios.put(`/api/v1/projects/${current.id}/document_rights/`, request, headers)
       .then(response => {
         dispatch(currentMembersFetched(response.data))
       })

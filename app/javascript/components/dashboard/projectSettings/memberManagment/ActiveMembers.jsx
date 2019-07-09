@@ -6,7 +6,7 @@ class ActiveMembers extends Component {
   render() {
     return (
       <div>
-        <MemberTable/>
+        <MemberTable {...this.props}/>
       </div>
     )
   }

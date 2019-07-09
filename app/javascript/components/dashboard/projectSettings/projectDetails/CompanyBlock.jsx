@@ -102,7 +102,7 @@ export class CompanyBlock extends Component {
   render() {
     const { submitErrors } = this.props
     const { billingForm } = this.state
-    console.log(submitErrors)
+
     return (
       <form
         onSubmit={this.props.handleSubmit(this.handleSubmit)}

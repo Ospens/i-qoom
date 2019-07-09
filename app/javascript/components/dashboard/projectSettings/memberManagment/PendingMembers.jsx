@@ -11,5 +11,5 @@ class PendingMembers extends Component {
     )
   }
 }
- 
+
 export default PendingMembers

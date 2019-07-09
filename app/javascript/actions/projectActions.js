@@ -36,9 +36,7 @@ export const exitProject = payload => ({
 export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   const request = {
     project: {
@@ -47,7 +45,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
   }
 
   return (
-    axios.put(`/api/v1/projects/${values.id}`, request, { headers })
+    axios.put(`/api/v1/projects/${values.id}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
         if (afterUpdate) afterUpdate({ ...response.data.project[0] })
@@ -62,9 +60,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
 export const startCreateProject = (values, afterCreate) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   const request = {
     project: {
@@ -74,7 +70,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   }
 
   return (
-    axios.post('/api/v1/projects', request, { headers })
+    axios.post('/api/v1/projects', request, headers)
       .then(response => {
         dispatch(projectCreated(response.data))
         afterCreate({ ...response.data.project[0] })
@@ -87,11 +83,9 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
 
 export const startFetchProjects = () => (dispatch, getState) => {
   const { token } = getState().user
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
   return (
-    axios.get('/api/v1/projects', { headers })
+    axios.get('/api/v1/projects', headers)
       .then(response => {
         dispatch(projectsFetched(response.data))
       })
@@ -103,12 +97,10 @@ export const startFetchProjects = () => (dispatch, getState) => {
 
 export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().user
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${id}`, { headers })
+    axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
         dispatch(projectFetched(response.data))
       })

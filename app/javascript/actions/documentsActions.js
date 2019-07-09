@@ -18,12 +18,10 @@ const creatingDocument = payload => ({
 
 export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { Authorization: token }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, {
-      headers
-    })
+    axios.get(`/api/v1/projects/${projectId}/documents`, headers)
       .then(response => {
         dispatch(documentsFetched(response.data.location))
       })
@@ -35,12 +33,10 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
 
 export const newDocument = projectId => (dispatch, getState) => {
   const { token } = getState().user
-  const headers = { Authorization: token }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents/new`, {
-      headers
-    })
+    axios.get(`/api/v1/projects/${projectId}/documents/new`, headers)
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)

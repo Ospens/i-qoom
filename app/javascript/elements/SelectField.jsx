@@ -29,7 +29,7 @@ const Option = props => {
   } else {
     return (
       <components.Option {...props} >
-        <span>{props.data.value}</span>
+        <span>{props.data.title}</span>
       </ components.Option>
     )
   }
@@ -57,7 +57,15 @@ const IndicatorSeparator = ({ innerProps }) => {
   )
 }
 
-const colourStyles = errorInfo => {
+const checkValue = (options, input) => {
+  if (typeof input.value === 'string' || typeof input.value === 'number') {
+    return options.filter(option => input.value === option.value)
+  } else if (typeof input.value === 'object') {
+    return options.filter(option => input.value.includes(option.value))
+  }
+}
+
+export const colourStyles = errorInfo => {
   const borderColor = errorInfo ? '#fd0944' : '#ced4da'
   const borderWidth = errorInfo ? '2px' : '1px'
   const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
@@ -76,39 +84,43 @@ const colourStyles = errorInfo => {
       marginTop: '0',
       zIndex: '5'
     }),
-    placeholder: (styles, state) => ({
+    placeholder: styles => ({
       ...styles,
       color: '#c8d8da'
     }),
-    option: (styles, { isFocused }) => ({
+    option: styles => ({
       ...styles,
-      color: isFocused ? '#2fa7f9' : 'lightgray'
+      color: 'rgba(0, 0, 0, .87)'
     })
   }
   return colourStyles
 }
+export const SelectComponent = props => (
+  <Select
+    {...props}
+    components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
+    autoFocus={false}
+    styles={colourStyles(props.errorInfo)}
+    maxMenuHeight='180'
+  />
+)
 
-function SelectField({ input, options, errorField, id, label, placeholder, isDisabled = false, isMulti= false }) {
+const SelectField = ({ input, options, errorField, id, label, placeholder, isDisabled = false, isMulti= false }) => {
   const errorInfo = errorField ? errorField[id] : false
 
   return (
     <div>
       {label && <label htmlFor={input.name}>{label}</label>}
-      <Select
+      <SelectComponent
         {...input}
         isMulti={isMulti}
-        components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
         options={options}
-        value={options.filter(option => input.value === option.value || input.value.includes(option.value))}
-        // value={options}
-        autoFocus={false}
-        styles={colourStyles(errorInfo)}
-        onChange={v => { input.onChange(v.value || v.map(val => val.value))  }}
-        maxMenuHeight='180'
+        value={checkValue(options, input)}
+        onChange={v => { input.onChange(v.value || v.map(val => val.value)) }}
         onBlur={value => input.onBlur(value.value)}
-        placeholder={placeholder ? placeholder : 'Select...'}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
         isDisabled={isDisabled}
+        placeholder={placeholder ? placeholder : 'Select...'}
       />
       <div className='invalid-feedback'>
         {errorInfo ? errorInfo[0] : ''}

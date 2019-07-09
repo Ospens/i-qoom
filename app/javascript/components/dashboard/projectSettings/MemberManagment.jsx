@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
+import { withRouter } from 'react-router-dom'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
 import NewModal from '../../../elements/Modal'
@@ -13,12 +15,17 @@ import emailSend from '../../../images/email-action-send-2'
 import greenCheck from '../../../images/check_3'
 import trash_bucket from '../../../images/trash_bucket'
 import AddMember from './memberManagment/AddMember'
-
+import { startFetchProjectMembers } from '../../../actions/projectMembersActions'
 
 class MemberManagment extends Component {
 
   state = {
     addMemberModal: false
+  }
+
+  componentWillMount() {
+    const { startFetchProjectMembers, match: { params: { project_id } } } = this.props
+    startFetchProjectMembers(project_id)
   }
 
   renderDropDownItems = (pic, name) => (
@@ -33,8 +40,19 @@ class MemberManagment extends Component {
     </a>
   )
 
+  renderNewMemberModal = () => {
+    const { match: { params: { project_id } } } = this.props
+    return (
+      <AddMember
+        closeModal={() => this.setState({ addMemberModal: false })}
+        projectId={project_id}
+      />
+    )
+  }
+
   render() {
     const { addMemberModal } = this.state
+    const { match: { params: { project_id } } } = this.props
 
     return (
       <div id='member-managment'>
@@ -59,26 +77,19 @@ class MemberManagment extends Component {
                 <span>Discipline list</span>
               </button>
             </div>
-            <NewModal
-              content={<AddMember closeModal={() => this.setState({ addMemberModal: false })} />}
-              trigger={
-                <div>
-                  <button
-                    type='button'
-                    className='btn with-icon'
-                    onClick={() => this.setState({ addMemberModal: true })}
-                  >
-                    <ReactSVG
-                      svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                      src={blueCheck}
-                    />
-                    <span>Add member</span>
-                  </button>
-                </div>
-              }
-              open={addMemberModal}
-              onClose={() => this.setState({ addMemberModal: false })}
-            />
+            <div>
+              <button
+                type='button'
+                className='btn with-icon'
+                onClick={() => this.setState({ addMemberModal: true })}
+              >
+                <ReactSVG
+                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
+                  src={blueCheck}
+                />
+                <span>Add member</span>
+              </button>
+            </div>
           </div>
         </div>
         <Tabs>
@@ -95,7 +106,7 @@ class MemberManagment extends Component {
                   {this.renderDropDownItems(trash_bucket, 'Delete')}
                 </DropDown>
               </div>
-              <ActiveMembers />
+              <ActiveMembers projectId={project_id}/>
             </React.Fragment>
           </div>
           <div label='Pending members'>
@@ -115,9 +126,21 @@ class MemberManagment extends Component {
             </React.Fragment>
           </div>
         </Tabs>
+        <NewModal
+          content={this.renderNewMemberModal()}
+          open={addMemberModal}
+          onClose={() => this.setState({ addMemberModal: false })}
+        />
       </div>
     )
   }
 }
 
-export default MemberManagment
+const mapDispatchToProps = dispatch => ({
+  startFetchProjectMembers: id => dispatch(startFetchProjectMembers(id))
+})
+
+const mapStateToProps = state => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MemberManagment))
+

@@ -48,9 +48,7 @@ export const discardConvention = () => ({
 export const startUpdateConvention = () => (dispatch, getState) => {
   const { user: { token }, conventions: { current }, projects } = getState()
   const projectId = projects.current.id
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
   const docFields = []
   const errors = {}
   Object.keys(current.grouped_fields).forEach(k => {
@@ -84,9 +82,7 @@ export const startUpdateConvention = () => (dispatch, getState) => {
   }
 
   return (
-    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, {
-      headers
-    })
+    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, headers)
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
@@ -101,15 +97,12 @@ export const startUpdateConvention = () => (dispatch, getState) => {
 
 export const startEditConvention = () => (dispatch, getState) => {
   const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/conventions/edit`, {
-      headers
-    })
+    axios.get(`/api/v1/projects/${current.id}/conventions/edit`, headers)
       .then(response => {
+        console.log(response)
         const { data } = response
         const sortedData = fieldByColumn(data)
         dispatch(editingConvention(sortedData))

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Field, FormSection } from 'redux-form'
+import { Field } from 'redux-form'
 import InputField from '../InputField'
 import SelectField from '../SelectField'
 import countryList from '../../components/landing/countriesCodes'
 
-const BillingAddressFields = ({ submitErrors }) => (
-  <FormSection name='billing_address'>
+const AddressFields = ({ submitErrors }) => (
+  <React.Fragment>
     <div className='form-group'>
       <InputField
         type='text'
@@ -84,7 +84,7 @@ const BillingAddressFields = ({ submitErrors }) => (
         />
       </div>
     </div>
-  </FormSection>
+  </React.Fragment>
 )
 
-export default BillingAddressFields
+export default AddressFields

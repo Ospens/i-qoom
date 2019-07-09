@@ -7,7 +7,9 @@ import {
 
 const initialState = {
   allProjects: [],
-  current: { }
+  current: {
+    admins: []
+  }
 }
 
 const projectReducer = (state = initialState, action) => {

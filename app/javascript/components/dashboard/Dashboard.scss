@@ -730,6 +730,10 @@ input[type=checkbox]:checked+label {
 
     &.access-column {
       min-width: 180px !important;
+
+      .btn-for-switch {
+        height: 33.5px;
+      }
     }
 
     &.td-files {
@@ -776,12 +780,12 @@ input[type=checkbox]:checked+label {
       justify-content: center;
       align-content: center;
       position: absolute;
-      border: 1px solid white;
+      border: 2px solid white;
       background-color: #4b5b5d;
       color: white;
       border-radius: 100%;
-      left: 0;
-      top: 20px;
+      left: 5px;
+      top: 30px;
     }
   }
 }

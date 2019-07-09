@@ -297,6 +297,12 @@ header {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.form-control-select {
+  input {
+    transition-duration: 0s !important;
+  }
+}
+
 .form-control-select.is-invalid~.invalid-feedback,
 .invalid-feedback.convention-feedback  {
   display: block;
