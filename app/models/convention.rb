@@ -20,7 +20,10 @@ class Convention < ApplicationRecord
             numericality: { greater_than_or_equal_to: 1 }
 
   validate :document_fields_update,
-           if: -> { last_convention.present? }
+           if: -> { last_convention.present? && last_convention != self }
+
+  validate :validate_presence_of_required_fields,
+           if: -> { version == 1 }
 
   before_validation :set_version
 
@@ -138,6 +141,20 @@ class Convention < ApplicationRecord
         end.present?
       if !contains_field
         errors.add(:document_fields, :wrong_field_added_to_convention)
+      end
+    end
+  end
+
+  def validate_presence_of_required_fields
+    [ :originating_company,
+      :discipline,
+      :document_native_file,
+      :document_type,
+      :document_number,
+      :revision_number,
+      :revision_date ].each do |kind|
+      if document_fields.detect{ |i| i['codification_kind'] == kind.to_s }.blank?
+        errors.add(:document_fields, "#{kind}_field_in_not_present")
       end
     end
   end
