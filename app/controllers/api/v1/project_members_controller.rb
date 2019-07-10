@@ -11,8 +11,10 @@ class Api::V1::ProjectMembersController < ApplicationController
   end
 
   def new
-    render json: { company_types: ProjectMember.company_types,
-                   employment_types: ProjectMember.employment_types },
+    render json: { company_types:
+                     enum_keys_with_titles(ProjectMember.company_types),
+                   employment_types:
+                     enum_keys_with_titles(ProjectMember.employment_types) },
            status: :ok
   end
 
