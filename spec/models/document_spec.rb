@@ -18,9 +18,9 @@ RSpec.describe Document, type: :model do
     document = document_attributes(user)
     project = Project.find(document['project_id'])
     document = Document.build_from_convention(project.conventions.active, project.user)
-    field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
+    field = document['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
     expect(field).to be_present
-    expect(field['document_field_values_attributes'].length).to eql(1)
+    expect(field['document_field_values'].length).to eql(1)
   end
 
   it 'upload field' do

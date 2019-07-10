@@ -52,13 +52,13 @@ describe Document, type: :request do
     it 'user with rights' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['document_fields_attributes'].count).to eql(8)
+      expect(json['document_fields'].count).to eql(8)
     end
 
     it 'project user' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
-      expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
+      expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
   end
 
@@ -66,7 +66,7 @@ describe Document, type: :request do
     let(:title) { Faker::Lorem.sentence }
 
     before do
-      @params = { document: document_attributes(user) }
+      @params = { document: document_attributes(user, false) }
       @params[:document]['email_title'] = title
       @project_id = @params[:document]['project_id']
       @project_user = Project.find(@project_id).user
@@ -108,7 +108,7 @@ describe Document, type: :request do
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
-      expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
+      expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
     it 'emails' do
@@ -127,11 +127,11 @@ describe Document, type: :request do
   end
 
   it 'uploads files' do
-    document_params = document_attributes(user)
+    document_params = document_attributes(user, false)
     document_native_file =
-      document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
+      document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['files'] = [fixture_file_upload('test.txt')]
-    revision_number = document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+    revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
     revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
@@ -139,7 +139,7 @@ describe Document, type: :request do
     project = Project.find(document_params['project_id'])
     project.conventions.active.document_fields.create!(field)
     field['files'] = [file1, file2]
-    document_params['document_fields_attributes'] << field
+    document_params['document_fields'] << field
     post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
     expect(response).to have_http_status(:success)
     files = Document.last.document_fields.find_by(title: 'title').files
@@ -165,6 +165,11 @@ describe Document, type: :request do
         end
       end
       doc_attrs = Document.build_from_convention(convention, user)
+      doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
+      doc_attrs['document_fields_attributes'].each do |field|
+        next if field['document_field_values'].blank?
+        field['document_field_values_attributes'] = field.delete('document_field_values')
+      end
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
       document_native_file['files'] = [fixture_file_upload('test.txt')]
@@ -177,7 +182,7 @@ describe Document, type: :request do
       let(:attrs) do
         attrs = document.attributes_for_edit
         attrs['email_title'] = title
-        revision_number = attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+        revision_number = attrs['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
         revision_number['value'] = '2'
         attrs
       end
@@ -273,7 +278,7 @@ describe Document, type: :request do
         document.update!(email_title: title)
         get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
         expect(response).to have_http_status(:success)
-        expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
+        expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(json['email_title']).to eql(title)
       end
 
@@ -337,7 +342,7 @@ describe Document, type: :request do
           headers: credentials(owner)
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
-        expect(json['document_fields_attributes'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
+        expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(document.revision.versions.length).to eql(2)
       end
 
@@ -659,6 +664,11 @@ describe Document, type: :request do
           end
         end
         doc_attrs = Document.build_from_convention(convention, user)
+        doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
+        doc_attrs['document_fields_attributes'].each do |field|
+          next if field['document_field_values'].blank?
+          field['document_field_values_attributes'] = field.delete('document_field_values')
+        end
         document_native_file =
           doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
         document_native_file['files'] = [fixture_file_upload('test.txt')]

@@ -112,12 +112,12 @@ class DocumentField < ApplicationRecord
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
     if select_field?
-      original_attributes['document_field_values_attributes'] = []
+      original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
         if can_limit_by_value?
           next if !has_access_for_limit_by_value_value?(user, field_value)
         end
-        original_attributes['document_field_values_attributes'] << field_value.build_for_new_document
+        original_attributes['document_field_values'] << field_value.build_for_new_document
       end
     end
     original_attributes
@@ -133,10 +133,10 @@ class DocumentField < ApplicationRecord
     #   end
     # end
     if codification_kind.present?
-      original_attributes['document_field_values_attributes'] = []
+      original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
         field_value_attrs = field_value.build_for_new_document
-        original_attributes['document_field_values_attributes'] << field_value_attrs
+        original_attributes['document_field_values'] << field_value_attrs
       end
     end
     original_attributes
