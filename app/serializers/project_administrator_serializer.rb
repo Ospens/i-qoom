@@ -1,3 +1,3 @@
 class ProjectAdministratorSerializer < ApplicationSerializer
-  has_one :user, key: :user_attributes
+  has_one :user
 end
