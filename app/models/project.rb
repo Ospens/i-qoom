@@ -8,7 +8,7 @@ class Project < ApplicationRecord
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
-  after_update :send_confirmation_emails, if: :creation_step_done?
+  after_save :send_confirmation_emails, if: :creation_step_done?
 
   validates :name,
             presence: true,

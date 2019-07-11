@@ -35,4 +35,8 @@ class ApplicationController < ActionController::Base
     @current_ability ||= Ability.new(signed_in_user)
   end
 
+  def enum_keys_with_titles(enum_hash)
+    enum_hash.keys.map { |k, v| { value: k, title: t("." + k) } }
+  end
+
 end
