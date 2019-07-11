@@ -79,7 +79,13 @@ class Api::V1::ProjectsController < ApplicationController
   private
 
   def project_params
-    params.fetch(:project,
+    params[:project][:admins_attributes] = params[:project][:admins]
+    params[:project][:company_data_attributes] = params[:project][:company_data]
+    if params[:project][:company_data_attributes]
+      params[:project][:company_data_attributes][:company_address_attributes] = params[:project][:company_data_attributes][:company_address]
+      params[:project][:company_data_attributes][:billing_address_attributes] = params[:project][:company_data_attributes][:billing_address]
+    end
+      params.fetch(:project,
                  { }).permit(:name,
                              :creation_step,
                              admins_attributes: [

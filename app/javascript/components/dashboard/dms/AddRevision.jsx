@@ -234,8 +234,8 @@ class AddRevision extends Component {
                 <h5>Open upload form</h5>
 
                 <div className='form-group col-6 pl-0 mt-4'>
-                  <InputField
-                    type='text'
+                  <Field
+                    component={InputField}
                     name='originator'
                     id='originator'
                     errorField={[submitErrors]}

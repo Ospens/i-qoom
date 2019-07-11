@@ -25,9 +25,9 @@ const CompanyFields = ({ submitErrors }) => (
       <div className='col-9'>
         <div className='row'>
           <div className='form-group col-12'>
-            <FormSection name='company_address_attributes'>
-              <InputField
-                type='text'
+            <FormSection name='company_address'>
+              <Field
+                component={InputField}
                 name='company_name'
                 id='company_name'
                 errorField={submitErrors}
@@ -38,8 +38,8 @@ const CompanyFields = ({ submitErrors }) => (
         </div>
         <div className='row'>
           <div className='form-group col col-55per'>
-            <InputField
-              type='text'
+            <Field
+              component={InputField}
               name='registration_number'
               id='registration_number'
               errorField={submitErrors}
@@ -47,8 +47,8 @@ const CompanyFields = ({ submitErrors }) => (
             />
           </div>
           <div className='form-group col col-45per'>
-            <InputField
-              type='text'
+            <Field
+              component={InputField}
               name='vat_id'
               id='vat_id'
               errorField={submitErrors}
@@ -58,11 +58,11 @@ const CompanyFields = ({ submitErrors }) => (
         </div>
       </div>
     </div>
-    <FormSection name='company_address_attributes'>
+    <FormSection name='company_address'>
       <div className='row'>
         <div className='form-group col-8'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='street'
             id='street'
             errorField={submitErrors}
@@ -70,8 +70,8 @@ const CompanyFields = ({ submitErrors }) => (
           />
         </div>
         <div className='form-group col-4'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='house_number'
             id='house_number'
             errorField={submitErrors}
@@ -81,8 +81,8 @@ const CompanyFields = ({ submitErrors }) => (
       </div>
       <div className='row'>
         <div className='form-group col-8'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='city'
             id='city'
             errorField={submitErrors}
@@ -90,8 +90,8 @@ const CompanyFields = ({ submitErrors }) => (
           />
         </div>
         <div className='form-group col-4'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='postcode'
             id='postcode'
             errorField={submitErrors}
@@ -110,8 +110,8 @@ const CompanyFields = ({ submitErrors }) => (
       </div>
       <div className='row'>
         <div className='form-group col-6'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='district'
             id='district'
             errorField={submitErrors}
@@ -119,8 +119,8 @@ const CompanyFields = ({ submitErrors }) => (
           />
         </div>
         <div className='form-group col-6'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='district_court'
             id='district_court'
             errorField={submitErrors}

@@ -29,39 +29,39 @@ class AddRevisionModal extends Component {
               </label>
 
               <div className='input-container'>
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='MWP'
                   disabled
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='STX'
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='EOS'
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='XXX'
                   disabled
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='XXXX'
@@ -100,7 +100,7 @@ class AddRevisionModal extends Component {
             <div className='row'>
               <div className='col-8'>
                 <div className='form-group'>
-                  <InputField
+                  <Field
                     step='1'
                     type='number'
                     name='revision_number'
@@ -113,7 +113,7 @@ class AddRevisionModal extends Component {
               <div className='col-4'>
                 <div className='form-group'>
                   <Field
-                    type='text'
+                    component={InputField}
                     name='employment_type'
                     label='Revision Date*'
                     id='employment_type'

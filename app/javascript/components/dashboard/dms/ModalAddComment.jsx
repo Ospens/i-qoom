@@ -58,8 +58,8 @@ class ModalAddComment extends Component {
 
             <form>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='subject'
                   id='subject'
                   errorField={[submitErrors]}
@@ -68,8 +68,8 @@ class ModalAddComment extends Component {
                 />
               </div>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='referance'
                   id='referance'
                   errorField={[submitErrors]}

@@ -61,7 +61,7 @@ const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state),
-  companyName: selector(state, 'company_data_attributes.company_address_attributes.company_name')
+  companyName: selector(state, 'company_data.company_address.company_name')
 })
 
 export default connect(mapStateToProps)(ModalCompanyData)

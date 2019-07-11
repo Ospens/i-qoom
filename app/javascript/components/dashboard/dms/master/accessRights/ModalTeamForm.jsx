@@ -79,8 +79,8 @@ class ModalTeamForm extends Component {
   renderNameField = () => {
     return (
       <div className='modal-container__content-block'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='team_title'
           id='team_title'
           placeholder='Team title'

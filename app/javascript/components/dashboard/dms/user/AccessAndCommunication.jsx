@@ -31,8 +31,8 @@ class AccessAndCommunication extends Component {
         <form className='form-body'>
           <div className='p-4'>
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='email_addresses'
                 id='email_addresses'
                 placeholder='E-mail'
@@ -55,8 +55,8 @@ class AccessAndCommunication extends Component {
             <div className='row'>
               <div className='col-6'>
                 <div className='form-group'>
-                  <InputField
-                    type='text'
+                  <Field
+                    component={InputField}
                     name='mail_subject'
                     id='mail_subject'
                     label='Mail subject'

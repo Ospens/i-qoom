@@ -44,8 +44,8 @@ class AdministratorForm extends Component {
             {label && <label className='project-admin'>{label}</label>}
             <div className='row'>
               <div className='form-group col-3'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`username`}
                   id={`username`}
                   errorField={submitErrors}
@@ -53,8 +53,8 @@ class AdministratorForm extends Component {
                 />
               </div>
               <div className='form-group col-9'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`last_name`}
                   id={`last_name`}
                   errorField={submitErrors}
@@ -64,8 +64,8 @@ class AdministratorForm extends Component {
             </div>
             <div className='custom_row'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`first_name`}
                   id={`first_name`}
                   errorField={submitErrors}
@@ -75,8 +75,8 @@ class AdministratorForm extends Component {
             </div>
             <div className='custom_row'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`email`}
                   id={`email`}
                   errorField={submitErrors}
@@ -86,8 +86,8 @@ class AdministratorForm extends Component {
             </div>
             <div className='row'>
               <div className='form-group col-3'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`phone_code`}
                   id={`phone_code`}
                   errorField={submitErrors}
@@ -95,8 +95,8 @@ class AdministratorForm extends Component {
                 />
               </div>
               <div className='form-group col-9'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name={`phone_number`}
                   id={`phone_number`}
                   errorField={submitErrors}

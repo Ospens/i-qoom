@@ -5,6 +5,7 @@ import CompanyFields from '../../../../elements/forms/CompanyFields'
 import NewModal from '../../../../elements/Modal'
 import ModalBillingAddress from '../../projectOverview/ModalBillingAddress'
 import { startUpdateProject, startFetchProject } from '../../../../actions/projectActions'
+import { successNotify } from '../../../../elements/Notices'
 
 export class CompanyBlock extends Component {
   nodeRef = React.createRef()
@@ -19,8 +20,8 @@ export class CompanyBlock extends Component {
 
   handleSubmit = values => {
     const { updateProject } = this.props
-    console.log(values)
     return updateProject(values)
+      .then(() => successNotify('The changes were successfully saved!'))
   }
 
   modalButtons = () => {
@@ -46,37 +47,18 @@ export class CompanyBlock extends Component {
     )
   }
 
-  renderSaveButtons = type => {
-    const { pristine, saved } = this.props
-
-    return (
-      <div>
-        {(() => {
-          if (!pristine) {
-            return (
-              <button
-                type='submit'
-                className='btn btn-purple wide-button mb-2'
-              >
-                Save changes
-              </button>
-            )
-          } else if (saved) {
-            return (
-              <span className='text-success'>
-                The changes were successfully saved!
-              </span>
-            )
-          }
-        })()}
-      </div>
-    )
-  }
-
   renderCompanyDataButtons = () => {
+    const { pristine } = this.props
+
     return (
       <div>
-        {this.renderSaveButtons('company_data')}
+        {!pristine &&
+        <button
+          type='submit'
+          className='btn btn-purple wide-button mb-2'
+        >
+          Save changes
+        </button>}
         <button
           type='button'
           className='btn btn-white-blue wide-button mt-2'
@@ -134,7 +116,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => ({
   resetSection: () => dispatch(resetSection('company_form', 'company_data.billing_address')),
-  updateProject: (values, afterUpdate) => dispatch(startUpdateProject(values, afterUpdate)),
+  updateProject: (values) => dispatch(startUpdateProject(values)),
   startFetchProject: id => dispatch(startFetchProject(id))
 })
 

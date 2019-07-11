@@ -133,8 +133,8 @@ class AddMember extends Component {
         <h6>Please enter member details</h6>
         <div className='form-group'>
           <label htmlFor='first_name'>Member details</label>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='first_name'
             id='first_name'
             errorField={submitErrors}
@@ -142,8 +142,8 @@ class AddMember extends Component {
           />
         </div>
         <div className='form-group'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='last_name'
             id='last_name'
             errorField={submitErrors}
@@ -151,8 +151,8 @@ class AddMember extends Component {
           />
         </div>
         <div className='form-group'>
-          <InputField
-            type='text'
+          <Field
+            component={InputField}
             name='email'
             id='email'
             errorField={submitErrors}
@@ -161,8 +161,8 @@ class AddMember extends Component {
         </div>
         <div className='row'>
           <div className='form-group col-4'>
-            <InputField
-              type='text'
+            <Field
+              component={InputField}
               name='phone_code'
               id='phone_code'
               errorField={submitErrors}
@@ -170,8 +170,8 @@ class AddMember extends Component {
             />
           </div>
           <div className='form-group col-8'>
-            <InputField
-              type='text'
+            <Field
+              component={InputField}
               name='phone_number'
               id='phone_number'
               errorField={submitErrors}
@@ -179,7 +179,7 @@ class AddMember extends Component {
             />
           </div>
         </div>
-        <FormSection name='company_address_attributes'>
+        <FormSection name='company_address'>
           <AddressFields submitErrors={submitErrors}/>
         </FormSection>
       </React.Fragment>

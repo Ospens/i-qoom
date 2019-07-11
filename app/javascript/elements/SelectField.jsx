@@ -106,11 +106,11 @@ export const SelectComponent = props => (
 )
 
 const SelectField = ({ input, options, errorField, id, label, placeholder, isDisabled = false, isMulti= false }) => {
-  const errorInfo = errorField ? errorField[id] : false
+  const errorInfo = errorField ? errorField[input.name] : false
 
   return (
     <div>
-      {label && <label htmlFor={input.name}>{label}</label>}
+      {label && <label htmlFor={input.id}>{label}</label>}
       <SelectComponent
         {...input}
         isMulti={isMulti}

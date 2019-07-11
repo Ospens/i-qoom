@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
 import { getFormSubmitErrors } from 'redux-form'
+import { Field } from 'redux-form'
 import InputField from '../../../elements/InputField'
 import Left from '../../../images/arrow-button-left'
 
@@ -16,11 +17,12 @@ class ModalProjectName extends Component {
         <div className='modal-body project-name'>
           <h6>What would you like to call this project?</h6>
           <div className='form-group'>
-            <InputField
+            <Field
               type='text'
               name='name'
               id='name'
               errorField={submitErrors}
+              component={InputField}
               placeholder='Project title'
               label='Please enter a project title'
             />

@@ -79,7 +79,7 @@ class ModalCreateProject extends Component {
     } else if (step === 6) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))
     } else {
-      return updateProject(values)
+      return updateProject(values, (val) => this.afterCreate(val, step + 1))
     }
   }
 
@@ -113,13 +113,13 @@ class ModalCreateProject extends Component {
         }
         {step === 2 &&
         <FieldArray
-          name='admins_attributes'
+          name='admins'
           component={props => this.renderModalFirstAdmin(props)}
         />
         }
         {step === 3 &&
         <FieldArray
-          name='admins_attributes'
+          name='admins'
           component={props => this.renderModalSecondAdmin(props)}
         />
         }
@@ -130,7 +130,7 @@ class ModalCreateProject extends Component {
         />
         }
         {step === 5 &&
-        <FormSection name='company_data_attributes'>
+        <FormSection name='company_data'>
           <ModalCompanyData
             closeModal={this.handleClose}
             changeStep={(val) => this.changeStep(val)}
@@ -138,7 +138,7 @@ class ModalCreateProject extends Component {
         </FormSection>
         }
         {step === 6 &&
-        <FormSection name='company_data_attributes'>
+        <FormSection name='company_data'>
           <ModalBillingAddress
             closeModal={this.handleClose}
             changeStep={(val) => this.changeStep(val)}
@@ -185,7 +185,7 @@ const selector = formValueSelector('project_form')
 const mapStateToProps = state => ({
   projectId: selector(state, 'id'),
   terms: selector(state, 'terms'),
-  sameBillingAddress: selector(state, 'company_data_attributes.same_for_billing_address')
+  sameBillingAddress: selector(state, 'company_data.same_for_billing_address')
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -61,7 +61,7 @@ class DocDocumentsAndFiles extends Component {
     } else if (field.kind === 'date_field') {
       return (
         <Field
-          type='text'
+          component={InputField}
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
@@ -71,8 +71,8 @@ class DocDocumentsAndFiles extends Component {
       )
     } else {
       return (
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name={field.codification_kind || uniqName}
           id={uniqName}
           placeholder={field.command}

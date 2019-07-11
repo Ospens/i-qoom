@@ -51,11 +51,10 @@ export const fetchUser = userId => dispatch => (
     })
 )
 
-export const signInUser = (login, password) => dispatch => {
+export const signInUser = values => dispatch => {
   const request = {
     session: {
-      login,
-      password
+      ...values
     }
   }
   return (

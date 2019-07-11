@@ -51,7 +51,7 @@ const ModalSecondAdmin = ({ submitErrors, fields, ...props }) => {
           <div className='modal-body'>
             <h6>Who is the second project administrator?</h6>
             <label className='project-admin'>Project second administrator</label>
-            <AdministratorFields submitErrors={submitErrors} admin={'admins_attributes[1]'}/>
+            <AdministratorFields submitErrors={submitErrors} admin={'admins[1]'}/>
           </div>
         </React.Fragment>}
       {!secondAdmin &&
@@ -75,10 +75,10 @@ const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state),
-  username: selector(state, 'admins_attributes[1].username'),
-  last_name: selector(state, 'admins_attributes[1].last_name'),
-  first_name: selector(state, 'admins_attributes[1].first_name'),
-  email: selector(state, 'admins_attributes[1].email')
+  username: selector(state, 'admins[1].username'),
+  last_name: selector(state, 'admins[1].last_name'),
+  first_name: selector(state, 'admins[1].first_name'),
+  email: selector(state, 'admins[1].email')
 })
 
 export default connect(mapStateToProps)(ModalSecondAdmin)

@@ -217,8 +217,8 @@ class ModalCreateField extends Component {
           </div>
           <div className="modal-container__content-block">
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='title'
                 id='title'
                 placeholder='Title (e.g. Discipline)'
@@ -228,8 +228,8 @@ class ModalCreateField extends Component {
               />
             </div>
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='command'
                 id='command'
                 placeholder='Command (e.g. Select discipline)'

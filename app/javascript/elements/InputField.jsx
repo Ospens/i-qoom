@@ -1,14 +1,14 @@
 import React from 'react'
-import { Field } from 'redux-form'
 
-function InputField({ errorField = {}, className, label, ...input }) {
-  const errorInfo = errorField[input.id]
+const InputField = ({ input, errorField = {}, className, label, placeholder, type }) => {
+  const errorInfo = errorField[input.name]
   return (
     <div className={className}>
-      {label && <label htmlFor={input.name}>{label}</label>}
-      <Field
+      {label && <label htmlFor={input.id}>{label}</label>}
+      <input
         {...input}
-        component='input'
+        placeholder={placeholder}
+        type={type ? type : 'text'}
         className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
       />
       <div className='invalid-feedback'>

@@ -36,7 +36,7 @@ const ModalFirstAdmin = ({ submitErrors, fields, ...props }) => {
       <div className='modal-body'>
         <h6>Who is the project administrator?</h6>
         <label className='project-admin'>Project administrator</label>
-        <AdministratorFields submitErrors={submitErrors} admin={'admins_attributes[0]'} />
+        <AdministratorFields submitErrors={submitErrors} admin={'admins[0]'} />
       </div>
       {renderSubmitButtons(props)}
     </div>
@@ -47,10 +47,10 @@ const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state),
-  username: selector(state, 'admins_attributes[0].username'),
-  last_name: selector(state, 'admins_attributes[0].last_name'),
-  first_name: selector(state, 'admins_attributes[0].first_name'),
-  email: selector(state, 'admins_attributes[0].email')
+  username: selector(state, 'admins[0].username'),
+  last_name: selector(state, 'admins[0].last_name'),
+  first_name: selector(state, 'admins[0].first_name'),
+  email: selector(state, 'admins[0].email')
 })
 
 export default connect(mapStateToProps)(ModalFirstAdmin)

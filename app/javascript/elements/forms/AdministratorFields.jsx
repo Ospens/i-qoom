@@ -1,4 +1,5 @@
 import React from 'react'
+import { Field } from 'redux-form'
 import InputField from '../InputField'
 
 const AdministratorFields = ({ submitErrors, admin }) => {
@@ -6,8 +7,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
     <React.Fragment>
       <div className='row'>
         <div className='form-group col-3'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.username`}
             id='username'
             errorField={submitErrors}
@@ -15,8 +17,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           />
         </div>
         <div className='form-group col-9'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.last_name`}
             id='last_name'
             errorField={submitErrors}
@@ -26,8 +29,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
       </div>
       <div className='custom_row'>
         <div className='form-group'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.first_name`}
             id='first_name'
             errorField={submitErrors}
@@ -37,8 +41,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
       </div>
       <div className='custom_row'>
         <div className='form-group'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.email`}
             id='email'
             errorField={submitErrors}
@@ -48,8 +53,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
       </div>
       <div className='row'>
         <div className='form-group col-3'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.phone_code`}
             id='phone_code'
             errorField={submitErrors}
@@ -57,8 +63,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           />
         </div>
         <div className='form-group col-9'>
-          <InputField
+          <Field
             type='text'
+            component={InputField}
             name={`${admin}.phone_number`}
             id='phone_number'
             errorField={submitErrors}

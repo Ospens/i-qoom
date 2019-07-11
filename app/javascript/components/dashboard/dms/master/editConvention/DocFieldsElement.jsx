@@ -83,8 +83,8 @@ class DocFieldsElement extends Component {
       )
     } else if (field.kind === 'textarea_field') {
       return (
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
@@ -104,7 +104,7 @@ class DocFieldsElement extends Component {
       )
     } else {
       return (
-        <InputField
+        <Field
           type='text'
           name={uniqName}
           id={uniqName}

@@ -7,8 +7,8 @@ import countryList from '../../components/landing/countriesCodes'
 const AddressFields = ({ submitErrors }) => (
   <React.Fragment>
     <div className='form-group'>
-      <InputField
-        type='text'
+      <Field
+        component={InputField}
         name='company_name'
         id='company_name'
         errorField={submitErrors}
@@ -17,8 +17,8 @@ const AddressFields = ({ submitErrors }) => (
     </div>
     <div className='row'>
       <div className='form-group col-8'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='street'
           id='street'
           errorField={submitErrors}
@@ -26,8 +26,8 @@ const AddressFields = ({ submitErrors }) => (
         />
       </div>
       <div className='form-group col-4'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='house_number'
           id='house_number'
           errorField={submitErrors}
@@ -37,8 +37,8 @@ const AddressFields = ({ submitErrors }) => (
     </div>
     <div className='row'>
       <div className='form-group col-8'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='city'
           id='city'
           errorField={submitErrors}
@@ -46,8 +46,8 @@ const AddressFields = ({ submitErrors }) => (
         />
       </div>
       <div className='form-group col-4'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='postcode'
           id='postcode'
           errorField={submitErrors}
@@ -66,8 +66,8 @@ const AddressFields = ({ submitErrors }) => (
     </div>
     <div className='row'>
       <div className='form-group col-6'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='district'
           id='district'
           errorField={submitErrors}
@@ -75,8 +75,8 @@ const AddressFields = ({ submitErrors }) => (
         />
       </div>
       <div className='form-group col-6'>
-        <InputField
-          type='text'
+        <Field
+          component={InputField}
           name='district_court'
           id='district_court'
           errorField={submitErrors}
