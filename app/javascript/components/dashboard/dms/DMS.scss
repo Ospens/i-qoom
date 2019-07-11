@@ -1204,7 +1204,7 @@ input.search-input {
 
       .form-group, .d-flex {
         .btn.btn-white-blue {
-          background-color:#f9f9f9 !important;
+          background-color:#f9f9f9;
         }
       }
     }
@@ -1213,6 +1213,10 @@ input.search-input {
   &.undraggable .form-group {
     background-color: #fff !important;
     cursor: auto !important;
+
+    .btn.btn-white-blue {
+      background-color:#fff !important;
+    }
   }
 }
 
@@ -1930,6 +1934,41 @@ input.search-input {
       min-height: 120px !important;
       height: 120px !important;
       max-height: 120px;
+    }
+  }
+}
+
+.document__email_addresses-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  .document__email_addresses-list__item {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    margin-right: 5px;
+    background: gray;
+    padding: 0.5em;
+    border-radius: 10px;
+    margin-top: 1rem;
+    color: #fff;
+    
+    span {
+      line-height: 1;
+    }
+
+    button {
+      width: 15px;
+      height: 15px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: initial;
+      border: none;
+      border-radius: 10px;
+      margin-left: 5px;
+      line-height: 1;
     }
   }
 }

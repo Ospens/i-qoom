@@ -105,7 +105,7 @@ class DocFieldsElement extends Component {
     } else {
       return (
         <Field
-          type='text'
+          component={InputField}
           name={uniqName}
           id={uniqName}
           placeholder={field.command}
@@ -147,6 +147,7 @@ class DocFieldsElement extends Component {
       field,
       column,
       removeField,
+      disabled,
       submitErrors
     } = this.props
 
@@ -166,10 +167,14 @@ class DocFieldsElement extends Component {
     const fieldErrors = submitErrors[`${column}${index}`]
 
     return (
-      <Draggable draggableId={`column_${column}_${index}`} index={index}>
+      <Draggable draggableId={`column_${column}_${index}`} index={index} isDragDisabled={disabled}>
         {(provided, snapshot) => (
           <div
-            className={classnames('draggable-container', { 'dragging': snapshot.isDragging })}
+            className={classnames(
+              'draggable-container',
+              { 'dragging': snapshot.isDragging },
+              { 'undraggable': disabled }
+            )}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}

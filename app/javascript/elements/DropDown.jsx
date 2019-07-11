@@ -28,7 +28,7 @@ class DropDown extends Component {
     const { dotsStyles } = this.props
     return (
       <ReactSVG
-        svgStyle={dotsStyles ? dotsStyles : { height: 15, width: 15 }}
+        svgStyle={dotsStyles ? dotsStyles : { height: 20, width: 20 }}
         src={dots}
       />
     )

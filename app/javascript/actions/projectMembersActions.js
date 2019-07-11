@@ -69,7 +69,7 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
   return (
     axios.post(`/api/v1/projects/${projectId}/members/`, request, headers)
       .then(response => {
-        dispatch(createProjectMember(response.data))
+        dispatch(createProjectMember(response.data.project_member[0]))
         dispatch(startFetchProjectMembers(projectId))
       })
       .catch(response => {

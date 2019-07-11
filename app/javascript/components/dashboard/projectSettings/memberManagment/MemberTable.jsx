@@ -38,16 +38,15 @@ const emplOptions = [
 ]
 
 const roleOptions = [
-  { value: 'Designer', title: 'Designer' },
-  { value: 'Electrian', title: 'Electrian' },
-  { value: 'Certifier', title: 'Certifier' },
-  { value: 'Other', title: 'Other' }
+  { value: 0, title: 'Designer' },
+  { value: 1, title: 'Electrian' },
+  { value: 2, title: 'Certifier' }
 ]
 
 const discOptions = [
-  { value: 'Design', title: 'Design' },
-  { value: 'Electrical', title: 'Electrical' },
-  { value: 'Certification', title: 'Certification' }
+  { value: 1, title: 'Design' },
+  { value: 2, title: 'Electrical' },
+  { value: 3, title: 'Certification' }
 ]
 
 class MemberTable extends Component {

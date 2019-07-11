@@ -252,11 +252,12 @@ class DocFieldsTable extends Component {
                       column={i + 1}
                       fields={fields[key]}
                       openInputForm={this.handleOpen}
+                      disabled={!!id}
                     />
                   </div>
                 ))}
               </div>
-              {this.renderModalButton(2, fields[2].length + 1)}
+              {!id && this.renderModalButton(2, fields[2].length + 1)}
             </div>
             {(() => {
               if (!id) {

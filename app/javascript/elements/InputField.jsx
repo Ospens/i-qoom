@@ -1,15 +1,16 @@
 import React from 'react'
 
-const InputField = ({ input, errorField = {}, className, label, placeholder, type }) => {
+const InputField = ({ input, errorField = {}, readOnly = false, className, label, type, ...props }) => {
   const errorInfo = errorField[input.name]
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
       <input
         {...input}
-        placeholder={placeholder}
+        {...props}
         type={type ? type : 'text'}
         className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
+        readOnly={readOnly}
       />
       <div className='invalid-feedback'>
         {errorInfo ? errorInfo[0] : ''}

@@ -17,9 +17,9 @@ import {
 import Left from '../../../../images/arrow-button-left'
 
 const options = [
-  { value: 0, title: 'Employee' },
-  { value: 1, title: 'Internal contractor' },
-  { value: 2, title: 'External contractor' }
+  { value: 1, title: 'Employee' },
+  { value: 2, title: 'Internal contractor' },
+  { value: 3, title: 'External contractor' }
 ]
 
 class AddMember extends Component {
@@ -34,8 +34,7 @@ class AddMember extends Component {
 
   handleSubmit = values => {
     const { startCreateProjectMember, projectId } = this.props
-    console.log(values)
-    startCreateProjectMember(values, projectId)
+    return startCreateProjectMember(values, projectId).then(this.closeModal)
   }
   
   changeStep = (val) => {
@@ -71,7 +70,7 @@ class AddMember extends Component {
         >
           Cancel
         </button>
-        {step < 3
+        {step < 4
           ? <button
             type='button'
             className='btn btn-purple'
@@ -179,6 +178,15 @@ class AddMember extends Component {
             />
           </div>
         </div>
+      </React.Fragment>
+    )
+  }
+
+  renderCompanyData = () => {
+    const { submitErrors } = this.props
+    return (
+      <React.Fragment>
+        <h6>Please enter company data</h6>
         <FormSection name='company_address'>
           <AddressFields submitErrors={submitErrors}/>
         </FormSection>
@@ -201,6 +209,8 @@ class AddMember extends Component {
                 case 2:
                   return this.renderCompanyEmplyee()
                 case 3:
+                  return this.renderCompanyData()
+                case 4:
                   return this.renderMemberDetails()
                 default:
                   return this.renderTypeEmployment()

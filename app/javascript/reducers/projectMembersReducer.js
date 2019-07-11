@@ -30,7 +30,7 @@ const projectMembersReducer = (state = initialState, action) => {
   case PROJECT_MEMBER_CREATED:
     return {
       ...state,
-      members: action.payload
+      members: state.members.concat([action.payload])
     }
   default:
     return state

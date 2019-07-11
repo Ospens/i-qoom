@@ -278,6 +278,7 @@ export class AdminBlock extends Component {
 
   renderAdminInfo = admin => {
     const { submitErrors, index, pristine } = this.props
+    const { adminInspectModal } = this.state
 
     return (
       <React.Fragment>
@@ -285,7 +286,6 @@ export class AdminBlock extends Component {
           <span className='mr-2'>{`Project administrator ${index}`}</span>
           {this.renderStatus(admin.status)}
           {this.renderAdminOptions(admin)}
-          {/*<DropDownMenu options={this.options(projectId, admin.id)} />*/}
         </div>
         <AdministratorFields
           submitErrors={submitErrors}
@@ -298,13 +298,17 @@ export class AdminBlock extends Component {
         >
           Save changes
         </button>}
+        <NewModal
+          content={this.renderAdminInspectModal(admin)}
+          open={adminInspectModal}
+          onClose={() => this.toggleModals('adminInspectModal', false)}
+        />
       </React.Fragment>
     )  
   }
 
   render() {
     const { initialValues: { admins } } = this.props
-    const { adminInspectModal } = this.state
 
     return (
       <form
@@ -315,11 +319,6 @@ export class AdminBlock extends Component {
         {admins[0]
           ? this.renderAdminInfo(admins[0])
           : this.renderButtonForCreate()}
-        <NewModal
-          content={this.renderAdminInspectModal(admins[0])}
-          open={adminInspectModal}
-          onClose={() => this.toggleModals('adminInspectModal', false)}
-        />
       </form>
     )
   }

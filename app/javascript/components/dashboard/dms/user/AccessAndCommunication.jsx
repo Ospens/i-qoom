@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Field } from 'redux-form'
+import { Field, FieldArray } from 'redux-form'
 import SelectField from '../../../../elements/SelectField'
 import CheckboxField from '../../../../elements/CheckboxField'
 import InputField from '../../../../elements/InputField'
@@ -17,10 +17,47 @@ const ddItems = [
 ]
 
 class AccessAndCommunication extends Component {
-  state = {  }
+  
+  updateEmails = (e, fields) => {
+    if (e.charCode !== 13) return
+    
+    const { change, untouch, dispatch } = this.props
+    fields.push(e.target.value)
+    dispatch(change('email_addresses', null))
+    dispatch(untouch('document_form', 'email_addresses'))
+  }
+  
+  renderField = ({ input: { value } }) => <span>{value}</span>
+
+  renderEmailSubjects = ({ fields }) => (
+    <React.Fragment>
+      <Field
+        component={InputField}
+        onKeyPress={e => this.updateEmails(e, fields)}
+        name='email_addresses'
+        id='email_addresses'
+        placeholder='E-mail and press Enter'
+        label='Enter E-mail addresses*'
+      />
+      <ul className='document__email_addresses-list'>
+        {fields.map((field, index) => (
+          <li className='document__email_addresses-list__item' key={index}>
+            <Field
+              name={field}
+              component={this.renderField}
+            />
+            <button type='button' onClick={() => fields.remove(index)}
+            >
+              x
+            </button>
+          </li>
+        ))}
+      </ul>
+    </React.Fragment>
+  )
 
   render() {
-    const { submitErrors, orig_company, backStep } = this.props
+    const { submitErrors, backStep } = this.props
 
     return (
       <React.Fragment>
@@ -31,12 +68,9 @@ class AccessAndCommunication extends Component {
         <form className='form-body'>
           <div className='p-4'>
             <div className='form-group'>
-              <Field
-                component={InputField}
-                name='email_addresses'
-                id='email_addresses'
-                placeholder='E-mail'
-                label='Enter E-mail addresses*'
+              <FieldArray
+                name='emails'
+                component={this.renderEmailSubjects}
               />
             </div>
             <div className='form-group'>
@@ -138,5 +172,5 @@ class AccessAndCommunication extends Component {
     )
   }
 }
- 
+
 export default AccessAndCommunication

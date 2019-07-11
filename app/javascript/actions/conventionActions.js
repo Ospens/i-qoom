@@ -10,7 +10,7 @@ import {
   CONVENTION_UPDATED,
   DISCARD_CONVENTION
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 
 
 export const fieldByColumn = data => {
@@ -72,6 +72,7 @@ export const startUpdateConvention = () => (dispatch, getState) => {
   })
 
   if (Object.entries(errors).length > 0) {
+    errorNotify('Something went wrong')
     throw new SubmissionError(errors)
   }
 
@@ -86,11 +87,12 @@ export const startUpdateConvention = () => (dispatch, getState) => {
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-
+        successNotify('The convention was updated!')
         dispatch(conventionUpdated(sortedData))
       })
-      .catch(() => {
+      .catch(errors => {
         errorNotify('Something went wrong')
+        throw new SubmissionError(errors)
       })
   )
 }
