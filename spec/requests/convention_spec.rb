@@ -28,14 +28,6 @@ describe Convention, type: :request do
       convention
     end
 
-    def assign_attributes_suffix(json)
-      json['document_fields_attributes'] = json.delete('document_fields')
-      json['document_fields_attributes'].each do |field|
-        field['document_field_values_attributes'] = field.delete('document_field_values')
-      end
-      json
-    end
-
     it '#edit' do
       get "/api/v1/projects/#{project.id}/conventions/edit", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
@@ -46,10 +38,10 @@ describe Convention, type: :request do
 
     it '#update' do
       title = Faker::Lorem.sentence
-      attrs = assign_attributes_suffix(convention.attributes_for_edit)
+      attrs = convention.attributes_for_edit
       convention_field =
-        attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
-      field_value = convention_field['document_field_values_attributes'].first
+        attrs['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
+      field_value = convention_field['document_field_values'].first
       expect(field_value['value']).to_not eql(title)
       field_value['value'] = title
       patch "/api/v1/projects/#{project.id}/conventions",\

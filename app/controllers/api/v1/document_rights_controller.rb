@@ -11,7 +11,7 @@ class Api::V1::DocumentRightsController < ApplicationController
   end
 
   def update
-    users_params[:users].each do |user_params|
+    users_params(true)[:users].each do |user_params|
       user = User.find(user_params[:id])
       user.update(user_params.except(:id).merge(accept_terms_and_conditions: true))
     end
@@ -24,7 +24,13 @@ class Api::V1::DocumentRightsController < ApplicationController
     authorize! :manage, @project
   end
 
-  def users_params
+  def users_params(assign_attrs = false)
+    if assign_attrs
+      params[:users].each do |user_params|
+        user_params[:document_rights_attributes] =
+          user_params.delete(:document_rights)
+      end
+    end
     params.permit(users: [
                     :id,
                     document_rights_attributes: [

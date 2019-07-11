@@ -17,6 +17,8 @@ class Api::V1::DmsSettingsController < ApplicationController
   private
 
   def dms_params
+    params[:project][:dms_settings_attributes] =
+      params[:project].delete(:dms_settings)
     params.require(:project).permit(dms_settings_attributes: [:id, :name, :value]).tap do |i|
       i[:dms_settings_attributes].each{ |k| k.merge!(user_id: signed_in_user.id) }
     end
