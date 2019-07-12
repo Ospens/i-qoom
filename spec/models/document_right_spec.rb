@@ -66,10 +66,12 @@ RSpec.describe DocumentRight, type: :model do
     field = attrs[:fields].detect{ |i| i['originating_company'].present? }['originating_company']
     expect(field.keys).to match_array([:id, :values])
     expect(field[:values].first.keys).to match_array(['id', 'value'])
-    attrs[:users].first[:document_rights_attributes].each do |right|
+    attrs[:users].first[:document_rights].each do |right|
       right['enabled'] = true
     end
     attrs[:users].each do |user_params|
+      user_params[:document_rights_attributes] =
+        user_params.delete(:document_rights)
       User.find(user_params[:id]).update!(user_params.except(:id).merge(accept_terms_and_conditions: true))
     end
     expect(Document.new(project: project).can_create?(user)).to eql(true)

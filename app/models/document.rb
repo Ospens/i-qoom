@@ -67,11 +67,11 @@ class Document < ApplicationRecord
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
-    doc['document_fields_attributes'] = []
+    doc['document_fields'] = []
     convention.document_fields.each do |field|
       field_attributes = field.build_for_new_document(user)
       if field_attributes.present?
-        doc['document_fields_attributes'] << field_attributes
+        doc['document_fields'] << field_attributes
       end
     end
     doc
@@ -110,11 +110,11 @@ class Document < ApplicationRecord
 
   def attributes_for_edit
     doc = attributes.except('id', 'created_at', 'updated_at', 'revision_version')
-    doc['document_fields_attributes'] = []
+    doc['document_fields'] = []
     document_fields.each do |field|
       field_attributes = field.build_for_edit_document
       if field_attributes.present?
-        doc['document_fields_attributes'] << field_attributes
+        doc['document_fields'] << field_attributes
       end
     end
     doc

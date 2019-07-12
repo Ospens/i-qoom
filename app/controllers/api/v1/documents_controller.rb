@@ -22,7 +22,7 @@ class Api::V1::DocumentsController < ApplicationController
   def create
     main = @project.document_mains.create
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(project_id: @project.id))
+    document = rev.versions.new(document_params(true).merge(project_id: @project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -36,7 +36,7 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new revision version
   def update
     project = @document.revision.document_main.project
-    document = @document.revision.versions.new(document_params.merge(project_id: project.id))
+    document = @document.revision.versions.new(document_params(true).merge(project_id: project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -48,7 +48,7 @@ class Api::V1::DocumentsController < ApplicationController
     authorize! :edit, @document
     main = @document.revision.document_main
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(project_id: main.project.id))
+    document = rev.versions.new(document_params(true).merge(project_id: main.project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -183,7 +183,16 @@ class Api::V1::DocumentsController < ApplicationController
     render json: { message: 'DMS is not available yet' }, status: :unprocessable_entity
   end
 
-  def document_params
+  def document_params(assign_attrs = false)
+    # assign_attrs is used to ensure that document_params is called from action
+    # instead of cancancan gem
+    if assign_attrs
+      params[:document][:document_fields_attributes] = params[:document].delete(:document_fields)
+      params[:document][:document_fields_attributes].each do |field|
+        next if field[:document_field_values].blank?
+        field[:document_field_values_attributes] = field.delete(:document_field_values)
+      end
+    end
     params.require(:document).permit(:issued_for,
                                      :email_title,
                                      :email_title_like_document,

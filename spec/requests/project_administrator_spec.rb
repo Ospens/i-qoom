@@ -36,7 +36,7 @@ describe "ProjectAdministrator", type: :request do
         get "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}/resend_confirmation",
                headers: headers
         expect(response).to have_http_status(:success)
-        expect(ActionMailer::Base.deliveries.count).to eq(1)
+        expect(ActionMailer::Base.deliveries.count).to eq(2)
       end
     end
     context "destroy" do
