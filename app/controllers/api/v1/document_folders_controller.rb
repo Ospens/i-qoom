@@ -2,7 +2,7 @@ class Api::V1::DocumentFoldersController < ApplicationController
   load_and_authorize_resource
 
   def create
-    document_folder = signed_in_user.document_folders.new(document_folder_params)
+    document_folder = signed_in_user.document_folders.new(document_folder_params(true))
     if document_folder.save
       render json: document_folder, include: :document_fields
     else
@@ -15,7 +15,7 @@ class Api::V1::DocumentFoldersController < ApplicationController
   end
 
   def update
-    if @document_folder.update(document_folder_params)
+    if @document_folder.update(document_folder_params(true))
       render json: @document_folder, include: :document_fields
     else
       render json: @document_folder.errors, status: :unprocessable_entity
@@ -39,7 +39,11 @@ class Api::V1::DocumentFoldersController < ApplicationController
 
   private
 
-  def document_folder_params
+  def document_folder_params(assign_attrs = false)
+    if assign_attrs
+      params[:document_folder][:document_fields_attributes] =
+        params[:document_folder].delete(:document_fields)
+    end
     params.require(:document_folder).permit(:title,
                                             :project_id,
                                              document_fields_attributes:

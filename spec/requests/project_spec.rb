@@ -32,7 +32,7 @@ describe "Project", type: :request do
       it 'should get a status "success"' do
         post "/api/v1/projects",
           params: { project:
-                    { admins_attributes:
+                    { admins:
                       { id: "",
                         email: Faker::Internet.email
                       }
@@ -56,7 +56,7 @@ describe "Project", type: :request do
         it 'should get a status "success" and add new admin to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: { project:
-                      { admins_attributes:
+                      { admins:
                         { id: "",
                           email: "someemail@gmail.com" } } }.to_json,
             headers: headers
@@ -70,7 +70,7 @@ describe "Project", type: :request do
             add an admin' do
           patch "/api/v1/projects/#{project.id}",
             params: { project:
-                      { admins_attributes:
+                      { admins:
                         { id: "",
                           email: "notemail" } } }.to_json,
             headers: headers
@@ -109,9 +109,9 @@ describe "Project", type: :request do
         it 'should get a status "success" and add a company data to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: {
-              project: FactoryBot.attributes_for(:project_company_data_step,
-                company_data_attributes: FactoryBot.attributes_for(:project_company_data,
-                  company_address_attributes: FactoryBot.attributes_for(:address)))
+              project: FactoryBot.attributes_for(:project_company_data_step)
+                        .merge(company_data: FactoryBot.attributes_for(:project_company_data)
+                        .merge(company_address: FactoryBot.attributes_for(:address)))
             }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
@@ -122,10 +122,10 @@ describe "Project", type: :request do
         it 'should get a status "success" and add billing address to the project' do
           patch "/api/v1/projects/#{project.id}",
             params: {
-              project: FactoryBot.attributes_for(:project_company_data_step,
-                company_data_attributes: FactoryBot.attributes_for(:project_company_data,
-                  same_for_billing_address: "1",
-                  company_address_attributes: FactoryBot.attributes_for(:address)))
+              project: FactoryBot.attributes_for(:project_company_data_step)
+                        .merge(company_data: FactoryBot.attributes_for(:project_company_data,
+                                                                        same_for_billing_address: "1")
+                        .merge(company_address: FactoryBot.attributes_for(:address)))
             }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
@@ -153,8 +153,8 @@ describe "Project", type: :request do
             params: {
               project: {
                 creation_step: "billing_address",
-                company_data_attributes: {
-                  billing_address_attributes: FactoryBot.attributes_for(:address)
+                company_data: {
+                  billing_address: FactoryBot.attributes_for(:address)
                 }
               }
             }.to_json,
@@ -177,8 +177,8 @@ describe "Project", type: :request do
             params: {
               project: {
                 creation_step: "billing_address",
-                company_data_attributes: {
-                  billing_address_attributes: { street: "unknown" }
+                company_data: {
+                  billing_address: { street: "unknown" }
                 }
               }
             }.to_json,

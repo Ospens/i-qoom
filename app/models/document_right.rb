@@ -58,16 +58,7 @@ class DocumentRight < ApplicationRecord
                                                  'view_only')
         end
       end
-      attrs[:users] << {
-        id: user.id,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        username: user.username,
-        email: user.email,
-        # TODO: change this
-        team: user.id == 3 ? { name: 'Workgroup Team', members: 12 } : nil,
-        document_rights_attributes: rights_attrs
-      }
+      attrs[:users] << { id: user.id, document_rights: rights_attrs }
     end
     attrs
   end

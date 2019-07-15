@@ -11,7 +11,7 @@ class Api::V1::ConventionsController < ApplicationController
   end
 
   def update
-    @convention = @project.conventions.new(convention_params.merge(number: 1))
+    @convention = @project.conventions.new(convention_params(true).merge(number: 1))
     if @convention.save
       render json: @convention.attributes_for_edit
     else
@@ -26,7 +26,15 @@ class Api::V1::ConventionsController < ApplicationController
     @convention = conventions.active.presence || conventions.new
   end
 
-  def convention_params
+  def convention_params(assign_attrs = false)
+    if assign_attrs
+      params[:convention][:document_fields_attributes] =
+        params[:convention].delete(:document_fields)
+      params[:convention][:document_fields_attributes].each do |field|
+        next if field[:document_field_values].blank?
+        field[:document_field_values_attributes] = field.delete(:document_field_values)
+      end
+    end
     params.require(:convention).permit(document_fields_attributes:
                                         [ :kind,
                                           :codification_kind,
