@@ -1,0 +1,2 @@
+class DocumentReviewSubject < ApplicationRecord
+end
