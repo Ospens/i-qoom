@@ -230,6 +230,15 @@ RSpec.describe Document, type: :model do
           expect(doc.errors.count).to eql(1)
         end
       end
+
+      it 'title' do
+        doc = Document.new(@attrs)
+        expect(doc).to be_valid
+        Convention.find(@attrs['convention_id']).document_fields.find_by(codification_kind: :originating_company).document_field_values.first.update!(title: nil)
+        field_value['title'] = nil
+        doc = Document.new(@attrs)
+        expect(doc).to be_valid
+      end
     end
   end
 
