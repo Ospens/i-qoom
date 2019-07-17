@@ -87,7 +87,10 @@ class SideBar extends Component {
             <span className='light-grey'>Frequently used</span>
           </li>
           <SideBarItem path='/dashboard/' label='Dashboard' />
-          <SideBarItem path='/dashboard/' label='Contracts' />
+          <SideBarItem 
+            path={`/dashboard/projects/${currentProject.id}`}
+            label='Project'
+          />
           <SideBarItem
             path={`/dashboard/projects/${currentProject.id}/documents/`}
             root={`/dashboard/projects/${currentProject.id}/documents/`}
@@ -143,7 +146,7 @@ class SideBar extends Component {
             />
           </div>
           {(() => {
-            if (currentProject.id) {
+            if (currentProject.id && pathname !== '/dashboard/') {
               return(this.renderProjectContent())
             } else if (pathname.includes('/dashboard')) {
               return (this.renderDashboardContent())

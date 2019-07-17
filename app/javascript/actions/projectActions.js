@@ -60,7 +60,6 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
   return (
     axios.put(`/api/v1/projects/${values.id}`, request, headers)
       .then(response => {
-        console.log(response)
         dispatch(projectUpdated(response.data))
         if (afterUpdate) afterUpdate({ ...response.data.project[0] })
       })
@@ -131,12 +130,10 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
   return (
     axios.delete(`/api/v1/projects/${projectId}/admins/${adminId}`, headers)
       .then(response => {
-        console.log(response)
         successNotify(response.data.message)
         dispatch(adminDeleted(adminId))
       })
-      .catch(response => {
-        console.log(response)
+      .catch(() => {
         errorNotify('Something went wrong')
       })
   )
@@ -159,7 +156,6 @@ export const starUpdateAdmin = values => (dispatch, getState) => {
       })
       .catch(response => {
         errorNotify('Something went wrong')
-        console.log(response)
         throw new SubmissionError(response.data.error_messages)
       })
   )

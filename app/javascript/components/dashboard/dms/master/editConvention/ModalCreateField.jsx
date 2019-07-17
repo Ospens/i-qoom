@@ -27,27 +27,27 @@ import ModalLimitAccess from './ModalLimitAccess'
 const typeVariants = [
   {
     value: 'text_field',
-    label: 'Textbox (one row)',
+    title: 'Textbox (one row)',
     icon: textIcon
   },
   {
     value: 'select_field',
-    label: 'Dropdown',
+    title: 'Dropdown',
     icon: dropdownIcon
   },
   {
     value: 'textarea_field',
-    label: 'Textbox (Comment)',
+    title: 'Textbox (Comment)',
     icon: textareaIcon
   },
   {
     value: 'upload_field',
-    label: 'Upload field',
+    title: 'Upload field',
     icon: uploadIcon
   },
   {
     value: 'date_field',
-    label: 'Date field',
+    title: 'Date field',
     icon: dateIcon
   }
 ]
@@ -103,7 +103,7 @@ class ModalCreateField extends Component {
     const newValue = {
       id: null,
       value: newSection,
-      label: newSection
+      title: newSection
     }
 
     document_field_values.splice(position, 0, newValue)

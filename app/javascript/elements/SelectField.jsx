@@ -13,7 +13,7 @@ const DropdownIndicator = props => {
 }
 
 const Option = props => {
-  const { data: { icon, label }} = props
+  const { data: { icon, title }} = props
   if (icon) {
     return (
       <components.Option {...props}>
@@ -22,14 +22,14 @@ const Option = props => {
             svgStyle={{ width: 50, marginRight: 10 }}
             src={icon}
           />
-          <span>{label}</span>
+          <span>{title}</span>
         </div>
       </components.Option>
     )
   } else {
     return (
       <components.Option {...props} >
-        <span>{props.data.title}</span>
+        <span>{props.data.title || props.data.value}</span>
       </ components.Option>
     )
   }
@@ -38,7 +38,7 @@ const Option = props => {
 const SingleValue = props => {
   return (
     <components.SingleValue {...props}>
-      {props.data.title}
+      {props.data.title || props.data.value}
     </components.SingleValue>
   )
 }
@@ -46,7 +46,7 @@ const SingleValue = props => {
 const MultiValueLabel = props => {
   return (
     <components.MultiValueLabel {...props}>
-      {props.data.title}
+      {props.data.title || props.data.value}
     </components.MultiValueLabel>
   )
 }
@@ -60,7 +60,7 @@ const IndicatorSeparator = ({ innerProps }) => {
 const checkValue = (options, input) => {
   if (typeof input.value === 'string' || typeof input.value === 'number') {
     return options.filter(option => input.value === option.value)
-  } else if (typeof input.value === 'object') {
+  } else if (typeof input.value === 'object' && Object.keys(input.value)) {
     return options.filter(option => input.value.includes(option.value))
   }
 }
@@ -105,7 +105,7 @@ export const SelectComponent = props => (
   />
 )
 
-const SelectField = ({ input, options, errorField, id, label, placeholder, isDisabled = false, isMulti= false }) => {
+const SelectField = ({ input, options, errorField, label, placeholder, isDisabled = false, isMulti = false }) => {
   const errorInfo = errorField ? errorField[input.name] : false
 
   return (

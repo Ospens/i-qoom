@@ -429,9 +429,11 @@ button:disabled {
   .dropdown {
     margin-left: auto;
 
-    .item * {
-      transition-duration: 0s !important;
-      transition: 0s ease-in-out !important;
+    .item {
+      *:not(path) {
+        transition-duration: 0s !important;
+        transition: 0s ease-in-out !important;
+      }
     }
   }
 
@@ -440,7 +442,7 @@ button:disabled {
       display: flex !important;
 
       .item-text {
-        align-self: flex-end;
+        align-self: center;
         margin-left: 5px;
       }
     }

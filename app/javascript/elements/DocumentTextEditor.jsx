@@ -76,42 +76,22 @@ const fontColorConfig = {
   ]
 }
 
-class DocumentTextEditor extends Component {
+const renderDocumentTextEditor = ({ input }) => (
+  <CKEditor
+    editor={ClassicEditor}
+    config={{
+      plugins: [Essentials, Autoformat, FontFamily, Heading, Bold, FontSize, Alignment, FontColor],
+      toolbar: [
+        'heading', 'fontFamily', 'fontSize', 'fontColor', 'bold', 'alignment'
+      ],
+      fontColor: fontColorConfig
+    }}
+    onChange={(_event, editor) => {
+      const data = editor.getData()
+      input.onChange(data)
+    }}
+    content={input.value}
+  />
+)
 
-  renderEditor = (text) => (
-    <CKEditor
-      editor={ClassicEditor}
-      config={{
-        plugins: [Essentials, Autoformat, FontFamily, Heading, Bold, FontSize, Alignment, FontColor],
-        toolbar: [
-          'heading', 'fontFamily', 'fontSize', 'fontColor', 'bold', 'alignment'
-        ],
-        fontColor: fontColorConfig
-      }}
-      data={text}
-      onInit={editor => {
-        console.log('Editor is ready to use!', editor.config._config.plugins)
-      }}
-      onChange={(event, editor) => {
-        const data = editor.getData()
-        console.log({ event, editor, data })
-      }}
-      onBlur={editor => {
-        this.setState({ editor: false })
-      }}
-      onFocus={editor => {
-      }}
-    />
-  )
-
-  render() {
-    const { text } = this.props
-    return (
-      <React.Fragment>
-        {this.renderEditor(text)}
-      </React.Fragment>
-    )
-  }
-}
-
-export default DocumentTextEditor
+export default renderDocumentTextEditor

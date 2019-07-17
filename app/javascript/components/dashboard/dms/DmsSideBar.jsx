@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, Route } from 'react-router-dom'
 import ReactSVG from 'react-svg'
+import classnames from 'classnames'
 import overviewIcon from '../../../images/task-checklist-check'
 import dmsSettingsIcon from '../../../images/task-list-settings'
 import docPlanIcon from '../../../images/calendar-3'
-import classnames from 'classnames'
 
-export const DmsSideBarItem = ({ path, label, icon, root, nested}) => (
+export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
   <Route path={path} exact>
     {({ match, location }) => {
       const matched = match || location.pathname.indexOf(root) > -1

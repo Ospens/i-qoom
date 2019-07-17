@@ -15,8 +15,8 @@ const initialState = {
   current: {
     document_field_values: [],
     grouped_fields: {
-      1: {},
-      2: {}
+      1: [{}],
+      2: [{}]
     }
   },
   currentDefault: {},
@@ -28,12 +28,8 @@ const conventionReducer = (state = initialState, action) => {
   case EDITING_CONVENTION:
     return {
       ...state,
-      current: {
-        ...action.payload
-      },
-      currentDefault: {
-        ...action.payload
-      }
+      current: action.payload,
+      currentDefault: action.payload
     }
   case CONVENTION_UPDATED:
     return {

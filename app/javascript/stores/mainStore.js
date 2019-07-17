@@ -13,7 +13,7 @@ import conventionReducer from '../reducers/conventionReducer'
 import accessRightsReducer from '../reducers/accessRightsReducer'
 import filterReducer from '../reducers/filterReducer'
 import distributionGroupReducer from '../reducers/distributionGroupReducer'
-import { loadState, saveState } from './localStorage'
+import loadState from './localStorage'
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -32,16 +32,16 @@ const persistedState = loadState()
 
 const store = createStore(
   rootReducer,
-  persistedState.state,
+  persistedState,
   composeWithDevTools(
     applyMiddleware(thunk)
   )
 )
-
+/*
 store.subscribe(() => {
   saveState({
     state: store.getState()
   })
 })
-
+*/
 export default store

@@ -25,14 +25,16 @@ const initialState = {
   ],
   newDocumentFields: {
     grouped_fields: {
-      1: {},
-      2: {}
+      1: [{}],
+      2: [{}]
     }
   }
 }
 
 const documentsReducer = (state = initialState, action) => {
   switch (action.type) {
+  case 'DOCUMENT_TEST':
+    return initialState
   case DOCUMENT_CREATE_SUCCESS:
     return {
       ...state,

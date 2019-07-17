@@ -14,9 +14,9 @@ import { errorNotify, successNotify } from '../elements/Notices'
 
 
 export const fieldByColumn = data => {
-  const fields = data.document_fields_attributes || data.document_fields
-  const sorted = fields.reduce((accumulator, currentValue) => {
-    accumulator[currentValue.column].push(currentValue)
+  const fields = data.document_fields || data.document_fields
+  const sorted = fields.reduce((accumulator, currentValue, index) => {
+    accumulator[currentValue.column].push({ ...currentValue, index })
     return accumulator
   }, { 1: [], 2: [] })
 
@@ -45,9 +45,8 @@ export const discardConvention = () => ({
   type: DISCARD_CONVENTION
 })
 
-export const startUpdateConvention = () => (dispatch, getState) => {
-  const { user: { token }, conventions: { current }, projects } = getState()
-  const projectId = projects.current.id
+export const startUpdateConvention = projectId => (dispatch, getState) => {
+  const { user: { token }, conventions: { current } } = getState()
   const headers = { headers: { Authorization: token } }
   const docFields = []
   const errors = {}
@@ -62,23 +61,22 @@ export const startUpdateConvention = () => (dispatch, getState) => {
 
       const newRow = {
         ...row,
-        document_field_values_attributes: row.document_field_values,
         column: k,
         row: i + 1
       }
-      delete newRow.document_field_values
+
       docFields.push(newRow)
     })
   })
 
   if (Object.entries(errors).length > 0) {
-    errorNotify('Something went wrong')
+    errorNotify('Please add values for select fields')
     throw new SubmissionError(errors)
   }
 
   const request = {
     convention: {
-      document_fields_attributes: docFields
+      document_fields: docFields
     }
   }
 
@@ -90,21 +88,20 @@ export const startUpdateConvention = () => (dispatch, getState) => {
         successNotify('The convention was updated!')
         dispatch(conventionUpdated(sortedData))
       })
-      .catch(errors => {
+      .catch(err => {
         errorNotify('Something went wrong')
-        throw new SubmissionError(errors)
+        throw new SubmissionError(err)
       })
   )
 }
 
-export const startEditConvention = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
+export const startEditConvention = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/conventions/edit`, headers)
+    axios.get(`/api/v1/projects/${projectId}/conventions/edit`, headers)
       .then(response => {
-        console.log(response)
         const { data } = response
         const sortedData = fieldByColumn(data)
         dispatch(editingConvention(sortedData))

@@ -4,12 +4,27 @@ import classnames from 'classnames'
 import ReactSVG from 'react-svg'
 import fileIcon from '../images/common-file-text_active'
 
-function DropZoneField(props) {
-  const { input, label, isDisabled = false } = props
+const fileProperties = [
+  'lastModified',
+  'lastModifiedDate',
+  'name',
+  'path',
+  'preview',
+  'size',
+  'type',
+  'webkitRelativePath'
+]
+
+function DropZoneField({ input, label, isDisabled = false }) {
 
   const onDrop = useCallback(acceptedFiles => {
-    input.onChange(acceptedFiles[0])
-    // console.log(acceptedFiles)
+    const fileBlob = acceptedFiles[0]
+    const newFile = {}
+    fileProperties.forEach(key => {
+      newFile[key] = fileBlob[key]
+    })
+    input.onChange(acceptedFiles)
+
   }, [])
 
   const {
@@ -21,7 +36,7 @@ function DropZoneField(props) {
   } = useDropzone({
     disabled: isDisabled,
     onDrop,
-    accept: 'image/png',
+    accept: 'application/pdf',
     minSize: 0
   })
 
@@ -33,14 +48,15 @@ function DropZoneField(props) {
       'disabled': isDisabled
     }
   )
-
+  
+  const currentFile = input.value ? input.value[0] : acceptedFiles[0]
   return (
     <section>
       {label && <label htmlFor={input.name}>{label}</label>}
-      <div {...getRootProps()} className={mainClass}>
+      <div {...getRootProps()} {...input} className={mainClass}>
         <input {...getInputProps()} />
         {(() => {
-          if (acceptedFiles[0]) {
+          if (currentFile) {
             return (
               <div className='accepted-file'>
                 <ReactSVG
@@ -49,7 +65,7 @@ function DropZoneField(props) {
                 />
                 <div className='accepted-file__text'>
                   <p>Old file</p>
-                  <span className='file-name'>{acceptedFiles[0].name}</span>
+                  <span className='file-name'>{currentFile.name}</span>
                   <span>Replace the document file</span>
                 </div>
               </div>

@@ -48,12 +48,12 @@ export const getGrandedAccessMembers = () => (dispatch, getState) => {
 export const startUpdateAccessMembers = (newUsers, removeUsers) => (dispatch, getState) => {
   const {
     user: { token },
-    projects: { current },
-    accessRights: { newMembers }
+    projects: { current }
+    // accessRights: { newMembers }
   } = getState()
   const headers = { headers: { Authorization: token } }
-  let users = newMembers.filter(member => newUsers.includes(member.id))
-  users = users.map(user => user.enabled === true)
+  // let users = newMembers.filter(member => newUsers.includes(member.id))
+  // users = users.map(user => user.enabled === true)
   const request = { newUsers, removeUsers }
 
   return (

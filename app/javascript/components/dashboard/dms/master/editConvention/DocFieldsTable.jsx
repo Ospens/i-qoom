@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import {
   startEditConvention,
   startUpdateConvention,
@@ -24,18 +25,18 @@ class DocFieldsTable extends Component {
 
   state = initState
 
+  componentWillMount() {
+    const { editConvention, match: { params: { project_id } } } = this.props
+    editConvention(project_id)
+  }
+  
   handleOpen = (column, row, isEdit) => this.setState({ modalOpen: true, column, row, isEdit })
 
   handleClose = () => this.setState({ ...initState })
 
   handleSubmit = () => {
-    const { startUpdateConvention } = this.props
-    return startUpdateConvention()
-  }
-
-  componentWillMount() {
-    const { editConvention } = this.props
-    editConvention()
+    const { startUpdateConvention, match: { params: { project_id } }  } = this.props
+    return startUpdateConvention(project_id)
   }
 
   onDragEnd = result => {
@@ -285,13 +286,13 @@ const mapStateToProps = ({ conventions }) => ({
 
 const mapDispatchToProps = dispatch => ({
   reorderFields: (result, fields) => dispatch(reorderFields(result, fields)),
-  editConvention: () => dispatch(startEditConvention()),
-  startUpdateConvention: (values) => dispatch(startUpdateConvention(values)),
+  editConvention: projectId => dispatch(startEditConvention(projectId)),
+  startUpdateConvention: (projectId, values) => dispatch(startUpdateConvention(projectId, values)),
   discardConvention: () => dispatch(discardConvention())
 })
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps, mapDispatchToProps
   )(reduxForm({
     form: 'convention_form'
-  })(DocFieldsTable))
+  })(DocFieldsTable)))

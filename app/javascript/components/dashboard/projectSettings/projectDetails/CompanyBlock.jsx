@@ -21,7 +21,10 @@ export class CompanyBlock extends Component {
   handleSubmit = values => {
     const { updateProject } = this.props
     return updateProject(values)
-      .then(() => successNotify('The changes were successfully saved!'))
+      .then(() => {
+        successNotify('The changes were successfully saved!')
+        this.toggleModals('billingForm', false)
+      })
   }
 
   modalButtons = () => {
