@@ -79,6 +79,22 @@ class Api::V1::ProjectsController < ApplicationController
   private
 
   def project_params
+    if params[:project][:admins]
+      params[:project][:admins_attributes] =
+        params[:project][:admins]
+      params[:project].delete(:admins)
+    end
+    if params[:project][:company_data].present?
+      params[:project][:company_data][:company_address_attributes] =
+        params[:project][:company_data][:company_address]
+      params[:project][:company_data].delete(:company_address)
+      params[:project][:company_data][:billing_address_attributes] =
+        params[:project][:company_data][:billing_address]
+      params[:project][:company_data].delete(:billing_address)
+      params[:project][:company_data_attributes] =
+        params[:project][:company_data]
+      params[:project].delete(:company_data)
+    end
     params.fetch(:project,
                  { }).permit(:name,
                              :creation_step,

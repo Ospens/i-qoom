@@ -45,6 +45,9 @@ class Api::V1::ProjectMembersController < ApplicationController
   private
 
   def project_member_params
+    params[:project_member][:company_address_attributes] =
+      params[:project_member][:company_address]
+    params[:project_member].delete(:company_address)
     params.fetch(:project_member,
                  { }).permit(:creation_step,
                              :employment_type,
