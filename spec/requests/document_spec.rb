@@ -111,6 +111,23 @@ describe Document, type: :request do
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
+    it 'expect DocumentMain is not created if document is invalid' do
+      DocumentRevision.destroy_all
+      DocumentMain.destroy_all
+      @params[:document]['document_fields'].first['kind'] = nil
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(DocumentMain.count).to eql(0)
+    end
+
+    it 'expect DocumentRevision is not created if document is invalid' do
+      DocumentRevision.destroy_all
+      @params[:document]['document_fields'].first['kind'] = nil
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(DocumentRevision.count).to eql(0)
+    end
+
     it 'emails' do
       @params[:document]['emails'] = [Faker::Internet.email]
       dbl = double
@@ -226,6 +243,24 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
         expect(document.revision.document_main.revisions.count).to eql(2)
+      end
+
+      it 'expect DocumentMain is not created if document is invalid' do
+        document
+        expect(DocumentMain.count).to eql(1)
+        attrs['document_fields'].first['kind'] = nil
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(DocumentMain.count).to eql(1)
+      end
+
+      it 'expect DocumentRevision is not created if document is invalid' do
+        document
+        expect(DocumentRevision.count).to eql(1)
+        attrs['document_fields'].first['kind'] = nil
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(DocumentRevision.count).to eql(1)
       end
 
       it 'owner' do
