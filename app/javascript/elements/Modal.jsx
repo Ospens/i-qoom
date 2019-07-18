@@ -1,21 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Modal } from 'semantic-ui-react'
 
-class NewModal extends Component {
-  render() {
-    const { content, trigger, modalOpen, handleClose } = this.props
+const NewModal = ({ content, ...props}) => {
 
-    // TODO: change new modal styles
-    return (
-      <Modal
-        trigger={trigger}
-        open={modalOpen}
-        onClose={handleClose}
-        className='modal-window'
-      >
-        {content}
-      </Modal>
-    )
-  }
+  // TODO: change new modal styles
+  return (
+    <Modal {...props} className='modal-window'>
+      {content}
+    </Modal>
+  )
 }
+
 export default NewModal

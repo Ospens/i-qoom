@@ -60,7 +60,7 @@ class UsersTable extends Component {
     return (
       <div className='user-table-block'>
         <h3 className='mb-5'>Users - Choose member to observe</h3>
-        <Table sortable className='mamber-managment-table'>
+        <Table sortable className='main-table-block'>
           <Table.Header>
             <Table.Row>
               {columns.map(({ title, divider }) => (

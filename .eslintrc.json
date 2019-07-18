@@ -16,7 +16,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "react-hooks"
     ],
     "rules": {
       "indent": [
@@ -39,6 +40,8 @@
       "arrow-parens": [
         "error",
         "as-needed"
-      ]
+      ],
+      "react-hooks/rules-of-hooks": "error", 
+      "react-hooks/exhaustive-deps": "warn"
     }
 }

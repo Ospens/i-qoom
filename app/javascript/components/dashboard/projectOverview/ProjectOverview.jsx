@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ReactSVG from 'react-svg'  
 import cogs from '../../../images/cog-double'
-import WelcomeModal from './ModalWelcome'
+import WelcomeModal from './Welcome'
 import ModalCreateProject from './ModalCreateProject'
 import { startFetchProjects, exitProject } from '../../../actions/projectActions'
 

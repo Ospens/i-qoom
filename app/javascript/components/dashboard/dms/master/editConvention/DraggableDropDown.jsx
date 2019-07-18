@@ -16,7 +16,14 @@ portal.classList.add('draggable-portal')
 class DropDownElement extends Component {
 
   render() {
-    const { index, field, addNewSection } = this.props
+    const {
+      index,
+      field,
+      addNewSection,
+      changeDDSection,
+      copySection,
+      removeSection
+    } = this.props
 
     const newDDElementOtions = [
       {
@@ -31,11 +38,13 @@ class DropDownElement extends Component {
       },
       {
         title: 'Copy',
-        icon: copyIcon
+        icon: copyIcon,
+        onClick: ((index) => copySection(index))
       },
       {
         title: 'Delete',
-        icon: trashIcon
+        icon: trashIcon,
+        onClick: ((index) => removeSection(index))
       }
     ]
     document.body.appendChild(portal)
@@ -57,16 +66,11 @@ class DropDownElement extends Component {
                   type='text'
                   className='form-control'
                   value={field.value}
-                  onChange={() => (console.log('change me'))}
+                  onChange={(e) => changeDDSection(e.target.value, index)}
                 />
                 <DropDown
-                  btnComponent={
-                    <ReactSVG
-                      className='svg-container'
-                      svgStyle={{ height: 25, width: 25, marginLeft: 10 }}
-                      src={dots}
-                    />
-                  }
+                  dots={true}
+                  dotsStyles={{ height: 25, width: 25, marginLeft: 10 }}
                   className='dropdown-with-icon dropleft'
                 >
                   {newDDElementOtions.map(({icon, title, onClick }, i) => (
@@ -99,7 +103,14 @@ class DropDownElement extends Component {
 
 class DropDownColumn extends Component {
   render() {
-    const { sections, column, addNewSection } = this.props
+    const {
+      sections,
+      column,
+      addNewSection,
+      changeDDSection,
+      removeSection,
+      copySection
+    } = this.props
 
     return (
       <Droppable droppableId='column_1'>
@@ -114,6 +125,9 @@ class DropDownColumn extends Component {
               return (
                 <DropDownElement
                   addNewSection={addNewSection}
+                  removeSection={removeSection}
+                  copySection={copySection}
+                  changeDDSection={changeDDSection}
                   key={i}
                   column={column}
                   field={field}
@@ -132,11 +146,24 @@ class DropDownColumn extends Component {
 class DraggableDropDown extends Component {
 
   render() {
-    const { sections, onDragEnd, addNewSection } = this.props
+    const {
+      sections,
+      onDragEnd,
+      addNewSection,
+      changeDDSection,
+      removeSection,
+      copySection
+    } = this.props
 
     return (
       <DragDropContext onDragEnd={onDragEnd}>
-        <DropDownColumn sections={sections} addNewSection={addNewSection}/>
+        <DropDownColumn
+        sections={sections}
+        addNewSection={addNewSection}
+        removeSection={removeSection}
+        copySection={copySection}
+        changeDDSection={changeDDSection}
+      />
       </DragDropContext>
     )
   }

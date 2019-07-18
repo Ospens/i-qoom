@@ -5,7 +5,7 @@ import ModalComponent from '../../../elements/ModalComponent'
 import InputField from '../../../elements/InputField'
 import TextAreaField from '../../../elements/TextAreaField'
 import SelectField from '../../../elements/SelectField'
-import DragAndDropField from '../../../elements/DragAndDropField'
+import DropZoneField from '../../../elements/DropZoneField'
 import searchIcon from '../../../images/search-alternate-gray'
 import attachIcon from '../../../images/attachment-1'
 import dotsIcon from '../../../images/dots-horizontal'
@@ -58,8 +58,8 @@ class ModalAddComment extends Component {
 
             <form>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='subject'
                   id='subject'
                   errorField={[submitErrors]}
@@ -68,8 +68,8 @@ class ModalAddComment extends Component {
                 />
               </div>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='referance'
                   id='referance'
                   errorField={[submitErrors]}
@@ -111,7 +111,7 @@ class ModalAddComment extends Component {
                   name='file'
                   id='file'
                   label='Add supportive file here'
-                  component={DragAndDropField}
+                  component={DropZoneField}
                 />
               </div>
 

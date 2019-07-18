@@ -107,12 +107,12 @@ class LandingMenu extends Component {
     const { projects } = this.props
     const projectCardClass = classnames('landing-menu__card landing-project-card', { 'open': projectsOpen })
     // TODO: change this
-    const prjLenght = projects.length > 3 ? 3 : projects.length
+    const prjlength = projects.length > 3 ? 3 : projects.length
     projects.slice(0, 4).map((el, i) => (
       menuListFirstRow[i]['project'] = el
     ))
-    {[...Array(3 - prjLenght)].map((_, i) => (
-      menuListFirstRow[i + prjLenght]['project'] = { id: 0 }
+    {[...Array(3 - prjlength)].map((_, i) => (
+      menuListFirstRow[i + prjlength]['project'] = { id: 0 }
     ))}
 
     return (

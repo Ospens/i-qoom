@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { getFormSubmitErrors, reduxForm } from 'redux-form'
+import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
 import { Redirect } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
@@ -10,8 +10,6 @@ import Left from '../../images/arrow-button-left'
 
 class SignIn extends Component {
   state = {
-    login: null,
-    password: null,
     loginSuccess: false
   }
 
@@ -21,10 +19,9 @@ class SignIn extends Component {
     })
   }
 
-  handleSubmit = () => {
-    const { login, password } = this.state
-    const { signInUser, history } = this.props
-    return signInUser(login, password, history).then(() => this.setState({ loginSuccess: true }))
+  handleSubmit = values => {
+    const { signInUser } = this.props
+    return signInUser(values).then(() => this.setState({ loginSuccess: true }))
   }
 
   render() {
@@ -45,23 +42,22 @@ class SignIn extends Component {
                 <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
                   <h2 className='sign-in-form__header text-center'>Log into your accont</h2>
                   <div className='form-group'>
-                    <InputField
-                      type='text'
+                    <Field
+                      component={InputField}
                       name='login'
                       id='login'
                       label='Type in e-mail adress or I-qoom ID'
-                      onChange={this.handleChange}
                       errorField={submitErrors}
                       placeholder='Company name'
                     />
                   </div>
                   <div className='form-group pt-4'>
-                    <InputField
+                    <Field
+                      component={InputField}
                       type='password'
                       name='password'
                       id='password'
                       label='Type in password'
-                      onChange={this.handleChange}
                       errorField={submitErrors}
                       placeholder='Password'
                     />
@@ -91,7 +87,7 @@ class SignIn extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  signInUser: (login, password, history) => dispatch(signInUser(login, password, history))
+  signInUser: values => dispatch(signInUser(values))
 })
 
 const mapStateToProps = state => ({

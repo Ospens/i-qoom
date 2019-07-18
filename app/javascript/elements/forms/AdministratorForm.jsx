@@ -13,7 +13,7 @@ class AdministratorForm extends Component {
       const key = k.replace(/administrator_form_(.)_/g, '')
       newValues[key] = values[k]
     })
-    customSubmit(newValues)
+    return customSubmit(newValues)
   }
 
   renderSubmitButtons = () => {
@@ -44,19 +44,19 @@ class AdministratorForm extends Component {
             {label && <label className='project-admin'>{label}</label>}
             <div className='row'>
               <div className='form-group col-3'>
-                <InputField
-                  type='text'
-                  name={`${form}_username`}
-                  id={`${form}_username`}
+                <Field
+                  component={InputField}
+                  name={`username`}
+                  id={`username`}
                   errorField={submitErrors}
                   placeholder='Username'
                 />
               </div>
               <div className='form-group col-9'>
-                <InputField
-                  type='text'
-                  name={`${form}_last_name`}
-                  id={`${form}_last_name`}
+                <Field
+                  component={InputField}
+                  name={`last_name`}
+                  id={`last_name`}
                   errorField={submitErrors}
                   placeholder='Last name'
                 />
@@ -64,10 +64,10 @@ class AdministratorForm extends Component {
             </div>
             <div className='custom_row'>
               <div className='form-group'>
-                <InputField
-                  type='text'
-                  name={`${form}_first_name`}
-                  id={`${form}_first_name`}
+                <Field
+                  component={InputField}
+                  name={`first_name`}
+                  id={`first_name`}
                   errorField={submitErrors}
                   placeholder='First name'
                 />
@@ -75,10 +75,10 @@ class AdministratorForm extends Component {
             </div>
             <div className='custom_row'>
               <div className='form-group'>
-                <InputField
-                  type='text'
-                  name={`${form}_email`}
-                  id={`${form}_email`}
+                <Field
+                  component={InputField}
+                  name={`email`}
+                  id={`email`}
                   errorField={submitErrors}
                   placeholder='Email address'
                 />
@@ -86,19 +86,19 @@ class AdministratorForm extends Component {
             </div>
             <div className='row'>
               <div className='form-group col-3'>
-                <InputField
-                  type='text'
-                  name={`${form}_phone_code`}
-                  id={`${form}_phone_code`}
+                <Field
+                  component={InputField}
+                  name={`phone_code`}
+                  id={`phone_code`}
                   errorField={submitErrors}
                   placeholder='+00'
                 />
               </div>
               <div className='form-group col-9'>
-                <InputField
-                  type='text'
-                  name={`${form}_phone_number`}
-                  id={`${form}_phone_number`}
+                <Field
+                  component={InputField}
+                  name={`phone_number`}
+                  id={`phone_number`}
                   errorField={submitErrors}
                   placeholder='Phone number'
                 />
@@ -117,15 +117,17 @@ const mapStateToProps = (state, ownProps) => {
 
   return ({
     submitErrors: getFormSubmitErrors(ownProps.form)(state),
-    username: selector(state, `${ownProps.form}_username`),
-    last_name: selector(state, `${ownProps.form}_last_name`),
-    first_name: selector(state, `${ownProps.form}_first_name`),
-    email: selector(state, `${ownProps.form}_email`)
+    username: selector(state, `username`),
+    last_name: selector(state, `last_name`),
+    first_name: selector(state, `first_name`),
+    email: selector(state, `email`),
+    destroyOnUnmount: ownProps.form !== 'administrator_form'
   })
 }
 
 export default connect(mapStateToProps)
                 (reduxForm({
-                  destroyOnUnmount: false,
-                  enableReinitialize: true})
+                  // destroyOnUnmount: false,
+                  enableReinitialize: true
+                })
                 (AdministratorForm))

@@ -31,9 +31,16 @@ body {
   color: #777696e1;
 }
 
+.form-group {
+  &:hover, &:active {
+    z-index: 2;                                                                                                                                                                                                                                                                                                                                               
+  }
+}
+
 button:disabled {
   cursor: not-allowed;
 }
+
 .project-card {
   display: flex;
   flex-direction: column;
@@ -201,6 +208,23 @@ button:disabled {
   overflow: inherit !important;
 }
 
+.admin-status {
+  .admin-status__info-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 2em;
+  }
+
+  .admin-status__info-block_email {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    color: #0096FA;
+  }
+}
+
 .modal-window {
   min-width: 500px;
   will-change: top, left, margin, opacity !important;
@@ -222,16 +246,20 @@ button:disabled {
     padding-left: 30px;
     padding-right: 30px;
 
-    &.terms-modal {
-      max-width: 490px;
+    &.info-modal {
       padding-left: 60px;
       padding-right: 60px;
+      max-width: 500px;
 
       a:hover {
         text-decoration: none;
         outline: none;
         color: #007bff;
       }
+    }
+
+    &.company-data {
+      max-width: 550px;
     }
 
     &.project-name,
@@ -301,7 +329,7 @@ button:disabled {
   }
 
   .new-project-modal {
-    max-width: 490px;
+    // max-width: 490px;
     h4 {
       padding-left: 30px;
       padding-top: 30px;
@@ -337,6 +365,18 @@ button:disabled {
   }
 }
 
+form {
+  label {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.admin-form {
+  width: 100%;
+  max-width: 440px;
+}
+
 .nav-bar {
   margin-bottom: 30px;
   margin-top: 30px;
@@ -357,6 +397,8 @@ button:disabled {
       padding-bottom: 15px;
       padding-top: 15px;
       border-bottom: 2px solid transparent;
+      align-items: center;
+      align-content: center;
 
       &:hover {
         color:  #0096FA;
@@ -370,6 +412,7 @@ button:disabled {
     }
   }
 }
+
 .project-settings {
   height: 100%;
   display: block;
@@ -385,17 +428,28 @@ button:disabled {
   }
 }
 
+.manage-members-actions-button {
+  max-width: 15em;
+
+  & > button {
+    width: 100%;
+  }
+}
+
 .block-title {
   font-size: 12px;
   color: #ced4da;
   display: flex;
+  padding-bottom: 0.5em;
 
   .dropdown {
     margin-left: auto;
 
-    .item * {
-      transition-duration: 0s !important;
-      transition: 0s ease-in-out !important;
+    .item {
+      *:not(path) {
+        transition-duration: 0s !important;
+        transition: 0s ease-in-out !important;
+      }
     }
   }
 
@@ -404,7 +458,7 @@ button:disabled {
       display: flex !important;
 
       .item-text {
-        align-self: flex-end;
+        align-self: center;
         margin-left: 5px;
       }
     }
@@ -521,7 +575,7 @@ button:disabled {
 
 .btn-white-blue {
   display: flex !important;
-  background-color: #fff !important;
+  background-color: #fff;
   border: 1px solid #ced4da !important;
   color: #0096FA !important;
   font-weight: 600 !important;
@@ -536,7 +590,7 @@ button:disabled {
     left: 30px;
   }
 
-  &:hover {
+  &:hover:not(.with-dots) {
     background-color: rgba(0, 150, 250, 0.685) !important;
     color: #fff !important;
   }
@@ -559,13 +613,16 @@ button:disabled {
   margin-top: 8px;
 }
 
-.wait-confirm-admin {
-  padding-left: 1em;
+.await-confirm-admin {
   color: #ff9b00;
 }
 
 .active-admin {
   color: #26bd5d;
+}
+
+.uncofirmed-admin {
+  color: #ff2826;
 }
 
 .wide-button {
@@ -610,7 +667,7 @@ button:disabled {
   }
 }
 
-.mamber-managment-table, .rect-checkbox {
+.main-table-block, .rect-checkbox {
 
   input[type=checkbox]+label {
     background-color: #e8f3f4;
@@ -653,7 +710,7 @@ input[type=checkbox]:checked+label {
   background-size: 100%;
 }
 
-.mamber-managment-table {
+.main-table-block {
   border: none !important;
   font-size: 12px !important;
   border-collapse: collapse !important;
@@ -675,7 +732,7 @@ input[type=checkbox]:checked+label {
 
     &.table-checkbox {
       padding-left: 16.8px !important;
-
+      
       label {
         margin-bottom: 0;
       }
@@ -696,6 +753,13 @@ input[type=checkbox]:checked+label {
 
     &.table-checkbox {
       min-width: 20px !important;
+      vertical-align: middle;
+
+      & > div {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+      }
     }
 
     &.member-id {
@@ -704,7 +768,11 @@ input[type=checkbox]:checked+label {
     }
 
     &.access-column {
-      min-width: 80px !important;
+      min-width: 180px !important;
+
+      .btn-for-switch {
+        height: 33.5px;
+      }
     }
 
     &.td-files {
@@ -719,7 +787,15 @@ input[type=checkbox]:checked+label {
     }
   }
 
-  .name-column {
+  .team-title-column {
+    min-width: 350px;
+
+    .btn {
+      color: #0095f9;
+    }
+  }
+
+  .name-column, .team-title-column {
     position: relative;
     flex-direction: row;
     display: flex;
@@ -743,12 +819,12 @@ input[type=checkbox]:checked+label {
       justify-content: center;
       align-content: center;
       position: absolute;
-      border: 1px solid white;
+      border: 2px solid white;
       background-color: #4b5b5d;
       color: white;
       border-radius: 100%;
-      left: 0;
-      top: 20px;
+      left: 5px;
+      top: 30px;
     }
   }
 }
@@ -765,11 +841,15 @@ span.divider {
 }
 
 .dropdown-menu {
-  min-width: 160px !important;
-  padding-left: 5px !important;
-  padding-right: 5px !important;
+  min-width: fit-content;
+  width: 100%;
+  margin-top: -1px; 
+  z-index: 9;
+  padding: 0;
+  padding: 5px !important;
 
   .dropdown-item {
+    min-width: fit-content;
     color: grey;
     display: flex;
     align-items: center;
@@ -782,6 +862,11 @@ span.divider {
       align-items: center;
       font-size: 14px;
     }
+  }
+
+  &.left {
+    right: 0 !important;
+    left: auto !important;
   }
 
   .dropdown-item:not(.dropdown-submenu) {
@@ -809,13 +894,14 @@ span.divider {
 
 .dropdown-with-icon {
   display: flex !important;
+  align-items: center;
 
   button {
     border: none !important;
     padding: 0;
 
     &:hover, &:active {
-      background: none !important;
+      // background: none !important;
 
       circle {
         fill: #0096FA !important;
@@ -828,6 +914,7 @@ span.divider {
   min-height: 300px;
   overflow: auto;
   margin-top: 10px;
+  max-height: 60vh;
 }
 
 .with-icon {
@@ -835,7 +922,7 @@ span.divider {
   span {
     font-weight: 500;
     color: #0095f9;
-    height: 19px;
+    // height: 19px;
     align-items: flex-end;
     align-self: flex-end;
     text-align: left;
@@ -880,10 +967,27 @@ span.tab-description {
   background-color: #475759 !important;
 
   .msg-card {
+    display: grid;
+    grid-template-areas:
+      "text text"
+      "cancel delete";
+    grid-gap: 10px;
     color: white;
     width: 150px;
     white-space: normal;
     line-height: 1.2;
+
+    span {
+      grid-area: text;
+    }
+
+    .btn-white-grey {
+      grid-area: cancel;
+    }
+
+    .btn-white-red {
+      grid-area: delete;
+    }
   }
 
   &::after {
@@ -895,8 +999,6 @@ span.tab-description {
     padding-right: 7px;
     padding-top: 0px;
     padding-bottom: 2px;
-    margin-top: 10px;
-    margin-left: 10px;
 
     &:hover {
       opacity: 0.8;
@@ -1000,10 +1102,6 @@ span.tab-description {
   }
 }
 
-.date-input {
-  text-align: center;
-}
-
 .react-datepicker-wrapper,
 .react-datepicker__input-container {
   width: 100%;
@@ -1067,13 +1165,6 @@ input:checked+.slider:before {
 }
 
 .dropdown-with-switch {
-  min-width: 170px;
-
-  .dropdown-menu {
-    margin-top: -5px; 
-    z-index: 9;
-    padding: 0;
-  }
   .dropdown-item {
     padding: 5px;
     color: #475859;
@@ -1118,6 +1209,8 @@ input:checked+.slider:before {
     display: flex !important;
     align-items: center;
     line-height: 1.25 !important;
+    width: 100%;
+    font-size: 1em;
 
     &::after {
       padding: 3px;
@@ -1242,7 +1335,7 @@ i.arrow {
   }
 }
 
-.drag-and-drop-area {
+.drop-zone-area {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1292,4 +1385,61 @@ i.arrow {
       margin-bottom: 5px;
     }
   }
+
+  &.disabled {
+    color: '#2fa7f9';
+    background-color: #e9ecef;
+    cursor: default;
+  }
 }
+
+.color-blue {
+  color: #0096FA !important;
+}
+
+.acceess-rights__drop-down {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1em;
+  padding-bottom: 1em;
+
+  .acceess-rights__drop-down-row {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.close-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: center;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  background: lightgrey;
+  border-radius: 100%;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:before, &:after {
+    position: absolute;
+    content: ' ';
+    height: 10px;
+    width: 2px;
+    background-color: #333;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+}
+

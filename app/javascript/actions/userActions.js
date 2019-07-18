@@ -34,16 +34,17 @@ const fetchUserSuccess = data => ({
 })
 
 export const signOutUser = () => {
-  localStorage.removeItem('jwt-iqoom-token')
+  localStorage.removeItem('i-qoom-user')
   return ({
     type: SIGN_OUT_USER
   })
 }
 
-export const fetchUser = userId => dispatch => (
+export const fetchUser = userId => (dispatch, getState) => (
   axios.get(`/api/v1/users/${userId}`)
     .then(response => {
       dispatch(fetchUserSuccess(response.data.location))
+      localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
     })
     .catch(({ response }) => {
       errorNotify(response.data.message)
@@ -51,19 +52,16 @@ export const fetchUser = userId => dispatch => (
     })
 )
 
-export const signInUser = (login, password) => dispatch => {
+export const signInUser = values => dispatch => {
   const request = {
     session: {
-      login,
-      password
+      ...values
     }
   }
   return (
     axios.post('/api/v1/sessions', request)
       .then(response => {
         const decoded = jwtDecode(response.data.auth_token)
-        localStorage.setItem('jwt-iqoom-token-expiry', decoded.exp)
-        localStorage.setItem('jwt-iqoom-token', response.data.auth_token)
         dispatch(signIn(response.data.auth_token, decoded.exp, decoded.user_id))
         dispatch(fetchUser(decoded.user_id))
       })

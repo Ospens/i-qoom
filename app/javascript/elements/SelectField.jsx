@@ -13,7 +13,7 @@ const DropdownIndicator = props => {
 }
 
 const Option = props => {
-  const { data: { icon, label }} = props
+  const { data: { icon, title }} = props
   if (icon) {
     return (
       <components.Option {...props}>
@@ -22,15 +22,33 @@ const Option = props => {
             svgStyle={{ width: 50, marginRight: 10 }}
             src={icon}
           />
-          <span>{label}</span>
+          <span>{title}</span>
         </div>
       </components.Option>
     )
   } else {
     return (
-      <components.Option {...props} />
+      <components.Option {...props} >
+        <span>{props.data.title || props.data.value}</span>
+      </ components.Option>
     )
   }
+}
+
+const SingleValue = props => {
+  return (
+    <components.SingleValue {...props}>
+      {props.data.title || props.data.value}
+    </components.SingleValue>
+  )
+}
+
+const MultiValueLabel = props => {
+  return (
+    <components.MultiValueLabel {...props}>
+      {props.data.title || props.data.value}
+    </components.MultiValueLabel>
+  )
 }
 
 const IndicatorSeparator = ({ innerProps }) => {
@@ -38,39 +56,85 @@ const IndicatorSeparator = ({ innerProps }) => {
     <span style={{display: 'none'}} {...innerProps} />
   )
 }
-const colourStyles = errorInfo => {
+
+const checkValue = (options, input) => {
+  if (typeof input.value === 'string' || typeof input.value === 'number') {
+    return options.filter(option => input.value === option.value)
+  } else if (typeof input.value === 'object' && Object.keys(input.value)) {
+    return options.filter(option => input.value.includes(option.value))
+  }
+}
+
+export const colourStyles = errorInfo => {
   const borderColor = errorInfo ? '#fd0944' : '#ced4da'
   const borderWidth = errorInfo ? '2px' : '1px'
   const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
-    control: styles => ({ ...styles, borderColor, borderWidth, boxShadow, zIndex: '4', minHeight: '33.5px' }),
-    menu: styles => ({ ...styles, marginTop: '0', zIndex: '5' }),
-    option: (styles, { isFocused }) => ({
+    control: (styles, state) => ({
       ...styles,
-      color: isFocused ? '#2fa7f9' : 'lightgray'
+      borderColor,
+      borderWidth,
+      boxShadow,
+      zIndex: '4',
+      minHeight: '33.5px',
+      backgroundColor: state.isDisabled ? '#e9ecef' : 'inherit'
+    }),
+    menu: styles => ({
+      ...styles,
+      marginTop: '0',
+      zIndex: '5'
+    }),
+    placeholder: styles => ({
+      ...styles,
+      color: '#c8d8da'
+    }),
+    option: styles => ({
+      ...styles,
+      color: 'rgba(0, 0, 0, .87)'
     })
   }
   return colourStyles
 }
+export const SelectComponent = props => (
+  <Select
+    {...props}
+    components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
+    autoFocus={false}
+    styles={colourStyles(props.errorInfo)}
+    maxMenuHeight='180'
+  />
+)
 
-function SelectField({ input, options, newValue, errorField, id, label, placeholder }) {
-  const errorInfo = errorField ? errorField[id] : false
-
+const SelectField = ({
+  input,
+  options,
+  errorField,
+  label,
+  placeholder,
+  isDisabled = false,
+  isMulti = false,
+  meta: { touched, error }
+}) => {
+  const errorInfo = (touched && error)
+    ? [error]
+    : errorField
+      ? errorField[input.name]
+      : false
+      
   return (
     <div>
-      {label && <label htmlFor={input.name}>{label}</label>}
-      <Select
+      {label && <label htmlFor={input.id}>{label}</label>}
+      <SelectComponent
         {...input}
-        components={{ DropdownIndicator, IndicatorSeparator, Option }}
+        isMulti={isMulti}
         options={options}
-        value={options.filter(option => option.value === input.value)}
-        autoFocus={false}
-        styles={colourStyles(errorInfo)}
-        onChange={value => input.onChange(value.value)}
-        maxMenuHeight='180'
+        errorInfo={errorInfo}
+        value={checkValue(options, input)}
+        onChange={v => { input.onChange(v.value || v.map(val => val.value)) }}
         onBlur={value => input.onBlur(value.value)}
-        placeholder={placeholder ? placeholder : 'Select...'}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
+        isDisabled={isDisabled}
+        placeholder={placeholder ? placeholder : 'Select...'}
       />
       <div className='invalid-feedback'>
         {errorInfo ? errorInfo[0] : ''}

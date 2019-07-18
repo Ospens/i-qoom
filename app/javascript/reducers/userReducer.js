@@ -34,23 +34,14 @@ const userReducer = (state = initialState, action) => {
       ...state
     }
   case SIGN_OUT_USER:
-    return {
-      ...initialState,
-      authStatus: false,
-      token: null
-    }
+    return initialState
   case FETCH_USER_SUCCESS:
     return {
       ...state,
       ...action.payload.data
     }
   default:
-    const currentDate = new Date()
-    const token = new Date(Number(state.exp) * 1000) >= currentDate ? state.token : undefined
-    return {
-      ...state,
-      authStatus: !!token
-    }
+    return state
   }
 }
 
