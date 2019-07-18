@@ -50,39 +50,39 @@ class DocIdModal extends Component {
               <label>Pleace select or generate Document ID</label>
 
               <div className='input-container'>
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='MWP'
                   disabled
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='STX'
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='EOS'
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='XXX'
                   disabled
                 />
-                <InputField
+                <Field
                   className='document-id-code'
-                  type='text'
+                  component={InputField}
                   name='document_id'
                   id='document_id'
                   placeholder='XXXX'
@@ -92,8 +92,8 @@ class DocIdModal extends Component {
             </div>
 
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='city'
                 id='city'
                 errorField={submitErrors}
@@ -143,7 +143,7 @@ class DocIdModal extends Component {
             <div className='row'>
               <div className='col-6'>
                 <div className='form-group'>
-                  <InputField
+                  <Field
                     step='0.1'
                     type='number'
                     name='document_number'
@@ -154,7 +154,7 @@ class DocIdModal extends Component {
               </div>
               <div className='col-6'>
                 <div className='form-group'>
-                  <InputField
+                  <Field
                     step='1'
                     type='number'
                     name='revision_number'

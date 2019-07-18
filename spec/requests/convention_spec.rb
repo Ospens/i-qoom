@@ -13,32 +13,46 @@ describe Convention, type: :request do
   end
 
   context do
-    let(:convention) { FactoryBot.create(:convention) }
-    let(:project) { convention.project }
+    let(:project) { FactoryBot.create(:project) }
+    let!(:convention) do
+      convention = project.conventions.new(number: 1)
+      convention.build_default_fields
+      convention.document_fields.each do |field|
+        next unless field.select_field?
+        value =
+          field.document_field_values.new(value: Faker::Name.initials(3),
+                                          position: 1,
+                                          title: '')
+      end
+      convention.save!
+      convention
+    end
 
     it '#edit' do
-      get "/api/v1/projects/#{convention.project.id}/conventions/edit", headers: credentials(convention.project.user)
+      get "/api/v1/projects/#{project.id}/conventions/edit", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
-      expect(json['id']).to eql(convention.id)
-      expect(json['document_fields'].count).to eql(9)
+      expect(json['document_fields'].count).to eql(8)
       field = json['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
       expect(field['document_field_values'].length).to eql(1)
     end
 
     it '#update' do
-      convention_field =
-        convention.document_fields.find_by(codification_kind: DocumentField.codification_kinds[:originating_company])
       title = Faker::Lorem.sentence
-      expect(convention_field.title).to_not eql(title)
-      patch "/api/v1/projects/#{convention.project.id}/conventions",\
-        params: { convention: { document_fields_attributes: { id: convention_field.id, title: title } } },\
+      attrs = convention.attributes_for_edit
+      convention_field =
+        attrs['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
+      field_value = convention_field['document_field_values'].first
+      expect(field_value['value']).to_not eql(title)
+      field_value['value'] = title
+      patch "/api/v1/projects/#{project.id}/conventions",\
+        params: { convention: attrs },\
         headers: credentials(project.user)
-      expect(convention.document_fields.count).to eql(9)
-      expect(convention_field.reload.title).to eql(title)
-      patch "/api/v1/projects/#{convention.project.id}/conventions",\
-        params: { convention: { document_fields_attributes: { id: convention_field.id, column: 3 } } },\
-        headers: credentials(project.user)
-      expect(json['document_fields[0].column']).to eql(['is not included in the list'])
+      expect(response).to have_http_status(:success)
+      new_convention = project.conventions.last
+      field = new_convention.document_fields.find_by(codification_kind: :originating_company)
+      field_value = field.document_field_values.first
+      expect(new_convention.document_fields.count).to eql(9)
+      expect(field_value.value).to eql(title)
     end
   end
 end

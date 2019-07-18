@@ -24,7 +24,7 @@ describe DmsSetting, type: :request do
                         user: project.user)
     project_params = {
       project: {
-        dms_settings_attributes: [{ id: setting.id, name: setting.name, value: 'true' }]
+        dms_settings: [{ id: setting.id, name: setting.name, value: 'true' }]
       }
     }
     patch "/api/v1/projects/#{project.id}/dms_settings", params: project_params, headers: credentials(project.user)
@@ -32,7 +32,7 @@ describe DmsSetting, type: :request do
     expect(setting.reload.value).to eql('true')
     project_params = {
       project: {
-        dms_settings_attributes: [{ id: setting.id, name: setting.name, value: 'false' }]
+        dms_settings: [{ id: setting.id, name: setting.name, value: 'false' }]
       }
     }
     patch "/api/v1/projects/#{project.id}/dms_settings", params: project_params, headers: credentials(FactoryBot.create(:user))

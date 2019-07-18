@@ -1,0 +1,4 @@
+en:
+  application_mailer:
+    new_document:
+      document: 'Document:'

@@ -6,7 +6,7 @@ import dots from '../images/dots-horizontal'
 export const trigger = svgStyle => {
   return (
     <ReactSVG
-      svgStyle={svgStyle ? svgStyle : { height: 15, width: 15 }}
+      svgStyle={svgStyle ? svgStyle : { height: 20, width: 20 }}
       src={dots}
       className='dropdown-menu-triger'
     />
@@ -16,7 +16,7 @@ export const trigger = svgStyle => {
 export const renderItem = (pic, title, action) => (
   <span onClick={action} className='text'>
     <ReactSVG
-      svgStyle={{ height: 15, width: 15 }}
+      svgStyle={{ height: 20, width: 20 }}
       src={pic}
     />
     <span className='item-text'>

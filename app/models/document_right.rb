@@ -25,20 +25,23 @@ class DocumentRight < ApplicationRecord
   validate :limit_for_based_on_field_kind
 
   def self.attributes_for_edit(project, only_new_users = false)
-    kinds = DocumentField.codification_kinds.slice(:originating_company, :discipline, :document_type).values
-    fields = project.conventions.active.document_fields.where(codification_kind: kinds)
-    fields_with_rights =
-      fields.joins(:document_rights).where(document_rights: { enabled: true })
+    kinds =
+      DocumentField.codification_kinds.slice(:originating_company, :discipline, :document_type).values
+    fields =
+      project.conventions.active.document_fields.where(codification_kind: kinds)
     user_ids =
-      DocumentRight.where(document_field: fields_with_rights).pluck(:user_id).uniq
-    users = only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
+      DocumentRight.where(document_field: fields, enabled: true).pluck(:user_id).uniq
+    users =
+      only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
     attrs = {
       fields: [], # used just for info
       users: []
     }
     fields.each do |field|
-      values = DocumentFieldValue.where(document_field: field).pluck(:value)
-      attrs[:fields] << { field.codification_kind => values }
+      values = DocumentFieldValue.where(document_field: field).as_json(only: [:id, :value])
+      attrs[:fields] << {
+        field.codification_kind => { id: field.id, values: values }
+      }
     end
     users.each do |user|
       rights_attrs = []
@@ -55,7 +58,7 @@ class DocumentRight < ApplicationRecord
                                                  'view_only')
         end
       end
-      attrs[:users] << { id: user.id, document_rights_attributes: rights_attrs }
+      attrs[:users] << { id: user.id, document_rights: rights_attrs }
     end
     attrs
   end

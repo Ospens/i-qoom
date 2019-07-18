@@ -32,14 +32,14 @@ describe DocumentRight, type: :request do
       get "/api/v1/projects/#{project.id}/document_rights/edit", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
       expect(json['users'][0]['id']).to eql(user.id)
-      expect(json['users'][0]['document_rights_attributes'].length).to eql(3)
+      expect(json['users'][0]['document_rights'].length).to eql(3)
     end
   end
 
   context '#update' do
     before do
       @attrs = DocumentRight.attributes_for_edit(project)
-      @attrs[:users].first[:document_rights_attributes].each do |right|
+      @attrs[:users].first[:document_rights].each do |right|
         right['enabled'] = true
       end
     end

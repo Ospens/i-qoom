@@ -3,15 +3,18 @@ import {
   Link,
   Route
 } from 'react-router-dom'
+import classnames from 'classnames'
 
-const SideBarItem = ({
-  path,
-  label
-}) => (
+const linkClass = (match, location, root) => {
+  const matched = match ? true : location.pathname.indexOf(root) > -1
+  return classnames('nav-item', { 'active': matched })
+}
+
+const SideBarItem = ({ path, label, root }) => (
   <Route path={path} exact>
-    {({ match }) => (
-      <li className={`nav-item ${match ? 'active' : ''}`}>
-        <Link className="nav-link" to={path}>
+    {({ match, location }) => (
+      <li className={linkClass(match, location, root)}>
+        <Link className='nav-link' to={path}>
           {label}
         </Link>
       </li>

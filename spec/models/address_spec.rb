@@ -4,14 +4,14 @@ RSpec.describe Address, type: :model do
   it { is_expected.to allow_value("", nil).for(:country) }
   it { is_expected.to validate_inclusion_of(:country)
                         .in_array(ISO3166::Country.codes) }
-  it { is_expected.to have_one(:project_company_datum)
+  it { is_expected.to have_one(:project_company_data)
                         .with_foreign_key(:company_address_id)
-                        .class_name("ProjectCompanyDatum") }
-  it { is_expected.to have_one(:project_company_billing_datum)
+                        .class_name("ProjectCompanyData") }
+  it { is_expected.to have_one(:project_company_billing_data)
                         .with_foreign_key(:billing_address_id)
-                        .class_name("ProjectCompanyDatum") }
+                        .class_name("ProjectCompanyData") }
 
-  context "without project_company_datum" do
+  context "without project_company_data" do
     [ :company_name,
       :street,
       :house_number,
@@ -22,10 +22,10 @@ RSpec.describe Address, type: :model do
     end
   end
 
-  [ "project_company_datum",
-    "project_company_billing_datum" ].each do |company_datum|
-    context "with #{company_datum}" do
-      subject { FactoryBot.build("address_with_#{company_datum}") }
+  [ "project_company_data",
+    "project_company_billing_data" ].each do |company_data|
+    context "with #{company_data}" do
+      subject { FactoryBot.build("address_with_#{company_data}") }
       [ :company_name,
         :street,
         :house_number,

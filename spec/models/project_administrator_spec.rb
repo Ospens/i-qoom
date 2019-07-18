@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ProjectAdministrator, type: :model do
-  it { is_expected.to belong_to(:project) }
+  it { is_expected.to belong_to(:project).inverse_of(:admins) }
   it { is_expected.not_to validate_presence_of(:user) }
   it { is_expected.to validate_presence_of(:email) }
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
@@ -32,7 +32,7 @@ RSpec.describe ProjectAdministrator, type: :model do
   end
 
   context "remove admin" do
-    let(:project) { FactoryBot.create(:project_done_step) }
+    let(:project) { FactoryBot.create(:project) }
     it "admin should be removed" do
       project.admins << FactoryBot.build(:project_administrator)
       project.save

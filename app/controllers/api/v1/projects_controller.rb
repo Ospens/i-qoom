@@ -2,7 +2,6 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
   
   def index
-    @projects = signed_in_user.projects
     render json: @projects,
                  each_serializer: ProjectSerializer,
            status: :ok
@@ -35,7 +34,6 @@ class Api::V1::ProjectsController < ApplicationController
   # to billing address
 
   def create
-    @project = signed_in_user.projects.new(project_params)
     if @project.save
       render json: { status: "success",
                      message: t(".success_message"),
@@ -80,11 +78,23 @@ class Api::V1::ProjectsController < ApplicationController
 
   private
 
-  def set_project
-    @project = Project.find(params[:id])
-  end
-
   def project_params
+    if params[:project][:admins]
+      params[:project][:admins_attributes] =
+        params[:project][:admins]
+      params[:project].delete(:admins)
+    end
+    if params[:project][:company_data].present?
+      params[:project][:company_data][:company_address_attributes] =
+        params[:project][:company_data][:company_address]
+      params[:project][:company_data].delete(:company_address)
+      params[:project][:company_data][:billing_address_attributes] =
+        params[:project][:company_data][:billing_address]
+      params[:project][:company_data].delete(:billing_address)
+      params[:project][:company_data_attributes] =
+        params[:project][:company_data]
+      params[:project].delete(:company_data)
+    end
     params.fetch(:project,
                  { }).permit(:name,
                              :creation_step,
@@ -97,7 +107,7 @@ class Api::V1::ProjectsController < ApplicationController
                                :phone_code,
                                :phone_number
                              ],
-                             company_datum_attributes: [
+                             company_data_attributes: [
                                :logo,
                                :registration_number,
                                :vat_id,

@@ -1,41 +1,110 @@
 import axios from 'axios'
+import { SubmissionError } from 'redux-form'
 import {
   EDITING_CONVENTION,
   UPDATED_FIELDS,
-  ORDER_FILEDS,
+  ORDER_FIELDS,
   EDITING_FIELD,
   REMOVE_FIELD,
-  DISCARD_EDIT_VALUES
+  DISCARD_EDIT_VALUES,
+  CONVENTION_UPDATED,
+  DISCARD_CONVENTION
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
+
+
+export const fieldByColumn = data => {
+  const fields = data.document_fields || data.document_fields
+  const sorted = fields.reduce((accumulator, currentValue, index) => {
+    accumulator[currentValue.column].push({ ...currentValue, index })
+    return accumulator
+  }, { 1: [], 2: [] })
+
+  sorted[1].sort((a, b) => a.row - b.row)
+  sorted[2].sort((a, b) => a.row - b.row)
+  const newData = {
+    ...data,
+    grouped_fields: {
+      ...sorted
+    }
+  }
+  return newData
+}
 
 const editingConvention = payload => ({
   type: EDITING_CONVENTION,
   payload
 })
 
-export const startEditConvention = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
-  const headers = {
-    Authorization: token
+const conventionUpdated = payload => ({
+  type: CONVENTION_UPDATED,
+  payload
+})
+
+export const discardConvention = () => ({
+  type: DISCARD_CONVENTION
+})
+
+export const startUpdateConvention = projectId => (dispatch, getState) => {
+  const { user: { token }, conventions: { current } } = getState()
+  const headers = { headers: { Authorization: token } }
+  const docFields = []
+  const errors = {}
+  Object.keys(current.grouped_fields).forEach(k => {
+    current.grouped_fields[k].forEach((row, i) => {
+      if (row.kind === 'select_field' && row.document_field_values.length < 1) {
+        errors[`${k}${i}`] = {
+          field: row.title,
+          error: 'Please add values'
+        }
+      }
+
+      const newRow = {
+        ...row,
+        column: k,
+        row: i + 1
+      }
+
+      docFields.push(newRow)
+    })
+  })
+
+  if (Object.entries(errors).length > 0) {
+    errorNotify('Please add values for select fields')
+    throw new SubmissionError(errors)
+  }
+
+  const request = {
+    convention: {
+      document_fields: docFields
+    }
   }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/conventions/edit`, {
-      headers
-    })
+    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, headers)
       .then(response => {
         const { data } = response
-        const sorted = data.document_fields.reduce((accumulator, currentValue) => {
-          accumulator[currentValue.column].push(currentValue)
-          return accumulator
-        }, { 1: [], 2: [] })
+        const sortedData = fieldByColumn(data)
+        successNotify('The convention was updated!')
+        dispatch(conventionUpdated(sortedData))
+      })
+      .catch(err => {
+        errorNotify('Something went wrong')
+        throw new SubmissionError(err)
+      })
+  )
+}
 
-        sorted[1].sort((a, b) => a.row - b.row)
-        sorted[2].sort((a, b) => a.row - b.row)
-        data.grouped_fields = sorted
+export const startEditConvention = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
 
-        dispatch(editingConvention(data))
+  return (
+    axios.get(`/api/v1/projects/${projectId}/conventions/edit`, headers)
+      .then(response => {
+        const { data } = response
+        const sortedData = fieldByColumn(data)
+        dispatch(editingConvention(sortedData))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -44,12 +113,12 @@ export const startEditConvention = () => (dispatch, getState) => {
 }
 
 export const removeField = (column, row) => (dispatch, getState) => {
-  const { conventions: { current: { grouped_fields } } } = getState()
-  const newColumn = new Array(...grouped_fields[column])
+  const groupedFields = getState().conventions.current.grouped_fields
+  const newColumn = new Array(...groupedFields[column])
   newColumn.splice(row, 1)
 
   const newFields = {
-    ...grouped_fields,
+    ...groupedFields,
     [column]: newColumn
   }
 
@@ -60,18 +129,18 @@ export const removeField = (column, row) => (dispatch, getState) => {
 }
 
 export const updateFields = (field, edit = false) => (dispatch, getState) => {
-  const { conventions: { current: { grouped_fields } } } = getState()
+  const groupedFields = getState().conventions.current.grouped_fields
   const { column, row } = field
-  const newColumn = new Array(...grouped_fields[column])
+  const newColumn = new Array(...groupedFields[column])
 
   if (edit) {
-    newColumn[row] = field
+    newColumn.splice(row, 1, field)
   } else {
     newColumn.splice(row, 0, field)
   }
 
   const newFields = {
-    ...grouped_fields,
+    ...groupedFields,
     [column]: newColumn
   }
 
@@ -114,10 +183,11 @@ export const reorderFields = (result, fields) => dispatch => {
       [source.droppableId]: newFields
     }
 
-    return dispatch({
-      type: ORDER_FILEDS,
+    dispatch({
+      type: ORDER_FIELDS,
       payload: orderedFields
     })
+    return
   }
 
   const startColumn = fields[source.droppableId]
@@ -135,8 +205,8 @@ export const reorderFields = (result, fields) => dispatch => {
     [destination.droppableId]: finishFields
   }
 
-  return dispatch({
-    type: ORDER_FILEDS,
+  dispatch({
+    type: ORDER_FIELDS,
     payload: orderedFields
   })
 }

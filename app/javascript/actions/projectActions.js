@@ -1,20 +1,23 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
-  PROJECT_CREATE_SUCCESS,
+  PROJECT_CREATED_SUCCESS,
+  PROJECT_UPDATED_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
   PROJECT_EXIT,
+  PROJECT_ADMIN_DELETED,
+  PROJECT_ADMIN_UPDATED,
   PROJECT_FETCH_SUCCESS
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 
 const projectCreated = payload => ({
-  type: PROJECT_CREATE_SUCCESS,
+  type: PROJECT_CREATED_SUCCESS,
   payload
 })
 
 const projectUpdated = payload => ({
-  type: PROJECT_CREATE_SUCCESS,
+  type: PROJECT_UPDATED_SUCCESS,
   payload
 })
 
@@ -28,77 +31,37 @@ const projectFetched = payload => ({
   payload
 })
 
+const adminDeleted = payload => ({
+  type: PROJECT_ADMIN_DELETED,
+  payload
+})
+
+const adminUpdated = payload => ({
+  type: PROJECT_ADMIN_UPDATED,
+  payload
+})
+
 export const exitProject = payload => ({
   type: PROJECT_EXIT,
   payload
 })
 
-export const startUpdateProject = (values, id, step) => (dispatch, getState) => {
+export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) => {
   const { user: { token } } = getState()
 
-  const headers = {
-    Authorization: token
-  }
-
-  const data = {}
-  if (step === 'company_datum') {
-    data.company_datum_attributes = {
-      id: values.id || '',
-      logo: values.logo,
-      registration_number: values.registration_number,
-      vat_id: values.vat_id,
-      same_for_billing_address: values.same_for_billing_address,
-      company_address_attributes: {
-        company_name: values.company_name,
-        street: values.street,
-        house_number: values.house_number,
-        city: values.city,
-        postcode: values.postcode,
-        country: values.country,
-        district: values.district,
-        district_court: values.district_court
-      }
-    }
-  }
-
-  if (step === 'billing_address') {
-    data.company_datum_attributes = {
-      billing_address_attributes: {
-        id: values.id || '',
-        company_name: values.billing_company_name,
-        street: values.billing_street,
-        house_number: values.billing_house_number,
-        city: values.billing_city,
-        postcode: values.billing_postcode,
-        country: values.billing_country,
-        district: values.billing_district,
-        district_court: values.billing_district_court
-      }
-    }
-  }
-
-  if (step === 'project_admins') {
-    data.admins_attributes = {
-      id: values.id || '',
-      username: values.username,
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      phone_code: values.phone_code,
-      phone_number: values.phone_number
-    }
-  }
+  const headers = { headers: { Authorization: token } }
 
   const request = {
     project: {
-      ...data
+      ...values
     }
   }
 
   return (
-    axios.put(`/api/v1/projects/${id}`, request, { headers })
+    axios.put(`/api/v1/projects/${values.id}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
+        if (afterUpdate) afterUpdate({ ...response.data.project[0] })
       })
       .catch(({ response }) => {
         errorNotify('Something went wrong')
@@ -107,37 +70,23 @@ export const startUpdateProject = (values, id, step) => (dispatch, getState) => 
   )
 }
 
-export const startCreateProject = () => (dispatch, getState) => {
-  const { user: { token }, form } = getState()
+export const startCreateProject = (values, afterCreate) => (dispatch, getState) => {
+  const { user: { token } } = getState()
 
-  const headers = {
-    Authorization: token
-  }
-
-  const newValues = {}
-  const { values } = form.administrator_form
-  Object.keys(values).forEach(k => {
-    const key = k.replace('administrator_form_', '')
-    newValues[key] = values[k]
-  })
-
-  const adminsAttributes = {
-    id: '',
-    ...newValues
-  }
+  const headers = { headers: { Authorization: token } }
 
   const request = {
     project: {
-      creation_step: 'admins',
-      name: form.project_form.values.project_title,
-      admins_attributes: adminsAttributes
+      ...values,
+      creation_step: 'admins'
     }
   }
 
   return (
-    axios.post('/api/v1/projects', request, { headers })
+    axios.post('/api/v1/projects', request, headers)
       .then(response => {
         dispatch(projectCreated(response.data))
+        afterCreate({ ...response.data.project[0] })
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -147,11 +96,9 @@ export const startCreateProject = () => (dispatch, getState) => {
 
 export const startFetchProjects = () => (dispatch, getState) => {
   const { token } = getState().user
-  const headers = {
-    Authorization: token
-  }
+  const headers = { headers: { Authorization: token } }
   return (
-    axios.get('/api/v1/projects', { headers })
+    axios.get('/api/v1/projects', headers)
       .then(response => {
         dispatch(projectsFetched(response.data))
       })
@@ -163,14 +110,80 @@ export const startFetchProjects = () => (dispatch, getState) => {
 
 export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().user
-  const headers = {
-    Authorization: token
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${id}`, headers)
+      .then(response => {
+        dispatch(projectFetched(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.delete(`/api/v1/projects/${projectId}/admins/${adminId}`, headers)
+      .then(response => {
+        successNotify(response.data.message)
+        dispatch(adminDeleted(adminId))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const starUpdateAdmin = values => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  const request = {
+    project: {
+      ...values
+    }
   }
 
   return (
-    axios.get(`/api/v1/projects/${id}`, { headers })
+    axios.put(`/api/v1/projects/${values.id}`, request, headers)
       .then(response => {
-        dispatch(projectFetched(response.data))
+        dispatch(projectUpdated(response.data))
+        successNotify('The project admin were successfully saved!')
+      })
+      .catch(response => {
+        errorNotify('Something went wrong')
+        throw new SubmissionError(response.data.error_messages)
+      })
+  )
+}
+
+export const startResendConfirmAdmin = (projectId, adminId) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/admins/${adminId}/resend_confirmation`, headers)
+      .then(() => {
+        successNotify('A new invitation has been sent to this address!')
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/admins/${adminId}/`, headers)
+      .then(response => {
+        dispatch(adminUpdated(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')

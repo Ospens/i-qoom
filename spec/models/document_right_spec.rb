@@ -62,10 +62,16 @@ RSpec.describe DocumentRight, type: :model do
     attrs = DocumentRight.attributes_for_edit(project)
     expect(attrs[:users].length).to eql(1)
     expect(attrs[:users].first[:id]).to eql(user.id)
-    attrs[:users].first[:document_rights_attributes].each do |right|
+    expect(attrs[:fields].length).to eql(3)
+    field = attrs[:fields].detect{ |i| i['originating_company'].present? }['originating_company']
+    expect(field.keys).to match_array([:id, :values])
+    expect(field[:values].first.keys).to match_array(['id', 'value'])
+    attrs[:users].first[:document_rights].each do |right|
       right['enabled'] = true
     end
     attrs[:users].each do |user_params|
+      user_params[:document_rights_attributes] =
+        user_params.delete(:document_rights)
       User.find(user_params[:id]).update!(user_params.except(:id).merge(accept_terms_and_conditions: true))
     end
     expect(Document.new(project: project).can_create?(user)).to eql(true)
@@ -73,5 +79,8 @@ RSpec.describe DocumentRight, type: :model do
     attrs = DocumentRight.attributes_for_edit(project, true)
     expect(attrs[:users].map{ |i| i[:id] }).to\
       match_array([user2.id, project.user.id])
+    attrs = DocumentRight.attributes_for_edit(project)
+    expect(attrs[:users].map{ |i| i[:id] }).to\
+      match_array([user.id])
   end
 end

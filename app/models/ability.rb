@@ -35,6 +35,10 @@ class Ability
       can :manage, ProjectAdministrator do |project_admin|
         project_admin.project.user_id == user.id
       end
+      # ProjectMember
+      can :manage, ProjectMember do |project_member|
+        project_member.project.user_id == user.id
+      end
       # Convention
       can :manage, Convention do |convention|
         convention.project.user == user
@@ -54,7 +58,7 @@ class Ability
           document.user == user ||
           document.can_create?(user)
       end
-      can [:index, :download_native_files], Document # there should be some limitation
+      can [:index, :download_native_files, :download_list], Document # there should be some limitation
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder

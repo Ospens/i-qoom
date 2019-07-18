@@ -18,6 +18,27 @@ describe Document, type: :request do
   end
 
   context '#new' do
+    context 'no convention' do
+      before { convention.destroy }
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents/new"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'user with rights' do
+        get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
+        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
     it 'anon' do
       get "/api/v1/projects/#{project.id}/documents/new"
       expect(response).to have_http_status(:forbidden)
@@ -31,12 +52,13 @@ describe Document, type: :request do
     it 'user with rights' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['document_fields_attributes'].count).to eql(8)
+      expect(json['document_fields'].count).to eql(8)
     end
 
     it 'project user' do
       get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
       expect(response).to have_http_status(:success)
+      expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
   end
 
@@ -44,11 +66,32 @@ describe Document, type: :request do
     let(:title) { Faker::Lorem.sentence }
 
     before do
-      @params = { document: document_attributes(user) }
+      @params = { document: document_attributes(user, false) }
       @params[:document]['email_title'] = title
       @project_id = @params[:document]['project_id']
       @project_user = Project.find(@project_id).user
       @project_user.password = 'password1'
+    end
+
+    context 'no convention' do
+      before { Project.find(@project_id).conventions.active.destroy }
+
+      it 'anon' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'user with rights' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
+        expect(response).to redirect_to("/api/v1/projects/#{@project_id}/conventions/edit")
+      end
     end
 
     it 'anon' do
@@ -65,6 +108,33 @@ describe Document, type: :request do
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
+      expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
+    end
+
+    it 'expect DocumentMain is not created if document is invalid' do
+      DocumentRevision.destroy_all
+      DocumentMain.destroy_all
+      @params[:document]['document_fields'].first['kind'] = nil
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(DocumentMain.count).to eql(0)
+    end
+
+    it 'expect DocumentRevision is not created if document is invalid' do
+      DocumentRevision.destroy_all
+      @params[:document]['document_fields'].first['kind'] = nil
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(DocumentRevision.count).to eql(0)
+    end
+
+    it 'emails' do
+      @params[:document]['emails'] = [Faker::Internet.email]
+      dbl = double
+      expect(ApplicationMailer).to receive(:new_document).and_return(dbl)
+      expect(dbl).to receive(:deliver_later)
+      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      expect(response).to have_http_status(:success)
     end
 
     it 'project user' do
@@ -74,11 +144,11 @@ describe Document, type: :request do
   end
 
   it 'uploads files' do
-    document_params = document_attributes(user)
+    document_params = document_attributes(user, false)
     document_native_file =
-      document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
+      document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['files'] = [fixture_file_upload('test.txt')]
-    revision_number = document_params['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+    revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
     revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
@@ -86,7 +156,7 @@ describe Document, type: :request do
     project = Project.find(document_params['project_id'])
     project.conventions.active.document_fields.create!(field)
     field['files'] = [file1, file2]
-    document_params['document_fields_attributes'] << field
+    document_params['document_fields'] << field
     post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
     expect(response).to have_http_status(:success)
     files = Document.last.document_fields.find_by(title: 'title').files
@@ -112,6 +182,11 @@ describe Document, type: :request do
         end
       end
       doc_attrs = Document.build_from_convention(convention, user)
+      doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
+      doc_attrs['document_fields_attributes'].each do |field|
+        next if field['document_field_values'].blank?
+        field['document_field_values_attributes'] = field.delete('document_field_values')
+      end
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
       document_native_file['files'] = [fixture_file_upload('test.txt')]
@@ -124,9 +199,33 @@ describe Document, type: :request do
       let(:attrs) do
         attrs = document.attributes_for_edit
         attrs['email_title'] = title
-        revision_number = attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+        revision_number = attrs['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
         revision_number['value'] = '2'
         attrs
+      end
+
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
       end
 
       it 'anon' do
@@ -146,6 +245,24 @@ describe Document, type: :request do
         expect(document.revision.document_main.revisions.count).to eql(2)
       end
 
+      it 'expect DocumentMain is not created if document is invalid' do
+        document
+        expect(DocumentMain.count).to eql(1)
+        attrs['document_fields'].first['kind'] = nil
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(DocumentMain.count).to eql(1)
+      end
+
+      it 'expect DocumentRevision is not created if document is invalid' do
+        document
+        expect(DocumentRevision.count).to eql(1)
+        attrs['document_fields'].first['kind'] = nil
+        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(DocumentRevision.count).to eql(1)
+      end
+
       it 'owner' do
         post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
@@ -158,6 +275,30 @@ describe Document, type: :request do
     end
 
     context '#edit' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/edit"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/edit", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}/edit"
         expect(response).to have_http_status(:forbidden)
@@ -172,6 +313,7 @@ describe Document, type: :request do
         document.update!(email_title: title)
         get "/api/v1/documents/#{document.id}/edit", headers: credentials(user)
         expect(response).to have_http_status(:success)
+        expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(json['email_title']).to eql(title)
       end
 
@@ -188,6 +330,30 @@ describe Document, type: :request do
 
     context '#update' do
       let(:attrs) { document.attributes_for_edit }
+
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
 
       it 'anon' do
         patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
@@ -206,9 +372,12 @@ describe Document, type: :request do
 
       it 'owner' do
         attrs['email_title'] = title
-        patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(owner)
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: attrs },\
+          headers: credentials(owner)
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
+        expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(document.revision.versions.length).to eql(2)
       end
 
@@ -219,6 +388,30 @@ describe Document, type: :request do
     end
 
     context '#show' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}"
         expect(response).to have_http_status(:forbidden)
@@ -249,6 +442,30 @@ describe Document, type: :request do
     end
 
     context '#download_native_file' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/download_native_file"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/documents/#{document.id}/download_native_file"
         expect(response).to have_http_status(:forbidden)
@@ -278,6 +495,30 @@ describe Document, type: :request do
     end
 
     context '#download_native_files' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
       it 'anon' do
         get "/api/v1/projects/#{project.id}/documents/download_native_files"
         expect(response).to have_http_status(:forbidden)
@@ -310,20 +551,127 @@ describe Document, type: :request do
       end
     end
 
-    it 'download_details' do
-      document.update(email_title: Faker::Internet.email)
-      document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
-      get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
-      expect(response).to have_http_status(:success)
-      expect(response.header['Content-Disposition']).to include(document.codification_string)
-      # File.open('public/document.pdf', 'w+') do |f|
-      #   f.binmode
-      #   f.write(response.body)
-      # end
+    context 'download_details' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/download_details"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/download_details", headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
+      it do
+        document.update(email_title: Faker::Internet.email)
+        document.document_fields.find_by(codification_kind: :additional_information).update(value: Faker::Lorem.paragraph)
+        get "/api/v1/documents/#{document.id}/download_details", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(response.header['Content-Disposition']).to include(document.codification_string)
+        # File.open('public/document.pdf', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
+    end
+
+    context 'download_list' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(project.user)
+          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
+      it 'csv' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = CSV.parse(response.body.force_encoding('utf-8'))
+        expect(sheet[0][0]).to eql("\xEF\xBB\xBFDoc-ID")
+        expect(sheet[0][1]).to eql('Revision')
+        expect(sheet[0][2]).to eql('Version')
+        expect(sheet[1][0]).to eql(document.codification_string)
+        expect(sheet[1][1]).to eql(document.revision_date)
+        expect(sheet[1][2]).to eql(document.revision_version)
+        # File.open('public/document.csv', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
+
+      it 'xlsx' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.xlsx", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        File.open('./tmp/documents.xlsx', 'w') { |file| file.write(response.body) }
+        sheet = Roo::Spreadsheet.open('./tmp/documents.xlsx').sheet(0)
+        row1 = sheet.row(1)
+        row2 = sheet.row(2)
+        expect(row1[0]).to eql('Doc-ID')
+        expect(row1[1]).to eql('Revision')
+        expect(row1[2]).to eql('Version')
+        expect(row2[0]).to eql(document.codification_string)
+        expect(row2[1].to_s).to eql(document.revision_date)
+        expect(row2[2].to_s).to eql(document.revision_version)
+        File.delete('./tmp/documents.xlsx')
+      end
+
+      it 'xml' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.xml", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        sheet = Nokogiri::XML(response.body).search('documents').search('document')
+        expect(sheet.search('doc_id').text).to eql(document.codification_string)
+        expect(sheet.search('revision').text).to eql(document.revision_date)
+        expect(sheet.search('version').text).to eql(document.revision_version)
+      end
+
+      it 'pdf' do
+        get "/api/v1/projects/#{project.id}/documents/download_list.pdf", params: { document_ids: [document.id] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        # File.open('./tmp/document.pdf', 'w+') do |f|
+        #   f.binmode
+        #   f.write(response.body)
+        # end
+      end
     end
   end
 
   context '#index' do
+    context 'no convention' do
+      before do
+        convention.destroy
+      end
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents", headers: credentials(project.user)
+        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
     it 'no documents' do
       get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -351,6 +699,11 @@ describe Document, type: :request do
           end
         end
         doc_attrs = Document.build_from_convention(convention, user)
+        doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
+        doc_attrs['document_fields_attributes'].each do |field|
+          next if field['document_field_values'].blank?
+          field['document_field_values_attributes'] = field.delete('document_field_values')
+        end
         document_native_file =
           doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
         document_native_file['files'] = [fixture_file_upload('test.txt')]

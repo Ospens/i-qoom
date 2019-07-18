@@ -1,14 +1,14 @@
 class Project < ApplicationRecord
   enum creation_step: [ :admins,
                         :name,
-                        :company_datum,
+                        :company_data,
                         :billing_address,
                         :done ],
                       _prefix: true
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
-  after_update :send_confirmation_emails, if: :creation_step_done?
+  after_save :send_confirmation_emails, if: :creation_step_done?
 
   validates :name,
             presence: true,
@@ -29,21 +29,23 @@ class Project < ApplicationRecord
   accepts_nested_attributes_for :dms_settings
 
   has_many :admins, class_name: "ProjectAdministrator"
-  has_one :company_datum, class_name: "ProjectCompanyDatum"
+  has_many :members, class_name: "ProjectMember"
+  has_one :company_data, class_name: "ProjectCompanyData"
 
   accepts_nested_attributes_for :admins
-  accepts_nested_attributes_for :company_datum,
+  accepts_nested_attributes_for :company_data,
                                 update_only: true
 
   validates_presence_of :admins
 
-  validates_presence_of :company_datum,
+  validates_presence_of :company_data,
     unless: -> { creation_step_admins? || creation_step_name? }
 
   private
 
   def update_creation_step_to_done
     update(creation_step: "done")
+    self.reload if creation_step_done?
   end
 
   def send_confirmation_emails

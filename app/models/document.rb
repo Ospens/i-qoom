@@ -1,9 +1,15 @@
+require 'csv'
+
 class Document < ApplicationRecord
   enum issued_for: [ :information, :review ], _prefix: true
+
+  serialize :emails
 
   belongs_to :user
 
   belongs_to :project
+
+  belongs_to :convention
 
   belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
 
@@ -24,7 +30,7 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values,
            on: :update
 
-  validate :prevent_adding_or_deleting_fields_from_convention,
+  validate :prevent_adding_more_fields_than_in_convention,
            on: :create
 
   validate :prevent_update_of_fields_from_convention,
@@ -35,6 +41,10 @@ class Document < ApplicationRecord
 
   before_validation :assign_document_revision_version_field,
                     unless: :document_revision_version_present?
+
+  before_validation :assign_convention
+
+  after_create :send_emails, if: -> { emails.try(:any?) }
 
   scope :first_version, -> { order(revision_version: :asc).first }
 
@@ -57,11 +67,11 @@ class Document < ApplicationRecord
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
-    doc['document_fields_attributes'] = []
+    doc['document_fields'] = []
     convention.document_fields.each do |field|
       field_attributes = field.build_for_new_document(user)
       if field_attributes.present?
-        doc['document_fields_attributes'] << field_attributes
+        doc['document_fields'] << field_attributes
       end
     end
     doc
@@ -69,7 +79,8 @@ class Document < ApplicationRecord
 
   def can_create?(user)
     # user cannot create document if he has no access to at least one value
-    # for each field that can be limited by value
+    # for each field that can be limited by value.
+    # when creating document we check current active convention
     !project.conventions.active.document_fields.limit_by_value.map do |field|
       field.document_rights.where(user: user,
                                   limit_for: :value,
@@ -79,25 +90,31 @@ class Document < ApplicationRecord
   end
 
   def can_view?(user)
-    # user cannot view document if he has no access to all values
-    # for each field that can be limited by value
-    !project.conventions.active.document_fields.limit_by_value.map do |field|
-      !field.document_field_values.where(selected: true).map do |value|
-        field.document_rights.where(user: user,
-                                    limit_for: :value,
-                                    enabled: true,
-                                    document_field_value: value).any?
-      end.include?(false)
+    # user cannot view document if he has no access to all
+    # selected values of document for each field that can be limited by value.
+    # when viewing document we check saved convention
+    !convention.document_fields.limit_by_value.map do |field|
+      selected_field =
+        document_fields
+          .find_by(codification_kind: field.codification_kind)
+      selected_value =
+        selected_field.document_field_values.find_by(selected: true)
+      field.document_rights
+           .joins(:document_field_value)
+           .where(user: user,
+                  limit_for: :value,
+                  enabled: true,
+                  document_field_values: { value: selected_value.value }).any?
     end.include?(false)
   end
 
   def attributes_for_edit
     doc = attributes.except('id', 'created_at', 'updated_at', 'revision_version')
-    doc['document_fields_attributes'] = []
+    doc['document_fields'] = []
     document_fields.each do |field|
       field_attributes = field.build_for_edit_document
       if field_attributes.present?
-        doc['document_fields_attributes'] << field_attributes
+        doc['document_fields'] << field_attributes
       end
     end
     doc
@@ -137,6 +154,46 @@ class Document < ApplicationRecord
     document_fields.find_by(codification_kind: :document_native_file).files.first
   end
 
+  def self.visible_columns
+    ['codification_string', 'revision_date', 'revision_version']
+  end
+
+  def self.assign_rows(array)
+    records = all.load
+    return array if records.length == 0
+    columns = visible_columns
+    array << columns.map do |column|
+      I18n.t("documents.list.#{column}")
+    end
+    records.each do |record|
+      line = []
+      columns.each do |column|
+        line.push(record.send(column))
+      end
+      array << line
+    end
+    array
+  end
+
+  def self.to_csv
+    # For UTF-8 characters
+    head = 'EF BB BF'.split(' ').map { |a| a.hex.chr }.join
+    CSV.generate(head) do |csv|
+      assign_rows(csv)
+    end
+  end
+
+  def self.to_xlsx
+    p = Axlsx::Package.new
+    sheet = p.workbook.add_worksheet(name: 'Documents')
+    assign_rows(sheet)
+    p.to_stream.read
+  end
+
+  def revision_date
+    document_fields.find_by(codification_kind: :revision_date).value
+  end
+
   private
 
   def original_document
@@ -160,15 +217,16 @@ class Document < ApplicationRecord
     errors.add(:document_fields, :codification_field_changed) if error
   end
 
-  def prevent_adding_or_deleting_fields_from_convention
-    convention = project.conventions.active
-    if convention.document_fields.length != document_fields.length
+  def prevent_adding_more_fields_than_in_convention
+    # adding more fields than in convention is not allowed
+    # but removing some fields is allowed
+    # since some fields could be hidden from user
+    if convention.document_fields.length < document_fields.length
       errors.add(:document_fields, :the_number_of_document_fields_is_wrong)
     end
   end
 
   def prevent_update_of_fields_from_convention
-    convention = project.conventions.active
     convention.document_fields.each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -189,7 +247,6 @@ class Document < ApplicationRecord
   end
 
   def prevent_update_of_values_from_convention
-    convention = project.conventions.active
     convention.document_fields.where(kind: :select_field).each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -246,5 +303,15 @@ class Document < ApplicationRecord
 
   def assign_document_revision_version_field
     document_fields.new(kind: :hidden_field, codification_kind: :revision_version, column: 1)
+  end
+
+  def assign_convention
+    self.convention = project.conventions.active
+  end
+
+  def send_emails
+    emails.each do |email|
+      ApplicationMailer.new_document(self, email).deliver_later
+    end
   end
 end

@@ -2,12 +2,11 @@ import React from 'react'
 import { Droppable } from 'react-beautiful-dnd'
 import DocFieldsElement from './DocFieldsElement'
 
-export const DocFieldsColumn = ({ fields, column, modalCreateField }) => {
+export const DocFieldsColumn = ({ fields, column, openInputForm, disabled }) => {
   return (
     <Droppable droppableId={column}>
       {(provided) => (
         <div
-          className='col-6'
           ref={provided.innerRef}
           style={{  }}
           {...provided.droppableProps}
@@ -20,7 +19,8 @@ export const DocFieldsColumn = ({ fields, column, modalCreateField }) => {
                 column={column}
                 field={field}
                 index={i}
-                modalCreateField={modalCreateField}
+                disabled={disabled}
+                openInputForm={openInputForm}
               />
             )
           })}

@@ -20,7 +20,8 @@ class DocumentField < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  has_many :document_rights
+  has_many :document_rights,
+           dependent: :destroy
 
   has_many :document_field_values,
            dependent: :destroy
@@ -110,11 +111,13 @@ class DocumentField < ApplicationRecord
     return if !can_build?(user)
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
-    if codification_kind.present?
-      original_attributes['document_field_values_attributes'] = []
+    if select_field?
+      original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
-        next if document_rights.find_by(user: user, document_field_value: field_value, enabled: true, view_only: false).blank?
-        original_attributes['document_field_values_attributes'] << field_value.build_for_new_document
+        if can_limit_by_value?
+          next if !has_access_for_limit_by_value_value?(user, field_value)
+        end
+        original_attributes['document_field_values'] << field_value.build_for_new_document
       end
     end
     original_attributes
@@ -130,10 +133,10 @@ class DocumentField < ApplicationRecord
     #   end
     # end
     if codification_kind.present?
-      original_attributes['document_field_values_attributes'] = []
+      original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
-        field_value_attrs = field_value.attributes.except('id', 'document_field_id', 'created_at', 'updated_at')
-        original_attributes['document_field_values_attributes'] << field_value_attrs
+        field_value_attrs = field_value.build_for_new_document
+        original_attributes['document_field_values'] << field_value_attrs
       end
     end
     original_attributes
@@ -141,8 +144,16 @@ class DocumentField < ApplicationRecord
 
   def can_build?(user)
     return false if parent.class.name != 'Convention' || revision_version?
+    return true if user == parent.project.user
     can_build_codification_field?(user) ||
-    (!codification_kind.present? && document_rights.where(user: user, limit_for: DocumentRight.limit_fors[:field], enabled: true).any?)
+      # limitation by field is temporarily disabled
+      (!codification_kind.present? && true
+      #  document_rights.where(user: user,
+      #                        limit_for: DocumentRight.limit_fors[:field],
+      #                        enabled: true).any?
+      #
+      #
+       )
   end
 
   def should_have_document_field_values?
@@ -159,6 +170,14 @@ class DocumentField < ApplicationRecord
 
   def codification_kind_as_text_field?
     document_number? || revision_number?
+  end
+
+  def has_access_for_limit_by_value_value?(user, value)
+    return true if user == parent.project.user
+    document_rights.find_by(user: user,
+                            document_field_value: value,
+                            enabled: true,
+                            view_only: false).present?
   end
 
   private
@@ -178,9 +197,11 @@ class DocumentField < ApplicationRecord
     limit_for = DocumentRight.limit_fors
     if can_limit_by_value?
       rights.where(user: user, limit_for: limit_for[:value]).any?
+    elsif codification_kind.present?
+      !rights.any? || rights.where(user: user, limit_for: limit_for[:field]).any?
+      true # limitation by field is temporarily disabled
     else
-      codification_kind.present? &&
-        (!rights.any? || rights.where(user: user, limit_for: limit_for[:field]).any?)
+      false
     end
   end
 

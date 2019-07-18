@@ -35,7 +35,7 @@ class ProjectStatus extends Component {
                 <Field
                   type='text'
                   name='employment_type'
-                  labelText='Please enter a start date'
+                  label='Please enter a start date'
                   id='employment_type'
                   defaultValue='04/23/2019'
                   errorField={submitErrors}

@@ -1,0 +1,27 @@
+en:
+  api:
+    v1:
+      project_members:
+        new:
+          project_company:
+            Project Company
+          parent_company:
+            Parent Company
+          joint_venture_company:
+            Joint Venture Company
+          employee:
+            Employee
+          internal_contractor:
+            Internal Contractor
+          external_contractor:
+            External Contractor
+        create:
+          success_message:
+            Successfully added
+          error_message:
+            Something went wrong
+        update:
+          success_message:
+            Successfully added
+          error_message:
+            Something went wrong

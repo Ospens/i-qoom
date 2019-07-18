@@ -10,6 +10,7 @@ class Api::V1::DocumentsController < ApplicationController
                                    :download_native_file,
                                    :download_details ]
   load_resource :document, through: :project, only: [ :new, :create ]
+  before_action :check_convention
   authorize_resource :document
 
   def new
@@ -21,10 +22,12 @@ class Api::V1::DocumentsController < ApplicationController
   def create
     main = @project.document_mains.create
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(project_id: @project.id))
+    document = rev.versions.new(document_params(true).merge(project_id: @project.id))
     if document.save
       render json: document.attributes_for_edit
     else
+      rev.destroy
+      main.destroy
       render json: document.errors, status: :unprocessable_entity
     end
   end
@@ -35,7 +38,7 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new revision version
   def update
     project = @document.revision.document_main.project
-    document = @document.revision.versions.new(document_params.merge(project_id: project.id))
+    document = @document.revision.versions.new(document_params(true).merge(project_id: project.id))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -47,10 +50,11 @@ class Api::V1::DocumentsController < ApplicationController
     authorize! :edit, @document
     main = @document.revision.document_main
     rev = main.revisions.create
-    document = rev.versions.new(document_params.merge(project_id: main.project.id))
+    document = rev.versions.new(document_params(true).merge(project_id: main.project.id))
     if document.save
       render json: document.attributes_for_edit
     else
+      rev.destroy
       render json: document.errors, status: :unprocessable_entity
     end
   end
@@ -127,13 +131,76 @@ class Api::V1::DocumentsController < ApplicationController
     send_zip(files, filename: "#{@project.name.underscore}.zip")
   end
 
+  def download_list
+    @documents =
+      @project.document_mains
+              .documents_available_for(signed_in_user)
+              .select{ |i| params[:document_ids].include?(i.id.to_s) }
+    @documents = Document.where(id: @documents.map(&:id))
+
+    filename = "documents_#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}"
+
+    respond_to do |format|
+      format.csv do
+        stream = @documents.to_csv
+        send_data(stream, type: 'text/csv', filename: "#{filename}.csv")
+      end
+      format.xlsx do
+        stream = @documents.to_xlsx
+        send_data(stream, type: 'application/xlsx', filename: "#{filename}.xlsx")
+      end
+      format.xml do
+        stream = render_to_string
+        send_data(stream, type: 'text/xml', filename: "#{filename}.xml")
+      end
+      format.pdf do
+        stream = document_list_render(@documents)
+        send_data(stream, type: 'application/pdf', filename: "#{filename}.pdf")
+      end
+    end
+  end
+
   private
 
-  def document_params
+  def check_convention
+    if @project.present?
+      if @project.conventions.active.blank?
+        if @project.user == signed_in_user
+          redirect_to edit_api_v1_project_conventions_path
+        else
+          dms_is_unavailable
+        end
+      end
+    elsif @document.present? && @document.project.present?
+      if @document.project.conventions.active.blank?
+        if @document.project.user == signed_in_user
+          redirect_to edit_api_v1_project_conventions_path(project_id: @document.project.id)
+        else
+          dms_is_unavailable
+        end
+      end
+    end
+  end
+
+  def dms_is_unavailable
+    render json: { message: 'DMS is not available yet' }, status: :unprocessable_entity
+  end
+
+  def document_params(assign_attrs = false)
+    # assign_attrs is used to ensure that document_params is called from action
+    # instead of cancancan gem
+    if assign_attrs
+      params[:document][:document_fields_attributes] = params[:document].delete(:document_fields)
+      params[:document][:document_fields_attributes].each do |field|
+        next if field[:document_field_values].blank?
+        field[:document_field_values_attributes] = field.delete(:document_field_values)
+      end
+    end
     params.require(:document).permit(:issued_for,
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,
+                                     emails: [],
                                      document_fields_attributes:
                                       [ :kind,
                                         :codification_kind,

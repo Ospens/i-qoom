@@ -1,7 +1,8 @@
 import {
   DOCUMENT_CREATE_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
-  DOCUMENTS_FETCH_SUCCESS
+  DOCUMENTS_FETCH_SUCCESS,
+  CREATING_DOCUMENT
 } from '../actions/types'
 
 const initialState = {
@@ -21,11 +22,19 @@ const initialState = {
       revision: '12.10.2017',
       version: '1.2'
     }
-  ]
+  ],
+  newDocumentFields: {
+    grouped_fields: {
+      1: [{}],
+      2: [{}]
+    }
+  }
 }
 
 const documentsReducer = (state = initialState, action) => {
   switch (action.type) {
+  case 'DOCUMENT_TEST':
+    return initialState
   case DOCUMENT_CREATE_SUCCESS:
     return {
       ...state,
@@ -40,6 +49,14 @@ const documentsReducer = (state = initialState, action) => {
     return {
       ...state,
       current: action.payload
+    }
+  case CREATING_DOCUMENT:
+    return {
+      ...state,
+      newDocumentFields: {
+        ...state.newDocumentFields,
+        ...action.payload
+      }
     }
   default:
     return state

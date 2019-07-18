@@ -51,12 +51,12 @@ RSpec.describe DocumentField, type: :model do
                                        user: user,
                                        enabled: true)
       end
-
-      it do
-        expect(subject).to_not be_select_field
-        expect(subject.parent.class.name).to eql('Convention')
-        expect(subject.can_build?(user)).to eql(true)
-      end
+      # limitation by field is temporarily disabled
+      # it do
+      #   expect(subject).to_not be_select_field
+      #   expect(subject.parent.class.name).to eql('Convention')
+      #   expect(subject.can_build?(user)).to eql(true)
+      # end
 
       it do
         subject.parent = FactoryBot.create(:document_main)
@@ -136,7 +136,8 @@ RSpec.describe DocumentField, type: :model do
     field = doc1.document_fields.find_by(codification_kind: :revision_number)
     field.update!(value: 1)
     rev2 = main.revisions.create
-    doc2 = rev2.versions.new(doc1.reload.attributes_for_edit)
+    attrs = assign_attributes_suffix_to_document(doc1.reload.attributes_for_edit)
+    doc2 = rev2.versions.new(attrs)
     expect(doc2).to_not be_valid
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '2'
     expect(doc2).to be_valid
@@ -152,7 +153,8 @@ RSpec.describe DocumentField, type: :model do
     field = ver1.document_fields.find_by(codification_kind: :revision_version)
     expect(field.value).to eql('0')
     expect(ver1.revision_version).to eql('0')
-    ver2 = rev.versions.new(ver1.attributes_for_edit)
+    attrs = assign_attributes_suffix_to_document(ver1.attributes_for_edit)
+    ver2 = rev.versions.new(attrs)
     ver2.save!
     expect(ver2.document_fields.detect{ |i| i['codification_kind'] == 'revision_version' }.value).to eql('1')
     expect(ver2.revision_version).to eql('1')
@@ -168,7 +170,7 @@ RSpec.describe DocumentField, type: :model do
       field.document_field_values.update_all(selected: false)
       value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
       value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
-      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs = assign_attributes_suffix_to_document(doc.reload.attributes_for_edit)
       doc_attrs['document_fields_attributes']
         .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
         .detect{ |i| i['value'] == value1.value }['value'] = '333'
@@ -183,7 +185,7 @@ RSpec.describe DocumentField, type: :model do
       field.document_field_values.update_all(selected: false)
       value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
       value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
-      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs = assign_attributes_suffix_to_document(doc.reload.attributes_for_edit)
       doc_attrs['document_fields_attributes']
         .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
         .detect{ |i| i['value'] == value1.value }['value'] = '333'
@@ -199,7 +201,7 @@ RSpec.describe DocumentField, type: :model do
       field.document_field_values.update_all(selected: false)
       value1 = FactoryBot.create(:document_field_value, value: '111', selected: true, document_field: field)
       value2 = FactoryBot.create(:document_field_value, value: '222', document_field: field)
-      doc_attrs = doc.reload.attributes_for_edit
+      doc_attrs = assign_attributes_suffix_to_document(doc.reload.attributes_for_edit)
       doc_attrs['document_fields_attributes']
         .detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes']
         .detect{ |i| i['value'] == value1.value }['value'] = '333'
@@ -325,7 +327,7 @@ RSpec.describe DocumentField, type: :model do
   context '#attach_previous_native_file' do
     let(:doc) { FactoryBot.create(:document) }
     let(:rev) { doc.revision }
-    let(:doc_attrs) { doc.attributes_for_edit }
+    let(:doc_attrs) { assign_attributes_suffix_to_document(doc.attributes_for_edit) }
     let(:file_field1) { doc.document_fields.find_by(codification_kind: :document_native_file) }
 
     it 'new version' do

@@ -18,7 +18,7 @@ describe DocumentFolder, type: :request do
       { document_folder: {
           title: title,
           project_id: project.id,
-          document_fields_attributes: [ attrs ] } }
+          document_fields: [ attrs ] } }
     end
     let(:user) { FactoryBot.create(:user) }
 
