@@ -26,6 +26,8 @@ class Api::V1::DocumentsController < ApplicationController
     if document.save
       render json: document.attributes_for_edit
     else
+      rev.destroy
+      main.destroy
       render json: document.errors, status: :unprocessable_entity
     end
   end
@@ -52,6 +54,7 @@ class Api::V1::DocumentsController < ApplicationController
     if document.save
       render json: document.attributes_for_edit
     else
+      rev.destroy
       render json: document.errors, status: :unprocessable_entity
     end
   end
