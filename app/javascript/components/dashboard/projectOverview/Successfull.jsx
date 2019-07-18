@@ -1,8 +1,8 @@
 import React from 'react'
 
-const ModalSuccessfull = ({ closeModal }) => (
+const Successfull = ({ closeModal }) => (
   <React.Fragment>
-    <div className='modal-body terms-modal'>
+    <div className='modal-body info-modal'>
       <h4>Well Done!</h4>
       <p>
         You have successfully created your first project.
@@ -16,4 +16,4 @@ const ModalSuccessfull = ({ closeModal }) => (
   </React.Fragment>
 )
 
-export default ModalSuccessfull
+export default Successfull

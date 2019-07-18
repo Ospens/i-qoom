@@ -2,10 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import CheckboxField from '../../../elements/CheckboxField'
 
-const ModalTerms = ({ closeModal, termsAccepted, nextStep}) => {
+const Terms = ({ closeModal, termsAccepted, nextStep}) => {
   return (
     <div>
-      <div className='modal-body terms-modal'>
+      <div className='modal-body info-modal'>
         <h5 className='text-center'>
           Please read our <Link to='/terms' target='_blank'>Terms and Conditions</Link> and check the box below
         </h5>
@@ -40,4 +40,4 @@ const ModalTerms = ({ closeModal, termsAccepted, nextStep}) => {
   )
 }
 
-export default ModalTerms
+export default Terms

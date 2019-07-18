@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { formValueSelector, getFormSubmitErrors, FormSection } from 'redux-form'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
-import AddressFields from '../../.../../../elements/forms/AddressFields'
+import AddressFields from '../../../elements/forms/AddressFields'
 
-class ModalBillingAddress extends Component {
+class BillingAddress extends Component {
 
   renderSubmitButtons = () => {
     const { closeModal, changeStep, companyName } = this.props
@@ -49,4 +49,4 @@ const mapStateToProps = state => ({
   companyName: selector(state, 'company_data.billing_address.company_name')
 })
 
-export default connect(mapStateToProps)(ModalBillingAddress)
+export default connect(mapStateToProps)(BillingAddress)

@@ -105,9 +105,22 @@ export const SelectComponent = props => (
   />
 )
 
-const SelectField = ({ input, options, errorField, label, placeholder, isDisabled = false, isMulti = false }) => {
-  const errorInfo = errorField ? errorField[input.name] : false
-
+const SelectField = ({
+  input,
+  options,
+  errorField,
+  label,
+  placeholder,
+  isDisabled = false,
+  isMulti = false,
+  meta: { touched, error }
+}) => {
+  const errorInfo = (touched && error)
+    ? [error]
+    : errorField
+      ? errorField[input.name]
+      : false
+      
   return (
     <div>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -115,6 +128,7 @@ const SelectField = ({ input, options, errorField, label, placeholder, isDisable
         {...input}
         isMulti={isMulti}
         options={options}
+        errorInfo={errorInfo}
         value={checkValue(options, input)}
         onChange={v => { input.onChange(v.value || v.map(val => val.value)) }}
         onBlur={value => input.onBlur(value.value)}

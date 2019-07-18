@@ -62,7 +62,7 @@ export class AdminBlock extends Component {
 
   renderAdminErrorModal = () => (
     <React.Fragment>
-      <div className='modal-body terms-modal'>
+      <div className='modal-body info-modal'>
         <h4>Sorry, you can't do that yet</h4>
         <p>
           Please note that you need two

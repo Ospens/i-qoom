@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { reduxForm, FormSection, resetSection, getFormSubmitErrors } from 'redux-form'
 import CompanyFields from '../../../../elements/forms/CompanyFields'
 import NewModal from '../../../../elements/Modal'
-import ModalBillingAddress from '../../projectOverview/ModalBillingAddress'
+import BillingAddress from '../../projectOverview/BillingAddress'
 import { startUpdateProject, startFetchProject } from '../../../../actions/projectActions'
 import { successNotify } from '../../../../elements/Notices'
 
@@ -76,7 +76,7 @@ export class CompanyBlock extends Component {
   renderBillingModal = () => {
     return (
       <FormSection name='company_data'>
-        <ModalBillingAddress
+        <BillingAddress
           submitButtons={this.modalButtons}
           modalTitle='Billing address'
         />

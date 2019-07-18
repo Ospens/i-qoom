@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class ModalWelcome extends Component {
+class Welcome extends Component {
 
   state = {
     showModal: false
@@ -41,4 +41,4 @@ class ModalWelcome extends Component {
   }
 }
 
-export default ModalWelcome
+export default Welcome

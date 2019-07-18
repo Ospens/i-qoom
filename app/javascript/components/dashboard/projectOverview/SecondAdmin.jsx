@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { getFormSubmitErrors, formValueSelector } from 'redux-form'
+import { getFormSubmitErrors, formValueSelector, isValid } from 'redux-form'
 import AdministratorFields from '../../../elements/forms/AdministratorFields'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
 
 
 const renderSubmitButtons = (secondAdmin, props) => {
-  const { closeModal, changeStep, username, last_name, first_name, email } = props
+  const { closeModal, changeStep, isValid } = props
 
-  const hasEmptyFields = !username || !last_name || !first_name || !email
   return (
     <div className='modal-footer'>
       {!secondAdmin &&
@@ -26,12 +25,12 @@ const renderSubmitButtons = (secondAdmin, props) => {
         onClick={closeModal}
       >
         Cancel
-        </button>
+      </button>
       <button
         type='button'
         className='btn btn-purple'
         onClick={() => changeStep(1)}
-        disabled={secondAdmin && hasEmptyFields}
+        disabled={secondAdmin && !isValid}
       >
         {secondAdmin ? 'Next' : 'Skip'}
       </button>
@@ -39,21 +38,20 @@ const renderSubmitButtons = (secondAdmin, props) => {
   )
 }
 
-const ModalSecondAdmin = ({ submitErrors, fields, ...props }) => {
+const SecondAdmin = ({ submitErrors, fields, ...props }) => {
   const [secondAdmin, togglesecondAdmin] = useState(false)
-  if (secondAdmin && fields.length < 2) fields.push({})
 
   return (
     <div className='new-project-modal'>
       <h4>New project</h4>
       {secondAdmin &&
-        <React.Fragment>
-          <div className='modal-body'>
-            <h6>Who is the second project administrator?</h6>
-            <label className='project-admin'>Project second administrator</label>
-            <AdministratorFields submitErrors={submitErrors} admin={'admins[1]'}/>
-          </div>
-        </React.Fragment>}
+      <React.Fragment>
+        <div className='modal-body'>
+          <h6>Who is the second project administrator?</h6>
+          <label className='project-admin'>Project second administrator</label>
+          <AdministratorFields submitErrors={submitErrors} admin={'admins[1]'}/>
+        </div>
+      </React.Fragment>}
       {!secondAdmin &&
         <div className='modal-body'>
           <h6>Would you like to add a second administrator now?</h6>
@@ -64,8 +62,7 @@ const ModalSecondAdmin = ({ submitErrors, fields, ...props }) => {
           >
             Add a second administrator
           </button>
-        </div>
-      }
+        </div>}
       {renderSubmitButtons(secondAdmin, props)}
     </div>
   )
@@ -75,11 +72,8 @@ const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state),
-  username: selector(state, 'admins[1].username'),
-  last_name: selector(state, 'admins[1].last_name'),
-  first_name: selector(state, 'admins[1].first_name'),
-  email: selector(state, 'admins[1].email')
+  isValid: isValid('project_form')(state)
 })
 
-export default connect(mapStateToProps)(ModalSecondAdmin)
+export default connect(mapStateToProps)(SecondAdmin)
 

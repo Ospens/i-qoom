@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { formValueSelector, getFormSubmitErrors } from 'redux-form'
+import { getFormSubmitErrors } from 'redux-form'
 import ReactSVG from 'react-svg'
 import Left from '../../../images/arrow-button-left'
 import CompanyFields from '../../../elements/forms/CompanyFields'
 import CheckboxField from '../../../elements/CheckboxField'
 
-class ModalCompanyData extends Component {
+class CompanyData extends Component {
 
   renderSubmitButtons = () => {
-    const { closeModal, changeStep, companyName } = this.props
+    const { closeModal, changeStep } = this.props
+    
     return (
       <div className='modal-footer'>
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
@@ -20,13 +21,7 @@ class ModalCompanyData extends Component {
           Back
         </button>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
-        <button
-          type='submit'
-          className='btn btn-purple'
-          disabled={!companyName}
-        >
-          Next
-        </button>
+        <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     )
   }
@@ -57,11 +52,8 @@ class ModalCompanyData extends Component {
   }
 }
 
-const selector = formValueSelector('project_form')
-
 const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('project_form')(state),
-  companyName: selector(state, 'company_data.company_address.company_name')
+  submitErrors: getFormSubmitErrors('project_form')(state)
 })
 
-export default connect(mapStateToProps)(ModalCompanyData)
+export default connect(mapStateToProps)(CompanyData)

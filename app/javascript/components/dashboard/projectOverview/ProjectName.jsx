@@ -5,8 +5,9 @@ import { getFormSubmitErrors } from 'redux-form'
 import { Field } from 'redux-form'
 import InputField from '../../../elements/InputField'
 import Left from '../../../images/arrow-button-left'
+import { required } from '../../../elements/validations'
 
-class ModalProjectName extends Component {
+class ProjectName extends Component {
 
   render() {
     const { submitErrors, closeModal, changeStep, pristine } = this.props
@@ -25,6 +26,7 @@ class ModalProjectName extends Component {
               component={InputField}
               placeholder='Project title'
               label='Please enter a project title'
+              validate={[required]}
             />
           </div>
         </div>
@@ -54,4 +56,4 @@ const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state)
 })
 
-export default connect(mapStateToProps)(ModalProjectName)
+export default connect(mapStateToProps)(ProjectName)

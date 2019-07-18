@@ -3,9 +3,10 @@ import { Field } from 'redux-form'
 import InputField from '../InputField'
 import SelectField from '../SelectField'
 import countryList from '../../components/landing/countriesCodes'
+import { required } from '../../elements/validations'
 
 const AddressFields = ({ submitErrors }) => (
-  <React.Fragment>
+  <div>
     <div className='form-group'>
       <Field
         component={InputField}
@@ -13,6 +14,7 @@ const AddressFields = ({ submitErrors }) => (
         id='company_name'
         errorField={submitErrors}
         placeholder='Company name'
+        validate={[required]}
       />
     </div>
     <div className='row'>
@@ -23,6 +25,7 @@ const AddressFields = ({ submitErrors }) => (
           id='street'
           errorField={submitErrors}
           placeholder='Street name'
+          validate={[required]}
         />
       </div>
       <div className='form-group col-4'>
@@ -32,6 +35,7 @@ const AddressFields = ({ submitErrors }) => (
           id='house_number'
           errorField={submitErrors}
           placeholder='No.'
+          validate={[required]}
         />
       </div>
     </div>
@@ -43,6 +47,7 @@ const AddressFields = ({ submitErrors }) => (
           id='city'
           errorField={submitErrors}
           placeholder='City'
+          validate={[required]}
         />
       </div>
       <div className='form-group col-4'>
@@ -62,6 +67,7 @@ const AddressFields = ({ submitErrors }) => (
         options={countryList}
         errorField={submitErrors}
         component={SelectField}
+        validate={[required]}
       />
     </div>
     <div className='row'>
@@ -84,7 +90,7 @@ const AddressFields = ({ submitErrors }) => (
         />
       </div>
     </div>
-  </React.Fragment>
+  </div>
 )
 
 export default AddressFields

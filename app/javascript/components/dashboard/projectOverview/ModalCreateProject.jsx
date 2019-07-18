@@ -1,21 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { destroy, reduxForm, formValueSelector, FieldArray, FormSection } from 'redux-form'
+import { destroy, reduxForm, formValueSelector, FormSection } from 'redux-form'
 import NewModal from '../../../elements/Modal'
 import ReactSVG from 'react-svg'
 import plus from '../../../images/add_1'
-import ModalTerms from './ModalTerms'
+import Terms from './Terms'
 import {
   startCreateProject,
   startFetchProjects,
   startUpdateProject,
 } from '../../../actions/projectActions'
-import ModalFirstAdmin from './ModalFirstAdmin'
-import ModalSecondAdmin from './ModalSecondAdmin'
-import ModalProjectName from './ModalProjectName'
-import ModalCompanyData from './ModalCompanyData'
-import ModalSuccessfull from './ModalSuccessfull'
-import ModalBillingAddress from './ModalBillingAddress'
+import FirstAdmin from './FirstAdmin'
+import SecondAdmin from './SecondAdmin'
+import ProjectName from './ProjectName'
+import CompanyData from './CompanyData'
+import Successfull from './Successfull'
+import BillingAddress from './BillingAddress'
 
 class ModalCreateProject extends Component {
 
@@ -83,17 +83,15 @@ class ModalCreateProject extends Component {
     }
   }
 
-  renderModalFirstAdmin = props => (
-    <ModalFirstAdmin
-      {...props}
+  renderModalFirstAdmin = () => (
+    <FirstAdmin
       closeModal={this.handleClose}
       nextStep={() => this.changeStep(1)}
     />
   )
 
-  renderModalSecondAdmin = props => (
-    <ModalSecondAdmin
-      {...props}
+  renderModalSecondAdmin = () => (
+    <SecondAdmin
       closeModal={this.handleClose}
       changeStep={(val) => this.changeStep(val)}
     />
@@ -102,54 +100,41 @@ class ModalCreateProject extends Component {
   renderModalContent = () => {
     const { step } = this.state
     const { terms } = this.props
+    
     return (
       <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         {step === 1 &&
-        <ModalTerms
+        <Terms
           closeModal={this.handleClose}
           termsAccepted={terms}
           nextStep={() => this.changeStep(1)}
         />
         }
-        {step === 2 &&
-        <FieldArray
-          name='admins'
-          component={props => this.renderModalFirstAdmin(props)}
-        />
-        }
-        {step === 3 &&
-        <FieldArray
-          name='admins'
-          component={props => this.renderModalSecondAdmin(props)}
-        />
-        }
+        {step === 2 && this.renderModalFirstAdmin()}
+        {step === 3 && this.renderModalSecondAdmin()}
         {step === 4 &&
-        <ModalProjectName
+        <ProjectName
           closeModal={this.handleClose}
           changeStep={(val) => this.changeStep(val)}
-        />
-        }
+        />}
         {step === 5 &&
         <FormSection name='company_data'>
-          <ModalCompanyData
+          <CompanyData
             closeModal={this.handleClose}
             changeStep={(val) => this.changeStep(val)}
           />
-        </FormSection>
-        }
+        </FormSection>}
         {step === 6 &&
         <FormSection name='company_data'>
-          <ModalBillingAddress
+          <BillingAddress
             closeModal={this.handleClose}
             changeStep={(val) => this.changeStep(val)}
           />
-        </FormSection>
-        }
+        </FormSection>}
         {step === 7 &&
-        <ModalSuccessfull
+        <Successfull
           closeModal={this.handleClose}
-        />
-        }
+        />}
       </form>
     )
   }

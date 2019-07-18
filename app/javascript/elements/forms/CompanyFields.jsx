@@ -4,9 +4,10 @@ import InputField from '../InputField'
 import FileField from '../FileField'
 import SelectField from '../SelectField'
 import countryList from '../../components/landing/countriesCodes'
+import { required } from '../../elements/validations' 
 
 const CompanyFields = ({ submitErrors }) => (
-  <React.Fragment>
+  <div>
     <div className='row'>
       <div className='col-3'>
         <div className='form-group'>
@@ -15,7 +16,6 @@ const CompanyFields = ({ submitErrors }) => (
               type='file'
               name='logo'
               id='file_logo'
-              label='Add a logo'
               component={FileField}
               dataAllowedFileExtensions='jpg png bmp'
             />
@@ -32,6 +32,7 @@ const CompanyFields = ({ submitErrors }) => (
                 id='company_name'
                 errorField={submitErrors}
                 placeholder='Company name'
+                validate={[required]}
               />
             </FormSection>
           </div>
@@ -53,6 +54,7 @@ const CompanyFields = ({ submitErrors }) => (
               id='vat_id'
               errorField={submitErrors}
               placeholder='VAT-ID'
+              validate={[required]}
             />
           </div>
         </div>
@@ -67,6 +69,7 @@ const CompanyFields = ({ submitErrors }) => (
             id='street'
             errorField={submitErrors}
             placeholder='Street name'
+            validate={[required]}
           />
         </div>
         <div className='form-group col-4'>
@@ -76,6 +79,7 @@ const CompanyFields = ({ submitErrors }) => (
             id='house_number'
             errorField={submitErrors}
             placeholder='No.'
+            validate={[required]}
           />
         </div>
       </div>
@@ -87,6 +91,7 @@ const CompanyFields = ({ submitErrors }) => (
             id='city'
             errorField={submitErrors}
             placeholder='City'
+            validate={[required]}
           />
         </div>
         <div className='form-group col-4'>
@@ -96,6 +101,7 @@ const CompanyFields = ({ submitErrors }) => (
             id='postcode'
             errorField={submitErrors}
             placeholder='Postcode'
+            validate={[required]}
           />
         </div>
       </div>
@@ -106,6 +112,7 @@ const CompanyFields = ({ submitErrors }) => (
           options={countryList}
           errorField={submitErrors}
           component={SelectField}
+          validate={[required]}
         />
       </div>
       <div className='row'>
@@ -129,7 +136,7 @@ const CompanyFields = ({ submitErrors }) => (
         </div>
       </div>
     </ FormSection>
-  </React.Fragment>
+  </div>
 )
 
 export default CompanyFields

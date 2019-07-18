@@ -1,7 +1,16 @@
 import React from 'react'
 
-const InputField = ({ input, errorField = {}, readOnly = false, className, label, type, ...props }) => {
+const InputField = ({
+  input,
+  errorField = {},
+  className,
+  label,
+  type,
+  meta: { touched, error },
+  ...props
+}) => {
   const errorInfo = errorField[input.name]
+
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -9,12 +18,16 @@ const InputField = ({ input, errorField = {}, readOnly = false, className, label
         {...input}
         {...props}
         type={type ? type : 'text'}
-        className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
-        readOnly={readOnly}
+        className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
       />
+      {touched &&
       <div className='invalid-feedback'>
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+      {error
+        ? error
+        : errorInfo
+          ? errorInfo[0]
+          : ''}
+      </div>}
     </div>
   )
 }

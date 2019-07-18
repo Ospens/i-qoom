@@ -246,16 +246,20 @@ button:disabled {
     padding-left: 30px;
     padding-right: 30px;
 
-    &.terms-modal {
-      max-width: 490px;
+    &.info-modal {
       padding-left: 60px;
       padding-right: 60px;
+      max-width: 500px;
 
       a:hover {
         text-decoration: none;
         outline: none;
         color: #007bff;
       }
+    }
+
+    &.company-data {
+      max-width: 550px;
     }
 
     &.project-name,
@@ -325,7 +329,7 @@ button:disabled {
   }
 
   .new-project-modal {
-    max-width: 490px;
+    // max-width: 490px;
     h4 {
       padding-left: 30px;
       padding-top: 30px;
@@ -359,6 +363,18 @@ button:disabled {
   .form-check-label {
     display: inline-block !important;
   }
+}
+
+form {
+  label {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.admin-form {
+  width: 100%;
+  max-width: 440px;
 }
 
 .nav-bar {

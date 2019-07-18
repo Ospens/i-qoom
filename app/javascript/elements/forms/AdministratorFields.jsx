@@ -1,11 +1,12 @@
 import React from 'react'
 import { Field } from 'redux-form'
 import InputField from '../InputField'
+import { email, required } from '../../elements/validations'
 
 const AdministratorFields = ({ submitErrors, admin }) => {
   return (
-    <React.Fragment>
-      <div className='row'>
+    <div className='admin-form'>
+      <div className='form-row'>
         <div className='form-group col-3'>
           <Field
             type='text'
@@ -14,6 +15,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
             id='username'
             errorField={submitErrors}
             placeholder='Username'
+            validate={[required]}
           />
         </div>
         <div className='form-group col-9'>
@@ -24,34 +26,32 @@ const AdministratorFields = ({ submitErrors, admin }) => {
             id='last_name'
             errorField={submitErrors}
             placeholder='Last name'
+            validate={[required]}
           />
         </div>
       </div>
-      <div className='custom_row'>
-        <div className='form-group'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.first_name`}
-            id='first_name'
-            errorField={submitErrors}
-            placeholder='First name'
-          />
-        </div>
+      <div className='form-group'>
+        <Field
+          type='text'
+          component={InputField}
+          name={`${admin}.first_name`}
+          id='first_name'
+          errorField={submitErrors}
+          placeholder='First name'
+          validate={[required]}
+        />
       </div>
-      <div className='custom_row'>
-        <div className='form-group'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.email`}
-            id='email'
-            errorField={submitErrors}
-            placeholder='Email address'
-          />
-        </div>
+      <div className='form-group'>
+        <Field
+          component={InputField}
+          name={`${admin}.email`}
+          id='email'
+          errorField={submitErrors}
+          placeholder='Email address'
+          validate={[email, required]}
+        />
       </div>
-      <div className='row'>
+      <div className='form-row'>
         <div className='form-group col-3'>
           <Field
             type='text'
@@ -73,7 +73,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           />
         </div>
       </div>
-    </React.Fragment>
+    </div>
   )
 }
 

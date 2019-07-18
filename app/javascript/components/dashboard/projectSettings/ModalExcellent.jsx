@@ -5,7 +5,7 @@ function ModalExcellent({ closeModal, termsAccepted, nextStep}) {
   return (
     <ModalComponent>
       <div>
-        <div className='modal-body terms-modal'>
+        <div className='modal-body info-modal'>
           <h4>Excellent!</h4>
           <p>An email has been sent to the second project</p>
           <p>administrator. Please note that the email address</p>
