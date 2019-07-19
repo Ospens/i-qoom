@@ -1,14 +1,10 @@
 import React, { useState, useEffect }  from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
 import { withRouter } from 'react-router-dom'
-import { FieldArray, reduxForm } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import classnames from 'classnames'
 import { newDocument, startCreateDocument } from '../../../../actions/documentsActions'
-import overviewIcon from '../../../../images/task-checklist-check'
-import dmsSettingsIcon from '../../../../images/task-list-settings'
-import editIcon from '../../../../images/pencil-write'
-import checkIcon from '../../../../images/check_1'
+import InputField from '../../../../elements/InputField'
 import DocumentsAndFiles from './DocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
 import DocIdModal from '../DocIdModal'
@@ -18,34 +14,102 @@ import DMSLayout from '../DMSLayout'
 const menuItems = [
   {
     title: 'Documents data & files',
-    icon: overviewIcon,
+    icon: 'task-checklist-icon',
     menuStep: 1
   },
   {
     title: 'Access & Communication',
-    icon: dmsSettingsIcon,
+    icon: 'task-list-settings-icon',
     menuStep: 2
   }
 ]
+
+const folders = [
+  {
+    title: 'My concerns',
+    checked: true,
+    disabled: false
+  },
+  {
+    title: 'Not relevant for me',
+    checked: false,
+    disabled: false
+  },
+  {
+    title: 'All documents',
+    checked: false,
+    disabled: true
+  },
+  {
+    title: 'My documents',
+    checked: false,
+    disabled: true
+  },
+]
+
+const PopCreateFolder = () => {
+  const [popup, togglePopup] = useState(true)
+
+  return (
+    <div className='copy-to-folder-block'>
+      <button className='btn btn-copy-to-folder' onClick={() => togglePopup(!popup)}>Copy to folder</button>
+
+      {popup &&
+        <div className='copy-to-folder-block__popup'>
+          <label className='copy-to-folder-block__popup_title'>Copy to folder</label>
+          <ul>
+            <li className='new-folder'>
+              <button className='btn'>
+                <i className='svg-icon blue-plus-icon' />
+                <span>New folder</span>
+              </button>
+            </li>
+            {folders.map((el, i) => (
+              <li
+                key={i}
+                className={classnames({ 'disabled': el.disabled }, { 'checked': el.checked })}
+              >
+                <button className='btn'>
+                  <input
+                    type='checkbox'
+                    id={el}
+                    checked={el.checked}
+                    onChange={val => console.log(val)}
+                  />
+                  <label htmlFor='my_concerns' />
+                  <i
+                    className={classnames('svg-icon black',
+                      { 'folder-icon': !el.disabled },
+                      { 'folder-icon-2': el.disabled })}
+                  />
+                  <span>{el.title}</span>
+                </button>
+              </li>
+            ))}
+            </ul>
+          </div>}
+    </div>
+  )
+}
 
 const SideBar = ({ step, toggleStep }) => (
   <div className='dms-sidebar-menu'>
 
     <div className='dms-sidebar-menu__document-title'>
-      <div className='editable-title'>
-        <h5>(Document name)</h5>
-        <ReactSVG
-          svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-          src={editIcon}
-        />
+      <div className='editable-title p-0'>
+        <div className='form-group mb-0'>
+          <Field
+            component={InputField}
+            name='document_name'
+            id='document_name'
+            label='Document name'
+            placeholder='Document name'
+          />
+        </div>
       </div>
-      <button className='btn copy-to-folder'>Copy to folder</button>
+      {PopCreateFolder()}
       {false && <React.Fragment>
         <div className='copied-to-folder'>
-          <ReactSVG
-            svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-            src={checkIcon}
-          />
           <span>Copied to folders</span>
           <button className='btn copy-to-folder'>change</button>
         </div>
@@ -66,10 +130,7 @@ const SideBar = ({ step, toggleStep }) => (
               className={classnames('btn', { 'active': step === menuStep })}
               onClick={() => toggleStep(menuStep)}
             >
-              <ReactSVG
-                svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-                src={icon}
-              />
+              <i className={classnames('svg-icon black', icon )} />
               <span className='head-button__gray-text'>{title}</span>
             </button>
           </li>

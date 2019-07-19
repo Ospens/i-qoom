@@ -334,9 +334,29 @@
               padding: 10px;
               border-radius: 5px;
               margin-bottom: 5px;
+              align-items: center;
 
-              &:not(.new-folder) path {
-                fill: black;
+              button {
+                display: flex;
+                align-items: center;
+                padding: 0;
+                color: rgba(0, 0, 0, .87);
+
+                i {
+                  margin-right: 10px;
+
+                  &.folder-icon,
+                  &.folder-icon-2,
+                  &.folder-icon-3 {
+                    margin-left: 10px;
+                  }
+                }
+              }
+
+              &.new-folder {
+                span {
+                  color:#0096FA;
+                }
               }
 
               &.checked {
@@ -344,7 +364,21 @@
               }
 
               &.disabled {
-                color: lightgray;
+
+                button {
+                  display: flex;
+                  align-items: center;
+                  padding: 0;
+                  color: lightgray;
+
+                  i {
+                    margin-right: 10px;
+
+                    &.folder-black-icon {
+                      margin-left: 10px;
+                    }
+                  }
+                }
 
                 path {
                   fill: lightgray;

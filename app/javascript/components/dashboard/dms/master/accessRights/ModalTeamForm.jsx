@@ -70,7 +70,6 @@ class ModalTeamForm extends Component {
       <ReactSVG
         svgStyle={{ height: 15, width: 15, marginRight: 5 }}
         src={plusIcon}
-        className='svg-icon'
       />
       <span>Create new Document</span>
     </button>

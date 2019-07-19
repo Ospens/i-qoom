@@ -49,7 +49,6 @@ class SideBar extends Component {
               <ReactSVG
                 svgStyle={{ height: 15 }}
                 src={searchIcon}
-                className='svg-icon'
               />
             } placeholder='Choose language' />
             <Dropdown.Menu scrolling>

@@ -1,0 +1,48 @@
+
+i.svg-icon {
+  display: inline-block;
+  height: 20px;
+  min-height: 20px;
+  width: 20px;
+  min-width: 20px;
+  -webkit-mask-size: cover !important;
+  mask-size: cover !important;
+  background-color: #0096FA;
+
+  &.black {
+    background-color: rgba(0, 0, 0, .87) !important;
+  }
+
+  &.blue-plus-icon {
+    -webkit-mask: url('../images/add_1.svg') no-repeat 50% 50%;
+    mask: url('../images/add_1.svg') no-repeat 50% 50%;
+  }
+
+  &.folder-icon {
+    -webkit-mask: url('../images/folder-empty-black.svg') no-repeat 50% 50%;
+    mask: url('../images/folder-empty-black.svg') no-repeat 50% 50%;
+    height: 18px;
+    min-height: 18px;
+    width: 20px;
+  }
+
+  &.folder-icon-2 {
+    -webkit-mask: url('../images/folder-image.svg') no-repeat 50% 50%;
+    mask: url('../images/folder-image.svg') no-repeat 50% 50%;
+  }
+
+  &.folder-icon-3 {
+    -webkit-mask: url('../images/folder-image-1.svg') no-repeat 50% 50%;
+    mask: url('../images/folder-image-1.svg') no-repeat 50% 50%;
+  }
+
+  &.task-checklist-icon {
+    -webkit-mask: url('../images/task-checklist-check.svg') no-repeat 50% 50%;
+    mask: url('../images/task-checklist-check.svg') no-repeat 50% 50%;
+  }
+
+  &.task-list-settings-icon {
+    -webkit-mask: url('../images/task-list-settings.svg') no-repeat 50% 50%;
+    mask: url('../images/task-list-settings.svg') no-repeat 50% 50%;
+  }
+}
