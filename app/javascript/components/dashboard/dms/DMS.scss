@@ -105,6 +105,10 @@
   .head-buttons {
     display: flex;
 
+    button {
+      align-items: center;
+    }
+    
     a {
       span {
         color: #0096FA !important;
@@ -117,22 +121,8 @@
       min-width: 110px;
     }
 
-    .edit-doc-icon {
-      path {
-        fill: #0096FA;
-      }
-
-      circle {
-        fill: #0096FA;
-      }
-    }
-
-    path {
-      stroke: #0096FA;
-    }
-
-    circle {
-      stroke: #0096FA;
+    .svg-icon {
+      background-color: #0096FA;
     }
 
     button.disable {
@@ -140,12 +130,8 @@
         color: lightgray;
       }
 
-      path {
-        stroke: lightgray;
-      }
-
-      circle {
-        stroke: lightgray;
+      .svg-icon {
+        background-color: lightgray;
       }
     }
   }
@@ -413,6 +399,7 @@
 
       .scroll-block-title {
         display: flex;
+        align-items: center;
         background-color: #f0f7f7;
         padding-top: 10px;
         padding-bottom: 10px;

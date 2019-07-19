@@ -7,8 +7,6 @@ import {
   startUpdateConvention,
   discardConvention
 } from '../../../../../actions/conventionActions'
-import ReactSVG from 'react-svg'
-import lockIcon from '../../../../../images/Locked'
 import { reorderFields } from '../../../../../actions/conventionActions'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { DocFieldsColumn } from './DocFieldsColumn'
@@ -203,10 +201,7 @@ class DocFieldsTable extends Component {
             <h4>Add documents data & files</h4>
             <label className='rounded-label red ml-4'>
               Form version 0.1
-              <ReactSVG
-                svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-                src={lockIcon}
-              />
+              <i className='svg-icon pink lock-icon ml-2' />
             </label>
           </div>
           <div className='dms-content__project-phases'>

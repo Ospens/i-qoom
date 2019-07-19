@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
 import TextEditor from '../../elements/TextEditor'
 import Arrows from '../../elements/Arrows'
-import blueCheck from '../../images/blue_check.svg'
-import star from '../../images/gold_star.svg'
 import DropDownMenu from '../../elements/DropDownMenu'
 import pencil from '../../images/pencil-write'
 import trashBucket from '../../images/trash_bucket'
@@ -50,10 +47,7 @@ class Reviews extends Component {
     for (let i = 0; i < count; ++i) {
       stars.push(
         <div key={i} className='vote-stars'>
-          <ReactSVG
-            src={star}
-            svgStyle={{ width: 10, height: 10 }}
-          />
+          <i className='svg-icon star-icon' />
         </div>
       )
     }
@@ -69,11 +63,7 @@ class Reviews extends Component {
         <div className='user-name-block col-9'>
         <div className='row'>
           <TextEditor text={el.name} />
-          <ReactSVG
-            src={blueCheck}
-            svgStyle={{ width: 15, height: 15 }}
-            className='blue-check'
-          />
+          <i className='svg-icon rounded-blue-check-icon ml-2' />
         </div>
           <TextEditor text={el.country} />
           <div className='user-stars'>{this.starsRender(el.stars)}
@@ -94,12 +84,8 @@ class Reviews extends Component {
         <div className='user-name-block col-9'>
           <div className='row'>
             <div dangerouslySetInnerHTML={{ __html: el.name }} />
-            <ReactSVG
-              src={blueCheck}
-              svgStyle={{ width: 15, height: 15 }}
-              className='blue-check'
-            />
-        </div>
+              <i className='svg-icon rounded-blue-check-icon ml-2' />
+            </div>
           <div dangerouslySetInnerHTML={{ __html: el.country}} />
           <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
@@ -136,11 +122,7 @@ class Reviews extends Component {
             <div className='clearfix' />
             <div className='user-name-block col-9'>
               <h6 className='user-name'>Name</h6>
-              <ReactSVG
-                src={blueCheck}
-                svgStyle={{ width: 15, height: 15 }}
-                className='blue-check'
-              />
+              <i className='svg-icon rounded-blue-check-icon ml-2' />
               <div className='user-country text-muted'>Place</div>
               <div className='user-stars'>{this.starsRender(5)}
               </div>

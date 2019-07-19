@@ -7,7 +7,6 @@ import {
   getFormSubmitErrors,
   Field
 } from 'redux-form'
-import ReactSVG from 'react-svg'
 import DropDown from '../../../../../elements/DropDown'
 import {
   setInitialValuesField,
@@ -17,10 +16,6 @@ import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
 import DatePickerField from '../../../../../elements/DatePickerField'
 import DropZoneField from '../../../../../elements/DropZoneField'
-import trashIcon from '../../../../../images/trash_bucket'
-import fieldBelow from '../../../../../images/upload-menu1'
-import fieldAbove from '../../../../../images/upload-menu2'
-import copyToFolderIcon from '../../../../../images/folder-empty'
 
 class DocFieldsElement extends Component {
 
@@ -123,10 +118,7 @@ class DocFieldsElement extends Component {
         className='dropdown-item'
         onClick={() => openInputForm(col, row)}
       >
-        <ReactSVG
-          svgStyle={{ height: 15, width: 15 }}
-          src={icon}
-        />
+        <i className={classnames('svg-icon gray', icon)} />
         <span className='item-text'>{title}</span>
       </li>
     )
@@ -136,7 +128,7 @@ class DocFieldsElement extends Component {
     const { index, column, field, setInitialValuesField } = this.props
     return (
       <div onClick={() => setInitialValuesField(field)}>
-        {this.renderMenuItem(copyToFolderIcon, 'Copy', column, index + 1)}
+        {this.renderMenuItem('copy-icon', 'Copy', column, index + 1)}
       </div>
     )
   }
@@ -154,12 +146,12 @@ class DocFieldsElement extends Component {
     const actionConventions = [
       {
         title: 'New field above',
-        icon: fieldAbove,
+        icon: 'section-above-icon',
         offset: index
       },
       {
         title: 'New field below',
-        icon: fieldBelow,
+        icon: 'section-below-icon',
         offset: index + 1
       }
     ]
@@ -199,10 +191,7 @@ class DocFieldsElement extends Component {
                       className='dropdown-item'
                       onClick={() => removeField(column, index)}
                     >
-                      <ReactSVG
-                        svgStyle={{ height: 15, width: 15 }}
-                        src={trashIcon}
-                      />
+                      <i className='svg-icon trash-icon gray' />
                       <span className='item-text'>Delete</span>
                     </li>
                   </React.Fragment>

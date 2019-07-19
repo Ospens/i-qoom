@@ -1,9 +1,4 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
-import lockIcon from '../../../images/Locked'
-import dmsSettingsIcon from '../../../images/task-list-settings'
-import revisionIcon from '../../../images/Revise_2'
-import pdfIcon from '../../../images/office-file-pdf'
 import DMSLayout from './DMSLayout'
 import ModalAddComment from './ModalAddComment'
 
@@ -27,22 +22,22 @@ class ShowDocument extends Component {
               <li className='col-3 active'>
                 <button>
                   Planning
-                      </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Development
-                      </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Execution
-                      </button>
+                </button>
               </li>
               <li className='col-3'>
                 <button>
                   Operation
-                      </button>
+                </button>
               </li>
             </ul>
           </div>
@@ -81,10 +76,7 @@ class ShowDocument extends Component {
                 <label>Current Revision</label>
                 <label className='rounded-label red'>
                   Revision 00
-                          <ReactSVG
-                    svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-                    src={lockIcon}
-                  />
+                  <i className='svg-icon pink lock-icon ml-2' />
                 </label>
               </div>
 
@@ -124,10 +116,7 @@ class ShowDocument extends Component {
                 <label>Current Version</label>
                 <label className='rounded-label red'>
                   Revision 00
-                          <ReactSVG
-                    svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-                    src={lockIcon}
-                  />
+                  <i className='svg-icon pink lock-icon ml-2' />
                 </label>
               </div>
 
@@ -146,23 +135,17 @@ class ShowDocument extends Component {
               nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
               velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
               proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                    </p>
+            </p>
           </div>
 
           <div className='document-show__files-row'>
             <label className='mb-4'>Files</label>
             <div className='d-flex align-items-center mb-4'>
-              <ReactSVG
-                svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-                src={pdfIcon}
-              />
+              <i className='svg-icon file-pdf-icon mr-2' />
               <span>Lorem_Ipsum_Langer_Filename.pdf</span>
             </div>
             <div className='d-flex align-items-center'>
-              <ReactSVG
-                svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-                src={pdfIcon}
-              />
+              <i className='svg-icon file-pdf-icon mr-2' />
               <span>Short_Intro.ppt</span>
             </div>
           </div>
@@ -292,10 +275,7 @@ class ShowDocument extends Component {
         <button className='btn copy-to-folder'>Copy to folder</button>
         {false && <React.Fragment>
           <div className='copied-to-folder'>
-            <ReactSVG
-              svgStyle={{ height: 13, width: 13, marginLeft: 10 }}
-              src={checkIcon}
-            />
+            <i className='svg-icon green-check-icon' />
             <span>Copied to folders</span>
             <button className='btn copy-to-folder'>change</button>
           </div>
@@ -310,10 +290,7 @@ class ShowDocument extends Component {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <ReactSVG
-              svgStyle={{ height: 15, width: 15, marginLeft: 10, marginRight: 10 }}
-              src={revisionIcon}
-            />
+            <i className='svg-icon revision-icon black mx-2' />
             <span>Revision</span>
           </div>
           <ul className='revision-list'>
@@ -333,10 +310,7 @@ class ShowDocument extends Component {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <ReactSVG
-              svgStyle={{ height: 15, width: 15, marginLeft: 10, marginRight: 10 }}
-              src={dmsSettingsIcon}
-            />
+            <i className='svg-icon task-list-settings-icon black mx-2' />
             <span>Versions</span>
           </div>
           <ul className='revision-list'>
@@ -347,7 +321,7 @@ class ShowDocument extends Component {
             ))}
             <li className='active'>
               3.0
-                      </li>
+            </li>
           </ul>
         </div>
       </div>

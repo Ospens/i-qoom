@@ -658,8 +658,8 @@ header {
         }
     }
     .review-card-avatar {
-        height: 100%;
-        max-width: 65px;
+        height: 65px;
+        width: 65px;
         margin-left: 1.25rem;
         border-radius: 100%;
     }
@@ -856,67 +856,86 @@ input[type=checkbox] {
 }
 
 #example-card {
-    background-color: #475759;
-    padding-top: 5em;
-    padding-bottom: 5em;
-    border-bottom: 1px solid #eaebeb;
-    overflow: hidden;
-    h2 {
-        color: white;
-        margin-left: 100px;
-        margin-right: 450px;
-        text-align: center;
+  background-color: #475759;
+  padding-top: 5em;
+  padding-bottom: 5em;
+  border-bottom: 1px solid #eaebeb;
+  overflow: hidden;
+
+  h2 {
+    color: white;
+    margin-left: 100px;
+    margin-right: 450px;
+    text-align: center;
+  }
+
+  .slick-list {
+    margin-left: 100px;
+    margin-right: 450px;
+  }
+
+  .slick-slide {
+    width: auto;
+    height: 630px;
+  }
+
+  .slick-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .slick-dots {
+    position: absolute;
+    display: block;
+    right: 50px;
+    top: -130px;
+    max-width: 300px;
+
+    li {
+      width: 300px;
+      margin-bottom: 10px;
     }
-    .slick-list {
-        margin-left: 100px;
-        margin-right: 450px;
+  }
+
+  .nextBtn {
+    position: absolute;
+    right: 460px;
+    bottom: -40px;
+  }
+
+  .prevBtn {
+    position: absolute;
+    right: 500px;
+    bottom: -40px;
+  }
+
+  path {
+    fill: white;
+  }
+
+  .btn-back {
+    background-color: white;
+    justify-content: center;
+    display: flex;
+    color: #a5adad;
+    margin-left: 200px;
+    width: 100px;
+    text-align: center;
+    margin-top: 10px;
+    align-items: center;
+    text-transform: uppercase;
+        
+    .svg-icon {
+      margin-right: 5px;
+      background-color: grey;
+      width: 8px;
+      min-width: 8.5px;
+      height: 12px;
+      min-height: 10px;
     }
-    .slick-slide {
-        width: auto;
-        height: 630px;
-    }
-    .slick-track {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-items: stretch;
-    }
-    .slick-dots {
-        position: absolute;
-        display: block;
-        right: 50px;
-        top: -130px;
-        max-width: 300px;
-        li {
-            width: 300px;
-            margin-bottom: 10px;
-        }
-    }
-    .nextBtn {
-        position: absolute;
-        right: 460px;
-        bottom: -40px;
-    }
-    .prevBtn {
-        position: absolute;
-        right: 500px;
-        bottom: -40px;
-    }
-    path {
-        fill: white;
-    }
-    .btn-back {
-        background-color: white;
-        display: flex;
-        color: #a5adad;
-        margin-left: 200px;
-        width: 100px;
-        text-align: center;
-        margin-top: 10px;
-        path {
-            fill: #a5adad;
-        }
-    }
+  }
 }
 
 .top-bar-user-info {

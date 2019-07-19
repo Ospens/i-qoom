@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
+import classnames from 'classnames'
 import { withRouter } from 'react-router-dom'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
 import NewModal from '../../../elements/Modal'
 import Tabs from '../../../elements/Tabs'
-import roleList from '../../../images/task-list-edit'
-import disciplineList from '../../../images/common-file-text'
-import blueCheck from '../../../images/add_1'
 import DropDown from '../../../elements/DropDown'
-import pencil from '../../../images/pencil-write'
-import emailSend from '../../../images/email-action-send-2'
-import greenCheck from '../../../images/check_3'
-import trash_bucket from '../../../images/trash_bucket'
 import AddMember from './memberManagment/AddMember'
 import { startFetchProjectMembers } from '../../../actions/projectMembersActions'
 
@@ -28,12 +21,9 @@ class MemberManagment extends Component {
     startFetchProjectMembers(project_id)
   }
 
-  renderDropDownItems = (pic, name) => (
+  renderDropDownItems = (icon, name) => (
     <a className='dropdown-item' href='#'>
-      <ReactSVG
-        svgStyle={{ height: 13, width: 13 }}
-        src={pic}
-      />
+      <i className={classnames("svg-icon", icon)} />
       <span className='item-text'>
         {name}
       </span>
@@ -61,19 +51,13 @@ class MemberManagment extends Component {
           <div className='member-managment-buttons'>
             <div>
               <button type='button' className='btn with-icon'>
-                <ReactSVG
-                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                  src={roleList}
-                />
+                <i className='svg-icon task-list-edit-icon' />
                 <span>Role list</span>
               </button>
             </div>
             <div>
               <button type='button' className='btn with-icon'>
-                <ReactSVG
-                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                  src={disciplineList}
-                />
+                <i className='svg-icon common-file-icon' />
                 <span>Discipline list</span>
               </button>
             </div>
@@ -83,10 +67,7 @@ class MemberManagment extends Component {
                 className='btn with-icon'
                 onClick={() => this.setState({ addMemberModal: true })}
               >
-                <ReactSVG
-                  svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                  src={blueCheck}
-                />
+                <i className='svg-icon blue-plus-icon' />
                 <span>Add member</span>
               </button>
             </div>
@@ -101,9 +82,9 @@ class MemberManagment extends Component {
                   btnName='Action'
                   className='manage-members-actions-button mt-4'
                 >
-                  {this.renderDropDownItems(emailSend, 'Send invite')}
-                  {this.renderDropDownItems(pencil, 'Edit member')}
-                  {this.renderDropDownItems(trash_bucket, 'Delete')}
+                  {this.renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
+                  {this.renderDropDownItems('pencil-icon gray', 'Edit member')}
+                  {this.renderDropDownItems('trash-icon gray', 'Delete')}
                 </DropDown>
               </div>
               <ActiveMembers projectId={project_id}/>
@@ -117,9 +98,9 @@ class MemberManagment extends Component {
                   btnName='Action'
                   className='mt-4'
                 >
-                  {this.renderDropDownItems(emailSend, 'Send invite')}
-                  {this.renderDropDownItems(pencil, 'Edit member')}
-                  {this.renderDropDownItems(trash_bucket, 'Delete')}
+                  {this.renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
+                  {this.renderDropDownItems('pencil-icon gray', 'Edit member')}
+                  {this.renderDropDownItems('trash-icon gray', 'Delete')}
                 </DropDown>
               </div>
               <PendingMembers />

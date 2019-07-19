@@ -52,6 +52,20 @@ button:disabled {
   border-top-right-radius: 3px;
   text-align: center !important;
 
+  .cogs-icon {
+    width: 30px;
+    height: 30px;
+    align-self: end;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: rgba(0, 0, 0, .87);
+
+    &:hover {
+      cursor: pointer;
+      background-color: #0096FA;
+    }
+  }
+
   &.in-preparation {
     display: flex;
     flex-direction: column;
@@ -64,21 +78,6 @@ button:disabled {
     a {
       display: flex;
       -webkit-box-orient: vertical;
-    }
-
-    .cogs {
-      align-self: end;
-      padding-top: 5px;
-      padding-left: 5px;
-
-      &:hover {
-        cursor: pointer;
-
-        path,
-        circle {
-          fill: #0096FA;
-        }
-      }
     }
 
     .project-card__bottom {
@@ -101,6 +100,7 @@ button:disabled {
     background-color: #fbffff;
     border: 2px solid #f2f8f9;
     cursor: pointer;
+    align-items: center;
 
     label {
       margin-top: 10px;
@@ -342,17 +342,22 @@ button:disabled {
       font-size: 18px;
     }
   }
+
   .btn-back {
     display: flex;
+    align-items: center;
     margin-right: auto !important;
     text-transform: uppercase;
     font-size: 11px;
     color: grey;
-    svg {
-      margin-bottom: 1px;
-      path {
-        fill: grey;
-      }
+    
+    .svg-icon {
+      margin-right: 5px;
+      background-color: grey;
+      width: 6px;
+      min-width: 6.5px;
+      height: 10px;
+      min-height: 10px;
     }
 
     &.back-member-details {
@@ -776,13 +781,16 @@ input[type=checkbox]:checked+label {
     }
 
     &.td-files {
-      min-width: 0;
-      max-width: 30px;
-
-      .td-files-icon {
+      & > div {
         display: flex;
-        align-items: center;
         justify-content: center;
+      }
+
+      .common-file-icon {
+        width: 23px;
+        min-width: 23px;
+        min-height: 24px;
+        height: 24px;
       }
     }
   }
@@ -880,9 +888,8 @@ span.divider {
       background-color: #f5fcfc;
       color: #0095f9;
 
-      path,
-      circle {
-        fill: #0095f9;
+      .svg-icon {
+        background-color: #0095f9 !important;
       }
     }
   }
@@ -919,14 +926,19 @@ span.divider {
 
 .with-icon {
   display: flex !important;
+  
   span {
     font-weight: 500;
     color: #0095f9;
-    // height: 19px;
     align-items: flex-end;
     align-self: flex-end;
     text-align: left;
   }
+
+  .svg-icon {
+    margin-right: 10px;
+  }
+
   &:hover {
     span {
       color: #006cb4;
@@ -934,8 +946,21 @@ span.divider {
   }
 }
 
-span.tab-description {
-  color:#ced4da;
+div.tab-description {
+  display: flex;
+  align-items: center;
+  
+  span {
+    color:#ced4da;
+  }
+
+  .green-check-icon {
+    margin-left: 10px;
+    min-height: 13px;
+    height: 13px;
+    min-width: 15px;
+    width: 15px;
+  }
 }
 
 .plus-icon {
@@ -1093,11 +1118,17 @@ span.tab-description {
 .btn-move-to-archive {
   display: flex !important;
   border: 1px solid #ccc !important;
+  
+  .common-file-lock {
+    margin-right: 10px;
+  }
+
   &:hover, &:active {
     background-color: #daf0ff;
     color: #2fa7f9 !important;
-    path {
-      fill: #2fa7f9 !important;
+    
+    .common-file-lock {
+      background-color: #2fa7f9 !important;
     }
   }
 }

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {
-  FOLDER_CREATED,
+  FOLDER_CREATED
 } from './types'
 import { errorNotify } from '../elements/Notices'
 

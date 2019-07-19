@@ -3,9 +3,6 @@ import ReactSVG from 'react-svg'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
 import logo from '../images/Logo_header'
-import cogs from '../images/cog-double'
-import searchIcon from '../images/search-alternate'
-import burgerOpen from '../images/Burgermenu_1'
 import SideBarItem from './SideBarItem'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
@@ -45,12 +42,10 @@ class SideBar extends Component {
           closeOnChange={false}
         >
           <Dropdown.Menu>
-            <Input icon={
-              <ReactSVG
-                svgStyle={{ height: 15 }}
-                src={searchIcon}
-              />
-            } placeholder='Choose language' />
+            <Input
+              icon={ <i className='svg-icon search-icon' /> }
+              placeholder='Choose language'
+            />
             <Dropdown.Menu scrolling>
               {tagOptions.map(option => (
                 <Dropdown.Item key={option.value} {...option} />
@@ -137,12 +132,9 @@ class SideBar extends Component {
               />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
-            <ReactSVG
-              svgStyle={{ height: 10, marginLeft: 20 }}
-              src={burgerOpen}
-              className='burger-button'
-              onClick={toggle}
-            />
+            <button type='button' className='btn d-flex' onClick={toggle}>
+              <i className='svg-icon burger-menu-icon' />
+            </button>
           </div>
           {(() => {
             if (currentProject.id && pathname !== '/dashboard/') {
@@ -160,11 +152,7 @@ class SideBar extends Component {
             <span className='active-project-text'>Active project</span>
             <span className='active-project-title'>{currentProject.name}</span>
           </div>
-          <ReactSVG
-            svgStyle={{ height: 20 }}
-            src={cogs}
-            className='active-project-cogs'
-          />
+          <i className='svg-icon cogs-icon white ml-auto' />
         </div>}
       </aside>
     )

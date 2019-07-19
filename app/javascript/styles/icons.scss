@@ -13,9 +13,30 @@ i.svg-icon {
     background-color: rgba(0, 0, 0, .87) !important;
   }
 
+  &.white {
+    background-color: #fff !important;
+  }
+
+  &.gray {
+    background-color: gray !important;
+  }
+
+  &.pink {
+    background-color: rgb(255, 140, 186) !important;
+  }
+
   &.blue-plus-icon {
     -webkit-mask: url('../images/add_1.svg') no-repeat 50% 50%;
     mask: url('../images/add_1.svg') no-repeat 50% 50%;
+  }
+
+  &.copy-icon {
+    -webkit-mask: url('../images/common-file-double-1.svg') no-repeat 50% 50%;
+    mask: url('../images/common-file-double-1.svg') no-repeat 50% 50%;
+    height: 23px;
+    min-height: 23px;
+    width: 19px;
+    min-width: 19px;
   }
 
   &.folder-icon {
@@ -34,6 +55,7 @@ i.svg-icon {
   &.folder-icon-3 {
     -webkit-mask: url('../images/folder-image-1.svg') no-repeat 50% 50%;
     mask: url('../images/folder-image-1.svg') no-repeat 50% 50%;
+    width: 21px;
   }
 
   &.task-checklist-icon {
@@ -44,5 +66,179 @@ i.svg-icon {
   &.task-list-settings-icon {
     -webkit-mask: url('../images/task-list-settings.svg') no-repeat 50% 50%;
     mask: url('../images/task-list-settings.svg') no-repeat 50% 50%;
+  }
+
+  &.cogs-icon {
+    -webkit-mask: url('../images/cog-double.svg') no-repeat 50% 50%;
+    mask: url('../images/cog-double.svg') no-repeat 50% 50%;
+  }
+
+  &.arrow-left-icon {
+    -webkit-mask: url('../images/arrow-button-left.svg') no-repeat 50% 50%;
+    mask: url('../images/arrow-button-left.svg') no-repeat 50% 50%;
+  }
+
+  &.arrow-left-icon-2 {
+    background: url('../images/Arrow_2_left.svg') no-repeat 50% 50%;
+  }
+
+  &.task-list-edit-icon {
+    -webkit-mask: url('../images/task-list-edit.svg') no-repeat 50% 50%;
+    mask: url('../images/task-list-edit.svg') no-repeat 50% 50%;
+  }
+
+  &.common-file-icon {
+    -webkit-mask: url('../images/common-file-text.svg') no-repeat 50% 50%;
+    mask: url('../images/common-file-text.svg') no-repeat 50% 50%;
+    width: 19.5px;
+    min-width: 19.5px;
+    min-height: 21px;
+    height: 21px;
+  }
+  
+  &.common-file-color-icon {
+    background: url('../images/common-file-text-1.svg') no-repeat 50% 50%;
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    height: 24px;
+  }
+
+  &.file-pdf-icon {
+    background: url('../images/office-file-pdf.svg') no-repeat 50% 50%;
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    height: 24px;
+  }
+
+  &.file-xml-icon {
+    background: url('../images/xml-1.svg') no-repeat 50% 50%;
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    height: 24px;
+  }
+
+  &.file-xls-icon {
+    background: url('../images/office-file-xls.svg') no-repeat 50% 50%;
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    height: 24px;
+  }
+
+  &.file-csv-icon {
+    background: url('../images/csv-1.svg') no-repeat 50% 50%;
+    width: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    height: 24px;
+  }
+
+  &.email-action-icon-2 {
+    -webkit-mask: url('../images/email-action-send-2.svg') no-repeat 50% 50%;
+    mask: url('../images/email-action-send-2.svg') no-repeat 50% 50%;
+  }
+
+  &.pencil-icon {
+    -webkit-mask: url('../images/pencil-write.svg') no-repeat 50% 50%;
+    mask: url('../images/pencil-write.svg') no-repeat 50% 50%;
+  }
+
+  &.trash-icon {
+    -webkit-mask: url('../images/trash_bucket.svg') no-repeat 50% 50%;
+    mask: url('../images/trash_bucket.svg') no-repeat 50% 50%;
+  }
+
+  &.green-check-icon {
+    -webkit-mask: url('../images/check_3.svg') no-repeat 50% 50%;
+    mask: url('../images/check_3.svg') no-repeat 50% 50%;
+    background-color: rgb(0, 179, 64) !important;
+  }
+  
+  &.rounded-blue-check-icon {
+    background: url('../images/blue_check.svg') no-repeat 50% 50%;
+    background-size: 100%;
+    height: 15px;
+    min-height: 15px;
+    width: 15px;
+    min-width: 15px;
+  }
+
+  &.common-file-lock {
+    -webkit-mask: url('../images/common-file-lock.svg') no-repeat 50% 50%;
+    mask: url('../images/common-file-lock.svg') no-repeat 50% 50%;
+  }
+
+  &.calendar-icon-3 {
+    -webkit-mask: url('../images/calendar-3.svg') no-repeat 50% 50%;
+    mask: url('../images/calendar-3.svg') no-repeat 50% 50%;
+  }
+
+  &.revision-icon {
+    -webkit-mask: url('../images/Revise_2.svg') no-repeat 50% 50%;
+    mask: url('../images/Revise_2.svg') no-repeat 50% 50%;min-width: 25px;
+    min-width: 22px;
+    width: 22px;
+    min-height: 14px;
+    height: 14px;
+  }
+
+  &.file-edit-icon {
+    -webkit-mask: url('../images/common-file-edit.svg') no-repeat 50% 50%;
+    mask: url('../images/common-file-edit.svg') no-repeat 50% 50%;
+  }
+
+  &.download-icon {
+    -webkit-mask: url('../images/download-button.svg') no-repeat 50% 50%;
+    mask: url('../images/download-button.svg') no-repeat 50% 50%;
+    min-width: 17px;
+    width: 17px;
+    min-height: 21px;
+    height: 21px;
+  }
+
+  &.review-icon {
+    -webkit-mask: url('../images/single-neutral-actions-text.svg') no-repeat 50% 50%;
+    mask: url('../images/single-neutral-actions-text.svg') no-repeat 50% 50%;
+  }
+
+  &.section-below-icon {
+    -webkit-mask: url('../images/upload-menu1.svg') no-repeat 50% 50%;
+    mask: url('../images/upload-menu1.svg') no-repeat 50% 50%;
+  }
+
+  &.section-above-icon {
+    -webkit-mask: url('../images/upload-menu2.svg') no-repeat 50% 50%;
+    mask: url('../images/upload-menu2.svg') no-repeat 50% 50%;
+  }
+
+  &.lock-icon {
+    -webkit-mask: url('../images/Locked.svg') no-repeat 50% 50%;
+    mask: url('../images/Locked.svg') no-repeat 50% 50%;
+    height: 14px;
+    min-height: 14px;
+    width: 11px;
+    min-width: 11px;
+  }
+
+  &.star-icon {
+    background: url('../images/gold_star.svg') no-repeat 50% 50%;
+  }
+
+  &.search-icon {
+    -webkit-mask: url('../images/search-alternate.svg') no-repeat 50% 50%;
+    mask: url('../images/search-alternate.svg') no-repeat 50% 50%;
+  }
+
+  &.burger-menu-icon {
+    -webkit-mask: url('../images/Burgermenu_1.svg') no-repeat 50% 50%;
+    mask: url('../images/Burgermenu_1.svg') no-repeat 50% 50%;
+    height: 13px;
+    min-height: 13px;
+    width: 36px;
+    min-width: 36px;
+    background-color: #fff;
   }
 }

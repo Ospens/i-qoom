@@ -1,14 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import classnames from 'classnames'
-import ReactSVG from 'react-svg'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import DropDown from '../../../../../elements/DropDown'
-import dots from '../../../../../images/dots-horizontal'
-import trashIcon from '../../../../../images/trash_bucket'
-import sectionBelow from '../../../../../images/upload-menu1'
-import sectionAbove from '../../../../../images/upload-menu2'
-import copyIcon from '../../../../../images/folder-empty'
 
 const portal = document.createElement('div')
 portal.classList.add('draggable-portal')
@@ -28,22 +22,22 @@ class DropDownElement extends Component {
     const newDDElementOtions = [
       {
         title: 'New section above',
-        icon: sectionAbove,
+        icon: 'section-above-icon',
         onClick: ((index) => addNewSection(index))
       },
       {
         title: 'New section below',
-        icon: sectionBelow,
+        icon: 'section-below-icon',
         onClick: ((index) => addNewSection(index + 1))
       },
       {
         title: 'Copy',
-        icon: copyIcon,
+        icon: 'copy-icon',
         onClick: ((index) => copySection(index))
       },
       {
         title: 'Delete',
-        icon: trashIcon,
+        icon: 'trash-icon',
         onClick: ((index) => removeSection(index))
       }
     ]
@@ -79,10 +73,7 @@ class DropDownElement extends Component {
                         className='dropdown-item'
                         onClick={() => onClick(index)}
                       >
-                        <ReactSVG
-                          svgStyle={{ height: 15, width: 15 }}
-                          src={icon}
-                        />
+                        <i className={classnames('svg-icon gray mr-2', icon)} />
                         <span className='item-text'>{title}</span>
                       </li>
                     </React.Fragment>

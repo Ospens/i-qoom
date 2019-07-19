@@ -1,45 +1,35 @@
-import emailSendIcon from '../../../images/email-action-send-2'
-import copyToFolderIcon from '../../../images/folder-empty'
-import showDetailsIcon from '../../../images/common-file-text'
-import downloadDetailsIcon from '../../../images/download-button'
-import reviewDocIcon from '../../../images/single-neutral-actions-text'
-import editDocIcon from '../../../images/common-file-edit'
-import revisionIcon from '../../../images/Revise_2'
-import allDocIcon from '../../../images/folder-image'
-import myDocIcon from '../../../images/folder-image-1'
-
 export const actionDDitems = [
   {
     title: 'Email',
-    icon: emailSendIcon
+    icon: 'email-action-icon-2'
   },
   {
     title: 'Copy to folder',
-    icon: copyToFolderIcon
+    icon: 'folder-icon'
   },
   {
     title: 'Show details',
-    icon: showDetailsIcon
+    icon: 'common-file-icon'
   },
   {
     title: 'Download Files',
-    icon: downloadDetailsIcon
+    icon: 'download-icon'
   },
   {
     title: 'Edit document',
-    icon: editDocIcon
+    icon: 'file-edit-icon'
   },
   {
     title: 'Add revision',
-    icon: revisionIcon
+    icon: 'revision-icon'
   },
   {
     title: 'Review document',
-    icon: reviewDocIcon
+    icon: 'review-icon'
   },
   {
     title: 'Download as list',
-    icon: downloadDetailsIcon
+    icon: 'download-icon'
   }
 ]
 
@@ -114,10 +104,10 @@ export const reviewStatuses = [
 export const foldersItems = [
   {
     title: 'All documents',
-    icon: allDocIcon
+    icon: 'folder-icon-2'
   },
   {
     title: 'My documents',
-    icon: myDocIcon
+    icon: 'folder-icon-3'
   }
 ]
