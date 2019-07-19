@@ -18,6 +18,14 @@ RSpec.describe Project, type: :model do
     it { is_expected.not_to validate_length_of(:name).is_at_least(3).is_at_most(255) }
   end
 
+  context "created on admins creation step" do
+    subject { FactoryBot.create(:project_admins_step) }
+    it "should add a project creator as an admin" do
+      expect(subject.admins.find_by(email: subject.user.email)).to be_present
+      expect(subject.admins.find_by(email: subject.user.email).status).to eq("active")
+    end
+  end
+
   context "creation step is not admins" do
     subject { FactoryBot.build(:project_admins_step,
                                creation_step: [ :name,
@@ -52,6 +60,9 @@ RSpec.describe Project, type: :model do
       subject { FactoryBot.create(:project_company_data_step) }
 
       it { expect(subject.creation_step).to eq("done") }
+      it { expect(subject.admins
+                         .find_by(email: subject.user.email)
+                         .first_confirmation_sent_at).to be_nil }
     end
   end
 end

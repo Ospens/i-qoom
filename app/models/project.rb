@@ -10,6 +10,8 @@ class Project < ApplicationRecord
 
   after_save :send_confirmation_emails, if: :creation_step_done?
 
+  after_create :add_creator_as_admin
+
   validates :name,
             presence: true,
             length: { minimum: 3,
@@ -46,6 +48,14 @@ class Project < ApplicationRecord
   def update_creation_step_to_done
     update(creation_step: "done")
     self.reload if creation_step_done?
+  end
+
+  def add_creator_as_admin
+    unless admins.map(&:email).include?(user.email)
+      admins.build(email: user.email,
+                   user_id: user.id,
+                   status: "active")
+    end
   end
 
   def send_confirmation_emails

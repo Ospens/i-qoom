@@ -79,7 +79,7 @@ class Api::V1::ProjectsController < ApplicationController
   private
 
   def project_params
-    if params[:project][:admins]
+    if params[:project][:admins].present?
       params[:project][:admins_attributes] =
         params[:project][:admins]
       params[:project].delete(:admins)
