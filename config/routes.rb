@@ -49,7 +49,9 @@ Rails.application.routes.draw do
             get :resend_confirmation
           end
         end
-        resources :project_members, path: :members
+        resources :project_members,
+                  path: :members,
+                  except: [:show]
       end
     end
   end
