@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
 import ModalComponent from '../../../elements/ModalComponent'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'
-import pdfIcon from '../../../images/office-file-pdf'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -37,11 +35,7 @@ class DocIdModal extends Component {
                 <button className='btn'>Remove and upload file</button>
               </div>
               <div className='file-name-row'>
-                <ReactSVG
-                  svgStyle={{ height: 20, width: 20, marginRight: 20 }}
-                  src={pdfIcon}
-                  className='td-files-icon'
-                />
+                <i className='svg-icon file-pdf-icon' />
                 <span>XYY-AAA-LET-YYY-1234_01-weird_data.pdf</span>
               </div>
             </div>

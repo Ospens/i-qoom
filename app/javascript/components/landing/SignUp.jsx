@@ -3,13 +3,10 @@ import { connect } from 'react-redux'
 import { Field, reduxForm, getFormSubmitErrors, formValueSelector } from 'redux-form'
 import { Link } from 'react-router-dom'
 import classnames from 'classnames'
-import ReactSVG from 'react-svg'
 import { signUpUser } from '../../actions/userActions'
 import SelectField from '../../elements/SelectField'
 import CheckboxField from '../../elements/CheckboxField'
 import InputField from '../../elements/InputField'
-import Left from '../../images/arrow-button-left'
-import Right from '../../images/arrow-button-right'
 import countryList from './countriesCodes'
 
 class SignUp extends Component {
@@ -103,18 +100,12 @@ class SignUp extends Component {
             </div>
             <div className='form-buttons col-12 text-center'>
               <Link to='/' className='col-3 btn btn-back'>
-                <ReactSVG
-                  svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-                  src={Left}
-                />
+                <i className='svg-icon arrow-left-icon' />            
                 Back
               </Link>
               <button type='button' className='col-3 btn btn-primary' onClick={this.nextStep}>
                 Next
-                <ReactSVG
-                  svgStyle={{ height: 15, width: 15, marginLeft: 10 }}
-                  src={Right}
-                />
+                <i className='svg-icon arrow-right-icon' />
               </button>
             </div>
           </div>
@@ -177,10 +168,7 @@ class SignUp extends Component {
             </div>
             <div className='form-buttons col-12 text-center'>
               <button type='button' className='col-3 btn btn-back' onClick={this.prevStep}>
-                <ReactSVG
-                  svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-                  src={Left}
-                />
+                <i className='svg-icon arrow-left-icon' />                
                 Back
               </button>
               <button type='submit' className='col-3 btn btn-primary'>Register</button>

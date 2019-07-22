@@ -54,7 +54,7 @@ class ModalAddComment extends Component {
               </div>
               <label>{name}</label>
               <span>Doument name transcendent ex Morti Ric...</span>
-           </div>
+            </div>
 
             <form>
               <div className='form-group'>

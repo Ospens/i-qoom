@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
 import classnames from 'classnames'
 import { connect } from 'react-redux'
-import logo from '../images/Logo_header'
 import SideBarItem from './SideBarItem'
 import { Dropdown, Input } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
@@ -126,10 +124,7 @@ class SideBar extends Component {
         <div className='sidebar-sticky'>
           <div className='side-bar-logo'>
             <div>
-              <ReactSVG
-                svgStyle={{ height: 30, width: 100 }}
-                src={logo}
-              />
+              <i className='svg-icon logo-header sidebar' />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
             <button type='button' className='btn d-flex' onClick={toggle}>

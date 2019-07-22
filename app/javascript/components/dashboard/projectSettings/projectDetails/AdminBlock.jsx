@@ -2,14 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm, getFormSubmitErrors } from 'redux-form'
 import moment from 'moment'
-import { Dropdown } from 'semantic-ui-react'
 import AdministratorFields from '../../../../elements/forms/AdministratorFields'
 import NewModal from '../../../../elements/Modal'
-import { trigger, renderItem } from '../../../../elements/DropDownMenu'
+import DropDown from '../../../../elements/DropDown'
 import pencil from '../../../../images/pencil-write'
 import trashBucket from '../../../../images/trash_bucket'
-import emailSend from '../../../../images/email-action-send-2'
-import searchIcon from '../../../../images/search-alternate'
 import {
   starUpdateAdmin,
   startDeleteAdmin,
@@ -111,17 +108,11 @@ export class AdminBlock extends Component {
 
   renderAdminOptions = admin => {
     const { startDeleteAdmin, startResendConfirmAdmin, projectId } = this.props
-    const checkStatusItem =
-    {
-      key: 'check_status',
-      content: renderItem(searchIcon, 'Check status'),
-      onClick: this.openInspectModal
-    }
 
     const confirmMsg = (
       <div className='msg-card'>
         <span>Do you really want to resend this invitation?</span>
-        <button type='button' className='btn btn-white-grey'>
+        <button type='button' className='btn btn-white-grey cancel-button'>
           Cancel
         </button>
         <button
@@ -137,7 +128,7 @@ export class AdminBlock extends Component {
     const confirmMsgDel = (
       <div className='msg-card'>
         <span>Do you really want to delete the administrator?</span>
-        <button type='button' className='btn btn-white-grey'>Cancel</button>
+        <button type='button' className='btn btn-white-grey cancel-button'>Cancel</button>
         <button
           type='button'
           className='btn btn-white-red'
@@ -148,34 +139,37 @@ export class AdminBlock extends Component {
       </div>
     )
     return (
-      <Dropdown
-        trigger={trigger({ height: 20, width: 20 })}
-        pointing='top right'
-        icon={null}
-      >
-        <Dropdown.Menu>
-          {admin.status !== 'active' &&
-          <Dropdown.Item >
-            <Dropdown
-              trigger={renderItem(emailSend, 'Resend email')}
-              pointing='right'
-              icon={null}
-            >
-              <Dropdown.Menu className='confirm-msg'>
-                <Dropdown.Item>{confirmMsg}</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Item>}
-          <Dropdown.Item {...checkStatusItem} />
-          <Dropdown.Item >
-            <Dropdown trigger={renderItem(trashBucket, 'Delete')} pointing='right' icon={null}>
-              <Dropdown.Menu className='confirm-msg'>
-                <Dropdown.Item>{confirmMsgDel}</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+      <DropDown dots={true} className='dropdown-with-icon ml-auto' ulClass='left'>
+        {admin.status !== 'active' &&
+        <DropDown
+          btnClass='dropdown-item btn'
+          btnComponent={
+            <React.Fragment>
+              <div><i className='svg-icon gray email-action-icon-2 mr-2' /></div>
+              <span className='item-text'>Resend email</span>
+            </React.Fragment>}
+          ulClass='confirm-msg'
+          className='dropdown-with-icon'
+        >
+          {confirmMsg}
+        </DropDown>}
+        <button type='button' className='dropdown-item btn' onClick={this.openInspectModal}>
+          <div><i className='svg-icon gray mr-2 search-icon' /></div>
+          <span className='item-text'>Check status</span>
+        </button>
+        <DropDown
+          btnClass='dropdown-item btn'
+          btnComponent={
+            <React.Fragment>
+              <div><i className='svg-icon gray email-action-icon-2 mr-2' /></div>
+              <span className='item-text'>Delete</span>
+            </React.Fragment>}
+          ulClass='confirm-msg'
+          className='dropdown-with-icon'
+        >
+          {confirmMsgDel}
+        </DropDown>
+      </DropDown>
     )
   }
 

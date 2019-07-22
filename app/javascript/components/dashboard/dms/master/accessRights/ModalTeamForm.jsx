@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import NewModal from '../../../../../elements/Modal'

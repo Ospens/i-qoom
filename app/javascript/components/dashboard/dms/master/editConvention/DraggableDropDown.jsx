@@ -64,7 +64,6 @@ class DropDownElement extends Component {
                 />
                 <DropDown
                   dots={true}
-                  dotsStyles={{ height: 25, width: 25, marginLeft: 10 }}
                   className='dropdown-with-icon dropleft'
                 >
                   {newDDElementOtions.map(({icon, title, onClick }, i) => (

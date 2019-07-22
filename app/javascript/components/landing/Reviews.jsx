@@ -1,37 +1,35 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Slider from 'react-slick'
+import classnames from 'classnames'
 import TextEditor from '../../elements/TextEditor'
 import Arrows from '../../elements/Arrows'
-import DropDownMenu from '../../elements/DropDownMenu'
-import pencil from '../../images/pencil-write'
-import trashBucket from '../../images/trash_bucket'
-import direction_button from '../../images/direction-button-5'
+import DropDown from '../../elements/DropDown'
 import tmpAvatar from '../../images/tmp_avatar'
 
 const options = [
   {
     key: 'edit_text',
-    text: 'Edit text',
-    icon: pencil,
+    title: 'Edit text',
+    icon: 'pencil-icon',
     onClick: undefined
   },
   {
     key: 'replace_icon',
-    text: 'Replace icon',
-    icon: direction_button,
+    title: 'Replace icon',
+    icon: 'pencil-icon',
     onClick: undefined
   },
   {
     key: 'move_section',
-    text: 'Move section',
-    icon: direction_button,
+    title: 'Move section',
+    icon: 'pencil-icon',
     onClick: undefined
   },
   {
     key: 'delete',
-    text: 'Delete',
-    icon: trashBucket,
+    title: 'Delete',
+    icon: 'trash-icon',
     onClick: undefined
   }
 ]
@@ -56,7 +54,22 @@ class Reviews extends Component {
 
   renderAdminCard = (el, i) => (
     <div className='card text-left with-dropdown-menu' key={i}>
-      <DropDownMenu options={options} />
+      <DropDown
+        dots={true}
+        className='dropdown-with-icon'
+        ulClass='left'
+      >
+        {options.map(({ title, icon }, i) => (
+          <button type='button' className='dropdown-item btn' key={i}>
+            <div>
+              <i className={classnames('svg-icon gray mr-2', icon)} />
+            </div>
+            <span className='item-text'>
+              {title}
+            </span>
+          </button>
+        ))}
+      </DropDown>
       <div className='reviews-user-info row'>
         <img className='review-card-avatar' src={tmpAvatar} alt='' />
         <div className='clearfix' />
@@ -116,7 +129,21 @@ class Reviews extends Component {
       )
       reviewsContent.push(
         <div className='card text-left with-dropdown-menu' key='new'>
-          <DropDownMenu options={options} />
+          <DropDown
+            dots={true}
+            className='dropdown-with-icon'
+          >
+            {options.map(({ title, icon }, i) => (
+              <button type='button' className='dropdown-item btn' key={i}>
+                <div>
+                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                </div>
+                <span className='item-text'>
+                  {title}
+                </span>
+              </button>
+            ))}
+          </DropDown>
           <div className='reviews-user-info row'>
             <img className='review-card-avatar' src={tmpAvatar} alt='' />
             <div className='clearfix' />
