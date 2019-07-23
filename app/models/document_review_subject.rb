@@ -4,4 +4,6 @@ class DocumentReviewSubject < ApplicationRecord
                  :rejected,
                  :issued_for_approval,
                  :issued_for_review ]
+
+  belongs_to :document_revision
 end

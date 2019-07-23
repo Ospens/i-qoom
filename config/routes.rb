@@ -21,6 +21,10 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :document_revisions, only: [] do
+        resources :document_review_subjects, only: [:new, :create]
+      end
+
       resources :document_folders, only: [:create, :edit, :update, :show] do
         collection do
           post :add_document_to_folders

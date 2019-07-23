@@ -3,6 +3,8 @@ class DocumentRevision < ApplicationRecord
 
   has_many :versions, class_name: 'Document', foreign_key: 'document_revision_id'
 
+  has_many :document_review_subjects
+
   scope :order_by_revision_number, -> { order(revision_number: :asc) }
 
   scope :last_revision, -> { order_by_revision_number.last }

@@ -62,7 +62,11 @@ class Ability
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder
-      can :manage, DocumentFolder, user_id: user.id # there should be some limitation
+      can :manage, DocumentFolder, user_id: user.id
+      # DocumentReviewSubject
+      can [:new, :create], DocumentReviewSubject do |subject|
+        subject.document_revision.last_version.can_view?(user)
+      end
     end
   end
 end
