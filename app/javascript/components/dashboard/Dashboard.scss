@@ -761,11 +761,15 @@ input[type=checkbox]:checked+label {
       }
 
       .common-file-icon {
-        width: 24px;
-        min-width: 24px;
+        width: 22.5px;
+        min-width: 22.5px;
         min-height: 24px;
         height: 24px;
       }
+    }
+
+    &.td-date {
+      white-space: nowrap;
     }
   }
 
@@ -844,6 +848,10 @@ span.divider {
       align-items: center;
       font-size: 14px;
     }
+
+    a {
+      color: grey;
+    }
   }
 
   &.left {
@@ -852,15 +860,14 @@ span.divider {
   }
 
   .dropdown-item:not(.dropdown-submenu) {
-
-    path {
-      fill: grey;
-    }
-
     &:hover,
     &:active {
       background-color: #f5fcfc;
       color: #0095f9;
+
+      a {
+        color: #0095f9;
+      }
 
       .svg-icon {
         background-color: #0095f9 !important;
@@ -889,7 +896,7 @@ span.divider {
     }
   }
 
-  button {
+  button.with-dots {
     border: none !important;
     padding: 0;
 

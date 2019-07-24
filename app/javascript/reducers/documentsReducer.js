@@ -6,28 +6,15 @@ import {
 } from '../actions/types'
 
 const initialState = {
-  allDocuments: [
-    {
-      id: 1,
-      codification_kind: 'AWE-ECR-EOS-LET-0113',
-      title: 'Tellus in hac habitasse',
-      revision: '12.10.2018',
-      version: '1.5'
-
-    },
-    {
-      id: 2,
-      codification_kind: 'AWE-ECR-EOS-LET-2018',
-      title: 'Nulla posuere sollicitudin aliquam',
-      revision: '12.10.2017',
-      version: '1.2'
-    }
-  ],
+  allDocuments: [],
   newDocumentFields: {
     grouped_fields: {
       1: [{}],
       2: [{}]
     }
+  },
+  current: {
+    document_fields: []
   }
 }
 
@@ -43,7 +30,7 @@ const documentsReducer = (state = initialState, action) => {
   case DOCUMENTS_FETCH_SUCCESS:
     return {
       ...state,
-      allProjects: action.payload
+      allDocuments: action.payload
     }
   case DOCUMENT_FETCH_SUCCESS:
     return {

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { startFetchDocuments } from '../../../actions/documentsActions'
 import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
+import moment from 'moment'
 import { Table } from 'semantic-ui-react'
+import { startFetchDocuments } from '../../../actions/documentsActions'
 import DropDown from '../../../elements/DropDown'
 import DocumentPopup from './DocumentPopup'
 import { actionDDitems, reviewStatuses, foldersItems, columns, DtOptions } from './constants'
@@ -62,12 +63,24 @@ class IndexDMS extends Component {
     )
   }
 
-  renderDropDownItems = (icon, name) => (
-    <li className='dropdown-item' >
-      <i className={classnames('svg-icon gray mr-2', icon)} />
-      <span className='item-text'>{name}</span>
-    </li>
-  )
+  renderDropDownItems = (icon, name, link) => {
+    const content = (
+      <React.Fragment>
+        <i className={classnames('svg-icon gray mr-2', icon)} />
+        <span className='item-text'>{name}</span>
+      </React.Fragment>
+    )
+
+    return (
+      <li className='dropdown-item'>
+        {link
+          ? <Link className='d-flex' to={link} target='_blank'>
+              {content}
+            </Link>
+          : content}
+      </li>
+    )
+  }
 
   handleChange = e => {
     const { checkedDocTypes } =  this.state
@@ -182,7 +195,7 @@ class IndexDMS extends Component {
   }
 
   renderTable = () => {
-    const { documents } = this.props
+    const { documents, match: { params: { project_id } } } = this.props
     const { checkedDocs } = this.state
     return (
       <div>
@@ -217,9 +230,9 @@ class IndexDMS extends Component {
                     dots={true}
                     className='dropdown-with-icon'
                   >
-                    {actionDDitems.map(({ icon, title }, i) => (
+                    {actionDDitems(project_id, doc.id).map(({ icon, title, link }, i) => (
                       <React.Fragment key={i}>
-                        {this.renderDropDownItems(icon, title)}
+                        {this.renderDropDownItems(icon, title, link)}
                       </React.Fragment>
                     ))}
                   </DropDown>
@@ -242,7 +255,7 @@ class IndexDMS extends Component {
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.title}
+                  {doc.id}
                 </Table.Cell>
 
                 <Table.Cell className='td-files'>
@@ -263,12 +276,20 @@ class IndexDMS extends Component {
                   </div>
                 </Table.Cell>
 
-                <Table.Cell>
-                  {doc.revision}
+                <Table.Cell className='td-date'>
+                  {moment(doc.created_at).format('MMMM Do YYYY')}
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.version}
+                  {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -299,7 +320,7 @@ class IndexDMS extends Component {
             btnName='Action'
             className='dms-sidebar-menu__dropdown'
           >
-            {actionDDitems.map(({ icon, title }, i) => (
+            {actionDDitems().map(({ icon, title }, i) => (
               <React.Fragment key={i}>
                 {this.renderDropDownItems(icon, title)}
               </React.Fragment>

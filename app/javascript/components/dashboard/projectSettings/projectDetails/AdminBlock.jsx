@@ -145,7 +145,7 @@ export class AdminBlock extends Component {
           btnClass='dropdown-item btn'
           btnComponent={
             <React.Fragment>
-              <div><i className='svg-icon gray email-action-icon-2 mr-2' /></div>
+              <i className='svg-icon gray email-action-icon-2 mr-2' />
               <span className='item-text'>Resend email</span>
             </React.Fragment>}
           ulClass='confirm-msg'
@@ -154,14 +154,14 @@ export class AdminBlock extends Component {
           {confirmMsg}
         </DropDown>}
         <button type='button' className='dropdown-item btn' onClick={this.openInspectModal}>
-          <div><i className='svg-icon gray mr-2 search-icon' /></div>
+          <i className='svg-icon gray mr-2 search-icon' />
           <span className='item-text'>Check status</span>
         </button>
         <DropDown
           btnClass='dropdown-item btn'
           btnComponent={
             <React.Fragment>
-              <div><i className='svg-icon gray email-action-icon-2 mr-2' /></div>
+              <i className='svg-icon gray email-action-icon-2 mr-2' />
               <span className='item-text'>Delete</span>
             </React.Fragment>}
           ulClass='confirm-msg'

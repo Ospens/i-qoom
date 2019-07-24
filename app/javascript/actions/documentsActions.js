@@ -1,10 +1,12 @@
 import axios from 'axios'
+import { SubmissionError } from 'redux-form'
 import {
   DOCUMENTS_FETCH_SUCCESS,
+  DOCUMENT_FETCH_SUCCESS,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 
 const documentsFetched = payload => ({
   type: DOCUMENTS_FETCH_SUCCESS,
@@ -16,6 +18,11 @@ const creatingDocument = payload => ({
   payload
 })
 
+const documentFetched = payload => ({
+  type: DOCUMENT_FETCH_SUCCESS,
+  payload
+})
+
 export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
@@ -23,7 +30,7 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${projectId}/documents`, headers)
       .then(response => {
-        dispatch(documentsFetched(response.data.location))
+        dispatch(documentsFetched(response.data.documents))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -87,7 +94,24 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
       const { data } = response
       const sortedData = fieldByColumn(data)
       dispatch(creatingDocument(sortedData))
+      successNotify('Document successfully created')
     })
+      .catch(response => {
+        errorNotify('Something went wrong')
+        throw new SubmissionError(response)
+      })
+  )
+}
+
+export const startFetchDocument = documentId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/documents/${documentId}`, headers)
+      .then(response => {
+        dispatch(documentFetched(response.data))
+      })
       .catch(() => {
         errorNotify('Something went wrong')
       })

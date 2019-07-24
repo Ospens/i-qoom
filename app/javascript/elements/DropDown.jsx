@@ -74,7 +74,6 @@ class DropDown extends Component {
       { [ulClass]: ulClass }
     )
     const iClass = classnames('arrow ml-4', { 'up': isOpen }, { 'down': !isOpen })
-    // const customBtnClass = btnClass ? btnClass : 'btn btn-white-blue'
     const customBtnClass = classnames(
       { 'btn btn-white-blue': !btnClass },
       { [btnClass]: btnClass },
