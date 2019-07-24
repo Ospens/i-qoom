@@ -151,7 +151,7 @@ class Document < ApplicationRecord
   end
 
   def native_file
-    document_fields.find_by(codification_kind: :document_native_file).files.first
+    document_fields.find_by(codification_kind: :document_native_file).file
   end
 
   def self.visible_columns

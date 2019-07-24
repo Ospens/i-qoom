@@ -212,7 +212,7 @@ class Api::V1::DocumentsController < ApplicationController
                                         :title,
                                         :command,
                                         :value,
-                                        files: [],
+                                        :file,
                                         document_field_values_attributes: [
                                           :value,
                                           :title,
