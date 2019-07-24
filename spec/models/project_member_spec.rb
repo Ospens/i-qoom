@@ -25,6 +25,9 @@ RSpec.describe ProjectMember, type: :model do
   it { is_expected.to belong_to(:company_address)
                         .class_name("Address")
                         .required(false) }
+
+  it { is_expected.to belong_to(:discipline) }
+
   it { is_expected.to accept_nested_attributes_for(:company_address)
                         .update_only(true) }
 

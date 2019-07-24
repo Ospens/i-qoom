@@ -32,6 +32,8 @@ class ProjectMember < ApplicationRecord
              required: false,
              inverse_of: :project_member
 
+  belongs_to :discipline
+
   accepts_nested_attributes_for :company_address,
                                 update_only: true
 
