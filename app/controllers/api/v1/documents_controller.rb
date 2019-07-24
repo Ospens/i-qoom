@@ -197,6 +197,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
     end
     params.require(:document).permit(:issued_for,
+                                     :title,
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,

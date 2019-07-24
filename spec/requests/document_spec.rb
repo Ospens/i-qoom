@@ -105,9 +105,11 @@ describe Document, type: :request do
     end
 
     it 'user with rights' do
+      @params[:document]['title'] = title
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
+      expect(json['title']).to eql(title)
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
