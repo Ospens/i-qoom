@@ -12,6 +12,7 @@ class Address < ApplicationRecord
       in: ISO3166::Country.codes,
       allow_blank: true
 
+
   validates_presence_of :company_name,
                         :street,
                         :house_number,
@@ -26,4 +27,15 @@ class Address < ApplicationRecord
                              project_member.creation_step_details? ||
                              project_member.creation_step_completed?))
                         }
+  
+  validates :company_name,
+            :street,
+            :house_number,
+            :city,
+            :postcode,
+            :country,
+            :district,
+            :district_court,
+            length: { maximum: 255 }
+
 end
