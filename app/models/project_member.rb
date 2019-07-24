@@ -32,7 +32,10 @@ class ProjectMember < ApplicationRecord
              required: false,
              inverse_of: :project_member
 
-  belongs_to :discipline
+  validates :job_title,
+            length: { maximum: 255 }
+
+  belongs_to :discipline, required: false
 
   accepts_nested_attributes_for :company_address,
                                 update_only: true

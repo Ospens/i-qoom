@@ -26,7 +26,10 @@ RSpec.describe ProjectMember, type: :model do
                         .class_name("Address")
                         .required(false) }
 
-  it { is_expected.to belong_to(:discipline) }
+  it { is_expected.to validate_length_of(:job_title)
+                                .is_at_most(255) }
+
+  it { is_expected.to belong_to(:discipline).required(false) }
 
   it { is_expected.to accept_nested_attributes_for(:company_address)
                         .update_only(true) }
