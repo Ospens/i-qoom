@@ -26,6 +26,14 @@ class Api::V1::DocumentFoldersController < ApplicationController
     render json: @document_folder.all_documents, include: { document_fields: { include: :document_field_values } }
   end
 
+  def index
+    document_folders =
+      signed_in_user.document_folders
+                    .where(project_id: params[:project_id])
+                    .order(id: :asc)
+    render json: document_folders, only: [:id, :title, :project_id]
+  end
+
   def add_document_to_folders
     document = Document.find(params[:document_id])
     params[:document_folder_ids].each do |folder_id|
