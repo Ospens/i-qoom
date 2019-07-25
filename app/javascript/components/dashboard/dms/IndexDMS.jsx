@@ -20,8 +20,8 @@ class IndexDMS extends Component {
   }
 
   componentWillMount() {
-    const { startFetchDocuments, match: { params: { project_id } } } = this.props
-    startFetchDocuments(project_id)
+    const { startFetchDocuments, history, match: { params: { project_id } } } = this.props
+    startFetchDocuments(project_id, history)
   }
 
   renderHeader = () => {
@@ -74,7 +74,7 @@ class IndexDMS extends Component {
     return (
       <li className='dropdown-item'>
         {link
-          ? <Link className='d-flex' to={link} target='_blank'>
+          ? <Link className='d-flex' to={link}>
               {content}
             </Link>
           : content}
@@ -255,7 +255,7 @@ class IndexDMS extends Component {
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.id}
+                  {doc.title || 'Undefined'}
                 </Table.Cell>
 
                 <Table.Cell className='td-files'>
@@ -467,7 +467,7 @@ class IndexDMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: (projectId) => dispatch(startFetchDocuments(projectId))
+  startFetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
 })
 
 const mapStateToProps = ({ documents }) => ({

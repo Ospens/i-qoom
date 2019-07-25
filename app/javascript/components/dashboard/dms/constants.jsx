@@ -19,7 +19,8 @@ export const actionDDitems = (projectId, documentId) => (
     },
     {
       title: 'Edit document',
-      icon: 'file-edit-icon'
+      icon: 'file-edit-icon',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}/edit`
     },
     {
       title: 'Add revision',

@@ -318,6 +318,31 @@ header {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.is-invalid {
+  .drop-zone-area {
+    border: 2px solid #fd0845;
+    background-image: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .invalid-feedback {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  input {
+    display: block;
+    border: 2px solid #fd0845;
+    background-image: none;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  }
+}
+
 .form-control-select {
   input {
     transition-duration: 0s !important;

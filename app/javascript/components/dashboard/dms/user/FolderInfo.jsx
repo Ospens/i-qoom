@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 import CreateFolder from './CreateFolder'
-import { addDocumentToFolders } from '../../../../actions/foldersActions'
+import { addDocumentToFolders, startFetchFolders } from '../../../../actions/foldersActions'
 import DropDown from '../../../../elements/DropDown'
 
 const checkingFolder = (checked, value) => {
@@ -17,15 +17,20 @@ const checkingFolder = (checked, value) => {
   return newVal
 }
 
-function FolderInfo({ match: { params: { document_id } } }) {
+function FolderInfo({ match: { params: { document_id, project_id } } }) {
   const [checkedFolders, setFolders] = useState([null])
   const folders = useSelector(state => state.folders.allFolders)
 
   const dispatch = useDispatch()
   const addDocToFolders = useCallback(() => 
     dispatch(addDocumentToFolders(document_id, checkedFolders)),
-    [dispatch, checkedFolders]
-  )
+    [dispatch, checkedFolders])
+
+  const fetchFolders = useCallback(() => 
+    dispatch(startFetchFolders(project_id)),
+    [dispatch])
+
+  useEffect(() => { fetchFolders() }, [])
 
   if (!document_id) return <div />
 

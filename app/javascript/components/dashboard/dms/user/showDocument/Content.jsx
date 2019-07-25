@@ -12,7 +12,7 @@ const renderBlock = field => {
         </label>
       </React.Fragment>
     )
-  } else if (field.codification_kind === 'document_number') {
+  } else if (field.codification_kind === 'revision_version') {
     return (
       <React.Fragment>
         <label>{field.title}</label>
@@ -95,7 +95,7 @@ const Content = () => {
 
             <div className='document-show__info-row'>
               <label>Title</label>
-              <span>{document.document_title}</span>
+              <span>{document.title}</span>
             </div>
 
             {secondColumn.map((field, i) => (

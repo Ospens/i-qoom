@@ -72,6 +72,7 @@ class ModalCreateProject extends Component {
     } else if (sameBillingAddress && step === 5) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))
     } else if (!sameBillingAddress && step === 5) {
+      delete values.company_data.billing_address
       return updateProject(values, (val) => this.afterUpdate(val, 6))
     } else if (step === 6) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))

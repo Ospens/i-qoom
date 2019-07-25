@@ -9,7 +9,7 @@ import FolderInfo from '../FolderInfo'
 
 const SideBar = () => {
   const document = useSelector(state => state.documents.current)
-  let versions = document.document_fields.filter(field => field.codification_kind === 'document_number')[0]
+  let versions = document.document_fields.filter(field => field.codification_kind === 'revision_version')[0]
   let revisions = document.document_fields.filter(field => field.codification_kind === 'revision_number')[0]
   versions = versions ? Number(versions.value) : 0
   revisions = revisions ? Number(revisions.value) : 0

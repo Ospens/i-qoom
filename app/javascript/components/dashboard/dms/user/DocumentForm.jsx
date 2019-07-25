@@ -3,7 +3,7 @@ import React from 'react'
 import DocumentsAndFiles from './DocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
 
-function DocumentFields({ handleSubmit, step, toggleStep }) {
+function DocumentForm({ handleSubmit, step, toggleStep }) {
 
   return (
     <form
@@ -11,11 +11,11 @@ function DocumentFields({ handleSubmit, step, toggleStep }) {
       onSubmit={handleSubmit}
     >
       {step === 1
-        ? <DocumentsAndFiles nextStep={() => toggleStep(2)} />
+        ? <DocumentsAndFiles />
         : <AccessAndCommunication backStep={() => toggleStep(1)} />
       }
     </form>
   )
 }
 
-export default DocumentFields
+export default DocumentForm

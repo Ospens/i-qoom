@@ -1,43 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { useState, useEffect, useCallback } from 'react'
+import { connect, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Field, reduxForm } from 'redux-form'
-import classnames from 'classnames'
-import { newDocument, startCreateDocument } from '../../../../actions/documentsActions'
-import InputField from '../../../../elements/InputField'
-import DocumentsAndFiles from './DocumentsAndFiles'
-import AccessAndCommunication from './AccessAndCommunication'
+import { reduxForm } from 'redux-form'
+import { startEditDocument, startUpdateDocument } from '../../../../actions/documentsActions'
 import DocIdModal from '../DocIdModal'
 import AddRevisionModal from '../AddRevisionModal'
 import DMSLayout from '../DMSLayout'
-import FolderInfo from './FolderInfo'
 import DocumentSideBar from './DocumentSideBar'
+import DocumentFields from './DocumentForm'
 
-
-function Content({ handleSubmit, startCreateDocument, project_id, step, toggleStep, history }) {
-
-  const createDocument = values => {
-    return startCreateDocument(project_id, values)
-      .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
-  }
-
-  return (
-    <form
-      className='dms-content bordered'
-      onSubmit={handleSubmit(createDocument)}
-    >
-      {step === 1
-        ? <DocumentsAndFiles nextStep={() => toggleStep(2)} />
-        : <AccessAndCommunication backStep={() => toggleStep(1)} />
-      }
-    </form>
-  )
-}
-
-function EditDocument({ getNewDocument, startCreateDocument, handleSubmit, history, match: { params: { project_id } } }) {
+function EditDocument({ handleSubmit, history, match: { params: { project_id, document_id } } }) {
   const [modalId, setModalId] = useState(0)
   const [step, toggleStep] = useState(1)
-  useEffect(() => { getNewDocument(project_id) }, [])
+  const dispatch = useDispatch()
+
+  const updateDocument = (useCallback(values =>
+    dispatch(startUpdateDocument(document_id, values)),
+    [dispatch]))
+
+  const getEditDocument = useCallback(() =>
+    dispatch(startEditDocument(document_id)),
+    [dispatch])
+
+  useEffect(() => { getEditDocument() }, [])
+
+  const submitDocument = values => {
+    return updateDocument(values)
+      .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
+  }
 
   return (
     <React.Fragment>
@@ -45,22 +35,21 @@ function EditDocument({ getNewDocument, startCreateDocument, handleSubmit, histo
       {modalId === 2 && <AddRevisionModal />}
       <DMSLayout
         sidebar={<DocumentSideBar {...{ step, toggleStep }} />}
-        content={<Content {...{ handleSubmit, startCreateDocument, project_id, step, toggleStep, history }} />}
+        content={
+          <DocumentFields
+            handleSubmit={handleSubmit(submitDocument)}
+            {...{ step, toggleStep }}
+          />}
       />
     </React.Fragment>
   )
 }
 
-const mapDispatchToProps = dispatch => ({
-  getNewDocument: (projectId) => dispatch(newDocument(projectId)),
-  startCreateDocument: (projectId, values) => dispatch(startCreateDocument(projectId, values))
-})
-
 const mapStateToProps = (state, ownProps) => ({
-  initialValues: { document_fields: state.documents.newDocumentFields.document_fields },
+  initialValues: { ...state.documents.documentFields },
   enableReinitialize: !ownProps.initialValues
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+export default connect(mapStateToProps)(reduxForm({
   form: 'document_form'
 })(withRouter(EditDocument)))

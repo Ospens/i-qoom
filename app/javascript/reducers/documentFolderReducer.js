@@ -1,5 +1,6 @@
-import {
-
+import { 
+  FOLDER_CREATED,
+  FOLDERS_FETCHED
 } from '../actions/types'
 
 const initialState = {
@@ -29,9 +30,14 @@ const initialState = {
 
 const documentFolderReducer = (state = initialState, action) => {
   switch (action.type) {
-  default:
-    return state
-  }
+    case FOLDERS_FETCHED:
+      return {
+        ...state,
+        allFolders: action.payload
+      }
+    default:
+      return state
+    }
 }
 
 export default documentFolderReducer

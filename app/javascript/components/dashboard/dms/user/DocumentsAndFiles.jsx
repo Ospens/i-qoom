@@ -12,6 +12,7 @@ import DatePickerField from '../../../../elements/DatePickerField'
 import DropZoneField from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
+import { required } from '../../../../elements/validations'
 
 // TODO: rewrite this method
 
@@ -32,11 +33,11 @@ function InputByType({ field }) {
   if (field.kind === 'upload_field') {
     return (
       <Field
-        //type='file'
-        name={`document_fields[${field.index}].files`}
-        id={`document_fields[${field.index}].files`}
+        name={`document_fields[${field.index}].file`}
+        id={`document_fields[${field.index}].file`}
         component={DropZoneField}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'select_field') {
@@ -60,15 +61,18 @@ function InputByType({ field }) {
         placeholder={field.command}
         component={SelectField}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'textarea_field') {
     return (
-      <TextAreaField
+      <Field
+        component={TextAreaField}
         name={uniqName}
         id={uniqName}
         placeholder={field.command}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'date_field') {
@@ -79,6 +83,7 @@ function InputByType({ field }) {
         placeholder={field.command}
         component={DatePickerField}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else {
@@ -89,6 +94,7 @@ function InputByType({ field }) {
         id={uniqName}
         placeholder={field.command}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   }
@@ -104,7 +110,7 @@ const formvalue = (fields = [], codKind) => {
 
 }
 
-function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFields }) {
+function DocumentsAndFiles({ submitErrors, documentFields, groupedFields }) {
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
   const disciplineValue = formvalue(documentFields, 'discipline')
@@ -231,13 +237,7 @@ function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFiel
       </div>
       <div className='dms-footer'>
         <button type='button' className='btn btn-white'>Cancel</button>
-        <button
-          type='submit'
-          className='btn btn-purple'
-          onClick={nextStep}
-        >
-          Next
-        </button>
+        <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     </React.Fragment>
   )
@@ -247,7 +247,7 @@ const selector = formValueSelector('document_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('document_form')(state),
-  groupedFields: state.documents.newDocumentFields.grouped_fields,
+  groupedFields: state.documents.documentFields.grouped_fields,
   documentFields: selector(state, 'document_fields')
 })
 

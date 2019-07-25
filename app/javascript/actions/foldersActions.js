@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {
-  FOLDER_CREATED
+  FOLDER_CREATED,
+  FOLDERS_FETCHED
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
 
@@ -14,25 +15,25 @@ const documentAddedToFolder = payload => ({
   payload
 })
 
-const folderFetched = payload => ({
-  type: FOLDER_CREATED,
+const foldersFetched = payload => ({
+  type: FOLDERS_FETCHED,
   payload
 })
 
-export const startFetchFolders = (projectId, values) => (dispatch, getState) => {
+export const startFetchFolders = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     document_folder: {
-      project_id: projectId,
-      ...values
+      project_id: projectId
     }
   }
 
   return (
-    axios.get('/api/v1/document_folders/', request, headers)
+    axios.get(`/api/v1/projects/${projectId}/document_folders`, headers)
       .then(response => {
-        dispatch(folderFetched(response.data))
+        console.log(response)
+        dispatch(foldersFetched(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')

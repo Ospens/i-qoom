@@ -25,8 +25,8 @@ const DocumentSideBar = ({ step, toggleStep }) => (
         <div className='form-group mb-0'>
           <Field
             component={InputField}
-            name='document_name'
-            id='document_name'
+            name='title'
+            id='title'
             label='Document name'
             placeholder='Document name'
           />
@@ -55,7 +55,7 @@ const DocumentSideBar = ({ step, toggleStep }) => (
               className={classnames('btn', { 'active': step === menuStep })}
               onClick={() => toggleStep(menuStep)}
             >
-              <i className={classnames('svg-icon black', icon)} />
+              <i className={classnames('svg-icon black mr-2', icon)} />
               <span className='head-button__gray-text'>{title}</span>
             </button>
           </li>

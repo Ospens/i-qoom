@@ -15,7 +15,7 @@ const fileProperties = [
   'webkitRelativePath'
 ]
 
-function DropZoneField({ input, label, isDisabled = false }) {
+function DropZoneField({ input, label, isDisabled = false, meta: { touched, error } }) {
 
   const onDrop = useCallback(acceptedFiles => {
     const fileBlob = acceptedFiles[0]
@@ -41,6 +41,7 @@ function DropZoneField({ input, label, isDisabled = false }) {
   })
 
   const isFileRejected = rejectedFiles.length !== 0
+  
   const mainClass = classnames(
     'drop-zone-area',
     {
@@ -48,10 +49,11 @@ function DropZoneField({ input, label, isDisabled = false }) {
       'disabled': isDisabled
     }
   )
-  
+  const sectionClass = classnames({ 'is-invalid': touched && error })
   const currentFile = input.value ? input.value[0] : acceptedFiles[0]
+
   return (
-    <section>
+    <section className={sectionClass}>
       {label && <label htmlFor={input.name}>{label}</label>}
       <div {...getRootProps()} {...input} className={mainClass}>
         <input {...getInputProps()} />
@@ -92,6 +94,10 @@ function DropZoneField({ input, label, isDisabled = false }) {
         })()}
 
       </div>
+      {touched && error &&
+      <div className='invalid-feedback'>
+        {error}
+      </div>}
     </section>
   )
 }
