@@ -1,19 +1,33 @@
 import React from 'react'
-import { Field } from 'redux-form'
 
-function InputField({ errorField = {}, className, label, ...input }) {
-  const errorInfo = errorField[input.id]
+const InputField = ({
+  input,
+  errorField = {},
+  className,
+  label,
+  type,
+  meta: { touched, error },
+  ...props
+}) => {
+  const errorInfo = errorField[input.name]
+
   return (
     <div className={className}>
-      {label && <label htmlFor={input.name}>{label}</label>}
-      <Field
+      {label && <label htmlFor={input.id}>{label}</label>}
+      <input
         {...input}
-        component='input'
-        className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
+        {...props}
+        type={type ? type : 'text'}
+        className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
       />
+      {touched &&
       <div className='invalid-feedback'>
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+      {error
+        ? error
+        : errorInfo
+          ? errorInfo[0]
+          : ''}
+      </div>}
     </div>
   )
 }

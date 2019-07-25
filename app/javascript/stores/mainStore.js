@@ -7,16 +7,24 @@ import thunk from 'redux-thunk'
 import userReducer from '../reducers/userReducer'
 import landingReducer from '../reducers/landingReducer'
 import projectReducer from '../reducers/projectReducer'
+import projectMembersReducer from '../reducers/projectMembersReducer'
 import documentsReducer from '../reducers/documentsReducer'
 import conventionReducer from '../reducers/conventionReducer'
-import { loadState, saveState } from './localStorage'
+import accessRightsReducer from '../reducers/accessRightsReducer'
+import filterReducer from '../reducers/filterReducer'
+import distributionGroupReducer from '../reducers/distributionGroupReducer'
+import loadState from './localStorage'
 
 const rootReducer = combineReducers({
   user: userReducer,
   landing: landingReducer,
   documents: documentsReducer,
   projects: projectReducer,
+  projectMembers: projectMembersReducer,
   conventions: conventionReducer,
+  accessRights: accessRightsReducer,
+  filters: filterReducer,
+  distributionGroups: distributionGroupReducer,
   form: reduxFormReducer
 })
 
@@ -24,16 +32,16 @@ const persistedState = loadState()
 
 const store = createStore(
   rootReducer,
-  persistedState.state,
+  persistedState,
   composeWithDevTools(
     applyMiddleware(thunk)
   )
 )
-
+/*
 store.subscribe(() => {
   saveState({
     state: store.getState()
   })
 })
-
+*/
 export default store

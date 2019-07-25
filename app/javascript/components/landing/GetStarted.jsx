@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getFormSyncErrors, Field, reduxForm } from 'redux-form'
+import { Field, getFormSyncErrors, reduxForm } from 'redux-form'
 import ReactSVG from 'react-svg'
 import { errorNotify } from '../../elements/Notices'
 import axios from 'axios'
@@ -67,8 +67,8 @@ class GetStarted extends Component {
         <div className='form-row'>
           <div className='form-group col-md-6'>
             <div className='form-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='email'
                 id='email'
                 validate={emailValid}
@@ -80,8 +80,8 @@ class GetStarted extends Component {
               />
             </div>
             <div className='form-group form-number-group'>
-              <InputField
-                type='text'
+              <Field
+                component={InputField}
                 name='phone'
                 id='phone'
                 errorField={synchronousError}

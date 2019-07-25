@@ -94,6 +94,26 @@ describe DocumentFolder, type: :request do
     end
   end
 
+  context '#index' do
+    let!(:document_folder1) { FactoryBot.create(:document_folder) }
+    let(:user) { document_folder1.user }
+    let(:project) { document_folder1.project }
+    let!(:document_folder2) { FactoryBot.create(:document_folder, user: user, project: project) }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/document_folders"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/document_folders", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json.count).to eql(2)
+      expect(json[0]['id']).to eql(document_folder1.id)
+      expect(json[1]['id']).to eql(document_folder2.id)
+    end
+  end
+
   context '#add_document_to_folders' do
     let(:document_folder1) { FactoryBot.create(:document_folder) }
     let(:document_folder2) { FactoryBot.create(:document_folder) }

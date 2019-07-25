@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
-import Select from 'react-select'
 import UserAvatar from 'react-user-avatar'
 import DropDown from '../../../../elements/DropDown'
+import { SelectComponent } from '../../../../elements/SelectField'
+import { startUpdateProjectMember } from '../../../../actions/projectMembersActions'
 
 const tableData = [
   { name: 'Anna Danielson', member_id: 'ArandomnameTest12dsf345', employment: 2, access: { DMS: true } },
@@ -30,31 +32,22 @@ const accessOptions = [
 ]
 
 const emplOptions = [
-  { value: 'Employee', label: 'Employee' },
-  { value: 'Internal contractor', label: 'Internal contractor' },
-  { value: 'External contractor', label: 'External contractor' }
+  { value: 0, title: 'Employee' },
+  { value: 1, title: 'Internal contractor' },
+  { value: 2, title: 'External contractor' }
 ]
 
 const roleOptions = [
-  { value: 'Designer', label: 'Designer' },
-  { value: 'Electrian', label: 'Electrian' },
-  { value: 'Certifier', label: 'Certifier' },
-  { value: 'Other', label: 'Other' }
+  { value: 0, title: 'Designer' },
+  { value: 1, title: 'Electrian' },
+  { value: 2, title: 'Certifier' }
 ]
 
 const discOptions = [
-  { value: 'Design', label: 'Design' },
-  { value: 'Electrical', label: 'Electrical' },
-  { value: 'Certification', label: 'Certification' }
+  { value: 1, title: 'Design' },
+  { value: 2, title: 'Electrical' },
+  { value: 3, title: 'Certification' }
 ]
-
-const minHeight = '30px'
-const height = '30px'
-
-const colourStyles = {
-  control: styles => ({ ...styles, minHeight, height }),
-  indicatorsContainer: styles => ({ ...styles, minHeight, height })
-}
 
 class MemberTable extends Component {
 
@@ -63,6 +56,15 @@ class MemberTable extends Component {
     column: null,
     data: tableData,
     direction: null,
+  }
+
+  handleChange = (values, id, type) => {
+    const { startUpdateProjectMember, projectId } = this.props
+    const v = {
+      id,
+      [type]: values.value
+    }
+    startUpdateProjectMember(v, projectId)
   }
 
   handleSort = clickedColumn => () => {
@@ -96,11 +98,12 @@ class MemberTable extends Component {
   }
 
   render() {
-    const { column, data, direction } = this.state
+    const { column, direction } = this.state
+    const { members } = this.props
 
     return (
       <div className='table-block'>
-        <Table sortable className='mamber-managment-table'>
+        <Table sortable className='main-table-block'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className='table-checkbox'>
@@ -125,55 +128,54 @@ class MemberTable extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {data.map(({ member_id, name, employment }) => (
-              <Table.Row key={name}>
+            {members.map(({ id, first_name, last_name, employment }) => (
+              <Table.Row key={id}>
                 <Table.Cell className='table-checkbox'>
                   <div>
-                    <input
-                      type='checkbox'
-                      id={member_id}
-                    />
-                    <label htmlFor={member_id}></label>
+                    <input type='checkbox' id={id} />
+                    <label htmlFor={id}></label>
                   </div>
                 </Table.Cell>
                 <Table.Cell className='name-column'>
                   <div>
-                    <UserAvatar size='24' name={name} />
+                    <UserAvatar size='42' name={`${first_name} ${last_name}`} />
                     <span className='master-icon'>M</span>
                   </div>
-                  <span>{name}</span>
+                  <div>
+                    <div>{first_name}</div>
+                    <div>{last_name}</div>
+                  </div>
                 </Table.Cell>
-                <Table.Cell className='member-id'><span>{member_id}</span></Table.Cell>
+                <Table.Cell className='member-id'>
+                  <span>{`${first_name}${last_name}`}</span>
+                </Table.Cell>
                 <Table.Cell className='td-select-dropdown'>
-                  <Select
-                    styles={colourStyles}
-                    onChange={this.handleChange}
+                  <SelectComponent
+                    id='employment_type'
+                    name='employment_type'
+                    onChange={val => this.handleChange(val, id, 'employment_type')}
                     options={emplOptions}
-                    defaultValue={emplOptions[employment]}
-                    autoFocus={false}
-                    maxMenuHeight='110'
+                    defaultValue={emplOptions[0]}
                     className='form-control-select'
                   />
                 </Table.Cell>
                 <Table.Cell className='td-select-dropdown'>
-                  <Select
-                    styles={colourStyles}
+                  <SelectComponent
+                    id='company_type'
+                    name='company_type'
                     onChange={this.handleChange}
                     options={roleOptions}
-                    defaultValue={roleOptions[employment]}
-                    autoFocus={false}
-                    maxMenuHeight='110'
+                    defaultValue={roleOptions[0]}
                     className='form-control-select'
                   />
                 </Table.Cell>
                 <Table.Cell className='td-select-dropdown'>
-                  <Select
-                    styles={colourStyles}
+                  <SelectComponent
+                    id='discipline'
+                    name='discipline'
                     onChange={this.handleChange}
                     options={discOptions}
-                    defaultValue={discOptions[employment]}
-                    autoFocus={false}
-                    maxMenuHeight='110'
+                    defaultValue={discOptions[0]}
                     className='form-control-select'
                   />
                 </Table.Cell>
@@ -186,8 +188,8 @@ class MemberTable extends Component {
                     {accessOptions.map(({ label, modulemaster }) => {
                       return (
                         <React.Fragment key={label}>
-                          {this.renderAccessOptions(label, false, true, member_id)}
-                          {modulemaster && this.renderAccessOptions('Module master', true, false, member_id)}
+                          {this.renderAccessOptions(label, false, true, id)}
+                          {modulemaster && this.renderAccessOptions('Module master', true, false, id)}
                         </React.Fragment>
                       )
                     })}
@@ -201,5 +203,13 @@ class MemberTable extends Component {
     )
   }
 }
- 
-export default MemberTable
+
+const mapDispatchToProps = dispatch => ({
+  startUpdateProjectMember: (values, projectId) => dispatch(startUpdateProjectMember(values, projectId))
+})
+
+const mapStateToProps = state => ({
+  members: state.projectMembers.members
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MemberTable)

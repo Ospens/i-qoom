@@ -45,8 +45,8 @@ class SignUp extends Component {
           <div className={firstFormClass} id='first-step-form'>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='first_name'
                   id='first_name'
                   label='Type in first name'
@@ -69,8 +69,8 @@ class SignUp extends Component {
             </div>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='last_name'
                   id='last_name'
                   label='Type in last name'
@@ -80,8 +80,8 @@ class SignUp extends Component {
               </div>
               <div className='row next-row'>
                 <div className='form-group col-6'>
-                  <InputField
-                    type='text'
+                  <Field
+                    component={InputField}
                     name='state'
                     id='state'
                     label='State'
@@ -90,8 +90,8 @@ class SignUp extends Component {
                   />
                 </div>
                 <div className='form-group col-6'>
-                  <InputField
-                    type='text'
+                  <Field
+                    component={InputField}
                     name='city'
                     id='city'
                     label='City'
@@ -122,8 +122,8 @@ class SignUp extends Component {
           <div className={secondFormClass} id='second-step-form'>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='email'
                   id='email'
                   label='Type in e-mail address'
@@ -132,7 +132,8 @@ class SignUp extends Component {
                 />
               </div>
               <div className='form-group next-row'>
-                <InputField
+                <Field
+                  component={InputField}
                   type='password'
                   name='password'
                   id='password'
@@ -144,8 +145,8 @@ class SignUp extends Component {
             </div>
             <div className='form-group col-6'>
               <div className='form-group'>
-                <InputField
-                  type='text'
+                <Field
+                  component={InputField}
                   name='username'
                   id='username'
                   label='Define your user ID'
@@ -154,7 +155,8 @@ class SignUp extends Component {
                 />
               </div>
               <div className='form-group next-row'>
-                <InputField
+                <Field
+                  component={InputField}
                   type='password'
                   name='password_confirmation'
                   id='password_confirmation'

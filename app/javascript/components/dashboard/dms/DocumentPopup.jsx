@@ -16,7 +16,7 @@ class DocumentPopup extends Component {
         <div className='documents-in-review-block__title'>
           <label>Documents in review</label>
           <ReactSVG
-            svgStyle={{ height: 15, width: 15, marginLeft: 'auto' }}
+            svgStyle={{ height: 20, width: 20, marginLeft: 'auto' }}
             src={dots}
           />
         </div>

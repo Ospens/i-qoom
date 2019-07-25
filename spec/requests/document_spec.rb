@@ -105,9 +105,11 @@ describe Document, type: :request do
     end
 
     it 'user with rights' do
+      @params[:document]['title'] = title
       post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
+      expect(json['title']).to eql(title)
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
@@ -143,26 +145,28 @@ describe Document, type: :request do
     end
   end
 
-  it 'uploads files' do
+  it 'uploads file' do
     document_params = document_attributes(user, false)
     document_native_file =
       document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-    document_native_file['files'] = [fixture_file_upload('test.txt')]
+    document_native_file['file'] = fixture_file_upload('test.txt')
     revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
     revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
-    field = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title')
+    field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
+    field2 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title2')
     project = Project.find(document_params['project_id'])
-    project.conventions.active.document_fields.create!(field)
-    field['files'] = [file1, file2]
-    document_params['document_fields'] << field
+    project.conventions.active.document_fields.create!(field1)
+    project.conventions.active.document_fields.create!(field2)
+    field1['file'] = file1
+    field2['file'] = file2
+    document_params['document_fields'] << field1
+    document_params['document_fields'] << field2
     post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
     expect(response).to have_http_status(:success)
-    files = Document.last.document_fields.find_by(title: 'title').files
-    file1 = files.first
-    file2 = files.last
-    expect(files.length).to eql(2)
+    file1 = Document.last.document_fields.find_by(title: 'title1').file
+    file2 = Document.last.document_fields.find_by(title: 'title1').file
     expect(file1.download.strip).to eql('111')
     expect(file2.download.strip).to eql('111')
   end
@@ -189,7 +193,7 @@ describe Document, type: :request do
       end
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-      document_native_file['files'] = [fixture_file_upload('test.txt')]
+      document_native_file['file'] = fixture_file_upload('test.txt')
       revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
       revision_number['value'] = '1'
       rev.versions.create!(doc_attrs.merge(user_id: owner.id, project_id: project.id))
@@ -706,7 +710,7 @@ describe Document, type: :request do
         end
         document_native_file =
           doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-        document_native_file['files'] = [fixture_file_upload('test.txt')]
+        document_native_file['file'] = fixture_file_upload('test.txt')
         revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
         revision_number['value'] = '1'
         @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))

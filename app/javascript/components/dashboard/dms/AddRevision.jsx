@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import DragAndDropField from '../../../elements/DragAndDropField'
+import DropZoneField from '../../../elements/DropZoneField'
 import InputField from '../../../elements/InputField'
 import overviewIcon from '../../../images/task-checklist-check'
 import revisionIcon from '../../../images/Revise_2'
@@ -13,7 +13,7 @@ import dmsSettingsIcon from '../../../images/task-list-settings'
 import editIcon from '../../../images/pencil-write'
 import lockIcon from '../../../images/Locked'
 import checkIcon from '../../../images/check_1'
-import SideBarItem from './SideBarItem'
+import { DmsSideBarItem } from './DmsSideBar'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -159,7 +159,7 @@ class AddRevision extends Component {
                   <ul className='dms-sidebar-menu__list'>
                     {menuItems.map(({ path, title, icon }, i) => (
                       <React.Fragment key={i}>
-                        <SideBarItem path={path} label={title} icon={icon} />
+                        <DmsSideBarItem path={path} label={title} icon={icon} />
                       </React.Fragment>
                     ))}
                   </ul>
@@ -234,8 +234,8 @@ class AddRevision extends Component {
                 <h5>Open upload form</h5>
 
                 <div className='form-group col-6 pl-0 mt-4'>
-                  <InputField
-                    type='text'
+                  <Field
+                    component={InputField}
                     name='originator'
                     id='originator'
                     errorField={[submitErrors]}
@@ -251,7 +251,7 @@ class AddRevision extends Component {
                       name='native_file'
                       id='native_file'
                       label='Replace the document file to update revision*'
-                      component={DragAndDropField}
+                      component={DropZoneField}
                     />
                   </div>
                   <div className='col-6'>
@@ -260,7 +260,7 @@ class AddRevision extends Component {
                       name='other_file'
                       id='other_file'
                       label='Add other file here'
-                      component={DragAndDropField}
+                      component={DropZoneField}
                     />
                   </div>
                 </div>

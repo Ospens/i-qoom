@@ -86,9 +86,16 @@ class SideBar extends Component {
           <li className='nav-item'>
             <span className='light-grey'>Frequently used</span>
           </li>
-          <SideBarItem path='/dashboard/' label='Resources' />
-          <SideBarItem path='/dashboard/' label='Contracts' />
-          <SideBarItem path={`/dashboard/projects/${currentProject.id}/documents/overview/`} label='Documents' />
+          <SideBarItem path='/dashboard/' label='Dashboard' />
+          <SideBarItem 
+            path={`/dashboard/projects/${currentProject.id}`}
+            label='Project'
+          />
+          <SideBarItem
+            path={`/dashboard/projects/${currentProject.id}/documents/`}
+            root={`/dashboard/projects/${currentProject.id}/documents/`}
+            label='Documents'
+          />
         </ul>
         <ul className='nav flex-column nav-items'>
           <li className='nav-item'>
@@ -139,7 +146,7 @@ class SideBar extends Component {
             />
           </div>
           {(() => {
-            if (currentProject.id) {
+            if (currentProject.id && pathname !== '/dashboard/') {
               return(this.renderProjectContent())
             } else if (pathname.includes('/dashboard')) {
               return (this.renderDashboardContent())

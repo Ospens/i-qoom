@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
-import classnames from 'classnames'
+import { connect } from 'react-redux'
 import ReactSVG from 'react-svg'
+import { withRouter } from 'react-router-dom'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
+import NewModal from '../../../elements/Modal'
+import Tabs from '../../../elements/Tabs'
 import roleList from '../../../images/task-list-edit'
 import disciplineList from '../../../images/common-file-text'
 import blueCheck from '../../../images/add_1'
@@ -12,17 +15,17 @@ import emailSend from '../../../images/email-action-send-2'
 import greenCheck from '../../../images/check_3'
 import trash_bucket from '../../../images/trash_bucket'
 import AddMember from './memberManagment/AddMember'
-
+import { startFetchProjectMembers } from '../../../actions/projectMembersActions'
 
 class MemberManagment extends Component {
 
   state = {
-    tab: 1,
     addMemberModal: false
   }
 
-  changeTab = (val) => {
-    this.setState({ tab: val })
+  componentWillMount() {
+    const { startFetchProjectMembers, match: { params: { project_id } } } = this.props
+    startFetchProjectMembers(project_id)
   }
 
   renderDropDownItems = (pic, name) => (
@@ -37,8 +40,20 @@ class MemberManagment extends Component {
     </a>
   )
 
+  renderNewMemberModal = () => {
+    const { match: { params: { project_id } } } = this.props
+    return (
+      <AddMember
+        closeModal={() => this.setState({ addMemberModal: false })}
+        projectId={project_id}
+      />
+    )
+  }
+
   render() {
-    const { tab, addMemberModal } = this.state
+    const { addMemberModal } = this.state
+    const { match: { params: { project_id } } } = this.props
+
     return (
       <div id='member-managment'>
         <div className='member-managment-first-line'>
@@ -63,7 +78,11 @@ class MemberManagment extends Component {
               </button>
             </div>
             <div>
-              <button type='button' className='btn with-icon' onClick={() => this.setState({ addMemberModal: true })}>
+              <button
+                type='button'
+                className='btn with-icon'
+                onClick={() => this.setState({ addMemberModal: true })}
+              >
                 <ReactSVG
                   svgStyle={{ height: 13, width: 13, marginRight: 5 }}
                   src={blueCheck}
@@ -73,40 +92,55 @@ class MemberManagment extends Component {
             </div>
           </div>
         </div>
-        <div className='nav-bar'>
-          <div className='nav-bar-item'>
-            <button className={classnames('nav-bar-element', { 'active': tab === 1 })} onClick={() => this.changeTab(1)}>
-              <span className='yellow-dot'></span>
-              Active members
-            </button>
+        <Tabs>
+          <div label='Active members'>
+            <React.Fragment>
+              <div>
+                <span className='tab-description'>Manage members and grant access</span>
+                <DropDown
+                  btnName='Action'
+                  className='manage-members-actions-button mt-4'
+                >
+                  {this.renderDropDownItems(emailSend, 'Send invite')}
+                  {this.renderDropDownItems(pencil, 'Edit member')}
+                  {this.renderDropDownItems(trash_bucket, 'Delete')}
+                </DropDown>
+              </div>
+              <ActiveMembers projectId={project_id}/>
+            </React.Fragment>
           </div>
-          <div className='nav-bar-item'>
-            <button className={classnames('nav-bar-element', { 'active': tab === 2 })} onClick={() => this.changeTab(2)}>
-              <ReactSVG
-                svgStyle={{ width: 10, marginRight: 15 }}
-                src={greenCheck}
-              />
-              Pending members
-            </button>
+          <div label='Pending members'>
+            <React.Fragment>
+              <div>
+                <span className='tab-description'>Manage members and grant access</span>
+                <DropDown
+                  btnName='Action'
+                  className='mt-4'
+                >
+                  {this.renderDropDownItems(emailSend, 'Send invite')}
+                  {this.renderDropDownItems(pencil, 'Edit member')}
+                  {this.renderDropDownItems(trash_bucket, 'Delete')}
+                </DropDown>
+              </div>
+              <PendingMembers />
+            </React.Fragment>
           </div>
-        </div>
-        <div>
-          <span className='tab-description'>Manage members and grant access</span>
-          <DropDown
-            btnName='Action'
-            className='mt-4'
-          >
-            {this.renderDropDownItems(emailSend, 'Send invite')}
-            {this.renderDropDownItems(pencil, 'Edit member')}
-            {this.renderDropDownItems(trash_bucket, 'Delete')}
-          </DropDown>
-        </div>
-        {tab === 1 && <ActiveMembers/>}
-        {tab === 2 && <PendingMembers />}
-        {addMemberModal && <AddMember closeModal={() => this.setState({ addMemberModal: false })}/>}
+        </Tabs>
+        <NewModal
+          content={this.renderNewMemberModal()}
+          open={addMemberModal}
+          onClose={() => this.setState({ addMemberModal: false })}
+        />
       </div>
     )
   }
 }
 
-export default MemberManagment
+const mapDispatchToProps = dispatch => ({
+  startFetchProjectMembers: id => dispatch(startFetchProjectMembers(id))
+})
+
+const mapStateToProps = state => ({ })
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MemberManagment))
+

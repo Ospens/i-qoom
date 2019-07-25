@@ -137,6 +137,11 @@ body {
 .svg-icon {
   display: flex;
   align-items: center;
+  
+  div {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .prevBtn,
@@ -268,18 +273,21 @@ header {
   width: max-content;
   margin-top: 0px;
   background-color: #fd0944;
-  padding: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 0 0 10px 10px;
   color: white;
-  font-size: 12px;
+  font-size: 10px;
   margin-bottom: -32px;
   text-transform: uppercase;
   max-width: 95%;
   z-index: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .form-control.is-invalid {
@@ -289,13 +297,27 @@ header {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.form-control-select.is-invalid~.invalid-feedback {
+.form-control-select {
+  input {
+    transition-duration: 0s !important;
+  }
+}
+
+.form-control-select.is-invalid~.invalid-feedback,
+.invalid-feedback.convention-feedback  {
   display: block;
   position: absolute;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
+}
+
+.invalid-feedback.convention-feedback  {
+  font-size: 0.8em;
+  height: 2em;
+  text-align: center;
+  line-height: 1;
 }
 
 .sign-in-form__header {
@@ -934,20 +956,70 @@ input[type=checkbox] {
   }
 }
 
+.UserAvatar--inner {
+  background: rgba(244, 167, 0, 1);
+  background: -moz-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(244, 167, 0, 1)), color-stop(100%, rgba(209, 216, 13, 1)));
+  background: -webkit-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -o-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: -ms-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  background: linear-gradient(135deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+  border: 2px solid #fff;
+  line-height: 38px !important;
+}
+
+.UserAvatar.middle {
+  .UserAvatar--inner {
+    line-height: 28px !important;
+    font-size: 11px !important;
+    color: #fff;
+  }
+}
+
 .user-info-avatar {
-    .UserAvatar--inner {
-        background: rgba(244, 167, 0, 1);
-        background: -moz-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(244, 167, 0, 1)), color-stop(100%, rgba(209, 216, 13, 1)));
-        background: -webkit-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -o-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: -ms-linear-gradient(-45deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        background: linear-gradient(135deg, rgba(244, 167, 0, 1) 0%, rgba(209, 216, 13, 1) 100%);
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-        font-weight: 600;
-        border: 2px solid #fff;
-        line-height: 38px !important;
+  display: flex;
+  margin-bottom: 5px;
+
+  .UserAvatar {
+    z-index: 1;
+  }
+}
+
+.team-icon {
+  position: relative;
+  display: flex;
+
+  &.with-avatar{
+    .UserAvatar {
+      z-index: 0;
+      margin-right: -10px !important;
     }
+  }
+
+  .UserAvatar--inner {
+    background: rgb(44, 62, 80);
+    background-color: rgb(44, 62, 80) !important;
+    color: #fff;
+  }
+
+  .team-length {
+    position: absolute;
+    bottom: -13px;
+    left: calc(50% - 7px);
+    background: black;
+    padding: 3px;
+    width: 25px;
+    height: 25px;
+    font-size: 1em;
+    color: white;
+    border-radius: 100%;
+    text-align: center;
+    line-height: 1.1;
+    vertical-align: middle;
+    border: 2px solid white;
+  }
 }
 
 .user-profile {
