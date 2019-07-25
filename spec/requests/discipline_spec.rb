@@ -28,6 +28,22 @@ describe "Discipline", type: :request do
         expect(json["name"]).to include(*discipline.name)
       end
     end
+    context "create" do
+      it 'should get a status "success" and create a discipline' do
+        post "/api/v1/projects/#{project.id}/disciplines",
+             params: { discipline: { name: "some field" } }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:success)
+        expect(project.disciplines.count).to eq(11)
+      end
+      it "should get a status 'error' and don't create a discipline" do
+        post "/api/v1/projects/#{project.id}/disciplines",
+             params: { discipline: { name: " " } }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(project.disciplines.count).to eq(10)
+      end
+    end
   end
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
@@ -39,6 +55,12 @@ describe "Discipline", type: :request do
     it 'edit' do
       get "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}/edit",
           headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'create' do
+      post "/api/v1/projects/#{project.id}/disciplines",
+           params: { discipline: { name: "some field" } }.to_json,
+           headers: headers
       expect(response).to have_http_status(:forbidden)
     end
   end

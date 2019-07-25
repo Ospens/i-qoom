@@ -13,4 +13,22 @@ class Api::V1::DisciplinesController < ApplicationController
                  serializer: DisciplineSerializer,
            status: :ok
   end
+
+  def create
+    if @discipline.save
+      render json: { status: "success",
+                     message: t(".success_message"),
+                     discipline: ActiveModel::Serializer::CollectionSerializer.new([@discipline],
+                                         serializer: DisciplineSerializer) },
+             status: :created
+    else
+      error(@discipline)
+    end
+  end
+
+  private
+
+  def discipline_params
+    params.fetch(:discipline, { }).permit(:name)
+  end
 end
