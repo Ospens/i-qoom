@@ -7,4 +7,10 @@ class Api::V1::DisciplinesController < ApplicationController
                  each_serializer: DisciplineSerializer,
            status: :ok
   end
+
+  def edit
+    render json: @discipline,
+                 serializer: DisciplineSerializer,
+           status: :ok
+  end
 end

@@ -6,6 +6,7 @@ describe "Discipline", type: :request do
                                     user_id: user.id) }
   let(:project_member) { FactoryBot.create(:project_member,
                                            project_id: project.id) }
+  let(:discipline) { project.disciplines.first }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -13,9 +14,18 @@ describe "Discipline", type: :request do
     context "index" do
       it 'should get a status "success" and render disciplines' do
         get "/api/v1/projects/#{project.id}/disciplines",
-             headers: headers
+            headers: headers
         expect(response).to have_http_status(:success)
-        expect(json.map { |h| h["name"] }).to include(*project.disciplines.map(&:name))
+        expect(json.map { |h| h["name"] }).to\
+          include(*project.disciplines.map(&:name))
+      end
+    end
+    context "edit" do
+      it 'should get a status "success" and render the discipline' do
+        get "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}/edit",
+            headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json["name"]).to include(*discipline.name)
       end
     end
   end
@@ -23,7 +33,12 @@ describe "Discipline", type: :request do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
     it 'index' do
       get "/api/v1/projects/#{project.id}/disciplines",
-           headers: headers
+          headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'edit' do
+      get "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}/edit",
+          headers: headers
       expect(response).to have_http_status(:forbidden)
     end
   end
