@@ -36,7 +36,7 @@ module DocumentHelpers
       elsif field['kind'] == 'date_field'
         field['value'] = Time.now.to_s
       elsif field['kind'] == 'upload_field'
-        field['files'] = [fixture_file_upload('spec/fixtures/test.txt')]
+        field['file'] = fixture_file_upload('spec/fixtures/test.txt')
       end
     end
     if suffix

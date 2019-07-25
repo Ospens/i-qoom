@@ -58,6 +58,7 @@ Rails.application.routes.draw do
                           :edit,
                           :update,
                           :destroy ]
+        resources :document_folders, only: :index
       end
     end
   end

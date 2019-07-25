@@ -292,25 +292,12 @@ RSpec.describe DocumentField, type: :model do
     it 'upload_field' do
       field = FactoryBot.create(:document_field, required: true, kind: :upload_field)
       document.project.conventions.active.document_fields << field
-      field.files.attach(fixture_file_upload('test.txt'))
+      field.file.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
       expect(document).to be_valid
-      field.files.purge
+      field.file.purge
       expect(document).to_not be_valid
     end
-  end
-
-  it '#native_file_is_only_one' do
-    document = FactoryBot.create(:document)
-    field = document.document_fields.find_by(codification_kind: :document_native_file)
-    expect(field.files.length).to eql(1)
-    expect(field).to be_valid
-    field.files.purge
-    expect(field).to_not be_valid
-    field.files.attach(fixture_file_upload('test.txt'))
-    expect(field).to be_valid
-    field.files.attach(fixture_file_upload('test.txt'))
-    expect(field).to_not be_valid
   end
 
   it '#multiselect_is_not_allowed' do
@@ -331,23 +318,21 @@ RSpec.describe DocumentField, type: :model do
     let(:file_field1) { doc.document_fields.find_by(codification_kind: :document_native_file) }
 
     it 'new version' do
-      file1 = file_field1.files.first
+      file1 = file_field1.file
       doc2 = rev.versions.create!(doc_attrs)
       file_field2 = doc2.document_fields.find_by(codification_kind: :document_native_file)
-      file2 = file_field2.files.first
-      expect(file_field2.files.length).to eql(1)
+      file2 = file_field2.file
       expect(file1.blob_id).to_not eql(file2.blob_id)
       expect(file1.download).to eql(file2.download)
     end
 
     it 'new revision' do
-      file1 = file_field1.files.first
+      file1 = file_field1.file
       rev2 = FactoryBot.create(:document_revision, document_main: rev.document_main)
       doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }['value'] = '2'
       doc2 = rev2.versions.create!(doc_attrs)
       file_field2 = doc2.document_fields.find_by(codification_kind: :document_native_file)
-      file2 = file_field2.files.first
-      expect(file_field2.files.length).to eql(1)
+      file2 = file_field2.file
       expect(file1.blob_id).to_not eql(file2.blob_id)
       expect(file1.download).to eql(file2.download)
     end
