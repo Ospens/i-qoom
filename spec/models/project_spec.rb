@@ -48,7 +48,7 @@ RSpec.describe Project, type: :model do
   it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
   it { is_expected.to validate_presence_of(:admins) }
-
+  it { is_expected.to have_many(:disciplines) }
 
   context "update_creation_step_to_done" do
     context "when is not ready" do

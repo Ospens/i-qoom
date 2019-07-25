@@ -52,6 +52,12 @@ Rails.application.routes.draw do
         resources :project_members,
                   path: :members,
                   except: [:show]
+        resources :disciplines,
+                  only: [ :index,
+                          :create,
+                          :edit,
+                          :update,
+                          :destroy ]
       end
     end
   end

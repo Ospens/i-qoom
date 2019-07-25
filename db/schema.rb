@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_160839) do
 
   create_table "disciplines", force: :cascade do |t|
     t.string "name"
+    t.integer "project_id"
   end
 
   create_table "dms_settings", force: :cascade do |t|

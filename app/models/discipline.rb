@@ -1,5 +1,7 @@
+# can be renamed to ProjectDiscipline
 class Discipline < ApplicationRecord
   has_many :project_members
+  belongs_to :project
 
   validates :name,
             presence: true,
