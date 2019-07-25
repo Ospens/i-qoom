@@ -17,6 +17,11 @@ FactoryBot.define do
         end
         factory :project do
           creation_step { "done" }
+          factory :project_with_disciplines do
+            after(:create) do |instance|
+              FactoryBot.create_list(:discipline, 10, project: instance)
+            end
+          end
         end
       end
     end
