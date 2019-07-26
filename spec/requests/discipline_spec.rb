@@ -60,6 +60,14 @@ describe "Discipline", type: :request do
         expect(discipline.name).not_to eq(" ")
       end
     end
+    context "destroy" do
+      it "should get a status 'success' and destroy the discipline" do
+        delete "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
+               headers: headers
+        expect(response).to have_http_status(:success)
+        expect(Discipline.find_by(id: discipline.id)).to be_falsy
+      end
+    end
   end
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
@@ -81,8 +89,13 @@ describe "Discipline", type: :request do
     end
     it 'update' do
       patch "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
-           params: { discipline: { name: "some field" } }.to_json,
-           headers: headers
+            params: { discipline: { name: "some field" } }.to_json,
+            headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'destroy' do
+      delete "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
+             headers: headers
       expect(response).to have_http_status(:forbidden)
     end
   end

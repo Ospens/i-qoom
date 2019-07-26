@@ -38,6 +38,11 @@ class Api::V1::DisciplinesController < ApplicationController
     end
   end
 
+  def destroy
+    @discipline.destroy
+    head :no_content
+  end
+
   private
 
   def discipline_params
