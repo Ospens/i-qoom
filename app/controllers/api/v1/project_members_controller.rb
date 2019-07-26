@@ -58,7 +58,7 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :phone_code,
                              :phone_number,
                              :job_title,
+                             :discipline_id,
                              company_address_attributes: Address.column_names)
   end
-
 end

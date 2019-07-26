@@ -138,17 +138,21 @@ describe "ProjectMember", type: :request do
                             project_id: project.id)
         }
         it 'should get a status "success"' do
+          discipline = 
+            FactoryBot.create(:discipline, project_id: project.id)
           patch "/api/v1/projects/#{project.id}/members/#{project_member_company_data.id}",
             params: { project_member:
                       { creation_step: "details",
                         email: Faker::Internet.email,
                         first_name: Faker::Name.first_name,
-                        last_name: Faker::Name.last_name }
+                        last_name: Faker::Name.last_name,
+                        discipline_id: discipline.id }
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
           expect(json["status"]).to eq("success")
           expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("completed")
+          expect(ProjectMember.find_by(id: project_member_company_data.id).discipline).to be_truthy
         end
         it 'should get a status "error"' do
           patch "/api/v1/projects/#{project.id}/members/#{project_member_company_data.id}",
