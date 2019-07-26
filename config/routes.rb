@@ -31,7 +31,9 @@ Rails.application.routes.draw do
         collection do
           get :confirm_admin
         end
-        resource :conventions, only: [:edit, :update]
+        resource :conventions, only: [:edit, :update] do
+          patch :update_field_titles
+        end
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
