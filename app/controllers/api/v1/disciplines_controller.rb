@@ -26,6 +26,18 @@ class Api::V1::DisciplinesController < ApplicationController
     end
   end
 
+  def update
+    if @discipline.update(discipline_params)
+      render json: { status: "success",
+                     message: t(".success_message"),
+                     discipline: ActiveModel::Serializer::CollectionSerializer.new([@discipline],
+                                         serializer: DisciplineSerializer) },
+             status: :created
+    else
+      error(@discipline)
+    end
+  end
+
   private
 
   def discipline_params
