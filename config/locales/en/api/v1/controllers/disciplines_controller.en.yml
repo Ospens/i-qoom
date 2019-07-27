@@ -12,6 +12,3 @@ en:
             Successfully added
           error_message:
             Something went wrong
-        destroy:
-          success_message:
-            Successfully deleted
