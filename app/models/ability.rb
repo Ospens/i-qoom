@@ -43,6 +43,10 @@ class Ability
       can :manage, Discipline do |discipline|
         discipline.project.user_id == user.id
       end
+      # Role
+      can :manage, Role do |role|
+        role.project.user_id == user.id
+      end
       # Convention
       can :manage, Convention do |convention|
         convention.project.user == user

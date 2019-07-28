@@ -22,6 +22,11 @@ FactoryBot.define do
               FactoryBot.create_list(:discipline, 10, project: instance)
             end
           end
+          factory :project_with_roles do
+            after(:create) do |instance|
+              FactoryBot.create_list(:role, 10, project: instance)
+            end
+          end
         end
       end
     end
