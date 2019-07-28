@@ -14,10 +14,14 @@ class DocumentMain < ApplicationRecord
       end
       final_documents
     else
-      all.map do |main|
-        document = main.revisions.last_revision.last_version
-        document if document.can_view?(user)
-      end.compact
+      last_versions(user)
     end
+  end
+
+  def self.last_versions(user)
+    all.map do |main|
+      document = main.revisions.last_revision.last_version
+      document if document.can_view?(user)
+    end.compact
   end
 end

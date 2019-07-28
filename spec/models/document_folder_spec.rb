@@ -29,7 +29,8 @@ RSpec.describe DocumentFolder, type: :model do
       dbl = double
       allow(project).to receive(:document_mains).and_return(dbl)
       allow(dbl).to receive(:documents_available_for).with(user).and_return([])
-      folder.documents << doc1
+      folder.document_mains << doc1.revision.document_main
+      allow_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       expect(folder.all_documents.pluck(:id)).to eql([doc1.id])
     end
 
