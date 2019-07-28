@@ -28,8 +28,8 @@ class DocumentField < ApplicationRecord
 
   accepts_nested_attributes_for :document_field_values
 
-  has_many_attached :files,
-                    dependent: :purge
+  has_one_attached :file,
+                   dependent: :purge
 
   before_validation :set_required,
                     if: -> { codification_kind.present? }
@@ -38,10 +38,10 @@ class DocumentField < ApplicationRecord
                     if: -> { parent.class.name == 'Document' && revision_version? },
                     on: :create
 
-  before_validation :attach_previous_native_file,
+  before_validation :attach_previous_file,
                     if: -> { parent.class.name == 'Document' &&
-                             document_native_file? &&
-                             !files.any? },
+                             upload_field? &&
+                             !file.attached? },
                     on: :create
 
   after_save :update_revision_number,
@@ -71,11 +71,6 @@ class DocumentField < ApplicationRecord
            if: -> { parent.class.name == 'Document' &&
                     should_have_document_field_values? &&
                     !multiselect? }
-
-  validate :native_file_is_only_one,
-           if: -> { parent.class.name == 'Document' &&
-                    document_native_file? &&
-                    files.length > 1 }
 
   validate :must_be_select_field,
            if: :codification_kind_as_select_field?
@@ -238,7 +233,7 @@ class DocumentField < ApplicationRecord
           errors.add(:document_field_values, :is_required)
         end
       elsif document_native_file?
-        errors.add(:files, :is_required) if !files.any?
+        errors.add(:file, :is_required) if !file.attached?
       elsif additional_information?
         # nothing, not required
       elsif value.blank?
@@ -251,7 +246,7 @@ class DocumentField < ApplicationRecord
         errors.add(:document_field_values, :is_required)
       end
     elsif upload_field?
-      errors.add(:files, :is_required) if !files.any?
+      errors.add(:file, :is_required) if !file.attached?
     end
   end
 
@@ -261,11 +256,7 @@ class DocumentField < ApplicationRecord
     end
   end
 
-  def native_file_is_only_one
-    errors.add(:files, :should_be_only_one)
-  end
-
-  def attach_previous_native_file
+  def attach_previous_file
     rev = parent.revision
     revs = rev.document_main.revisions.where.not(id: rev)
     vers = rev.versions.where.not(id: parent)
@@ -277,11 +268,16 @@ class DocumentField < ApplicationRecord
         revs.last_revision.last_version.document_fields
       end
     file_field =
-      last_version_fields.find_by(codification_kind: :document_native_file)
-    file = file_field.files.first
-    files.attach(io: StringIO.new(file.download),
-                 filename: file.filename,
-                 content_type: file.content_type)
+      last_version_fields.find_by(codification_kind: codification_kind,
+                                  kind: kind,
+                                  title: title,
+                                  row: row,
+                                  column: column)
+    return if file_field.blank?
+    prev_file = file_field.file
+    file.attach(io: StringIO.new(prev_file.download),
+                filename: prev_file.filename,
+                content_type: prev_file.content_type)
   end
 
   def must_be_select_field

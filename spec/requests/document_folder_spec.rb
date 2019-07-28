@@ -94,6 +94,30 @@ describe DocumentFolder, type: :request do
     end
   end
 
+  context '#index' do
+    let!(:document_folder1) { FactoryBot.create(:document_folder) }
+    let(:user) { document_folder1.user }
+    let(:project) { document_folder1.project }
+    let!(:document_folder2) { FactoryBot.create(:document_folder, user: user, project: project) }
+    let!(:document) { FactoryBot.create(:document) }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/document_folders", params: { document_id: document.id }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      document_folder1.document_mains << document.revision.document_main
+      get "/api/v1/projects/#{project.id}/document_folders", headers: credentials(user), params: { document_id: document.id }
+      expect(response).to have_http_status(:success)
+      expect(json.count).to eql(2)
+      expect(json[0]['id']).to eql(document_folder1.id)
+      expect(json[0]['enabled']).to eql(true)
+      expect(json[1]['id']).to eql(document_folder2.id)
+      expect(json[1]['enabled']).to eql(false)
+    end
+  end
+
   context '#add_document_to_folders' do
     let(:document_folder1) { FactoryBot.create(:document_folder) }
     let(:document_folder2) { FactoryBot.create(:document_folder) }
@@ -111,10 +135,11 @@ describe DocumentFolder, type: :request do
       allow(document_folder1).to receive(:allowed_to_add_document?).and_return(true)
       post '/api/v1/document_folders/add_document_to_folders', params: folder_params, headers: credentials(user)
       expect(response).to have_http_status(:success)
-      doc_ids1 = document_folder1.documents.pluck(:id)
-      doc_ids2 = document_folder2.documents.pluck(:id)
-      expect(doc_ids1).to include(document.id)
-      expect(doc_ids2).to_not include(document.id)
+      doc_ids1 = document_folder1.document_mains.pluck(:id)
+      doc_ids2 = document_folder2.document_mains.pluck(:id)
+      document_main_id = document.revision.document_main.id
+      expect(doc_ids1).to include(document_main_id)
+      expect(doc_ids2).to_not include(document_main_id)
     end
   end
 end

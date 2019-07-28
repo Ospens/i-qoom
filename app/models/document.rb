@@ -86,7 +86,7 @@ class Document < ApplicationRecord
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false)
+    end.include?(false) || user == project.user
   end
 
   def can_view?(user)
@@ -105,7 +105,7 @@ class Document < ApplicationRecord
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
-    end.include?(false)
+    end.include?(false) || user == project.user
   end
 
   def attributes_for_edit
@@ -151,7 +151,7 @@ class Document < ApplicationRecord
   end
 
   def native_file
-    document_fields.find_by(codification_kind: :document_native_file).files.first
+    document_fields.find_by(codification_kind: :document_native_file).file
   end
 
   def self.visible_columns

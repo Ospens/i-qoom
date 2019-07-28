@@ -47,9 +47,10 @@ describe "ProjectAdministrator", type: :request do
                headers: headers
 
         expect(response).to have_http_status(:success)
-        expect(project.admins.count).to eq(1)
+        expect(project.admins.count).to eq(2)
       end
       it "shouldn't work" do
+        project.admins.last.remove
         delete "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}",
                headers: headers
 

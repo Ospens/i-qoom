@@ -35,7 +35,8 @@ describe Document, type: :request do
 
       it 'project user' do
         get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
-        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        expect(response).to have_http_status(307)
+        expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
       end
     end
 
@@ -45,18 +46,21 @@ describe Document, type: :request do
     end
 
     it 'user' do
-      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(FactoryBot.create(:user))
+      get "/api/v1/projects/#{project.id}/documents/new",\
+        headers: credentials(FactoryBot.create(:user))
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user with rights' do
-      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(user)
+      get "/api/v1/projects/#{project.id}/documents/new",\
+        headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['document_fields'].count).to eql(8)
     end
 
     it 'project user' do
-      get "/api/v1/projects/#{project.id}/documents/new", headers: credentials(project.user)
+      get "/api/v1/projects/#{project.id}/documents/new",\
+        headers: credentials(project.user)
       expect(response).to have_http_status(:success)
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
@@ -83,14 +87,17 @@ describe Document, type: :request do
       end
 
       it 'user with rights' do
-        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+        post "/api/v1/projects/#{@project_id}/documents",\
+          params: @params, headers: credentials(user)
         expect(response).to have_http_status(:unprocessable_entity)
         expect(json['message']).to eql('DMS is not available yet')
       end
 
       it 'project user' do
-        post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
-        expect(response).to redirect_to("/api/v1/projects/#{@project_id}/conventions/edit")
+        post "/api/v1/projects/#{@project_id}/documents",\
+          params: @params, headers: credentials(@project_user)
+        expect(response).to have_http_status(307)
+        expect(json['location']).to eql("/api/v1/projects/#{@project_id}/conventions/edit")
       end
     end
 
@@ -100,14 +107,18 @@ describe Document, type: :request do
     end
 
     it 'user' do
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(FactoryBot.create(:user))
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(FactoryBot.create(:user))
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user with rights' do
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      @params[:document]['title'] = title
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['email_title']).to eql(title)
+      expect(json['title']).to eql(title)
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
 
@@ -115,7 +126,8 @@ describe Document, type: :request do
       DocumentRevision.destroy_all
       DocumentMain.destroy_all
       @params[:document]['document_fields'].first['kind'] = nil
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(user)
       expect(response).to have_http_status(:unprocessable_entity)
       expect(DocumentMain.count).to eql(0)
     end
@@ -123,7 +135,8 @@ describe Document, type: :request do
     it 'expect DocumentRevision is not created if document is invalid' do
       DocumentRevision.destroy_all
       @params[:document]['document_fields'].first['kind'] = nil
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(user)
       expect(response).to have_http_status(:unprocessable_entity)
       expect(DocumentRevision.count).to eql(0)
     end
@@ -133,36 +146,41 @@ describe Document, type: :request do
       dbl = double
       expect(ApplicationMailer).to receive(:new_document).and_return(dbl)
       expect(dbl).to receive(:deliver_later)
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(user)
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
     end
 
     it 'project user' do
-      post "/api/v1/projects/#{@project_id}/documents", params: @params, headers: credentials(@project_user)
+      post "/api/v1/projects/#{@project_id}/documents",\
+        params: @params, headers: credentials(@project_user)
       expect(response).to have_http_status(:success)
     end
   end
 
-  it 'uploads files' do
+  it 'uploads file' do
     document_params = document_attributes(user, false)
     document_native_file =
       document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-    document_native_file['files'] = [fixture_file_upload('test.txt')]
+    document_native_file['file'] = fixture_file_upload('test.txt')
     revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
     revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
-    field = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title')
+    field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
+    field2 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title2')
     project = Project.find(document_params['project_id'])
-    project.conventions.active.document_fields.create!(field)
-    field['files'] = [file1, file2]
-    document_params['document_fields'] << field
-    post "/api/v1/projects/#{project.id}/documents", params: { document: document_params }, headers: credentials(user)
+    project.conventions.active.document_fields.create!(field1)
+    project.conventions.active.document_fields.create!(field2)
+    field1['file'] = file1
+    field2['file'] = file2
+    document_params['document_fields'] << field1
+    document_params['document_fields'] << field2
+    post "/api/v1/projects/#{project.id}/documents",\
+      params: { document: document_params }, headers: credentials(user)
     expect(response).to have_http_status(:success)
-    files = Document.last.document_fields.find_by(title: 'title').files
-    file1 = files.first
-    file2 = files.last
-    expect(files.length).to eql(2)
+    file1 = Document.last.document_fields.find_by(title: 'title1').file
+    file2 = Document.last.document_fields.find_by(title: 'title1').file
     expect(file1.download.strip).to eql('111')
     expect(file2.download.strip).to eql('111')
   end
@@ -189,7 +207,7 @@ describe Document, type: :request do
       end
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-      document_native_file['files'] = [fixture_file_upload('test.txt')]
+      document_native_file['file'] = fixture_file_upload('test.txt')
       revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
       revision_number['value'] = '1'
       rev.versions.create!(doc_attrs.merge(user_id: owner.id, project_id: project.id))
@@ -211,35 +229,43 @@ describe Document, type: :request do
         end
 
         it 'anon' do
-          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
+          post "/api/v1/documents/#{document.id}/create_revision",\
+            params: { document: attrs }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'user with rights' do
-          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+          post "/api/v1/documents/#{document.id}/create_revision",\
+            params: { document: attrs }, headers: credentials(user)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'project user' do
-          post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          post "/api/v1/documents/#{document.id}/create_revision",\
+            params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
       it 'anon' do
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'user' do
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(FactoryBot.create(:user))
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs },\
+          headers: credentials(FactoryBot.create(:user))
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'user with rights' do
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
         expect(document.revision.document_main.revisions.count).to eql(2)
@@ -249,7 +275,8 @@ describe Document, type: :request do
         document
         expect(DocumentMain.count).to eql(1)
         attrs['document_fields'].first['kind'] = nil
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }, headers: credentials(user)
         expect(response).to have_http_status(:unprocessable_entity)
         expect(DocumentMain.count).to eql(1)
       end
@@ -258,13 +285,15 @@ describe Document, type: :request do
         document
         expect(DocumentRevision.count).to eql(1)
         attrs['document_fields'].first['kind'] = nil
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(user)
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }, headers: credentials(user)
         expect(response).to have_http_status(:unprocessable_entity)
         expect(DocumentRevision.count).to eql(1)
       end
 
       it 'owner' do
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(owner)
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
       end
 
@@ -295,7 +324,8 @@ describe Document, type: :request do
 
         it 'project user' do
           get "/api/v1/documents/#{document.id}/edit", headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
@@ -338,43 +368,50 @@ describe Document, type: :request do
         end
 
         it 'anon' do
-          patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
+          patch "/api/v1/documents/#{document.id}",\
+            params: { document: { email_title: '' } }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'user with rights' do
-          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(user)
+          patch "/api/v1/documents/#{document.id}",\
+            params: { document: attrs }, headers: credentials(user)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'project user' do
-          patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          patch "/api/v1/documents/#{document.id}",\
+            params: { document: attrs }, headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
       it 'anon' do
-        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: { email_title: '' } }
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'user' do
-        patch "/api/v1/documents/#{document.id}", params: { document: { email_title: '' } }, headers: credentials(FactoryBot.create(:user))
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: { email_title: '' } },\
+          headers: credentials(FactoryBot.create(:user))
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'user with rights' do
-        patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(user)
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: attrs }, headers: credentials(user)
         expect(response).to have_http_status(:success)
       end
 
       it 'owner' do
         attrs['email_title'] = title
         patch "/api/v1/documents/#{document.id}",\
-          params: { document: attrs },\
-          headers: credentials(owner)
+          params: { document: attrs }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
         expect(json['email_title']).to eql(title)
         expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
@@ -382,7 +419,8 @@ describe Document, type: :request do
       end
 
       it 'project user' do
-        patch "/api/v1/documents/#{document.id}", params: { document: attrs }, headers: credentials(project.user)
+        patch "/api/v1/documents/#{document.id}",\
+          params: { document: attrs }, headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -407,8 +445,10 @@ describe Document, type: :request do
         end
 
         it 'project user' do
-          get "/api/v1/documents/#{document.id}", headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          get "/api/v1/documents/#{document.id}",\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
@@ -418,7 +458,8 @@ describe Document, type: :request do
       end
 
       it 'user' do
-        get "/api/v1/documents/#{document.id}", headers: credentials(FactoryBot.create(:user))
+        get "/api/v1/documents/#{document.id}",\
+          headers: credentials(FactoryBot.create(:user))
         expect(response).to have_http_status(:forbidden)
       end
 
@@ -436,7 +477,8 @@ describe Document, type: :request do
       end
 
       it 'project user' do
-        get "/api/v1/documents/#{document.id}", headers: credentials(project.user)
+        get "/api/v1/documents/#{document.id}",\
+          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -455,14 +497,17 @@ describe Document, type: :request do
         end
 
         it 'user with rights' do
-          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+          get "/api/v1/documents/#{document.id}/download_native_file",\
+            headers: credentials(user)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'project user' do
-          get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          get "/api/v1/documents/#{document.id}/download_native_file",\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
@@ -472,24 +517,28 @@ describe Document, type: :request do
       end
 
       it 'user' do
-        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(FactoryBot.create(:user))
+        get "/api/v1/documents/#{document.id}/download_native_file",\
+          headers: credentials(FactoryBot.create(:user))
         expect(response).to have_http_status(:forbidden)
       end
 
       it 'user with rights' do
-        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(user)
+        get "/api/v1/documents/#{document.id}/download_native_file",\
+          headers: credentials(user)
         expect(response).to have_http_status(:success)
       end
 
       it 'owner' do
-        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(owner)
+        get "/api/v1/documents/#{document.id}/download_native_file",\
+          headers: credentials(owner)
         expect(response).to have_http_status(:success)
         expect(response.body).to eql("111\n")
         expect(response.header['Content-Disposition']).to include(document.codification_string)
       end
 
       it 'project user' do
-        get "/api/v1/documents/#{document.id}/download_native_file", headers: credentials(project.user)
+        get "/api/v1/documents/#{document.id}/download_native_file",\
+          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -508,14 +557,18 @@ describe Document, type: :request do
         end
 
         it 'user with rights' do
-          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(user)
+          get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+            params: { document_ids: [document.id] }, headers: credentials(user)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'project user' do
-          get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+            params: { document_ids: [document.id] },\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
@@ -525,12 +578,15 @@ describe Document, type: :request do
       end
 
       it 'user' do
-        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(FactoryBot.create(:user))
+        get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+          params: { document_ids: [document.id] },\
+          headers: credentials(FactoryBot.create(:user))
         expect(response).to have_http_status(:success)
       end
 
       it 'user with rights' do
-        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(user)
+        get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         files = Zip::InputStream.open(StringIO.new(response.body))
         file = files.get_next_entry
@@ -541,12 +597,15 @@ describe Document, type: :request do
       end
 
       it 'owner' do
-        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(owner)
+        get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+          params: { document_ids: [document.id] }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
       end
 
       it 'project user' do
-        get "/api/v1/projects/#{project.id}/documents/download_native_files", params: { document_ids: [document.id] }, headers: credentials(project.user)
+        get "/api/v1/projects/#{project.id}/documents/download_native_files",\
+          params: { document_ids: [document.id] },\
+          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -565,8 +624,10 @@ describe Document, type: :request do
         end
 
         it 'project user' do
-          get "/api/v1/documents/#{document.id}/download_details", headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          get "/api/v1/documents/#{document.id}/download_details",\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
@@ -591,19 +652,24 @@ describe Document, type: :request do
         end
 
         it 'anon' do
-          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv",\
+            params: { document_ids: [document.id] }
           expect(response).to have_http_status(:unprocessable_entity)
           expect(json['message']).to eql('DMS is not available yet')
         end
 
         it 'project user' do
-          get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(project.user)
-          expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+          get "/api/v1/projects/#{project.id}/documents/download_list.csv",\
+            params: { document_ids: [document.id] },\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
       end
 
       it 'csv' do
-        get "/api/v1/projects/#{project.id}/documents/download_list.csv", params: { document_ids: [document.id] }, headers: credentials(user)
+        get "/api/v1/projects/#{project.id}/documents/download_list.csv",\
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         sheet = CSV.parse(response.body.force_encoding('utf-8'))
         expect(sheet[0][0]).to eql("\xEF\xBB\xBFDoc-ID")
@@ -619,7 +685,8 @@ describe Document, type: :request do
       end
 
       it 'xlsx' do
-        get "/api/v1/projects/#{project.id}/documents/download_list.xlsx", params: { document_ids: [document.id] }, headers: credentials(user)
+        get "/api/v1/projects/#{project.id}/documents/download_list.xlsx",\
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         File.open('./tmp/documents.xlsx', 'w') { |file| file.write(response.body) }
         sheet = Roo::Spreadsheet.open('./tmp/documents.xlsx').sheet(0)
@@ -635,7 +702,8 @@ describe Document, type: :request do
       end
 
       it 'xml' do
-        get "/api/v1/projects/#{project.id}/documents/download_list.xml", params: { document_ids: [document.id] }, headers: credentials(user)
+        get "/api/v1/projects/#{project.id}/documents/download_list.xml",\
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         sheet = Nokogiri::XML(response.body).search('documents').search('document')
         expect(sheet.search('doc_id').text).to eql(document.codification_string)
@@ -644,7 +712,8 @@ describe Document, type: :request do
       end
 
       it 'pdf' do
-        get "/api/v1/projects/#{project.id}/documents/download_list.pdf", params: { document_ids: [document.id] }, headers: credentials(user)
+        get "/api/v1/projects/#{project.id}/documents/download_list.pdf",\
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
         # File.open('./tmp/document.pdf', 'w+') do |f|
         #   f.binmode
@@ -667,13 +736,16 @@ describe Document, type: :request do
       end
 
       it 'project user' do
-        get "/api/v1/projects/#{project.id}/documents", headers: credentials(project.user)
-        expect(response).to redirect_to("/api/v1/projects/#{project.id}/conventions/edit")
+        get "/api/v1/projects/#{project.id}/documents",\
+          headers: credentials(project.user)
+        expect(response).to have_http_status(307)
+        expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
       end
     end
 
     it 'no documents' do
-      get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
+      get "/api/v1/projects/#{project.id}/documents",\
+        headers: credentials(user)
       expect(response).to have_http_status(:success)
     end
 
@@ -706,7 +778,7 @@ describe Document, type: :request do
         end
         document_native_file =
           doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-        document_native_file['files'] = [fixture_file_upload('test.txt')]
+        document_native_file['file'] = fixture_file_upload('test.txt')
         revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
         revision_number['value'] = '1'
         @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))

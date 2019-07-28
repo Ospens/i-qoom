@@ -10,7 +10,7 @@ class DocumentFolder < ApplicationRecord
 
   accepts_nested_attributes_for :document_fields
 
-  has_and_belongs_to_many :documents
+  has_and_belongs_to_many :document_mains
 
   validate :document_fields_values
 
@@ -52,7 +52,7 @@ class DocumentFolder < ApplicationRecord
       value = document_number.value
       all_docs = all_docs.filter_by_codification_kind(:document_number, value)
     end
-    Document.find(documents.pluck(:id) + all_docs.pluck(:id))
+    Document.find(document_mains.last_versions(user).pluck(:id) + all_docs.pluck(:id))
   end
 
   def document_fields_values
@@ -68,7 +68,26 @@ class DocumentFolder < ApplicationRecord
 
   def allowed_to_add_document?(document, user_to_check)
     user == user_to_check &&
-    !documents.include?(document) &&
+    !document_mains.last_versions(user).include?(document) &&
     project.document_mains.documents_available_for(user_to_check).include?(document)
+  end
+
+  def self.select_folders_index(user_id, project_id, document_id)
+    document_main = Document.find(document_id).revision.document_main
+    find_by_sql([
+      'SELECT
+        t1.*,
+        exists(
+          SELECT true
+          FROM document_folders_mains
+          WHERE t1.id = document_folder_id AND document_main_id = ?
+        ) AS enabled
+      FROM "document_folders" AS t1
+      WHERE t1.user_id = ? AND t1.project_id = ?
+      ORDER BY t1.id ASC',
+      document_main.id,
+      user_id.to_i,
+      project_id.to_i
+    ])
   end
 end

@@ -166,7 +166,7 @@ class Api::V1::DocumentsController < ApplicationController
     if @project.present?
       if @project.conventions.active.blank?
         if @project.user == signed_in_user
-          redirect_to edit_api_v1_project_conventions_path
+          render json: { location: edit_api_v1_project_conventions_path }, status: 307
         else
           dms_is_unavailable
         end
@@ -174,7 +174,7 @@ class Api::V1::DocumentsController < ApplicationController
     elsif @document.present? && @document.project.present?
       if @document.project.conventions.active.blank?
         if @document.project.user == signed_in_user
-          redirect_to edit_api_v1_project_conventions_path(project_id: @document.project.id)
+          render json: { location: edit_api_v1_project_conventions_path(project_id: @document.project.id) }, status: 307
         else
           dms_is_unavailable
         end
@@ -197,6 +197,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
     end
     params.require(:document).permit(:issued_for,
+                                     :title,
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,
@@ -211,7 +212,7 @@ class Api::V1::DocumentsController < ApplicationController
                                         :title,
                                         :command,
                                         :value,
-                                        files: [],
+                                        :file,
                                         document_field_values_attributes: [
                                           :value,
                                           :title,

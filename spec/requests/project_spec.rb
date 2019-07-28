@@ -61,7 +61,7 @@ describe "Project", type: :request do
                           email: "someemail@gmail.com" } } }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).admins.count).to eq(2)
+          expect(Project.find_by(id: project.id).admins.count).to eq(3)
           expect(Project.find_by(id: project.id).admins.last.email).to\
             eq("someemail@gmail.com")
           expect(json["status"]).to eq("success")
@@ -75,7 +75,7 @@ describe "Project", type: :request do
                           email: "notemail" } } }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
+          expect(Project.find_by(id: project.id).admins.count).not_to eq(3)
           expect(Project.find_by(id: project.id).admins.last.email).not_to\
             eq("notemail")
           expect(json["status"]).to eq("error")
