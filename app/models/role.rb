@@ -4,6 +4,7 @@ class Role < ApplicationRecord
 
   validates :name,
             presence: true,
+            uniqueness: { scope: [:project_id] },
             length: { minimum: 2,
                       maximum: 255 }
 end
