@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_220746) do
+ActiveRecord::Schema.define(version: 2019_07_27_213845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,11 +110,11 @@ ActiveRecord::Schema.define(version: 2019_07_24_220746) do
     t.index ["user_id"], name: "index_document_folders_on_user_id"
   end
 
-  create_table "document_folders_documents", id: false, force: :cascade do |t|
-    t.bigint "document_id", null: false
+  create_table "document_folders_mains", id: false, force: :cascade do |t|
     t.bigint "document_folder_id", null: false
-    t.index ["document_folder_id", "document_id"], name: "index_document_folder_id_and_document_id"
-    t.index ["document_id", "document_folder_id"], name: "index_document_id_and_document_folder_id"
+    t.bigint "document_main_id", null: false
+    t.index ["document_folder_id", "document_main_id"], name: "index_document_folder_id_and_document_main_id"
+    t.index ["document_main_id", "document_folder_id"], name: "index_document_main_id_and_document_folder_id"
   end
 
   create_table "document_mains", force: :cascade do |t|
