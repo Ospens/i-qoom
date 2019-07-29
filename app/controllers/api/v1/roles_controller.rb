@@ -4,7 +4,6 @@ class Api::V1::RolesController < ApplicationController
                               through: :project
   def index
     render json: @project.roles,
-                 each_serializer: RoleSerializer,
            status: :ok
   end
 
@@ -18,8 +17,7 @@ class Api::V1::RolesController < ApplicationController
     if @role.save
       render json: { status: "success",
                      message: t(".success_message"),
-                     role: ActiveModel::Serializer::CollectionSerializer.new([@role],
-                                         serializer: RoleSerializer) },
+                     role: @role },
              status: :created
     else
       error(@role)
@@ -30,8 +28,7 @@ class Api::V1::RolesController < ApplicationController
     if @role.update(role_params)
       render json: { status: "success",
                      message: t(".success_message"),
-                     role: ActiveModel::Serializer::CollectionSerializer.new([@role],
-                                         serializer: RoleSerializer) },
+                     role: @role },
              status: :created
     else
       error(@role)

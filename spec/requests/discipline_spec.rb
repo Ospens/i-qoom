@@ -50,7 +50,7 @@ describe "Discipline", type: :request do
              params: { discipline: { name: "new name" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["discipline"].first["name"]).to eq("new name")
+        expect(json["discipline"]["name"]).to eq("new name")
       end
       it "should get a status 'error' and don't update the discipline" do
         patch "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",

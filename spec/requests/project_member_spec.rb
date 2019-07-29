@@ -17,8 +17,7 @@ describe "ProjectMember", type: :request do
         get "/api/v1/projects/#{project.id}/members",
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json
-                .map { |h| h["id"] }).to include(*project.members.map(&:id))
+        expect(json["members"].map { |h| h["id"] }).to include(*project.members.map(&:id))
       end
     end
     # context "show" do

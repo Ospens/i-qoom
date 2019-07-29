@@ -5,8 +5,10 @@ class Api::V1::ProjectMembersController < ApplicationController
                               through_association: :members
 
   def index
-    render json: @project.members,
-                 each_serializer: ProjectMemberSerializer,
+    render json: { disciplines: @project.disciplines,
+                   roles: @project.roles,
+                   members: ActiveModel::Serializer::CollectionSerializer.new(@project.members,
+                              serializer: ProjectMemberSerializer) },
            status: :ok
   end
 
