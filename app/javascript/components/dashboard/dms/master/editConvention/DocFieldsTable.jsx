@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
-import { reduxForm } from 'redux-form'
+import { reduxForm, getFormValues } from 'redux-form'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {
   startEditConvention,
   startUpdateConvention,
-  discardConvention
+  reorderFields
 } from '../../../../../actions/conventionActions'
-import { reorderFields } from '../../../../../actions/conventionActions'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { DocFieldsColumn } from './DocFieldsColumn'
 import ModalCreateField from './ModalCreateField'
 
 const initState = {
-  modalOpen: false,
-  column: 0,
-  row: 0,
-  isEdit: false
+  modalOpen: false
 }
 
 class DocFieldsTable extends Component {
@@ -28,13 +24,14 @@ class DocFieldsTable extends Component {
     editConvention(project_id)
   }
   
-  handleOpen = (column, row, isEdit) => this.setState({ modalOpen: true, column, row, isEdit })
+  handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => this.setState({ ...initState })
 
-  handleSubmit = () => {
+  handleSubmit = values => {
     const { startUpdateConvention, match: { params: { project_id } }  } = this.props
-    return startUpdateConvention(project_id)
+    console.log(values)
+    return startUpdateConvention(project_id, values)
   }
 
   onDragEnd = result => {
@@ -42,23 +39,20 @@ class DocFieldsTable extends Component {
     reorderFields(result, fields)
   }
 
-  renderModalButton = (column, row) => (
+  renderModalButton = () => (
     <button
       type='button'
       className='btn btn-create-new-field btn-purple my-4'
-      onClick={() => this.handleOpen(column, row)}
+      onClick={() => this.handleOpen()}
     >
       Create new input field
     </button>
   )
 
   renderModalCreateField = () => {
-    const { column, row, modalOpen, isEdit } = this.state
+    const { modalOpen } = this.state
     return (
       <ModalCreateField
-        column={column}
-        row={row}
-        isEdit={isEdit}
         modalOpen={modalOpen}
         handleClose={this.handleClose}
       />
@@ -142,13 +136,8 @@ class DocFieldsTable extends Component {
     </React.Fragment>
   )
 
-  resetForm = () => {
-    const { discardConvention, reset } = this.props
-    reset()
-    discardConvention()
-  }
-
   renerFooter = () => {
+    const { reset } = this.props
     return (
       <div className='dms-footer edit-convetion-footer'>
         <div className='changes-description'>
@@ -159,7 +148,7 @@ class DocFieldsTable extends Component {
           <button
             type='button'
             className='btn btn-white'
-            onClick={this.resetForm}
+            onClick={reset}
           >
             Discard
           </button>
@@ -172,13 +161,14 @@ class DocFieldsTable extends Component {
   }
 
   renerFooterForNewConv = () => {
+    const { reset } = this.props
     return (
       <div className='dms-footer edit-convetion-footer'>
         <div className='d-flex'>
           <button
             type='button'
             className='btn btn-white'
-            onClick={this.resetForm}
+            onClick={reset}
           >
             Discard
           </button>
@@ -191,8 +181,7 @@ class DocFieldsTable extends Component {
   }
 
   render() {
-    const { fields, handleSubmit, changed, id } = this.props
-    const fieldsKeys = Object.keys(fields)
+    const { handleSubmit, pristine, id } = this.props
 
     return (
       <React.Fragment>
@@ -208,24 +197,16 @@ class DocFieldsTable extends Component {
             <span>Project phases</span>
             <ul className='row mx-0 phases-row'>
               <li className='col-3 active'>
-                <button>
-                  Planning
-                </button>
+                <button>Planning</button>
               </li>
               <li className='col-3'>
-                <button>
-                  Development
-                </button>
+                <button>Development</button>
               </li>
               <li className='col-3'>
-                <button>
-                  Execution
-                </button>
+                <button>Execution</button>
               </li>
               <li className='col-3'>
-                <button>
-                  Operation
-                </button>
+                <button>Operation</button>
               </li>
               <button className='btn edit-button'>
                 Edit
@@ -241,26 +222,30 @@ class DocFieldsTable extends Component {
           >
             <div className='p-4'>
               <div className='row'>
-                {fieldsKeys.map((key, i) => (
-                  <div className='col-6' key={i}>
-                    {i === 0 && this.renderDocIdFields()}
-                    <DocFieldsColumn
-                      column={i + 1}
-                      fields={fields[key]}
-                      openInputForm={this.handleOpen}
-                      disabled={!!id}
-                    />
-                  </div>
-                ))}
+                <div className='col-6'>
+                  {this.renderDocIdFields()}
+                  <DocFieldsColumn
+                    column='1'
+                    openInputForm={this.handleOpen}
+                    disabled={!!id}
+                  />
+                </div>
+                <div className='col-6'>
+                  <DocFieldsColumn
+                    column='2'
+                    openInputForm={this.handleOpen}
+                    disabled={!!id}
+                  />
+                </div>
               </div>
-              {!id && this.renderModalButton(2, fields[2].length + 1)}
+              {!id && this.renderModalButton()}
             </div>
             {(() => {
               if (!id) {
                 return (
                   this.renerFooterForNewConv()
                 )
-              } else if (changed) {
+              } else if (!pristine) {
                 return (
                   this.renerFooter()
                 )
@@ -273,21 +258,19 @@ class DocFieldsTable extends Component {
   }
 }
 
-const mapStateToProps = ({ conventions }) => ({
-  id: conventions.current.id,
-  fields: conventions.current.grouped_fields,
-  changed: conventions.changed
+const mapStateToProps = state => ({
+  id: state.conventions.current.id,
+  fields: getFormValues('convention_form')(state),
 })
 
 const mapDispatchToProps = dispatch => ({
   reorderFields: (result, fields) => dispatch(reorderFields(result, fields)),
   editConvention: projectId => dispatch(startEditConvention(projectId)),
   startUpdateConvention: (projectId, values) => dispatch(startUpdateConvention(projectId, values)),
-  discardConvention: () => dispatch(discardConvention())
 })
 
-export default withRouter(connect(
+export default connect(
   mapStateToProps, mapDispatchToProps
   )(reduxForm({
     form: 'convention_form'
-  })(DocFieldsTable)))
+  })(withRouter(DocFieldsTable)))

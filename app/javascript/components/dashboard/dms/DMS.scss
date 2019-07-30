@@ -1234,6 +1234,9 @@ input.search-input {
       margin-left: auto;
     }
 
+    input, textarea {
+      cursor: pointer;
+    }
 
     &:hover {
       background-color:#f9f9f9;
@@ -1243,6 +1246,17 @@ input.search-input {
         .btn.btn-white-blue {
           background-color:#f9f9f9;
         }
+      }
+    }
+
+    label {
+      display: flex;
+      align-items: center;
+    }
+
+    .dots-container {
+      .svg-icon.dots-icon {
+        margin-bottom: 0.5em;
       }
     }
   }
@@ -1368,6 +1382,11 @@ input.search-input {
     transition: 0s ease-in-out;
   }
 
+  .dropdown-section__input-block {
+    display: block;
+    width: 100%;
+  }
+
   &:hover {
     background-color:#f9f9f9;
     cursor: pointer;
@@ -1379,7 +1398,6 @@ input.search-input {
 }
 
 .new-dropdown-section {
-  display: flex;
   padding: 10px;
   border-top: 1px solid lightgray;
 }

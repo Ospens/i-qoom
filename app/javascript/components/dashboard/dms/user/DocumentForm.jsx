@@ -6,10 +6,7 @@ import AccessAndCommunication from './AccessAndCommunication'
 function DocumentForm({ handleSubmit, step, toggleStep }) {
 
   return (
-    <form
-      className='dms-content bordered'
-      onSubmit={handleSubmit}
-    >
+    <form className='dms-content bordered' onSubmit={handleSubmit}>
       {step === 1
         ? <DocumentsAndFiles />
         : <AccessAndCommunication backStep={() => toggleStep(1)} />

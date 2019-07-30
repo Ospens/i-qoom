@@ -33,7 +33,7 @@ body {
 
 .form-group {
   &:hover, &:active {
-    z-index: 2;                                                                                                                                                                                                                                                                                                                                               
+    z-index: 5;                                                                                                                                                                                                                                                                                                                                               
   }
 }
 
@@ -833,6 +833,7 @@ span.divider {
   z-index: 9;
   padding: 0;
   padding: 5px !important;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 
   .dropdown-item {
     min-width: fit-content;
@@ -899,6 +900,7 @@ span.divider {
   button.with-dots {
     border: none !important;
     padding: 0;
+    background: transparent !important;
 
     &:hover, &:active {
       .dots-icon {

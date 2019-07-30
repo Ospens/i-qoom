@@ -61,7 +61,7 @@ export const startFetchDocuments = (projectId, history) => (dispatch, getState) 
       })
       .catch(({ response }) => {
         if (response.status === 302) {
-          history.push({ pathname: '/dashboard' + response.data.location })
+          history.push({ pathname: `/dashboard${response.data.location}` })
           errorNotify('Please, create a convention')
         } else {
           errorNotify('Something went wrong')

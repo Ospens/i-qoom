@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import ReactDOM from 'react-dom'
 import classnames from 'classnames'
+import {
+  formValueSelector,
+  Field,
+  change
+} from 'redux-form'
+import InputField from '../../../../../elements/InputField'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import DropDown from '../../../../../elements/DropDown'
 
@@ -12,13 +19,12 @@ class DropDownElement extends Component {
   render() {
     const {
       index,
-      field,
       addNewSection,
-      changeDDSection,
       copySection,
-      removeSection
+      removeSection,
+      input: { name }
     } = this.props
-
+    
     const newDDElementOtions = [
       {
         title: 'New section above',
@@ -50,21 +56,20 @@ class DropDownElement extends Component {
 
           const child = (
             <div
-              className={classnames("draggable-container", { 'dragging': snapshot.isDragging })}
+              className={classnames('draggable-container', { 'dragging': snapshot.isDragging })}
               ref={provided.innerRef}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
             >
-              <div className="dropdown-section">
-                <input
-                  type='text'
-                  className='form-control'
-                  value={field.value}
-                  onChange={(e) => changeDDSection(e.target.value, index)}
+              <div className='dropdown-section'>
+                <Field
+                  component={InputField}
+                  name={`${name}.value`}
+                  className='dropdown-section__input-block'
                 />
                 <DropDown
                   dots={true}
-                  className='dropdown-with-icon dropleft'
+                  className='dropdown-with-icon dropleft ml-2'
                 >
                   {newDDElementOtions.map(({icon, title, onClick }, i) => (
                     <React.Fragment key={i}>
@@ -81,9 +86,8 @@ class DropDownElement extends Component {
               </div>
             </div>
           )
-          if (!usePortal) {
-            return child
-          }
+          if (!usePortal) return child
+          
           return ReactDOM.createPortal(child, portal)
         }}
       </Draggable>
@@ -92,15 +96,26 @@ class DropDownElement extends Component {
 }
 
 class DropDownColumn extends Component {
+
+  constructor(props) {
+    super(props)
+    this.renderElement = this.renderElement.bind(this)
+  }
+
+  renderElement(props) {
+    const { addNewSection, copySection, removeSection} = this.props
+    return (
+      <DropDownElement
+        {...props}
+        addNewSection={addNewSection}
+        copySection={copySection}
+        removeSection={removeSection}
+      />
+    )
+  }
+
   render() {
-    const {
-      sections,
-      column,
-      addNewSection,
-      changeDDSection,
-      removeSection,
-      copySection
-    } = this.props
+    const { fields } = this.props
 
     return (
       <Droppable droppableId='column_1'>
@@ -111,20 +126,14 @@ class DropDownColumn extends Component {
             style={{}}
             {...provided.droppableProps}
           >
-            {sections.map((field, i) => {
-              return (
-                <DropDownElement
-                  addNewSection={addNewSection}
-                  removeSection={removeSection}
-                  copySection={copySection}
-                  changeDDSection={changeDDSection}
-                  key={i}
-                  column={column}
-                  field={field}
-                  index={i}
-                />
-              )
-            })}
+            {fields.map((field, i) => (
+              <Field
+                key={i}
+                name={field}
+                component={this.renderElement}
+                index={i}
+              />
+            ))}
             {provided.placeholder}
           </div>
         )}
@@ -135,28 +144,83 @@ class DropDownColumn extends Component {
 
 class DraggableDropDown extends Component {
 
+  onDragEnd = result => {
+    const { fields } = this.props
+    const { destination, source } = result
+
+    if (!destination) return
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return
+    }
+
+    fields.move(source.index, destination.index)
+  }
+
+  addNewSection = (e, index) => {
+    e.preventDefault()
+    const { discardNewSection, newSection, fields } = this.props
+    if (index === undefined && newSection.length < 1) return
+
+    const position = index > -1 ? index : fields.length
+    const newValue = {
+      id: null,
+      value: newSection,
+      title: ''
+    }
+    fields.splice(position, 0, newValue)
+    discardNewSection()
+  }
+
+  removeSection = index => {
+    const { fields } = this.props
+    fields.remove(index)
+  }
+
+  copySection = index => {
+    const { fields } = this.props
+    const newValue = fields.get(index)
+    fields.splice(index, 0, newValue)
+  }
+
   render() {
-    const {
-      sections,
-      onDragEnd,
-      addNewSection,
-      changeDDSection,
-      removeSection,
-      copySection
-    } = this.props
+    const { fields } = this.props
 
     return (
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd}>
         <DropDownColumn
-        sections={sections}
-        addNewSection={addNewSection}
-        removeSection={removeSection}
-        copySection={copySection}
-        changeDDSection={changeDDSection}
-      />
+          {...this.props}
+          addNewSection={this.addNewSection}
+          removeSection={this.removeSection}
+          copySection={this.copySection}
+        />
+        <div className='new-dropdown-section-block form-froup'>
+          <div className='new-dropdown-section'>
+            <Field
+              component={InputField}
+              id='new_section'
+              name='new_section'
+              placeholder={`Section ${fields.length + 1}`}
+              onBlur={e => this.addNewSection(e)}
+            />
+          </div>
+        </div>
       </DragDropContext>
     )
   }
 }
 
-export default DraggableDropDown 
+const selector = formValueSelector('convention_input_form')
+
+const mapStateToProps = state => ({
+  newSection: selector(state, 'new_section')
+})
+
+const mapDispatchToProps = dispatch => ({
+  discardNewSection: () => dispatch(change('convention_input_form', 'new_section', ''))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DraggableDropDown)

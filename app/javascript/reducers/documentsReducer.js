@@ -10,8 +10,8 @@ const initialState = {
   allDocuments: [],
   documentFields: {
     grouped_fields: {
-      1: [{}],
-      2: [{}]
+      column_1: [{}],
+      column_2: [{}]
     }
   },
   current: {
