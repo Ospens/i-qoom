@@ -33,19 +33,19 @@ class Ability
       can :manage, Project, user_id: user.id
       # ProjectAdministrator
       can :manage, ProjectAdministrator do |project_admin|
-        project_admin.project.user_id == user.id
+        project_admin.project.admins.map(&:user_id).include?(user.id)
       end
       # ProjectMember
       can :manage, ProjectMember do |project_member|
-        project_member.project.user_id == user.id
+        project_member.project.admins.map(&:user_id).include?(user.id)
       end
       # Discipline
       can :manage, Discipline do |discipline|
-        discipline.project.user_id == user.id
+        discipline.project.admins.map(&:user_id).include?(user.id)
       end
       # Role
       can :manage, Role do |role|
-        role.project.user_id == user.id
+        role.project.admins.map(&:user_id).include?(user.id)
       end
       # Convention
       can :manage, Convention do |convention|

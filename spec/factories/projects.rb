@@ -26,6 +26,7 @@ FactoryBot.define do
           factory :project_with_roles do
             after(:create) do |instance|
               FactoryBot.create_list(:role, 10, project: instance)
+              Faker::UniqueGenerator.clear
             end
           end
         end
