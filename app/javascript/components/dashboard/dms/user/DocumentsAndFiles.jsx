@@ -116,6 +116,7 @@ function DocumentsAndFiles({ submitErrors, documentFields, groupedFields }) {
   const disciplineValue = formvalue(documentFields, 'discipline')
   const docTypeValue = formvalue(documentFields, 'document_type')
   const docNumberValue = formvalue(documentFields, 'document_number')
+  const columns = Object.keys(groupedFields)
 
   return (
     <React.Fragment>
@@ -217,7 +218,7 @@ function DocumentsAndFiles({ submitErrors, documentFields, groupedFields }) {
                 errorField={submitErrors}
               />
             </div>
-            {groupedFields[1].map((field, index) => (
+            {groupedFields[columns[0]].map((field, index) => (
               <div className='form-group' key={index}>
                 <InputByType field={field} />
               </div>
@@ -226,7 +227,7 @@ function DocumentsAndFiles({ submitErrors, documentFields, groupedFields }) {
           </div>
 
           <div className='col-6'>
-            {groupedFields[2].map((field, index) => (
+            {groupedFields[columns[1]].map((field, index) => (
               <div className='form-group' key={index}>
                 <InputByType field={field}/>
               </div>

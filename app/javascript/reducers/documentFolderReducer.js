@@ -1,31 +1,11 @@
 import {
   FOLDER_CREATED,
+  DOCUMENT_ADDED,
   FOLDERS_FETCHED
 } from '../actions/types'
 
 const initialState = {
-  allFolders: [
-    {
-      id: 1,
-      title: 'My concerns',
-      disabled: false
-    },
-    {
-      id: 2,
-      title: 'Not relevant for me',
-      disabled: false
-    },
-    {
-      id: 3,
-      title: 'All documents',
-      disabled: true
-    },
-    {
-      id: 4,
-      title: 'My documents',
-      disabled: true
-    }
-  ]
+  allFolders: []
 }
 
 const documentFolderReducer = (state = initialState, action) => {
@@ -34,6 +14,19 @@ const documentFolderReducer = (state = initialState, action) => {
     return {
       ...state,
       allFolders: action.payload
+    }
+  case DOCUMENT_ADDED:
+    return {
+      ...state,
+      allFolders: action.payload
+    }
+  case FOLDER_CREATED:
+    return {
+      ...state,
+      allFolders: [
+        ...state.allFolders,
+        action.payload
+      ]
     }
   default:
     return state

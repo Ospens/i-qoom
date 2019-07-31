@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {
   FOLDER_CREATED,
+  DOCUMENT_ADDED,
   FOLDERS_FETCHED
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
@@ -11,7 +12,7 @@ const folderCreated = payload => ({
 })
 
 const documentAddedToFolder = payload => ({
-  type: FOLDER_CREATED,
+  type: DOCUMENT_ADDED,
   payload
 })
 
@@ -20,19 +21,14 @@ const foldersFetched = payload => ({
   payload
 })
 
-export const startFetchFolders = projectId => (dispatch, getState) => {
+export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { headers: { Authorization: token } }
-  const request = {
-    document_folder: {
-      project_id: projectId
-    }
-  }
+  const headers = { Authorization: token }
+  const params = { document_id: docId }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/document_folders`, headers)
+    axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers } )
       .then(response => {
-        console.log(response)
         dispatch(foldersFetched(response.data))
       })
       .catch(() => {
@@ -54,6 +50,7 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
   return (
     axios.post('/api/v1/document_folders/', request, headers)
       .then(response => {
+        console.log(response)
         dispatch(folderCreated(response.data))
       })
       .catch(() => {
@@ -63,7 +60,7 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
 }
 
 export const addDocumentToFolders = (docId, ids) => (dispatch, getState) => {
-  const { user: { token } } = getState()
+  const { user: { token }, folders: { allFolders } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     document_id: docId,
@@ -72,8 +69,13 @@ export const addDocumentToFolders = (docId, ids) => (dispatch, getState) => {
 
   return (
     axios.post('/api/v1/document_folders/add_document_to_folders', request, headers)
-      .then(response => {
-        dispatch(documentAddedToFolder(response.data))
+      .then(() => {
+        const updatedFolders = allFolders.map(el =>
+          ids.includes(el.id)
+            ? { ...el, enabled: true }
+            : el
+        )
+        dispatch(documentAddedToFolder(updatedFolders))
         successNotify('Copied to folders')
       })
       .catch(() => {

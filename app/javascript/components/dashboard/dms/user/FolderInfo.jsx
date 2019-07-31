@@ -6,6 +6,8 @@ import CreateFolder from './CreateFolder'
 import { addDocumentToFolders, startFetchFolders } from '../../../../actions/foldersActions'
 import DropDown from '../../../../elements/DropDown'
 
+let initIds = []
+
 const checkingFolder = (checked, value) => {
   const index = checked.indexOf(value)
   if (index > -1) {
@@ -18,8 +20,10 @@ const checkingFolder = (checked, value) => {
 }
 
 function FolderInfo({ match: { params: { document_id, project_id } } }) {
-  const [checkedFolders, setFolders] = useState([null])
+  if (!document_id) return <div />
+
   const folders = useSelector(state => state.folders.allFolders)
+  const [checkedFolders, setFolders] = useState([null])
 
   const dispatch = useDispatch()
   const addDocToFolders = useCallback(() => 
@@ -27,12 +31,15 @@ function FolderInfo({ match: { params: { document_id, project_id } } }) {
     [dispatch, checkedFolders])
 
   const fetchFolders = useCallback(() => 
-    dispatch(startFetchFolders(project_id)),
+    dispatch(startFetchFolders(project_id, document_id)),
     [dispatch])
 
   useEffect(() => { fetchFolders() }, [])
-
-  if (!document_id) return <div />
+  useEffect(() => {
+    initIds = folders.filter(f => f.enabled).map(el => el.id)
+    initIds.push(null)
+    setFolders(new Array(...initIds))
+  }, [folders])
 
   return (
     <div className='copy-to-folder-block'>
@@ -73,16 +80,15 @@ function FolderInfo({ match: { params: { document_id, project_id } } }) {
               </button>
             </li>
           )
-        }
-      )}
-      {checkedFolders.length > 1 &&
-      <button
-        type='button'
-        className='btn btn-white-blue wide-button'
-        onClick={addDocToFolders}
-      >
-        Copy to folder(s)
-      </button>}
+        })}
+        {JSON.stringify(initIds) !== JSON.stringify(checkedFolders) &&
+        <button
+          type='button'
+          className='btn btn-white-blue wide-button'
+          onClick={addDocToFolders}
+        >
+          Copy to folder(s)
+        </button>}
       </DropDown>
     </div>
   )
