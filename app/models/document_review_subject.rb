@@ -6,4 +6,6 @@ class DocumentReviewSubject < ApplicationRecord
                  :issued_for_review ]
 
   belongs_to :document_revision
+
+  belongs_to :user
 end

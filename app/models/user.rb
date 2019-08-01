@@ -34,6 +34,7 @@ class User < ApplicationRecord
   has_many :document_rights
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
+  has_many :document_review_subjects
 
   def full_name
     "#{first_name} #{last_name}"

@@ -1,20 +1,35 @@
 class Api::V1::DocumentReviewSubjectsController < ApplicationController
+  load_resource :document
   load_resource :document_revision
-  load_resource :document_review_subject,
-                through: :document_revision,
-                only: [ :new, :create ]
+  before_action :set_revision,
+                if: -> { @document.present? && @document_revision.blank? }
+  load_resource :document_review_subject, through: :document_revision
   authorize_resource :document_review_subject
 
   def new
-    render json: @document_review_subject
+    render json: DocumentReviewSubject.new
   end
 
   def create
-    render json: {}
+    subject =
+      signed_in_user.document_review_subjects
+                    .new(document_review_subject_params)
+    if subject.save
+      render json: subject
+    else
+      render json: subject.errors, status: :unprocessable_entity
+    end
   end
 
   private
 
   def document_review_subject_params
+    params.require(:document_review_subject)
+          .permit(:title)
+          .merge(document_revision_id: @document_revision.id)
+  end
+
+  def set_revision
+    @document_revision = @document.revision
   end
 end

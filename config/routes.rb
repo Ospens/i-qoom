@@ -18,11 +18,13 @@ Rails.application.routes.draw do
           post :create_revision
           get :download_native_file
           get :download_details
+          get :revisions
         end
+        resources :document_review_subjects, only: [:new, :create]
       end
 
       resources :document_revisions, only: [] do
-        resources :document_review_subjects, only: [:new, :create]
+        resources :document_review_subjects, only: :index
       end
 
       resources :document_folders, only: [:create, :edit, :update, :show] do

@@ -12,29 +12,38 @@ describe DocumentReviewSubject, type: :request do
 
   context '#new' do
     it 'anon' do
-      get "/api/v1/document_revisions/#{revision.id}/document_review_subjects/new"
+      get "/api/v1/documents/#{document.id}/document_review_subjects/new"
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user' do
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
-      get "/api/v1/document_revisions/#{revision.id}/document_review_subjects/new", headers: credentials(user)
+      get "/api/v1/documents/#{document.id}/document_review_subjects/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json).to eql({})
+      expect(json).to have_key('id')
+      expect(json).to have_key('document_reference')
+      expect(json).to have_key('title')
+      expect(json).to have_key('status')
+      expect(json).to_not have_key('created_at')
+      expect(json).to_not have_key('updated_at')
     end
   end
 
   context '#create' do
     it 'anon' do
-      post "/api/v1/document_revisions/#{revision.id}/document_review_subjects"
+      post "/api/v1/documents/#{document.id}/document_review_subjects",\
+        params: { document_review_subject: { title: '' } }
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user' do
+      title = Faker::Lorem.sentence
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
-      post "/api/v1/document_revisions/#{revision.id}/document_review_subjects", headers: credentials(user)
+      post "/api/v1/documents/#{document.id}/document_review_subjects",\
+        headers: credentials(user),\
+        params: { document_review_subject: { title: title } }
       expect(response).to have_http_status(:success)
-      expect(json).to eql({})
+      expect(json['title']).to eql(title)
     end
   end
 end

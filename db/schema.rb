@@ -127,9 +127,11 @@ ActiveRecord::Schema.define(version: 2019_07_27_213845) do
     t.string "title"
     t.string "document_reference"
     t.bigint "document_revision_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["document_revision_id"], name: "index_document_review_subjects_on_document_revision_id"
+    t.index ["user_id"], name: "index_document_review_subjects_on_user_id"
   end
 
   create_table "document_revisions", force: :cascade do |t|
@@ -250,6 +252,7 @@ ActiveRecord::Schema.define(version: 2019_07_27_213845) do
   add_foreign_key "document_folders", "users"
   add_foreign_key "document_mains", "projects"
   add_foreign_key "document_review_subjects", "document_revisions"
+  add_foreign_key "document_review_subjects", "users"
   add_foreign_key "document_revisions", "document_mains"
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"
