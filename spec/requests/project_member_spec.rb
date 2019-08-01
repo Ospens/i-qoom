@@ -49,7 +49,6 @@ describe "ProjectMember", type: :request do
                   }.to_json,
           headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["status"]).to eq("success")
       end
       it 'should get a status "error"' do
         post "/api/v1/projects/#{project.id}/members",
@@ -58,7 +57,6 @@ describe "ProjectMember", type: :request do
                     }.to_json,
           headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json["status"]).to eq("error")
       end
     end
     context "update" do
@@ -71,7 +69,6 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error"' do
           patch "/api/v1/projects/#{project.id}/members/#{project_member_employment_type.id}",
@@ -81,7 +78,6 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'company_type'" do
@@ -93,7 +89,6 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error"' do
           patch "/api/v1/projects/#{project.id}/members/#{project_member_employment_type.id}",
@@ -103,7 +98,6 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'company_data'" do
@@ -119,7 +113,6 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error"' do
           patch "/api/v1/projects/#{project.id}/members/#{project_member_company_type.id}",
@@ -128,7 +121,6 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'details'" do
@@ -149,7 +141,6 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(json["status"]).to eq("success")
           expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("completed")
           expect(ProjectMember.find_by(id: project_member_company_data.id).discipline).to be_truthy
         end
@@ -160,7 +151,6 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(json["status"]).to eq("error")
           expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("completed")
         end
       end

@@ -15,23 +15,21 @@ class Api::V1::RolesController < ApplicationController
 
   def create
     if @role.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     role: @role },
+      render json: @role,
              status: :created
     else
-      error(@role)
+      render json: @role.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update
     if @role.update(role_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     role: @role },
+      render json: @role,
              status: :created
     else
-      error(@role)
+      render json: @role.errors,
+             status: :unprocessable_entity
     end
   end
 

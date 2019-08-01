@@ -14,23 +14,21 @@ class Api::V1::DisciplinesController < ApplicationController
 
   def create
     if @discipline.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     discipline: @discipline },
+      render json: @discipline,
              status: :created
     else
-      error(@discipline)
+      render json: @discipline.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update
     if @discipline.update(discipline_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     discipline: @discipline },
+      render json: @discipline,
              status: :created
     else
-      error(@discipline)
+      render json: @discipline.errors,
+             status: :unprocessable_entity
     end
   end
 

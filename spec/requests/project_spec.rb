@@ -41,14 +41,12 @@ describe "Project", type: :request do
           headers: headers
         expect(response).to have_http_status(:success)
         expect(ActionMailer::Base.deliveries.count).to eq(0)
-        expect(json["status"]).to eq("success")
       end
       it 'should get a status "error"' do
         post "/api/v1/projects",
           params: { project: { name: "12" } }.to_json,
           headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(json["status"]).to eq("error")
       end
     end
     context "update" do
@@ -64,7 +62,6 @@ describe "Project", type: :request do
           expect(Project.find_by(id: project.id).admins.count).to eq(3)
           expect(Project.find_by(id: project.id).admins.last.email).to\
             eq("someemail@gmail.com")
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             add an admin' do
@@ -78,7 +75,6 @@ describe "Project", type: :request do
           expect(Project.find_by(id: project.id).admins.count).not_to eq(3)
           expect(Project.find_by(id: project.id).admins.last.email).not_to\
             eq("notemail")
-          expect(json["status"]).to eq("error")
         end
       end
 
@@ -91,7 +87,6 @@ describe "Project", type: :request do
             headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).name).to eq("some name")
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             change the name of the project' do
@@ -102,7 +97,6 @@ describe "Project", type: :request do
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project.id).name).not_to eq("12")
-          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'company_data'" do
@@ -117,7 +111,6 @@ describe "Project", type: :request do
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).company_data).to be_present
           expect(Project.find_by(id: project.id).company_data.billing_address).not_to be_present
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "success" and add billing address to the project' do
           patch "/api/v1/projects/#{project.id}",
@@ -130,7 +123,6 @@ describe "Project", type: :request do
             headers: headers
           expect(response).to have_http_status(:success)
           expect(Project.find_by(id: project.id).company_data.billing_address).to be_present
-          expect(json["status"]).to eq("success")
         end
         it 'should get a status "error" and don\'t
             add a company data to the project' do
@@ -141,7 +133,6 @@ describe "Project", type: :request do
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(Project.find_by(id: project.id).company_data).not_to be_present
-          expect(json["status"]).to eq("error")
         end
       end
       context "creation_step 'billing_address'" do
@@ -166,7 +157,6 @@ describe "Project", type: :request do
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).to eq("done")
           expect(ActionMailer::Base.deliveries.count).to eq(1)
-          expect(json["status"]).to eq("success")
         end
         it "should get a status 'error' and don't
             add a billing_address to the project" do
@@ -190,7 +180,6 @@ describe "Project", type: :request do
                                        .billing_address).not_to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).not_to eq("done")
-          expect(json["status"]).to eq("error")
         end
       end
     end

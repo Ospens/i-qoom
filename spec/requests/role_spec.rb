@@ -50,7 +50,7 @@ describe "Role", type: :request do
              params: { role: { name: "new name" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["role"]["name"]).to eq("new name")
+        expect(json["name"]).to eq("new name")
       end
       it "should get a status 'error' and don't update the role" do
         patch "/api/v1/projects/#{project.id}/roles/#{role.id}",

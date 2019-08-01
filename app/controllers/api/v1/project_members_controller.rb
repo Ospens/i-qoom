@@ -22,25 +22,23 @@ class Api::V1::ProjectMembersController < ApplicationController
 
   def create
     if @project_member.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project_member: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer) },
+      render json: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
+                                         serializer: ProjectMemberSerializer),
              status: :created
     else
-      error(@project_member)
+      render json: @project_member.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update   
     if @project_member.update(project_member_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project_member: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer) },
+      render json: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
+                                         serializer: ProjectMemberSerializer),
              status: :created
     else
-      error(@project_member)
+      render json: @project_member.errors,
+             status: :unprocessable_entity
     end
   end
 
