@@ -34,6 +34,7 @@ class Project < ApplicationRecord
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
   has_many :disciplines
+  has_many :roles
 
   accepts_nested_attributes_for :admins
   accepts_nested_attributes_for :company_data,

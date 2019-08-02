@@ -44,7 +44,7 @@ class Api::V1::DocumentFoldersController < ApplicationController
         folder.document_mains << document.revision.document_main
       end
     end
-    success(200)
+    head 200
   end
 
   private

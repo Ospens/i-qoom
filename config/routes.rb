@@ -61,11 +61,9 @@ Rails.application.routes.draw do
                   path: :members,
                   except: [:show]
         resources :disciplines,
-                  only: [ :index,
-                          :create,
-                          :edit,
-                          :update,
-                          :destroy ]
+                  except: [:new, :show]
+        resources :roles,
+                  except: [:new, :show]
         resources :document_folders, only: :index
       end
     end

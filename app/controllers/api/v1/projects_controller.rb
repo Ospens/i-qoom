@@ -35,25 +35,23 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     if @project.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer) },
+      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
+                                         serializer: ProjectSerializer),
              status: :created
     else
-      error(@project)
+      render json: @project.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update
     if @project.update(project_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer) },
+      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
+                                         serializer: ProjectSerializer),
              status: :created
     else
-      error(@project)
+      render json: @project.errors,
+             status: :unprocessable_entity
     end
   end
 
@@ -70,9 +68,10 @@ class Api::V1::ProjectsController < ApplicationController
       ProjectAdministratorConfirmation.new(token: params[:token],
                                     signed_in_user: signed_in_user)
     if project_admin_confirmation.save
-      success(:created)
+      head :created
     else
-      error(project_admin_confirmation)
+      render json: project_admin_confirmation.errors,
+             status: :unprocessable_entity
     end
   end
 

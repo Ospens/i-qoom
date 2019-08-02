@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_051309) do
     t.integer "company_address_id"
     t.integer "discipline_id"
     t.string "job_title"
+    t.integer "role_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -225,6 +226,11 @@ ActiveRecord::Schema.define(version: 2019_08_01_051309) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "creation_step", default: 0
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.integer "project_id"
   end
 
   create_table "users", force: :cascade do |t|
