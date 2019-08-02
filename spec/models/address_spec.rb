@@ -11,6 +11,18 @@ RSpec.describe Address, type: :model do
                         .with_foreign_key(:billing_address_id)
                         .class_name("ProjectCompanyData") }
 
+  [ :company_name,
+    :street,
+    :house_number,
+    :city,
+    :postcode,
+    :country,
+    :district,
+    :district_court ].each do |column| 
+    it { is_expected.to validate_length_of(column)
+                                .is_at_most(255) }
+  end
+
   context "without project_company_data" do
     [ :company_name,
       :street,

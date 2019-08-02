@@ -17,7 +17,7 @@ RSpec.describe DocumentFolder, type: :model do
 
     def create_field(folder, kind)
       field = doc1.document_fields.find_by(codification_kind: kind)
-      field.update(value: Faker::Name.initials(3))
+      field.update(value: Faker::Name.initials)
       value = field.value
       main_kind = kind == :document_number ? :text_field : :select_field
       folder.document_fields.create!(kind: main_kind,

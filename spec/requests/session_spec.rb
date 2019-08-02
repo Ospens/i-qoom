@@ -13,7 +13,6 @@ describe "Session", type: :request do
                              password: "password1" } }.to_json,
         headers: headers
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(json["status"]).to eq("error")
     end
 
     it 'should get a status "success"' do
@@ -23,7 +22,6 @@ describe "Session", type: :request do
                              password: "password1" } }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
-      expect(json["status"]).to eq("success")
     end
   end
 end

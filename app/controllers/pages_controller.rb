@@ -3,7 +3,7 @@ class PagesController < ApplicationController
   def home
     user_email = 
       signed_in_user.present? ? { hello: signed_in_user.email } : {}
-    render json: { status: "success" }.merge(user_email),
+    render json: user_email,
            status: :ok
   end
 

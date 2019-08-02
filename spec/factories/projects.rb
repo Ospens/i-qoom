@@ -17,6 +17,18 @@ FactoryBot.define do
         end
         factory :project do
           creation_step { "done" }
+          factory :project_with_disciplines do
+            after(:create) do |instance|
+              FactoryBot.create_list(:discipline, 10, project: instance)
+              Faker::UniqueGenerator.clear
+            end
+          end
+          factory :project_with_roles do
+            after(:create) do |instance|
+              FactoryBot.create_list(:role, 10, project: instance)
+              Faker::UniqueGenerator.clear
+            end
+          end
         end
       end
     end

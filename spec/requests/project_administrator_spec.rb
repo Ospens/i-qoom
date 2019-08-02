@@ -47,18 +47,18 @@ describe "ProjectAdministrator", type: :request do
                headers: headers
 
         expect(response).to have_http_status(:success)
-        expect(project.admins.count).to eq(1)
+        expect(project.admins.count).to eq(2)
       end
       it "shouldn't work" do
+        project.admins.last.remove
         delete "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}",
                headers: headers
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:forbidden)
         expect(project.admins.count).to eq(1)
       end
     end
   end
-
 
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }

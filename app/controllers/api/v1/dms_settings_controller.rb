@@ -8,9 +8,10 @@ class Api::V1::DmsSettingsController < ApplicationController
 
   def update
     if @project.update(dms_params)
-      success(200)
+      head 200
     else
-      error(@project)
+      render json: @project.errors,
+             status: :unprocessable_entity
     end
   end
 
