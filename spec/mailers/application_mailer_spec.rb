@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 describe ApplicationMailer, type: :mailer do
-  context 'seller' do
+  context 'new document' do
     let(:email) { Faker::Internet.email }
     let(:email_title) { Faker::Lorem.sentence }
-    let(:email_text) { Faker::Lorem.characters(50) }
+    let(:email_text) { Faker::Lorem.characters(number: 50) }
     let(:document) do
       doc = FactoryBot.create(:document)
       doc.update!(email_title: email_title, email_text: email_text)
