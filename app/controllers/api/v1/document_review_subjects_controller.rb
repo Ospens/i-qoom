@@ -25,7 +25,10 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
 
   def document_review_subject_params
     params.require(:document_review_subject)
-          .permit(:title)
+          .permit(:title,
+                  :document_reference,
+                  :status,
+                  :review_issuer_id)
           .merge(document_revision_id: @document_revision.id)
   end
 

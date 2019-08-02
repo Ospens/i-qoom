@@ -8,4 +8,7 @@ class DocumentReviewSubject < ApplicationRecord
   belongs_to :document_revision
 
   belongs_to :user
+
+  belongs_to :review_issuer,
+             class_name: 'User'
 end
