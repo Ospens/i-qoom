@@ -1,0 +1,3 @@
+class DisciplineSerializer < ApplicationSerializer
+
+end

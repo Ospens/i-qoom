@@ -1,0 +1,3 @@
+class RoleSerializer < ApplicationSerializer
+
+end

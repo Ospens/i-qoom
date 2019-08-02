@@ -51,8 +51,14 @@ Rails.application.routes.draw do
             get :resend_confirmation
           end
         end
+        resources :project_members,
+                  path: :members,
+                  except: [:show]
+        resources :disciplines,
+                  except: [:new, :show]
+        resources :roles,
+                  except: [:new, :show]
         resources :document_folders, only: :index
-        resources :project_members, path: :members
       end
     end
   end

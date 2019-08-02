@@ -5,6 +5,8 @@ RSpec.describe ProjectAdministrator, type: :model do
   it { is_expected.not_to validate_presence_of(:user) }
   it { is_expected.to validate_presence_of(:email) }
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
+  it { is_expected.to validate_uniqueness_of(:email)
+                          .scoped_to(:project_id) }
 
   context "add_user" do
     it 'should be added when created' do
@@ -37,7 +39,7 @@ RSpec.describe ProjectAdministrator, type: :model do
       project.admins << FactoryBot.build(:project_administrator)
       project.save
       project.admins.first.remove
-      expect(project.admins.count).to eq(1)
+      expect(project.admins.count).to eq(2)
     end
     it "admin shouldn't be removed if he is the last one" do
       project.admins.first.remove
