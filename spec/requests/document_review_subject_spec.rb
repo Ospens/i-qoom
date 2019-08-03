@@ -39,15 +39,18 @@ describe DocumentReviewSubject, type: :request do
     it 'user' do
       title = Faker::Lorem.sentence
       review_issuer = FactoryBot.create(:user)
+      reviewer = FactoryBot.create(:user)
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       post "/api/v1/documents/#{document.id}/document_review_subjects",\
         headers: credentials(user),\
         params: { document_review_subject: { title: title,
-                                             review_issuer_id: review_issuer.id } }
+                                             review_issuer_id: review_issuer.id,
+                                             reviewer_ids: [reviewer.id] } }
       expect(response).to have_http_status(:success)
       expect(json['title']).to eql(title)
       subject = DocumentReviewSubject.last
       expect(subject.review_issuer).to eql(review_issuer)
+      expect(subject.reviewers).to include(reviewer)
     end
   end
 end

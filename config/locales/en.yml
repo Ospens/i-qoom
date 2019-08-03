@@ -39,6 +39,10 @@ en:
           attributes:
             project:
               last_admin: The last user can't be removed
+        document_review_subject:
+          attributes:
+            reviewers:
+              too_short: At least one reviewer is required
   activemodel:
     errors:
       models:

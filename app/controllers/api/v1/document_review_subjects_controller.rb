@@ -28,7 +28,8 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
           .permit(:title,
                   :document_reference,
                   :status,
-                  :review_issuer_id)
+                  :review_issuer_id,
+                  reviewer_ids: [])
           .merge(document_revision_id: @document_revision.id)
   end
 
