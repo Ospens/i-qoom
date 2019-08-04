@@ -14,4 +14,10 @@ RSpec.describe DocumentReviewSubject, type: :model do
     subject.reviewer_ids = []
     expect(subject).to_not be_valid
   end
+
+  it 'has comments' do
+    subject = FactoryBot.create(:document_review_subject)
+    subject.comments.create(text: '111')
+    expect(subject.comments.length).to eql(1)
+  end
 end

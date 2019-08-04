@@ -29,6 +29,7 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
                   :document_reference,
                   :status,
                   :review_issuer_id,
+                  :comment,
                   reviewer_ids: [])
           .merge(document_revision_id: @document_revision.id)
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_02_051405) do
+ActiveRecord::Schema.define(version: 2019_08_03_131707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,14 @@ ActiveRecord::Schema.define(version: 2019_08_02_051405) do
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
+  end
+
+  create_table "document_review_comments", force: :cascade do |t|
+    t.bigint "document_review_subject_id"
+    t.bigint "user_id"
+    t.text "text"
+    t.index ["document_review_subject_id"], name: "index_document_review_comments_on_document_review_subject_id"
+    t.index ["user_id"], name: "index_document_review_comments_on_user_id"
   end
 
   create_table "document_review_subjects", force: :cascade do |t|
@@ -266,6 +274,8 @@ ActiveRecord::Schema.define(version: 2019_08_02_051405) do
   add_foreign_key "document_folders", "projects"
   add_foreign_key "document_folders", "users"
   add_foreign_key "document_mains", "projects"
+  add_foreign_key "document_review_comments", "document_review_subjects"
+  add_foreign_key "document_review_comments", "users"
   add_foreign_key "document_review_subjects", "document_revisions"
   add_foreign_key "document_review_subjects", "users"
   add_foreign_key "document_review_subjects", "users", column: "review_issuer_id"
