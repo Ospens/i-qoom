@@ -2,15 +2,15 @@ require "rails_helper"
 
 RSpec.describe Api::V1::ProjectMembersController, type: :routing do
   describe "routing" do
-    it "routes to #show" do
-      expect(get: "/api/v1/projects/1/members/1").to\
-        route_to("api/v1/project_members#show",
-                 project_id: "1",
-                 id: "1")
+    it "routes to #active" do
+      expect(get: "/api/v1/projects/1/members/active").to\
+        route_to("api/v1/project_members#active",
+                 project_id: "1")
     end
-    it "routes to #index" do
-      expect(get: "/api/v1/projects/1/members").to\
-        route_to("api/v1/project_members#index",
+
+    it "routes to #pending" do
+      expect(get: "/api/v1/projects/1/members/pending").to\
+        route_to("api/v1/project_members#pending",
                  project_id: "1")
     end
 

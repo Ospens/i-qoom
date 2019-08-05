@@ -53,7 +53,12 @@ Rails.application.routes.draw do
         end
         resources :project_members,
                   path: :members,
-                  except: [:show]
+                  except: [ :index, :show ] do
+          collection do
+            get :active
+            get :pending
+          end
+        end
         resources :disciplines,
                   except: [:new, :show]
         resources :roles,

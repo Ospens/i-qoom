@@ -4,10 +4,18 @@ class Api::V1::ProjectMembersController < ApplicationController
                               through: :project,
                               through_association: :members
 
-  def index
+  def active
     render json: { disciplines: @project.disciplines,
                    roles: @project.roles,
-                   members: ActiveModel::Serializer::CollectionSerializer.new(@project.members,
+                   members: ActiveModel::Serializer::CollectionSerializer.new(@project.members.creation_step_active,
+                              serializer: ProjectMemberSerializer) },
+           status: :ok
+  end
+
+  def pending
+    render json: { disciplines: @project.disciplines,
+                   roles: @project.roles,
+                   members: ActiveModel::Serializer::CollectionSerializer.new(@project.members.creation_step_pending,
                               serializer: ProjectMemberSerializer) },
            status: :ok
   end
