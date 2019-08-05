@@ -7,7 +7,8 @@ RSpec.describe ProjectMember, type: :model do
                            :company_type,
                            :company_data,
                            :details,
-                           :completed ])
+                           :pending,
+                           :active ])
             .with_prefix(:creation_step) }
   it { is_expected.to define_enum_for(:employment_type)
             .with_values([ :employee,
@@ -71,11 +72,11 @@ RSpec.describe ProjectMember, type: :model do
   context "update_creation_step_to_completed" do
     context "when is not ready" do
       subject { FactoryBot.create(:project_member_company_data) }
-      it { expect(subject.creation_step).not_to eq("completed") }
+      it { expect(subject.creation_step).not_to eq("pending") }
     end
     context "when is ready" do
       subject { FactoryBot.create(:project_member_details) }
-      it { expect(subject.creation_step).to eq("completed") }
+      it { expect(subject.creation_step).to eq("pending") }
     end
   end
 

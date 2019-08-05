@@ -141,7 +141,7 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("completed")
+          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("pending")
           expect(ProjectMember.find_by(id: project_member_company_data.id).discipline).to be_truthy
         end
         it 'should get a status "error"' do
@@ -151,7 +151,7 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("completed")
+          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("pending")
         end
       end
     end

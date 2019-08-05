@@ -17,7 +17,7 @@ FactoryBot.define do
           first_name { Faker::Name.first_name }
           last_name  { Faker::Name.last_name }
           factory :project_member do
-            creation_step { "completed" }
+            creation_step { "pending" }
           end
         end
       end
