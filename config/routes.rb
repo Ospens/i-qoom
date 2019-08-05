@@ -55,8 +55,9 @@ Rails.application.routes.draw do
                   path: :members,
                   except: [ :index, :show ] do
           collection do
-            get :active
-            get :pending
+            get  :active
+            get  :pending
+            post :invite
           end
         end
         resources :disciplines,

@@ -50,6 +50,10 @@ class Api::V1::ProjectMembersController < ApplicationController
     end
   end
 
+  def invite
+    #ProjectMember.invite(params[project_member_ids])
+  end
+
   private
 
   def project_member_params
