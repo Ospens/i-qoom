@@ -27,7 +27,7 @@ export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
   const params = { document_id: docId }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers } )
+    axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers })
       .then(response => {
         dispatch(foldersFetched(response.data))
       })
@@ -70,11 +70,9 @@ export const addDocumentToFolders = (docId, ids) => (dispatch, getState) => {
   return (
     axios.post('/api/v1/document_folders/add_document_to_folders', request, headers)
       .then(() => {
-        const updatedFolders = allFolders.map(el =>
-          ids.includes(el.id)
-            ? { ...el, enabled: true }
-            : el
-        )
+        const updatedFolders = allFolders.map(el => (ids.includes(el.id)
+          ? { ...el, enabled: true }
+          : el))
         dispatch(documentAddedToFolder(updatedFolders))
         successNotify('Copied to folders')
       })

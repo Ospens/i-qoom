@@ -3,7 +3,6 @@ import { connect, useDispatch } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { reduxForm } from 'redux-form'
 import { startEditDocument, startUpdateDocument } from '../../../../actions/documentsActions'
-import DocIdModal from '../DocIdModal'
 import AddRevisionModal from '../AddRevisionModal'
 import DMSLayout from '../DMSLayout'
 import DocumentSideBar from './DocumentSideBar'
@@ -31,7 +30,6 @@ function EditDocument({ handleSubmit, history, match: { params: { project_id, do
 
   return (
     <React.Fragment>
-      {modalId === 1 && <DocIdModal />}
       {modalId === 2 && <AddRevisionModal />}
       <DMSLayout
         sidebar={<DocumentSideBar {...{ step, toggleStep }} />}

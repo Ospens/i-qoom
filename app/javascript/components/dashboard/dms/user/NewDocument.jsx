@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { reduxForm } from 'redux-form'
 import { newDocument, startCreateDocument } from '../../../../actions/documentsActions'
@@ -9,9 +9,10 @@ import DMSLayout from '../DMSLayout'
 import DocumentSideBar from './DocumentSideBar'
 import DocumentFields from './DocumentForm'
 
-function NewDocument({ handleSubmit, history, match: { params: { project_id } } }) {
+function NewDocument({ initialize, handleSubmit, history, match: { params: { project_id } } }) {
   const [modalId, setModalId] = useState(0)
   const [step, toggleStep] = useState(1)
+  const document_fields = useSelector(state => state.documents.documentFields.document_fields)
   const dispatch = useDispatch()
 
   const createDocument = (useCallback(values =>
@@ -22,9 +23,12 @@ function NewDocument({ handleSubmit, history, match: { params: { project_id } } 
     dispatch(newDocument(project_id)),
     [dispatch])
 
-  useEffect(() => { getNewDocument(project_id) }, [])
+  useEffect(() => { getNewDocument(project_id)}, [])
+
+  useEffect(() => { initialize({ document_fields }) }, [document_fields])
 
   const submitDocument = values => {
+    console.log(values)
     if (step === 1) return toggleStep(2)
     return createDocument(values)
       .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
@@ -46,11 +50,4 @@ function NewDocument({ handleSubmit, history, match: { params: { project_id } } 
   )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  initialValues: { document_fields: state.documents.documentFields.document_fields },
-  enableReinitialize: !ownProps.initialValues
-})
-
-export default connect(mapStateToProps)(reduxForm({
-  form: 'document_form'
-})(withRouter(NewDocument)))
+export default reduxForm({ form: 'document_form' })(withRouter(NewDocument))

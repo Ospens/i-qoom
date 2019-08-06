@@ -15,16 +15,18 @@ const fileProperties = [
   'webkitRelativePath'
 ]
 
+export const fileToObject = fileBlob => {
+  const newFile = {}
+  fileProperties.forEach(key => {
+    newFile[key] = fileBlob[key]
+  })
+  return newFile
+}
+
 function DropZoneField({ input, label, isDisabled = false, meta: { touched, error } }) {
 
   const onDrop = useCallback(acceptedFiles => {
-    const fileBlob = acceptedFiles[0]
-    const newFile = {}
-    fileProperties.forEach(key => {
-      newFile[key] = fileBlob[key]
-    })
     input.onChange(acceptedFiles)
-
   }, [])
 
   const {
@@ -49,14 +51,14 @@ function DropZoneField({ input, label, isDisabled = false, meta: { touched, erro
       'disabled': isDisabled
     }
   )
+  
   const sectionClass = classnames({ 'is-invalid': touched && error })
   const currentFile = input.value ? input.value[0] : acceptedFiles[0]
-
   return (
     <section className={sectionClass}>
       {label && <label htmlFor={input.name}>{label}</label>}
-      <div {...getRootProps()} {...input} className={mainClass}>
-        <input {...getInputProps()} />
+      <div {...getRootProps()} className={mainClass}>
+        <input {...getInputProps()}/>
         {(() => {
           if (currentFile) {
             return (
