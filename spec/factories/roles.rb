@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :role do
-    name { Faker::Job.title }
+    name { Faker::Job.unique.title }
   end
 end
