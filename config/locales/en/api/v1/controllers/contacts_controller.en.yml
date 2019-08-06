@@ -1,9 +1,0 @@
-en:
-  api:
-    v1:
-      contacts:
-        create:
-          success_message:
-            Successfully sent
-          error_message:
-            Something went wrong

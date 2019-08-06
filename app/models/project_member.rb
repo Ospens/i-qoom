@@ -36,6 +36,7 @@ class ProjectMember < ApplicationRecord
             length: { maximum: 255 }
 
   belongs_to :discipline, required: false
+  belongs_to :role, required: false
 
   accepts_nested_attributes_for :company_address,
                                 update_only: true

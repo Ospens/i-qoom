@@ -119,6 +119,7 @@ class DocumentField < ApplicationRecord
   end
 
   def build_for_edit_document
+    return if revision_version?
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
     # if upload_field? || document_native_file?

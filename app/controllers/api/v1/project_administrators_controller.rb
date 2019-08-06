@@ -19,14 +19,15 @@ class Api::V1::ProjectAdministratorsController < ApplicationController
 
   def resend_confirmation
     @project_administrator.send_confirmation_email
-    success(:ok)
+    head :ok
   end
 
   def destroy
     if @project_administrator.remove
-      success(:ok)
+      head :ok
     else
-      error(@project_administrator)
+      render json: @project_administrator.errors,
+             status: :unprocessable_entity
     end
   end
 

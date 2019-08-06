@@ -75,7 +75,7 @@ RSpec.describe Document, type: :model do
       convention.document_fields.find_by(codification_kind: :originating_company)
     con_value =
       con_field.document_field_values
-               .create(value: Faker::Name.initials(3),
+               .create(value: Faker::Name.initials,
                        position: 1,
                        title: '')
     field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
@@ -143,7 +143,7 @@ RSpec.describe Document, type: :model do
 
       let!(:field) do
         doc = Document.create(doc_attrs)
-        value = Faker::Name.initials(3)
+        value = Faker::Name.initials
         field = FactoryBot.build(:document_field, kind: :text_field, title: value)
         @attrs = doc_attrs
         Project.find(@attrs['project_id']).conventions.active.document_fields << field
@@ -175,7 +175,7 @@ RSpec.describe Document, type: :model do
             elsif attribute == 'required'
               !field[attribute]
             else
-              Faker::Name.initials(9)
+              Faker::Name.initials(number: 9)
             end
           expect(field[attribute]).to_not eql(old_value)
           doc = Document.new(@attrs)
@@ -224,7 +224,7 @@ RSpec.describe Document, type: :model do
             if attribute == 'position'
               rand(100..999)
             else
-              Faker::Name.initials(9)
+              Faker::Name.initials(number: 9)
             end
           expect(field_value[attribute]).to_not eql(old_value)
           doc = Document.new(@attrs)

@@ -4,12 +4,11 @@ class Api::V1::SessionsController < ApplicationController
   def create
     session = Session.new(session_params)
     if session.valid?
-      render json: { status: "success",
-                     auth_token: session.auth_token,
-                     message: t(".success_message") },
+      render json: { auth_token: session.auth_token },
              status: :created
     else
-      error(session)
+      render json: session.errors,
+             status: :unprocessable_entity
     end
   end
 

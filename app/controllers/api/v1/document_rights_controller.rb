@@ -15,7 +15,7 @@ class Api::V1::DocumentRightsController < ApplicationController
       user = User.find(user_params[:id])
       user.update(user_params.except(:id).merge(accept_terms_and_conditions: true))
     end
-    success(200)
+    head 200
   end
 
   private

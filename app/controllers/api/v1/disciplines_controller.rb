@@ -4,37 +4,31 @@ class Api::V1::DisciplinesController < ApplicationController
                               through: :project
   def index
     render json: @project.disciplines,
-                 each_serializer: DisciplineSerializer,
            status: :ok
   end
 
   def edit
     render json: @discipline,
-                 serializer: DisciplineSerializer,
            status: :ok
   end
 
   def create
     if @discipline.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     discipline: ActiveModel::Serializer::CollectionSerializer.new([@discipline],
-                                         serializer: DisciplineSerializer) },
+      render json: @discipline,
              status: :created
     else
-      error(@discipline)
+      render json: @discipline.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update
     if @discipline.update(discipline_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     discipline: ActiveModel::Serializer::CollectionSerializer.new([@discipline],
-                                         serializer: DisciplineSerializer) },
+      render json: @discipline,
              status: :created
     else
-      error(@discipline)
+      render json: @discipline.errors,
+             status: :unprocessable_entity
     end
   end
 

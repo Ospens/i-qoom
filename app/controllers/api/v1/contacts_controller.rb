@@ -4,9 +4,10 @@ class Api::V1::ContactsController < ApplicationController
     contact = Contact.new(contact_params)
     if contact.valid?
       ApplicationMailer.send_contact_form(contact).deliver_now
-      success(:created)
+      head :created
     else
-      error(contact)
+      render json: contact.errors,
+             status: :unprocessable_entity
     end
   end
 

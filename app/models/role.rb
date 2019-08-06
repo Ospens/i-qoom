@@ -1,5 +1,4 @@
-# can be renamed to ProjectDiscipline
-class Discipline < ApplicationRecord
+class Role < ApplicationRecord
   has_many :project_members
   belongs_to :project
 
