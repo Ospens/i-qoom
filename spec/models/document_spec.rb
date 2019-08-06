@@ -30,6 +30,17 @@ RSpec.describe Document, type: :model do
     expect(field.file.download.strip).to eql('111')
   end
 
+  it 'return filename' do
+    user = FactoryBot.create(:user)
+    document = Document.create(document_attributes(user))
+    field1 =
+      document.document_fields.find_by(codification_kind: :document_native_file)
+    field2 =
+      document.attributes_for_edit['document_fields']
+              .detect{ |i| i['codification_kind'] == 'document_native_file' }
+    expect(field2['filename']).to eql(field1.file.filename.to_s)
+  end
+
   it '#additional_information' do
     doc1 = FactoryBot.create(:document)
     doc1.revision.update!(revision_number: '1')

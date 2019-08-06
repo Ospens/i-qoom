@@ -18,6 +18,8 @@ class DocumentField < ApplicationRecord
                             :document_native_file,
                             :additional_information ]
 
+  attr_accessor :filename
+
   belongs_to :parent, polymorphic: true
 
   has_many :document_rights,
@@ -122,12 +124,9 @@ class DocumentField < ApplicationRecord
     return if revision_version?
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
-    # if upload_field? || document_native_file?
-    #   original_attributes['files'] = []
-    #   files.each do |file|
-    #     original_attributes['files'] << { filename: file.filename.to_s }
-    #   end
-    # end
+    if upload_field? && file.attached?
+      original_attributes['filename'] = file.filename.to_s
+    end
     if codification_kind.present?
       original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
