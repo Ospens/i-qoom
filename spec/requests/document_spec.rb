@@ -807,4 +807,16 @@ describe Document, type: :request do
       end
     end
   end
+
+  it 'revisions' do
+    title = Faker::Lorem.sentence
+    document = FactoryBot.create(:document)
+    document.update(title: title)
+    get "/api/v1/documents/#{document.id}/revisions",\
+      headers: credentials(document.user)
+    expect(response).to have_http_status(:success)
+    revision = json.first
+    expect(revision['codification_string']).to eql(document.codification_string)
+    expect(revision['title']).to eql(title)
+  end
 end

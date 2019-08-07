@@ -8,7 +8,8 @@ class Api::V1::DocumentsController < ApplicationController
                                    :show,
                                    :create_revision,
                                    :download_native_file,
-                                   :download_details ]
+                                   :download_details,
+                                   :revisions ]
   load_resource :document, through: :project, only: [ :new, :create ]
   before_action :check_convention
   authorize_resource :document
@@ -158,6 +159,10 @@ class Api::V1::DocumentsController < ApplicationController
         send_data(stream, type: 'application/pdf', filename: "#{filename}.pdf")
       end
     end
+  end
+
+  def revisions
+    render json: @document.revision.document_main.revisions
   end
 
   private
