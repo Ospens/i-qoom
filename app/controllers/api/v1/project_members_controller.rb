@@ -22,8 +22,7 @@ class Api::V1::ProjectMembersController < ApplicationController
 
   def create
     if @project_member.save
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer),
+      render json: @project_member,
              status: :created
     else
       render json: @project_member.errors,
@@ -33,8 +32,7 @@ class Api::V1::ProjectMembersController < ApplicationController
 
   def update   
     if @project_member.update(project_member_params)
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer),
+      render json: @project_member,
              status: :created
     else
       render json: @project_member.errors,
