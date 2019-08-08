@@ -9,7 +9,6 @@ class Api::V1::RolesController < ApplicationController
 
   def edit
     render json: @role,
-                 serializer: RoleSerializer,
            status: :ok
   end
 

@@ -7,13 +7,11 @@ class Api::V1::ProjectAdministratorsController < ApplicationController
   # inspect
   def show
     render json: @project_administrator,
-                 serializer: ProjectAdministratorSerializer,
            status: :ok
   end
 
   def index
     render json: @project.admins.order(id: :asc),
-                 each_serializer: ProjectAdministratorSerializer,
            status: :ok
   end
 
