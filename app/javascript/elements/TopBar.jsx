@@ -10,7 +10,7 @@ class TopBar extends Component {
 
   renderLandingLinks = navClass => (
     <ul className={`nav navbar-nav menu_nav justify-content-center ${navClass}`}>
-      <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>
+      {/* <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>*/}
       <li className='nav-item'><a href='#samples-card' className='nav-link'>Examples</a></li>
       <li className='nav-item'><a href='#what-is-card' className='nav-link'>i-Qoom</a></li>
       <li className='nav-item'><a href='#pricing-card' className='nav-link'>Pricing</a></li>
@@ -30,12 +30,12 @@ class TopBar extends Component {
             Logout
           </button>
         </li>
-        <li className='nav-item'>
+        <li className='nav-item nav-item-icon'>
           <button type='button' className='btn'>
             <i className='svg-icon email-unread-icon gray' />
           </button>
         </li>
-        <li className='nav-item'>
+        <li className='nav-item nav-item-icon'>
           <button type='button' className='btn'>
             <i className='svg-icon alarm-bell-icon gray' />
           </button>
@@ -75,7 +75,7 @@ class TopBar extends Component {
             <Link className='navbar-brand logo_h' to='/'>
               <i className='svg-icon logo-header' />
             </Link>
-            <div className='collapse navbar-collapse offset'>
+            <div className='navbar-collapse offset'>
               {this.renderLandingLinks(navClass)}
               <div className={`nav justify-content-center back-button ${navClass}`}>
                 <Link to='/' className='btn nav-link btn-back' >

@@ -9,7 +9,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import App from '../components/App'
 import '../styles/semantic.css'
 import 'react-datepicker/dist/react-datepicker.css'
-import '../styles/ckEditor.css'
 import '../styles/icons.scss'
 
 document.addEventListener('DOMContentLoaded', () => {

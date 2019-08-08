@@ -91,11 +91,10 @@ class Reviews extends Component {
 
   renderCommonCard = (el, i) => (
     <div className='card text-left with-dropdown-menu' key={i}>
-      <div className='reviews-user-info row'>
-        <img className='review-card-avatar' src={tmpAvatar} alt='' />
-        <div className='clearfix' />
-        <div className='user-name-block col-9'>
-          <div className='row'>
+      <div className='reviews-user-info'>
+        <img className='review-card-avatar' src={el.photo || tmpAvatar} alt='' />
+        <div className='user-name-block'>
+          <div className='d-flex'>
             <div dangerouslySetInnerHTML={{ __html: el.name }} />
               <i className='svg-icon rounded-blue-check-icon ml-2' />
             </div>
@@ -104,24 +103,28 @@ class Reviews extends Component {
           </div>
         </div>
       </div>
-      <div className='card-body'>
+      <div className='card-body px-0'>
         <div dangerouslySetInnerHTML={{ __html: el.desription }} />
       </div>
     </div>
   )
 
   renderReviewsSlider = (reviews, newClassName = '') => {
+    const cardCount = window.innerWidth > 1580
+      ? 3
+      : window.innerWidth > 768
+        ? 2
+        : 1
     const settings = {
       infinite: true,
       speed: 1000,
-      slidesToShow: 3,
+      slidesToShow: cardCount,
       slidesToScroll: 1,
       nextArrow: <Arrows type='nextBtn' />,
       prevArrow: <Arrows type='prevBtn' />
     }
-    const { authed, editable } = this.props
-    let reviewsContent
-    if (authed && editable) {
+    // const { authed, editable } = this.props
+    /*if (authed && editable) {
       reviewsContent = (
         reviews.map((el, i) => {
           return this.renderAdminCard(el, i)
@@ -167,7 +170,9 @@ class Reviews extends Component {
           return this.renderCommonCard(el, i)
         })
       )
-    }
+    }*/
+
+    const reviewsContent = reviews.map((el, i) => this.renderCommonCard(el, i))
 
     return (
       <Slider className={`card-deck mx-4 mb-4 ${newClassName}`} {...settings}>
@@ -202,17 +207,19 @@ class Reviews extends Component {
   render() {
     const { authed, editable, description, cards } = this.props
     const { readMore } = this.state
- 
+
     return (
       <section id='reviews-card'>
         <div className='container'>
-          {authed && editable ?
+          {/*authed && editable ?
             (
               <TextEditor text={description} />
             ) : (
               <div dangerouslySetInnerHTML={{ __html: description }} />
-            )}
+            )*/}
+          <div dangerouslySetInnerHTML={{ __html: description }} />
         </div>
+        
         {this.renderReviewsSlider(cards)}
         {readMore && this.renderReviewsSlider(cards, 'new-slider')}
         {readMore && this.renderReviewsSlider(cards, 'new-slider')}

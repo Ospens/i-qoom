@@ -35,9 +35,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     if @project.save
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer),
-             status: :created
+      render json: @project, status: :created
     else
       render json: @project.errors,
              status: :unprocessable_entity
@@ -46,9 +44,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def update
     if @project.update(project_params)
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer),
-             status: :created
+      render json: @project, status: :created
     else
       render json: @project.errors,
              status: :unprocessable_entity

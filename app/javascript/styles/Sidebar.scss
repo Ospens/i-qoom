@@ -47,6 +47,7 @@
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling:touch;
 
     .nav-items {
       margin-top: 50px;

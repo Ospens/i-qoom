@@ -1,7 +1,7 @@
 :not(.landing-page) {
 
   textarea {
-    min-height: 180px;
+    min-height: calc(7em + 0.75rem + 2px);
   }
 
   label {
@@ -365,6 +365,7 @@
       .revision-list {
         max-height: 250px;
         overflow: auto;
+        -webkit-overflow-scrolling:touch;
 
         li {
           width: max-content;
@@ -976,6 +977,7 @@ input.search-input {
   padding-bottom: 15px;
   height: 100%;
   overflow-y: auto;
+	-webkit-overflow-scrolling:touch;
 
   .date-block {
     align-self: center;
@@ -1416,6 +1418,7 @@ input.search-input {
 .access-rights-table-block {
   width: 100%;
   overflow: auto;
+	-webkit-overflow-scrolling:touch;
   min-height: 800px;
   margin-bottom: 100px;
 
@@ -1567,6 +1570,7 @@ input.search-input {
       #grid-row-opener:checked~.filter-grid-subcolumn {
         max-height: 600px;
         overflow: auto;
+        -webkit-overflow-scrolling:touch;
         -webkit-transition: overflow .5s;
         border-top: 1px solid lightgray;
         margin-top: 15px;
@@ -1912,6 +1916,7 @@ input.search-input {
   .table-contaniner {
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling:touch;
     height: 55vh;
     margin-top: 20px;
     margin-bottom: 10px;

@@ -297,6 +297,17 @@ i.svg-icon {
     min-width: 170px;
     background-color: #fff;
 
+    @media only screen and (max-width: 1028px) {
+      height: 30px;
+      min-height: 30px;
+      width: 130px;
+      min-width: 130px;
+    }
+
+    @media only screen and (max-width: 768px) {
+      display: none;
+    }
+
     &.sidebar {
       height: 25px;
       min-height: 25px;

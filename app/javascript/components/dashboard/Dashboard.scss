@@ -913,6 +913,7 @@ span.divider {
 .table-block {
   min-height: 300px;
   overflow: auto;
+	-webkit-overflow-scrolling:touch;
   margin-top: 10px;
   max-height: 60vh;
 }

@@ -11,12 +11,6 @@ class SignIn extends Component {
     loginSuccess: false
   }
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
-  }
-
   handleSubmit = values => {
     const { signInUser } = this.props
     return signInUser(values).then(() => this.setState({ loginSuccess: true }))

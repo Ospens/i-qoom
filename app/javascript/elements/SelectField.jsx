@@ -114,6 +114,7 @@ const SelectField = ({
   errorField,
   label,
   placeholder,
+  className,
   isDisabled = false,
   isMulti = false,
   meta: { touched, error }
@@ -125,7 +126,7 @@ const SelectField = ({
       : false
       
   return (
-    <div>
+    <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
       <SelectComponent
         {...input}
