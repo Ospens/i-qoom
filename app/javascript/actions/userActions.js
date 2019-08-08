@@ -84,7 +84,7 @@ export const signUpUser = userFields => dispatch => {
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {
-      errorNotify(response.data.message)
-      throw new SubmissionError(response.data.error_messages)
+      errorNotify('Something went wrong')
+      throw new SubmissionError(response.data)
     })
 }

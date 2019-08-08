@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  SubmissionError,
   getFormSubmitErrors,
   reduxForm,
   formValueSelector,
   Field,
-  destroy
+  FieldArray,
+  destroy,
+  arraySplice
 } from 'redux-form'
-import {
-  updateFields,
-  discardInitialValues
-} from '../../../../../actions/conventionActions'
 import DraggableDropDown from './DraggableDropDown'
 import InputField from '../../../../../elements/InputField'
 import NewModal from '../../../../../elements/Modal'
@@ -23,6 +20,7 @@ import textareaIcon from '../../../../../images/form_3'
 import uploadIcon from '../../../../../images/form_4'
 import dateIcon from '../../../../../images/form_5'
 import ModalLimitAccess from './ModalLimitAccess'
+import { required } from '../../../../../elements/validations'
 
 const typeVariants = [
   {
@@ -54,7 +52,17 @@ const typeVariants = [
 
 const initState = {
   limitAccess: false,
-  newSection: ''
+}
+
+const validate = values => {
+  const errors = {}
+  if (values.kind === 'select_field'
+    && values.document_field_values
+    && values.document_field_values.length < 1
+  ) {
+    errors.new_section = 'Add some value'
+  }
+  return errors
 }
 
 class ModalCreateField extends Component {
@@ -62,117 +70,18 @@ class ModalCreateField extends Component {
   state = initState
 
   handleClose = () => {
-    const { destroyForm, discardInitialValues, change, handleClose } = this.props
+    const { destroyForm, handleClose } = this.props
     handleClose()
     this.setState({ ...initState })
-    change('document_field_values', [])
     destroyForm()
-    discardInitialValues()
   }
 
-  onDragEnd = result => {
-    const { document_field_values } = this.props
-    const { destination, source } = result
+  handleSubmit = field => {
+    const { column = '2', row, spliceToConvention, id } = this.props
 
-    if (!destination) return
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return
-    }
-
-    let { draggableId } = result
-    draggableId = draggableId.replace(/field_/g, '')
-    const newSections = new Array(...document_field_values)
-    newSections.splice(source.index, 1)
-    newSections.splice(destination.index, 0, document_field_values[draggableId])
-
-    this.props.change('document_field_values', newSections)
-  }
-
-  handleChange = e =>  this.setState({ newSection: e.target.value })
-
-  addNewSection = index => {
-    const { newSection } = this.state
-    const { document_field_values } = this.props
-    if (index === undefined && newSection.length < 1) return
-
-    const position = index > -1 ? index : document_field_values.length
-    const newValue = {
-      id: null,
-      value: newSection,
-      title: newSection
-    }
-
-    document_field_values.splice(position, 0, newValue)
-    this.setState({ newSection: '' })
-    this.props.change('document_field_values', document_field_values)
-  }
-
-  removeSection = index => {
-    const { document_field_values, change } = this.props
-    document_field_values.splice(index, 1)
-    change('document_field_values', document_field_values)
-    this.forceUpdate()
-  }
-
-  copySection = index => {
-    const { document_field_values, change } = this.props
-    const newValue = document_field_values[index]
-    document_field_values.splice(index, 0, newValue)
-    change('document_field_values', document_field_values)
-    this.forceUpdate()
-  }
-
-  changeDDSection = (newValue, index) => {
-    const { document_field_values, change } = this.props
-    const updatedValue = {
-      ...document_field_values[index],
-      value: newValue,
-      label: newValue
-    }
-    document_field_values.splice(index, 1, updatedValue)
-    
-    change('document_field_values', document_field_values)
-  }
-
-  validations = field => {
-    const errors = {}
-    const { document_field_values } = this.props
-
-    if (!field.title) {
-      errors['title'] = ['Required']
-    }
-    if (!field.command) {
-      errors['command'] = ['Required']
-    }
-    if (!field.kind) {
-      errors['kind'] = ['Required']
-    }
-    if (field.kind === 'select_field' &&
-        !field.codification_kind &&
-        document_field_values.length < 1
-        ) {
-        errors['kind'] = ['Add some value']
-      }
-    if (Object.keys(errors).length < 1) return
-
-    throw new SubmissionError({ ...errors })
-  }
-
-  handleSubmit = (field, e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const { updateFields, column, row, isEdit } = this.props
-    const { document_field_values } = this.props
-    this.validations(field)
-
-    // TODO: fields don't rerender after drag'n'drop
     let newSections = []
     if (field.kind === 'select_field') {
-      newSections = document_field_values.map((el, i) => {
+      newSections = field.document_field_values.map((el, i) => {
         const newEl = {
           ...el,
           'position': i
@@ -182,31 +91,30 @@ class ModalCreateField extends Component {
     }
     field['document_field_values'] = newSections
     field['column'] = column
-    field['row'] = row
-    const newField = new Array(field)
+    field['row'] = row || 0
+    field['id'] = id || null
 
-    updateFields(...newField, isEdit)
+    const removeNum = id === undefined ? 0 : 1
+    spliceToConvention(`column_${column}`, row || 0, removeNum, field)
     this.handleClose()
   }
 
   renderFieldForm = () => {
     const {
       field_type,
-      isEdit,
       handleSubmit,
       submitErrors,
-      initialValues: { title, codification_kind }
+      initialized,
+      codification_kind,
     } = this.props
-    const { document_field_values } = this.props
-    const { newSection } = this.state
 
     // TODO: Change limit access for new field to
     
     return (
-      <form onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
+      <form onSubmit={handleSubmit(this.handleSubmit)}>
         <div className='modal-container'>
           <div className="modal-container__title-block">
-            <h4>{title || 'New input field'}</h4>
+            <h4>{initialized ? 'Edit input field' : 'New input field'}</h4>
             {false && <button
               type='button'
               className='btn color-blue p-0 ml-auto'
@@ -225,6 +133,7 @@ class ModalCreateField extends Component {
                 label='Type in title'
                 errorField={submitErrors}
                 disabled={codification_kind}
+                validate={[required]}
               />
             </div>
             <div className='form-group'>
@@ -236,6 +145,7 @@ class ModalCreateField extends Component {
                 label='Type in command'
                 errorField={submitErrors}
                 disabled={codification_kind}
+                validate={[required]}
               />
             </div>
             <div className='form-group'>
@@ -249,6 +159,7 @@ class ModalCreateField extends Component {
                 component={SelectField}
                 errorField={submitErrors}
                 isDisabled={codification_kind}
+                validate={[required]}
               />
             </div>
             <div className='form-group d-flex'>
@@ -270,33 +181,13 @@ class ModalCreateField extends Component {
               }
             </div>
             {field_type === 'select_field' &&
-              <div>
-                <div><label>Define selections</label></div>
-                <div><label>Selections</label></div>
-                <DraggableDropDown
-                  sections={document_field_values}
-                  onDragEnd={this.onDragEnd}
-                  addNewSection={this.addNewSection}
-                  removeSection={this.removeSection}
-                  copySection={this.copySection}
-                  changeDDSection={this.changeDDSection}
-                />
-
-                <div className="new-dropdown-section-block form-froup">
-                  <div className="new-dropdown-section">
-                    <input
-                      id='new-section'
-                      name='new-section'
-                      type='text'
-                      className='form-control'
-                      value={newSection}
-                      placeholder={`Section ${document_field_values.length + 1}`}
-                      onChange={(e) => this.handleChange(e)}
-                      onBlur={() => this.addNewSection()}
-                    />
-                  </div>
-                </div>
-              </div>}
+            <div>
+              <div><label>Selections</label></div>
+              <FieldArray
+                name='document_field_values'
+                component={DraggableDropDown}
+              />
+            </div>}
           </div>
         </div>
         <div className='modal-footer'>
@@ -308,7 +199,7 @@ class ModalCreateField extends Component {
             Cancel
           </button>
           <button type='submit' className='btn btn-purple'>
-            {isEdit ? 'Update' : 'Create'}
+            {initialized ? 'Update' : 'Create'}
           </button>
         </div>
       </form>
@@ -317,7 +208,7 @@ class ModalCreateField extends Component {
 
   renderModalContent = () => {
     const { limitAccess } = this.state
-    const { initialValues: { title } } = this.props
+    const { title } = this.props
     if (limitAccess) {
       return (
         <ModalLimitAccess
@@ -331,21 +222,12 @@ class ModalCreateField extends Component {
     return this.renderFieldForm()
   }
 
-  renderTrigger = content => {
-    return (
-      <div onClick={this.handleOpen}>
-        {content}
-      </div>
-    )
-  }
-
   render() {
     const { modalOpen } = this.props
 
     return (
       <NewModal
         content={this.renderModalContent()}
-        // trigger={this.renderTrigger(triggerContent)}
         open={modalOpen}
         onClose={this.handleClose}
       />
@@ -358,19 +240,21 @@ const selector = formValueSelector('convention_input_form')
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('convention_input_form')(state),
   field_type: selector(state, 'kind'),
-  document_field_values: selector(state, 'document_field_values') || [],
-  initialValues: state.conventions.editingField
+  column: selector(state, 'column'),
+  row: selector(state, 'row'),
+  id: selector(state, 'id'),
+  title: selector(state, 'title'),
+  codification_kind: selector(state, 'codification_kind'),
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateFields: (field, edit) => dispatch(updateFields(field, edit)),
   destroyForm: () => dispatch(destroy('convention_input_form')),
-  discardInitialValues: () => dispatch(discardInitialValues(''))
+  spliceToConvention: (field, index, removeNum, val) => dispatch(arraySplice('convention_form', field, index, removeNum, val)),
 })
 
 export default connect(
   mapStateToProps, mapDispatchToProps
   )(reduxForm({
     form: 'convention_input_form',
-    enableReinitialize: true
+    validate
   })(ModalCreateField))

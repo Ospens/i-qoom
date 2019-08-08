@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
-import ReactSVG from 'react-svg'
 import UserAvatar from 'react-user-avatar'
+import classnames from 'classnames'
+import { withRouter } from 'react-router-dom'
 import {
   getGrantAccessMembers,
   getGrandedAccessMembers
@@ -12,10 +13,6 @@ import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 import Tabs from '../../../../../elements/Tabs'
 import DropDown from '../../../../../elements/DropDown'
-import accessRightsIcon from '../../../../../images/common-file-share'
-import showProfileIcon from '../../../../../images/single-neutral-actions-text'
-import messageIcon from '../../../../../images/email-action-unread'
-import trashIcon from '../../../../../images/trash_bucket'
 import ShowMembersPopup from './ShowMembersPopup'
 import NewTeamModal from './ModalTeamForm'
 import ModalBulkAccessRights from './ModalBulkAccessRights'
@@ -31,65 +28,18 @@ const columns = [
   { title: '', divider: true }
 ]
 
-const disciplineList = [
-  {
-    label: 'FOU',
-    enable: true,
-    view_only: true
-  },
-  {
-    label: 'HSE',
-    enable: true,
-    view_only: true
-  },
-  {
-    label: 'LOG',
-    enable: true,
-    view_only: false
-  },
-  {
-    label: 'SAA',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'SOO',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'TTT',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'XXX',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'YYY',
-    enable: false,
-    view_only: false
-  },
-]
-
 const optionBtn = [
   {
-    title: 'Edit team / add members',
-    icon: accessRightsIcon
-  },
-  {
     title: 'Copy DG-members to team',
-    icon: showProfileIcon
+    icon: 'review-icon'
   },
   {
     title: 'Synchronize with distribution group',
-    icon: messageIcon
+    icon: 'email-unread-icon'
   },
   {
     title: 'Delete team',
-    icon: trashIcon
+    icon: 'trash-icon'
   }
 ]
 
@@ -102,9 +52,9 @@ class TeamsAccessRights extends Component {
   }
 
   componentWillMount() {
-    const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
-    getGrandedAccessMembers()
-    getGrantAccessMembers()
+    const { getGrantAccessMembers, getGrandedAccessMembers, match: { params: { project_id } } } = this.props
+    getGrandedAccessMembers(project_id)
+    getGrantAccessMembers(project_id)
   }
 
   checkItem = (type, value) => {
@@ -147,10 +97,9 @@ class TeamsAccessRights extends Component {
             <ModalBulkAccessRights users={[]} />
             {optionBtn.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
-                <ReactSVG
-                  svgStyle={{ height: 13, width: 13 }}
-                  src={icon}
-                />
+                <div>
+                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                </div>
                 <span className='item-text'>
                   {title}
                 </span>
@@ -232,10 +181,9 @@ class TeamsAccessRights extends Component {
                     >
                       {optionBtn.map(({ title, icon }, i) => (
                         <button type='button' className='dropdown-item btn' key={i}>
-                          <ReactSVG
-                            svgStyle={{ height: 13, width: 13 }}
-                            src={icon}
-                          />
+                          <div>
+                            <i className={classnames('svg-icon gray mr-2', icon)} />
+                          </div>
                           <span className='item-text'>
                             {title}
                           </span>
@@ -282,8 +230,8 @@ const mapStateToProps = ({ accessRights }) => ({
 
 const mapDispatchToProps = dispatch => ({
   // TODO: change it for teams
-  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
-  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
+  getGrantAccessMembers: projectId => dispatch(getGrantAccessMembers(projectId)),
+  getGrandedAccessMembers: projectId => dispatch(getGrandedAccessMembers(projectId))
 })
 
 export default connect(
@@ -291,5 +239,5 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: 'team_access_rights_form'
-})(TeamsAccessRights))
+})(withRouter(TeamsAccessRights)))
 

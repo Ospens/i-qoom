@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import TextEditor from '../../elements/TextEditor'
+// import TextEditor from '../../elements/TextEditor'
 
 class WhatIsIQoom extends Component {
 
@@ -9,7 +9,7 @@ class WhatIsIQoom extends Component {
     return (
       <section id='what-is-card'>
         <div className='container'>
-          {authed && editable ?
+          {/*authed && editable ?
             (
               <React.Fragment>
                 <TextEditor text={title} className='mb-5' />
@@ -20,7 +20,9 @@ class WhatIsIQoom extends Component {
                 <div className='mb-5' dangerouslySetInnerHTML={{ __html: title }}></div>
                 <div dangerouslySetInnerHTML={{ __html: description }}></div>
               </React.Fragment>
-            )}
+            )*/}
+          <div className='mb-5' dangerouslySetInnerHTML={{ __html: title }}></div>
+          <div dangerouslySetInnerHTML={{ __html: description }}></div>
         </div>
       </section>
     )

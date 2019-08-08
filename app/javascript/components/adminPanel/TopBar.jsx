@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
-import bell from '../../images/alarm-bell'
-import messages from '../../images/email-action-unread'
-import logo from '../../images/i-Qoom_Brand_Logo_Gradient'
 import UserAvatar from 'react-user-avatar'
+import logo from '../../images/i-Qoom_Brand_Logo_Gradient'
 import { signOutUser } from '../../actions/userActions'
 
 class TopBar extends Component {
@@ -18,25 +15,22 @@ class TopBar extends Component {
         </h2>
         <ul className=''>
           <li className='nav-item'>
-            <button type='button' className='nav-link btn-transparent text-dark' onClick={signOutUser}>
+            <button
+              type='button'
+              className='nav-link btn-transparent text-dark'
+              onClick={signOutUser}
+            >
               Logout
             </button>
           </li>
           <li className='nav-item'>
-            <button type='button' className='nav-link btn-transparent'>
-              <ReactSVG
-                svgStyle={{ height: 15, marginRight: 10 }}
-                src={messages}
-                className='purple-logo'
-              />
+            <button type='button' className='btn'>
+              <i className='svg-icon email-unread-icon gray' />
             </button>
           </li>
           <li className='nav-item'>
-            <button type='button' className='nav-link btn-transparent'>
-              <ReactSVG
-                svgStyle={{ height: 20, marginRight: 10 }}
-                src={bell}
-              />
+            <button type='button' className='btn'>
+              <i className='svg-icon alarm-bell-icon gray' />
             </button>
           </li>
           <li className='nav-item'>

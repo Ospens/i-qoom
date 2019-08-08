@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { formValueSelector, getFormSubmitErrors, FormSection } from 'redux-form'
-import ReactSVG from 'react-svg'
-import Left from '../../../images/arrow-button-left'
 import AddressFields from '../../../elements/forms/AddressFields'
 
 class BillingAddress extends Component {
@@ -12,10 +10,7 @@ class BillingAddress extends Component {
     return (
       <div className='modal-footer'>
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
-          <ReactSVG
-            svgStyle={{ height: 10, width: 10, marginRight: 5 }}
-            src={Left}
-          />
+          <i className='svg-icon arrow-left-icon' />
           Back
         </button>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>

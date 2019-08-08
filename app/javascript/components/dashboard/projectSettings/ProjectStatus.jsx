@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
 import ModalComponent from '../../../elements/ModalComponent'
 import DatePickerField from '../../../elements/DatePickerField'
 import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
-import fileLock from '../../../images/common-file-lock'
-import left from '../../../images/arrow-button-left'
-import greenCheck from '../../../images/check_3'
 
 const statuses = [
   { name: 'Planning', status: 'active', date: '31-03-2019' },
@@ -73,10 +69,7 @@ class ProjectStatus extends Component {
             <div className='modal-footer'>
               <button type='button' className='btn btn-back'
                 onClick={() => this.setState({ modal: 1 })}>
-                <ReactSVG
-                  svgStyle={{ height: 10, width: 10, marginRight: 5 }}
-                  src={left}
-                />
+                <i className='svg-icon arrow-left-icon' />
                 Back
               </button>
               <button type='button' className='btn btn-white' onClick={this.closeModal}>No</button>
@@ -128,43 +121,28 @@ class ProjectStatus extends Component {
         </div>
         <span className='tab-description'>Requirements for activation:</span>
         <div className='mt-4'>
-          <span className='tab-description d-flex'>
-            Two confirmed administrators
-            <ReactSVG
-              svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
-              src={greenCheck}
-            />
-            <ReactSVG
-              svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
-              src={greenCheck}
-            />
-          </span>
+          <div className='tab-description d-flex'>
+            <span>Two confirmed administrators</span>
+            <i className="svg-icon green-check-icon" />
+            <i className="svg-icon green-check-icon" />
+          </div>
         </div>
         <div className='mt-3'>
-          <span className='tab-description d-flex'>
-            Terms & Conditions accepted
-            <ReactSVG
-              svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
-              src={greenCheck}
-            />
-          </span>
+          <div className='tab-description d-flex'>
+            <span>Terms & Conditions accepted</span>
+            <i className="svg-icon green-check-icon" />
+          </div>
         </div>
         <div className='mt-3'>
-          <span className='tab-description d-flex'>
-            Billing for agreed
-            <ReactSVG
-              svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
-              src={greenCheck}
-            />
-          </span>
+          <div className='tab-description d-flex'>
+            <span>Billing for agreed</span>
+            <i className="svg-icon green-check-icon" />
+          </div>
         </div>
         <div className='d-flex justify-content-end my-5'>
           <button className='btn btn-move-to-archive'>
-            <ReactSVG
-              svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-              src={fileLock}
-            />
-              Move to archive
+            <i className='svg-icon common-file-lock black' />
+            Move to archive
             </button>
         </div>
         {modal === 1 && this.renderModalFordate()}

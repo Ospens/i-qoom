@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
-import ReactSVG from 'react-svg'
 import { DragDropContext } from 'react-beautiful-dnd'
 import NewModal from '../../../../../elements/Modal'
-import accessRightsIcon from '../../../../../images/common-file-share'
 import ModalCopyDGTable from './ModalCopyDGTable'
 
 export class ModalCopyToDG extends Component {
@@ -79,10 +77,7 @@ export class ModalCopyToDG extends Component {
         className='dropdown-item btn'
         onClick={this.handleOpen}
       >
-        <ReactSVG
-          svgStyle={{ height: 13, width: 13 }}
-          src={accessRightsIcon}
-        />
+        <i className='svg-icon share-file-icon' />
         <span className='item-text'>
           Copy team members to DG
         </span>

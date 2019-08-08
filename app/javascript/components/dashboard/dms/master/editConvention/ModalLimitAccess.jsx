@@ -23,13 +23,6 @@ class ModalLimitAccess extends Component {
     grandedAccess: []
   }
 
-  componentWillMount() {
-    // const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
-    // TODO: doesn't release on backend now
-    // getGrandedAccessMembers()
-    // getGrantAccessMembers()
-  }
-
   handleCheckUser = (value, type) => {
     const values = this.state[type] || []
     const { change } = this.props
@@ -194,10 +187,6 @@ const mapStateToProps = ({ accessRights }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  /*
-  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
-  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
-  */
 })
 
 export default connect(

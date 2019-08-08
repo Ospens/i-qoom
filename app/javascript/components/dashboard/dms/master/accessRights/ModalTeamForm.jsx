@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
+import { reduxForm, Field } from 'redux-form'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import NewModal from '../../../../../elements/Modal'
@@ -70,7 +70,6 @@ class ModalTeamForm extends Component {
       <ReactSVG
         svgStyle={{ height: 15, width: 15, marginRight: 5 }}
         src={plusIcon}
-        className='svg-icon'
       />
       <span>Create new Document</span>
     </button>

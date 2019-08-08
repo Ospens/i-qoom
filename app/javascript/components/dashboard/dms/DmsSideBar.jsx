@@ -1,24 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, Route } from 'react-router-dom'
-import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import overviewIcon from '../../../images/task-checklist-check'
-import dmsSettingsIcon from '../../../images/task-list-settings'
-import docPlanIcon from '../../../images/calendar-3'
 
 export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
   <Route path={path} exact>
     {({ match, location }) => {
       const matched = match || location.pathname.indexOf(root) > -1
       return (
-        <li className="dms-sidebar-menu__item">
+        <li className='dms-sidebar-menu__item'>
           <Link className={classnames('btn', { 'active': matched })} to={path}>
-            <ReactSVG
-              svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-              src={icon}
-            />
-            <span className="head-button__gray-text">{label}</span>
+            <i className={classnames('svg-icon black mr-2', icon)} />
+            <span className='head-button__gray-text'>{label}</span>
           </Link>
           {matched && nested &&
           <ul className='dms-sidebar-menu__sublitem'>
@@ -51,22 +44,22 @@ class DmsSideBar extends Component {
     const menuItems = [
       {
         title: 'Overview',
-        icon: overviewIcon,
+        icon: 'task-checklist-icon',
         path: `/dashboard/projects/${projectId}/documents/`
       },
       {
         title: 'DMS Settings',
-        icon: dmsSettingsIcon,
+        icon: 'task-list-settings-icon',
         path: `/dashboard/projects/${projectId}/documents/settings/`
       },
       {
         title: 'Document planning',
-        icon: docPlanIcon,
+        icon: 'calendar-icon-3',
         path: `/dashboard/projects/${projectId}/documents/planning/`
       },
       {
         title: 'Master settings',
-        icon: docPlanIcon,
+        icon: 'calendar-icon-3',
         path: `${masterPath}/edit_convention`,
         root: `${masterPath}/`
       }
@@ -75,12 +68,12 @@ class DmsSideBar extends Component {
     const masterMenu = [
       {
         title: 'Upload form',
-        icon: overviewIcon,
+        icon: 'task-checklist-icon',
         path: `${masterPath}/edit_convention/`
       },
       {
         title: 'Access rights',
-        icon: dmsSettingsIcon,
+        icon: 'task-list-settings-icon',
         path: `${masterPath}/access_rights/members/`,
         root: `${masterPath}/access_rights/`,
         nested: [
@@ -96,12 +89,12 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Quick search',
-        icon: docPlanIcon,
+        icon: 'calendar-icon-3',
         path: `${masterPath}/quick_search/`
       },
       {
         title: 'Codification',
-        icon: dmsSettingsIcon,
+        icon: 'task-list-settings-icon',
         path: `${masterPath}/codifications/1/`,
         root: `${masterPath}/codifications/`,
         nested: [
@@ -125,12 +118,12 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Distribution groups',
-        icon: dmsSettingsIcon,
+        icon: 'task-list-settings-icon',
         path: `${masterPath}/distribution_group/`
       },
       {
         title: 'Review managment',
-        icon: dmsSettingsIcon,
+        icon: 'task-list-settings-icon',
         path: `${masterPath}/planning/`
       }
     ]
