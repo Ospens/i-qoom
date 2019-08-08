@@ -5,8 +5,10 @@ class Api::V1::ProjectMembersController < ApplicationController
                               through_association: :members
 
   def index
-    render json: @project.members,
-                 each_serializer: ProjectMemberSerializer,
+    render json: { disciplines: @project.disciplines,
+                   roles: @project.roles,
+                   members: ActiveModel::Serializer::CollectionSerializer.new(@project.members,
+                              serializer: ProjectMemberSerializer) },
            status: :ok
   end
 
@@ -20,25 +22,21 @@ class Api::V1::ProjectMembersController < ApplicationController
 
   def create
     if @project_member.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project_member: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer) },
+      render json: @project_member,
              status: :created
     else
-      error(@project_member)
+      render json: @project_member.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update   
     if @project_member.update(project_member_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project_member: ActiveModel::Serializer::CollectionSerializer.new([@project_member],
-                                         serializer: ProjectMemberSerializer) },
+      render json: @project_member,
              status: :created
     else
-      error(@project_member)
+      render json: @project_member.errors,
+             status: :unprocessable_entity
     end
   end
 
@@ -57,7 +55,9 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :last_name,
                              :phone_code,
                              :phone_number,
+                             :job_title,
+                             :discipline_id,
+                             :role_id,
                              company_address_attributes: Address.column_names)
   end
-
 end

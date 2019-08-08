@@ -3,13 +3,11 @@ class Api::V1::ProjectsController < ApplicationController
   
   def index
     render json: @projects,
-                 each_serializer: ProjectSerializer,
            status: :ok
   end
 
   def show
     render json: @project,
-                 serializer: ProjectSerializer,
            status: :ok
   end
 
@@ -18,7 +16,7 @@ class Api::V1::ProjectsController < ApplicationController
   # the other steps are "update" method
   # and on admins step it is better to have request like this:
   # { "project" :
-  #   { "admins_attributes":
+  #   { "admins":
   #     {
   #       "id": "",
   #       "email": "someemailaddress@gmail.com"
@@ -35,25 +33,21 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     if @project.save
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer) },
+      render json: @project,
              status: :created
     else
-      error(@project)
+      render json: @project.errors,
+             status: :unprocessable_entity
     end
   end
 
   def update
     if @project.update(project_params)
-      render json: { status: "success",
-                     message: t(".success_message"),
-                     project: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer) },
+      render json: @project,
              status: :created
     else
-      error(@project)
+      render json: @project.errors,
+             status: :unprocessable_entity
     end
   end
 
@@ -70,16 +64,17 @@ class Api::V1::ProjectsController < ApplicationController
       ProjectAdministratorConfirmation.new(token: params[:token],
                                     signed_in_user: signed_in_user)
     if project_admin_confirmation.save
-      success(:created)
+      head :created
     else
-      error(project_admin_confirmation)
+      render json: project_admin_confirmation.errors,
+             status: :unprocessable_entity
     end
   end
 
   private
 
   def project_params
-    if params[:project][:admins]
+    if params[:project][:admins].present?
       params[:project][:admins_attributes] =
         params[:project][:admins]
       params[:project].delete(:admins)

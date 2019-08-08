@@ -17,7 +17,7 @@ RSpec.describe DocumentFolder, type: :model do
 
     def create_field(folder, kind)
       field = doc1.document_fields.find_by(codification_kind: kind)
-      field.update(value: Faker::Name.initials(3))
+      field.update(value: Faker::Name.initials)
       value = field.value
       main_kind = kind == :document_number ? :text_field : :select_field
       folder.document_fields.create!(kind: main_kind,
@@ -29,7 +29,8 @@ RSpec.describe DocumentFolder, type: :model do
       dbl = double
       allow(project).to receive(:document_mains).and_return(dbl)
       allow(dbl).to receive(:documents_available_for).with(user).and_return([])
-      folder.documents << doc1
+      folder.document_mains << doc1.revision.document_main
+      allow_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       expect(folder.all_documents.pluck(:id)).to eql([doc1.id])
     end
 

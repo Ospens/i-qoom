@@ -31,7 +31,9 @@ Rails.application.routes.draw do
         collection do
           get :confirm_admin
         end
-        resource :conventions, only: [:edit, :update]
+        resource :conventions, only: [:edit, :update] do
+          patch :update_field_titles
+        end
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
@@ -49,7 +51,14 @@ Rails.application.routes.draw do
             get :resend_confirmation
           end
         end
-        resources :project_members, path: :members
+        resources :project_members,
+                  path: :members,
+                  except: [:show]
+        resources :disciplines,
+                  except: [:new, :show]
+        resources :roles,
+                  except: [:new, :show]
+        resources :document_folders, only: :index
       end
     end
   end

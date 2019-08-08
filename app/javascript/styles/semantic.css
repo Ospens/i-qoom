@@ -32509,6 +32509,7 @@ select.ui.dropdown {
 .ui.selection.dropdown .menu {
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;
@@ -32747,6 +32748,7 @@ select.ui.dropdown {
 .ui.search.dropdown .menu {
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;
@@ -33283,11 +33285,13 @@ select.ui.dropdown {
 .ui.dropdown .scrolling.menu {
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 .ui.scrolling.dropdown .menu {
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;
@@ -33298,6 +33302,7 @@ select.ui.dropdown {
 .ui.dropdown .scrolling.menu {
   position: static;
   overflow-y: auto;
+  -webkit-overflow-scrolling:touch;
   border: none;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;

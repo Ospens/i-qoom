@@ -5,3 +5,7 @@ export const email = value => (
     ? 'Invalid email address'
     : undefined
 )
+
+export const minValue = min => value => (value && value < min ? `Must be at least ${min}` : undefined)
+
+export const maxValue = max => value => (value && value > max ? `Must be less then ${max}` : undefined)

@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
-import ReactSVG from 'react-svg'
 import ModalCopyToDG from './ModalCopyToDG'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 import DropDown from '../../../../../elements/DropDown'
-import accessRightsIcon from '../../../../../images/common-file-share'
 import { RenderTeamlist } from '../accessRights/ShowMembersPopup'
 
 export class DistributionGroup extends Component {
@@ -21,7 +19,7 @@ export class DistributionGroup extends Component {
           <h4>Distribution groups</h4>
           <label>Manage distribution groups</label>
         </div>
-        <div className="px-4">
+        <div className='px-4'>
           <Table sortable className='main-table-block'>
             <Table.Header>
               <Table.Row>
@@ -38,7 +36,7 @@ export class DistributionGroup extends Component {
               {groups.map((group, i) => (
                 <Table.Row key={i}>
                   <Table.Cell>
-                    <div className="d-flex align-items-center">
+                    <div className='d-flex align-items-center'>
                       <div className='team-icon'>
                         <UserAvatar size='42' name='D G' className='group-avatar' />
                       </div>
@@ -46,7 +44,7 @@ export class DistributionGroup extends Component {
                     </div>
                   </Table.Cell>
                   <Table.Cell>
-                    <div className="dg-members">
+                    <div className='dg-members'>
                       <RenderTeamlist users={group.members}/>
                       <DropDown
                         dots={true}
@@ -58,10 +56,7 @@ export class DistributionGroup extends Component {
                           className='dropdown-item btn'
                           // onClick={this.handleOpen}
                         >
-                          <ReactSVG
-                            svgStyle={{ height: 13, width: 13 }}
-                            src={accessRightsIcon}
-                          />
+                          <i className='svg-icon share-file-icon' />
                           <span className='item-text'>
                             Edit DG / add DG-members
                           </span>

@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import classnames from 'classnames'
-import ReactSVG from 'react-svg'
-import plus from '../images/add_1'
-import trash from '../images/trash_bucket'
 
 class FileField extends Component {
 
@@ -30,12 +27,12 @@ class FileField extends Component {
   renderLogo = (imagePreviewUrl) => {
     return (
       <div className='logo-container'>
-        <ReactSVG
-          svgStyle={{ height: 35 }}
-          className='trash-icon'
-          src={trash}
-          onClick={() => this.setState({ file: '', imagePreviewUrl: ''})}
-        />
+        <div className='trash-icon-container'>
+          <i
+            className='svg-icon trash-icon white'
+            onClick={() => this.setState({ file: '', imagePreviewUrl: '' })}
+          />
+        </div>
         <img src={imagePreviewUrl} /> 
       </div>
     )
@@ -51,23 +48,21 @@ class FileField extends Component {
       <div className={mainClass}>
         {imagePreview}
         {!imagePreview &&
-          <div>
-            <input
-              onChange={(e) => this.onInputChange(e, input)}
-              id='file_logo'
-              type='file'
-              className='inputfile'
-              data-allowed-file-extensions={dataAllowedFileExtensions}
-            />
-            <label htmlFor='file_logo'>
-              <ReactSVG
-                svgStyle={{ height: 20, width: 20 }}
-                className='plus-icon'
-                src={plus}
-              />
-              <strong>Add a logo</strong>
-            </label>
-          </div>}
+        <div>
+          <input
+            onChange={(e) => this.onInputChange(e, input)}
+            id='file_logo'
+            type='file'
+            className='inputfile'
+            data-allowed-file-extensions={dataAllowedFileExtensions}
+          />
+          <label htmlFor='file_logo'>
+            <div>
+              <i className='svg-icon blue-plus-icon' />
+            </div>
+            <strong>Add a logo</strong>
+          </label>
+        </div>}
       </div>
     )
   }

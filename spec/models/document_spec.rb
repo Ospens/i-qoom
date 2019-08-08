@@ -26,8 +26,19 @@ RSpec.describe Document, type: :model do
   it 'upload field' do
     doc = FactoryBot.create(:document)
     field = doc.document_fields.create(kind: :upload_field)
-    field.files.attach(fixture_file_upload('test.txt'))
-    expect(field.files.first.download.strip).to eql('111')
+    field.file.attach(fixture_file_upload('test.txt'))
+    expect(field.file.download.strip).to eql('111')
+  end
+
+  it 'return filename' do
+    user = FactoryBot.create(:user)
+    document = Document.create(document_attributes(user))
+    field1 =
+      document.document_fields.find_by(codification_kind: :document_native_file)
+    field2 =
+      document.attributes_for_edit['document_fields']
+              .detect{ |i| i['codification_kind'] == 'document_native_file' }
+    expect(field2['filename']).to eql(field1.file.filename.to_s)
   end
 
   it '#additional_information' do
@@ -75,7 +86,7 @@ RSpec.describe Document, type: :model do
       convention.document_fields.find_by(codification_kind: :originating_company)
     con_value =
       con_field.document_field_values
-               .create(value: Faker::Name.initials(3),
+               .create(value: Faker::Name.initials,
                        position: 1,
                        title: '')
     field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
@@ -89,6 +100,7 @@ RSpec.describe Document, type: :model do
     field_true.update_columns(selected: false)
     field_false.update_columns(selected: true)
     expect(doc.reload.can_view?(user)).to eql(false)
+    expect(doc.can_view?(doc.project.user)).to eql(true)
   end
 
   it 'can_create?' do
@@ -96,6 +108,7 @@ RSpec.describe Document, type: :model do
     document = document_attributes(user)
     doc = Document.new(document)
     expect(doc.can_create?(user)).to eql(true)
+    expect(doc.can_create?(doc.project.user)).to eql(true)
   end
 
   context 'prevent update of fields and values from convention' do
@@ -141,7 +154,7 @@ RSpec.describe Document, type: :model do
 
       let!(:field) do
         doc = Document.create(doc_attrs)
-        value = Faker::Name.initials(3)
+        value = Faker::Name.initials
         field = FactoryBot.build(:document_field, kind: :text_field, title: value)
         @attrs = doc_attrs
         Project.find(@attrs['project_id']).conventions.active.document_fields << field
@@ -173,7 +186,7 @@ RSpec.describe Document, type: :model do
             elsif attribute == 'required'
               !field[attribute]
             else
-              Faker::Name.initials(9)
+              Faker::Name.initials(number: 9)
             end
           expect(field[attribute]).to_not eql(old_value)
           doc = Document.new(@attrs)
@@ -222,7 +235,7 @@ RSpec.describe Document, type: :model do
             if attribute == 'position'
               rand(100..999)
             else
-              Faker::Name.initials(9)
+              Faker::Name.initials(number: 9)
             end
           expect(field_value[attribute]).to_not eql(old_value)
           doc = Document.new(@attrs)

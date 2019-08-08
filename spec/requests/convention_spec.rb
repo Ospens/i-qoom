@@ -20,7 +20,7 @@ describe Convention, type: :request do
       convention.document_fields.each do |field|
         next unless field.select_field?
         value =
-          field.document_field_values.new(value: Faker::Name.initials(3),
+          field.document_field_values.new(value: Faker::Name.initials,
                                           position: 1,
                                           title: '')
       end
@@ -53,6 +53,23 @@ describe Convention, type: :request do
       field_value = field.document_field_values.first
       expect(new_convention.document_fields.count).to eql(9)
       expect(field_value.value).to eql(title)
+    end
+
+    it '#update_field_titles' do
+      title = Faker::Lorem.sentence
+      attrs = convention.attributes_for_edit
+      convention_field =
+        attrs['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
+      field_value = convention_field['document_field_values'].first
+      expect(field_value['title']).to_not eql(title)
+      field_value['title'] = title
+      patch "/api/v1/projects/#{project.id}/conventions/update_field_titles",\
+        params: { convention: attrs },\
+        headers: credentials(project.user)
+      expect(response).to have_http_status(:success)
+      field = convention.document_fields.find_by(codification_kind: :originating_company)
+      field_value = field.document_field_values.first
+      expect(field_value.title).to eql(title)
     end
   end
 end

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import TextEditor from '../../elements/TextEditor'
+// import TextEditor from '../../elements/TextEditor'
 
 class FirstCard extends Component {
 
@@ -17,7 +17,7 @@ class FirstCard extends Component {
         <div className='container'>
           <div className='welcome-and-signin justify-content-center'>
             <div className='welocme-text'>
-              {authed && editable ?
+              {/*authed && editable ?
                 (
                   <React.Fragment>
                     <TextEditor text={firstLine} />
@@ -28,7 +28,9 @@ class FirstCard extends Component {
                     <div dangerouslySetInnerHTML={{__html: firstLine}} />
                     <div dangerouslySetInnerHTML={{ __html: secondLine}} />
                   </React.Fragment>
-                )}
+                )*/}
+              <div dangerouslySetInnerHTML={{ __html: firstLine }} />
+              <div dangerouslySetInnerHTML={{ __html: secondLine }} />
               <a href='#get-started-card' className='btn btn-light contact-us'>Contact us</a>
             </div>
           </div>

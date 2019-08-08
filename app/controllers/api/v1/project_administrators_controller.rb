@@ -7,26 +7,25 @@ class Api::V1::ProjectAdministratorsController < ApplicationController
   # inspect
   def show
     render json: @project_administrator,
-                 serializer: ProjectAdministratorSerializer,
            status: :ok
   end
 
   def index
     render json: @project.admins.order(id: :asc),
-                 each_serializer: ProjectAdministratorSerializer,
            status: :ok
   end
 
   def resend_confirmation
     @project_administrator.send_confirmation_email
-    success(:ok)
+    head :ok
   end
 
   def destroy
     if @project_administrator.remove
-      success(:ok)
+      head :ok
     else
-      error(@project_administrator)
+      render json: @project_administrator.errors,
+             status: :unprocessable_entity
     end
   end
 

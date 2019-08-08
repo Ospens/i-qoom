@@ -13,6 +13,9 @@ class ProjectAdministrator < ApplicationRecord
             email: true,
             presence: true
 
+  validates :email,
+            uniqueness: { scope: [:project_id] }
+
   before_create :add_user
 
   def send_confirmation_email

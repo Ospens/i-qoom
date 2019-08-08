@@ -11,7 +11,7 @@ module DocumentHelpers
     convention.build_default_fields
     convention.document_fields.each do |field|
       if field.select_field?
-        value = field.document_field_values.new(value: Faker::Name.initials(3), position: 1, title: '')
+        value = field.document_field_values.new(value: Faker::Name.initials, position: 1, title: '')
         if field.can_limit_by_value?
           field.document_rights.new(user: user,
                                     limit_for: :value,
@@ -32,11 +32,11 @@ module DocumentHelpers
       elsif field['codification_kind'] == 'revision_number'
         field['value'] = '1'
       elsif field['kind'] == 'text_field' || field['kind'] == 'textarea_field'
-        field['value'] = Faker::Name.initials(3)
+        field['value'] = Faker::Name.initials
       elsif field['kind'] == 'date_field'
         field['value'] = Time.now.to_s
       elsif field['kind'] == 'upload_field'
-        field['files'] = [fixture_file_upload('spec/fixtures/test.txt')]
+        field['file'] = fixture_file_upload('spec/fixtures/test.txt')
       end
     end
     if suffix

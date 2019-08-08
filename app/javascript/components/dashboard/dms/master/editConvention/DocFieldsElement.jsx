@@ -3,36 +3,36 @@ import { connect } from 'react-redux'
 import { Popup } from 'semantic-ui-react'
 import { Draggable } from 'react-beautiful-dnd'
 import classnames from 'classnames'
-import {
-  getFormSubmitErrors,
-  Field
-} from 'redux-form'
-import ReactSVG from 'react-svg'
+import { initialize } from 'redux-form'
 import DropDown from '../../../../../elements/DropDown'
-import {
-  setInitialValuesField,
-  removeField
-} from '../../../../../actions/conventionActions'
-import InputField from '../../../../../elements/InputField'
-import SelectField from '../../../../../elements/SelectField'
-import DatePickerField from '../../../../../elements/DatePickerField'
-import DropZoneField from '../../../../../elements/DropZoneField'
-import trashIcon from '../../../../../images/trash_bucket'
-import fieldBelow from '../../../../../images/upload-menu1'
-import fieldAbove from '../../../../../images/upload-menu2'
-import copyToFolderIcon from '../../../../../images/folder-empty'
+import { SelectComponent } from '../../../../../elements/SelectField'
+
+const actionConventions = index => (
+  [
+    {
+      title: 'New field above',
+      icon: 'section-above-icon',
+      offset: index
+    },
+    {
+      title: 'New field below',
+      icon: 'section-below-icon',
+      offset: index + 1
+    }
+  ]
+)
 
 class DocFieldsElement extends Component {
 
   editButton = row => {
-    const { setInitialValuesField, field, openInputForm } = this.props
+    const { input: { value }, openInputForm, initModal } = this.props
     return (
       <button
         type='button'
         className='btn edit-button'
         onClick={() => {
-          setInitialValuesField(field)
-          openInputForm(field.column, row, true)
+          initModal({ ...value, row, new_section: '' })
+          openInputForm()
         }}
       >
         Edit
@@ -60,124 +60,97 @@ class DocFieldsElement extends Component {
 
   renderInputByType = field => {
     const uniqName = `${field.column}_${field.row}`
+
     if (field.kind === 'upload_field') {
       return (
-        <Field
-          type='file'
-          name={uniqName}
-          id={uniqName}
-          component={DropZoneField}
-          isDisabled={true}
-        />
+        <div className='drop-zone-area disabled'>
+          <p>This is a drag & drop area.</p>
+          <p>You can also browse your files manually.</p>
+          <span>Click here to browse your files</span>
+        </div>
       )
     } else if (field.kind === 'select_field') {
       return (
-        <Field
-          name={uniqName}
+        <SelectComponent
+          className='form-control-select'
           id={uniqName}
-          options={field.document_field_values}
           placeholder={field.command}
-          component={SelectField}
+          options={[]}
           isDisabled={true}
         />
       )
     } else if (field.kind === 'textarea_field') {
       return (
-        <Field
-          component={InputField}
-          name={uniqName}
+        <textarea
+          className='form-control'
           id={uniqName}
           placeholder={field.command}
-          readOnly={true}
-        />
-      )
-    } else if (field.kind === 'date_field') {
-      return (
-        <Field
-          type='text'
-          name={uniqName}
-          id={uniqName}
-          placeholder={field.command}
-          component={DatePickerField}
           readOnly={true}
         />
       )
     } else {
       return (
-        <Field
-          component={InputField}
-          name={uniqName}
+        <input
+          className='form-control'
           id={uniqName}
           placeholder={field.command}
           readOnly={true}
+          type='text'
         />
       )
     }
   }
 
-  renderMenuItem = (icon, title, col, row) => {
-    const { openInputForm } = this.props
+  renderMenuItem = (icon, title, row, val = {}) => {
+    const { openInputForm, initModal, input: { value } } = this.props
 
     return (
       <li
         className='dropdown-item'
-        onClick={() => openInputForm(col, row)}
+        onClick={() => {
+          openInputForm()
+          initModal({ ...val, row, column: value.column })
+        }}
       >
-        <ReactSVG
-          svgStyle={{ height: 15, width: 15 }}
-          src={icon}
-        />
+        <i className={classnames('svg-icon gray', icon)} />
         <span className='item-text'>{title}</span>
       </li>
     )
   }
 
   renderCopyElement = () => {
-    const { index, column, field, setInitialValuesField } = this.props
-    return (
-      <div onClick={() => setInitialValuesField(field)}>
-        {this.renderMenuItem(copyToFolderIcon, 'Copy', column, index + 1)}
-      </div>
-    )
+    const { input: { value } } = this.props
+    const row = value.row + 1
+    const val = { ...value, id: undefined }
+    return this.renderMenuItem('copy-icon', 'Copy', row, val)
   }
 
   render() {
     const {
       index,
-      field,
       column,
       removeField,
       disabled,
-      submitErrors
+      input: { value },
+      meta: { touched, error }
     } = this.props
-
-    const actionConventions = [
-      {
-        title: 'New field above',
-        icon: fieldAbove,
-        offset: index
-      },
-      {
-        title: 'New field below',
-        icon: fieldBelow,
-        offset: index + 1
-      }
-    ]
-
-    const fieldErrors = submitErrors[`${column}${index}`]
-
+    
     return (
-      <Draggable draggableId={`column_${column}_${index}`} index={index} isDragDisabled={disabled}>
+      <Draggable
+        draggableId={`row_${column}_${index}`}
+        index={index}
+        isDragDisabled={disabled}
+      >
         {(provided, snapshot) => (
           <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
             className={classnames(
               'draggable-container',
               { 'dragging': snapshot.isDragging },
               { 'undraggable': disabled }
             )}
             ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
           >
             <div className='form-group'>
               <div className='d-flex'>
@@ -185,38 +158,35 @@ class DocFieldsElement extends Component {
                   dots={true}
                   className='dropdown-with-icon form-group_drop-down'
                 >
-                  {actionConventions.map(({ icon, title, offset }, i) => {
+                  {actionConventions(index).map(({ icon, title, offset }, i) => {
                     return (
                       <React.Fragment key={i}>
-                        {this.renderMenuItem(icon, title, column, offset)}
+                        {this.renderMenuItem(icon, title, offset)}
                       </React.Fragment>
                     )
                   })}
-                  {!field.codification_kind &&
+                  {!value.codification_kind &&
                   <React.Fragment>
                     {this.renderCopyElement()}
                     <li
                       className='dropdown-item'
                       onClick={() => removeField(column, index)}
                     >
-                      <ReactSVG
-                        svgStyle={{ height: 15, width: 15 }}
-                        src={trashIcon}
-                      />
+                      <i className='svg-icon trash-icon gray' />
                       <span className='item-text'>Delete</span>
                     </li>
                   </React.Fragment>
                   }
                 </DropDown>
-                <label htmlFor='document_title'>{field.title}</label>
+                <label>{value.title}</label>
                 {/* TODO: disable on the backed now */}
                 {/* this.accessList() */}
               </div>
-              {this.renderInputByType(field, index)}
+              {this.renderInputByType(value, index)}
               <div>
-                {fieldErrors && 
+                {touched && error && 
                 <div className='invalid-feedback convention-feedback'>
-                  {fieldErrors.error}
+                  {error}
                 </div>}
                 {this.editButton(index)}
               </div>
@@ -229,12 +199,7 @@ class DocFieldsElement extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setInitialValuesField: (field) => dispatch(setInitialValuesField(field)),
-  removeField: (column, row) => dispatch(removeField(column, row))
+  initModal: values => dispatch(initialize('convention_input_form', values)),
 })
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('convention_form')(state)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(DocFieldsElement)
+export default connect(null, mapDispatchToProps)(DocFieldsElement)

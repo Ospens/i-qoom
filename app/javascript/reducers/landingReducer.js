@@ -6,6 +6,10 @@ import commonFileText from '../images/common-file-text_big-1.svg'
 import robotHead from '../images/robot-head-1.svg'
 import cogBrowser from '../images/cog-browser.svg'
 import conversationImg from '../images/conversation-chat-bubble-1.svg'
+import photo1 from '../images/photo_1.jpg'
+import photo2 from '../images/photo_2.jpg'
+import photo3 from '../images/photo_3.jpg'
+import photo4 from '../images/photo_4.jpg'
 
 const initialState = {
   firstCard: {
@@ -35,7 +39,7 @@ const initialState = {
     },
     secondTab: {
       title: 'Project Managment',
-      description: 'Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling'
+      description: '<h4><span class="text-small">Project Managment</span></h4>Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling'
     },
     cards: [
       {
@@ -68,34 +72,38 @@ const initialState = {
     description: '<h3 style="text-align:center;"><span class="text-big"><span style="color:#26276a;">i-Qoom Reviews</span></span></h3><p style="text-align:center;">Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>',
     cards: [
       {
-        name: '<h6>Humayra Samiha</h6>',
+        name: '<h6>Donald Trump</h6>',
+        photo: photo1,
         country: 'California, USA',
         stars: 5,
-        desription: '<p style="text-align:center;"><span class="text-big">Crevice kelpfish</span></p><p style="text-align:center;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
+        desription: '<p><span class="text-big">Cares about employees, work/life balance, culture</span></p><p>Great management, mentorship, and overall culture! A very youthful, casual vibe. I love how they have team meetings every morning discussing goals. The communication is excellent. It seems if you excel, you can get promoted very quickly.'
+      },
+      {
+        name: '<h6>Sarah Mitchell</h6>',
+        photo: photo2,
+        country: 'Hamburg, GER',
+        stars: 5,
+        desription: '<p><span class="text-big">Productive, energetic company</span></p><p>It is a great place to work. Hard to get your foot in the door.Extremely hard.But once you do, you have every opportunity to nail your interview and make a difference..'
+      },
+      {
+        name: '<h6>Elon Mask</h6>',
+        photo: photo3,
+        country: 'Stockhorm, SE',
+        stars: 5,
+        desription: '<p><span class="text-big">Good Experience</span></p><p>I loved this job and the people there. I still talk to all my friends there and it’s very easy to get the hang of it. Moving up will be easy if you learn quickly.'
+      },
+      {
+        name: '<h6>Humayra Samiha</h6>',
+        photo: photo4,
+        country: 'Stockhorm, SE',
+        stars: 5,
+        desription: '<p><span class="text-big">The good things</span></p><p>The opportunities available to move from project to project and the support given. Also the range of workshops and support available to improve your career.'
       },
       {
         name: '<h6>Humayra Samiha</h6>',
         country: 'Hamburg, GER',
         stars: 5,
-        desription: '<p style="text-align:center;"><span class="text-big">Crevice kelpfish</span></p><p style="text-align:center;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
-      },
-      {
-        name: '<h6>Humayra Samiha</h6>',
-        country: 'Stockhorm, SE',
-        stars: 5,
-        desription: '<p style="text-align:center;"><span class="text-big">Crevice kelpfish</span></p><p style="text-align:center;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
-      },
-      {
-        name: '<h6>Humayra Samiha</h6>',
-        country: 'Stockhorm, SE',
-        stars: 5,
-        desription: '<p style="text-align:center;"><span class="text-big">Crevice kelpfish</span></p><p style="text-align:center;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
-      },
-      {
-        name: '<h6>Humayra Samiha</h6>',
-        country: 'Hamburg, GER',
-        stars: 5,
-        desription: '<p style="text-align:center;"><span class="text-big">Crevice kelpfish</span></p><p style="text-align:center;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
+        desription: '<p><span class="text-big">Crevice kelpfish</span></p><p>Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
       }
     ]
   },

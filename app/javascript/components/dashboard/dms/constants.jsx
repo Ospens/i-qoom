@@ -1,47 +1,41 @@
-import emailSendIcon from '../../../images/email-action-send-2'
-import copyToFolderIcon from '../../../images/folder-empty'
-import showDetailsIcon from '../../../images/common-file-text'
-import downloadDetailsIcon from '../../../images/download-button'
-import reviewDocIcon from '../../../images/single-neutral-actions-text'
-import editDocIcon from '../../../images/common-file-edit'
-import revisionIcon from '../../../images/Revise_2'
-import allDocIcon from '../../../images/folder-image'
-import myDocIcon from '../../../images/folder-image-1'
-
-export const actionDDitems = [
-  {
-    title: 'Email',
-    icon: emailSendIcon
-  },
-  {
-    title: 'Copy to folder',
-    icon: copyToFolderIcon
-  },
-  {
-    title: 'Show details',
-    icon: showDetailsIcon
-  },
-  {
-    title: 'Download Files',
-    icon: downloadDetailsIcon
-  },
-  {
-    title: 'Edit document',
-    icon: editDocIcon
-  },
-  {
-    title: 'Add revision',
-    icon: revisionIcon
-  },
-  {
-    title: 'Review document',
-    icon: reviewDocIcon
-  },
-  {
-    title: 'Download as list',
-    icon: downloadDetailsIcon
-  }
-]
+export const actionDDitems = (projectId, documentId) => (
+  [
+    {
+      title: 'Email',
+      icon: 'email-action-icon-2'
+    },
+    {
+      title: 'Copy to folder',
+      icon: 'folder-icon'
+    },
+    {
+      title: 'Show details',
+      icon: 'common-file-icon',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}`
+    },
+    {
+      title: 'Download Files',
+      icon: 'download-icon'
+    },
+    {
+      title: 'Edit document',
+      icon: 'file-edit-icon',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}/edit`
+    },
+    {
+      title: 'Add revision',
+      icon: 'revision-icon'
+    },
+    {
+      title: 'Review document',
+      icon: 'review-icon'
+    },
+    {
+      title: 'Download as list',
+      icon: 'download-icon'
+    }
+  ]
+)
 
 export const columns = [
   { title: 'DOC-ID', divider: true },
@@ -49,8 +43,10 @@ export const columns = [
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },
   { title: 'Additional', divider: true },
-  { title: 'Revision', divider: true },
-  { title: 'Version', divider: true }
+  { title: 'Revision date', divider: true },
+  { title: 'Dicipline', divider: true },
+  { title: 'Document types', divider: true },
+  { title: 'Originating companies', divider: true }
 ]
 
 export const DtOptions = [
@@ -114,10 +110,10 @@ export const reviewStatuses = [
 export const foldersItems = [
   {
     title: 'All documents',
-    icon: allDocIcon
+    icon: 'folder-icon-2'
   },
   {
     title: 'My documents',
-    icon: myDocIcon
+    icon: 'folder-icon-3'
   }
 ]

@@ -58,6 +58,8 @@ const IndicatorSeparator = ({ innerProps }) => {
 }
 
 const checkValue = (options, input) => {
+  if (!options) return {}
+  
   if (typeof input.value === 'string' || typeof input.value === 'number') {
     return options.filter(option => input.value === option.value)
   } else if (typeof input.value === 'object' && Object.keys(input.value)) {
@@ -95,6 +97,7 @@ export const colourStyles = errorInfo => {
   }
   return colourStyles
 }
+
 export const SelectComponent = props => (
   <Select
     {...props}
@@ -111,6 +114,7 @@ const SelectField = ({
   errorField,
   label,
   placeholder,
+  className,
   isDisabled = false,
   isMulti = false,
   meta: { touched, error }
@@ -122,7 +126,7 @@ const SelectField = ({
       : false
       
   return (
-    <div>
+    <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
       <SelectComponent
         {...input}
