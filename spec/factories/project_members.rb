@@ -16,8 +16,11 @@ FactoryBot.define do
           sequence(:email) { Faker::Internet.email }
           first_name { Faker::Name.first_name }
           last_name  { Faker::Name.last_name }
-          factory :project_member do
+          factory :project_member_pending do
             creation_step { "pending" }
+            factory :project_member do
+              creation_step { "active" }
+            end
           end
         end
       end

@@ -48,6 +48,19 @@ en:
               project_admin_is_not_found:
                 "problem: the project admin is not found"
               emails_do_not_match: "problem: Emails do not match"
+              project_admin_has_already_been_confirmed:
+                "problem: the project admin has already been confirmed"
+        project_member_confirmation:
+          attributes:
+            token:
+              project_member_is_not_found:
+                "problem: the member is not found"
+              emails_do_not_match: "problem: Emails do not match"
+              project_member_cant_be_confirmed:
+                "problem: the member cant be confirmed because his
+                data is not filled properly"
+              project_member_has_already_been_confirmed:
+                "problem: the member has already been confirmed"
   documents:
     list:
       codification_string: Doc-ID

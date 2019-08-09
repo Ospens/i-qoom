@@ -38,7 +38,7 @@ class Api::V1::ProjectMembersController < ApplicationController
     end
   end
 
-  def update   
+  def update
     if @project_member.update(project_member_params)
       render json: @project_member,
              status: :created
@@ -46,10 +46,6 @@ class Api::V1::ProjectMembersController < ApplicationController
       render json: @project_member.errors,
              status: :unprocessable_entity
     end
-  end
-
-  def invite
-    #ProjectMember.invite(params[project_member_ids])
   end
 
   private

@@ -80,4 +80,17 @@ RSpec.describe ProjectMember, type: :model do
     end
   end
 
+  it "send_confirmation_email" do
+    project_member =
+      FactoryBot.create(:project_member,
+                        creation_step: [:employment_type,
+                                        :company_type,
+                                        :company_data,
+                                        :details,
+                                        :pending,
+                                        :active].sample)
+    project_member.send_confirmation_email
+    expect(project_member.confirmation_sent_at).to be_present
+  end
+
 end

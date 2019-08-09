@@ -33,6 +33,22 @@ RSpec.describe ProjectAdministrator, type: :model do
     end
   end
 
+  it "send_confirmation_email" do
+    project_admin = FactoryBot.create(:project).admins.first
+    expect(project_admin.first_confirmation_sent_at).to be_nil
+    expect(project_admin.confirmation_resent_at).to be_nil
+    expect(project_admin.status).to eq("unconfirmed")
+
+    project_admin.send_confirmation_email
+    expect(project_admin.first_confirmation_sent_at).to be_present
+    expect(project_admin.confirmation_resent_at).to be_nil
+    expect(project_admin.status).to eq("awaiting_confirmation")
+
+    project_admin.send_confirmation_email
+    expect(project_admin.confirmation_resent_at).to be_present
+    expect(project_admin.status).to eq("awaiting_confirmation")
+  end
+
   context "remove admin" do
     let(:project) { FactoryBot.create(:project) }
     it "admin should be removed" do

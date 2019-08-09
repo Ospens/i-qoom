@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 2019_08_09_093038) do
     t.integer "discipline_id"
     t.string "job_title"
     t.integer "role_id"
+    t.datetime "confirmation_sent_at"
   end
 
   create_table "projects", force: :cascade do |t|

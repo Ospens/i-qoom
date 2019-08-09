@@ -77,6 +77,16 @@ class ProjectMember < ApplicationRecord
                         maximum: 255 }
   end
 
+  def send_confirmation_email
+    self.confirmation_sent_at = Time.now
+    ApplicationMailer.send_project_member_confirmation(self).deliver_now
+    self.save
+  end
+
+  def confirmation_token
+    ::JsonWebToken.encode(member_id: id, email: email)
+  end
+
   private
 
   def update_creation_step_to_pending

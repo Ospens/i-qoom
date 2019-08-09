@@ -71,6 +71,26 @@ class Api::V1::ProjectsController < ApplicationController
     end
   end
 
+  def invite
+    if @project.invite_members(params[:project_member_ids])
+      head :ok
+    else
+      head :unprocessable_entity
+    end
+  end
+
+  def confirm_member
+    project_member_confirmation =
+      ProjectMemberConfirmation.new(token: params[:token],
+                                    signed_in_user: signed_in_user)
+    if project_member_confirmation.save
+      head :created
+    else
+      render json: project_member_confirmation.errors,
+             status: :unprocessable_entity
+    end
+  end
+
   private
 
   def project_params
