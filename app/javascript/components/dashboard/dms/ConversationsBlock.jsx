@@ -89,7 +89,7 @@ export default class ConversationsBlock extends Component {
           <DropDown
             dots={true}
             className='dropdown-with-icon dropleft'
-            defaultValues={actionDDitems}
+            defaultValues={actionDDitems()}
           />
         </div>
         <div className="conversations__messages-block">

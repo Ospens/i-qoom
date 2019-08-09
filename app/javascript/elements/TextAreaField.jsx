@@ -1,19 +1,31 @@
 import React from 'react'
-import { Field } from 'redux-form'
 
-function TextAreaField({ errorField = {}, className, label, ...input }) {
-  const errorInfo = errorField[input.id]
+const TextAreaField = ({
+  input,
+  errorField = {},
+  className,
+  label,
+  meta: { touched, error },
+  ...props
+}) => {
+  const errorInfo = errorField[input.name]
+
   return (
     <div className={className}>
-      {label && <label htmlFor={input.name}>{label}</label>}
-      <Field
+      {label && <label htmlFor={input.id}>{label}</label>}
+      <textarea
         {...input}
-        component='textarea'
-        className={`form-control ${errorInfo ? ' is-invalid' : ''}`}
+        {...props}
+        className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
       />
-      <div className='invalid-feedback'>
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+      {touched &&
+        <div className='invalid-feedback'>
+          {error
+            ? error
+            : errorInfo
+              ? errorInfo[0]
+              : ''}
+        </div>}
     </div>
   )
 }

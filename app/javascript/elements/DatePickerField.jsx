@@ -1,12 +1,15 @@
 
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
+import classnames from 'classnames'
 import moment from 'moment'
 
 const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => {
   const [date, toggleDate] = useState(null)
+  const mainClass = classnames({ 'is-invalid': touched && error })
+  
   return (
-    <div>
+    <div className={mainClass}>
       {label && <label>{label}</label>} 
       <DatePicker
         {...input}
@@ -22,8 +25,11 @@ const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: {
         }}
         placeholderText={placeholder ? placeholder : ''}
         readOnly={readOnly}
-        />
-      {touched && error && <span>{error}</span>}
+      />
+      {touched && error &&
+      <div className='invalid-feedback'>
+        {error}
+      </div>}
     </div>
   )
 }

@@ -1,22 +1,14 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
 import { Redirect } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
-import Left from '../../images/arrow-button-left'
 
 class SignIn extends Component {
   state = {
     loginSuccess: false
-  }
-
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
   }
 
   handleSubmit = values => {
@@ -65,11 +57,8 @@ class SignIn extends Component {
                   <div className='btn-toolbar pt-4'>
                     <div className='btn-group justify-content-center'>
                       <Link className='col-6 btn btn-back mx-auto' to='/'>
-                          <ReactSVG
-                            svgStyle={{ height: 15, width: 15, marginRight: 10 }}
-                            src={Left}
-                          />
-                          Back
+                        <i className='svg-icon arrow-left-icon' />
+                        Back
                       </Link>
                     </div>
                     <div className='btn-group justify-content-center'>

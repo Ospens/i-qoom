@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { getFormSubmitErrors } from 'redux-form'
-import ReactSVG from 'react-svg'
-import Left from '../../../images/arrow-button-left'
 import CompanyFields from '../../../elements/forms/CompanyFields'
 import CheckboxField from '../../../elements/CheckboxField'
 
@@ -14,10 +12,7 @@ class CompanyData extends Component {
     return (
       <div className='modal-footer'>
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
-          <ReactSVG
-            svgStyle={{ height: 10, width: 10, marginRight: 5 }}
-            src={Left}
-          />
+          <i className='svg-icon arrow-left-icon' />
           Back
         </button>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>

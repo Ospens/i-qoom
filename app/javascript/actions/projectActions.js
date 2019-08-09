@@ -61,7 +61,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
     axios.put(`/api/v1/projects/${values.id}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
-        if (afterUpdate) afterUpdate({ ...response.data.project[0] })
+        if (afterUpdate) afterUpdate(response.data)
       })
       .catch(({ response }) => {
         errorNotify('Something went wrong')
@@ -86,7 +86,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
     axios.post('/api/v1/projects', request, headers)
       .then(response => {
         dispatch(projectCreated(response.data))
-        afterCreate({ ...response.data.project[0] })
+        afterCreate(response.data)
       })
       .catch(() => {
         errorNotify('Something went wrong')
