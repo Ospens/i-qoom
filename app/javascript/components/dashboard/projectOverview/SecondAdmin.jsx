@@ -2,9 +2,6 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { getFormSubmitErrors, formValueSelector, isValid } from 'redux-form'
 import AdministratorFields from '../../../elements/forms/AdministratorFields'
-import ReactSVG from 'react-svg'
-import Left from '../../../images/arrow-button-left'
-
 
 const renderSubmitButtons = (secondAdmin, props) => {
   const { closeModal, changeStep, isValid } = props
@@ -13,10 +10,7 @@ const renderSubmitButtons = (secondAdmin, props) => {
     <div className='modal-footer'>
       {!secondAdmin &&
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
-          <ReactSVG
-            svgStyle={{ height: 10, width: 10, marginRight: 5 }}
-            src={Left}
-          />
+          <i className='svg-icon arrow-left-icon' />
           Back
         </button>}
       <button

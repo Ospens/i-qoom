@@ -1,36 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import projectsIcon from '../../images/streamline-icon-folder-file'
-import calendarIcon from '../../images/streamline-icon-calendar-1'
-import timeSheetIcon from '../../images/streamline-icon-stopwatch'
-import taskListIcon from '../../images/streamline-icon-task-list-edit'
-import resourcePlanningIcon from '../../images/streamline-icon-module-hand-puzzle'
 import { startFetchProjects } from '../../actions/projectActions'
-import blueCheck from '../../images/add_1'
 
 const menuListFirstRow = [
   {
     title: undefined,
-    img: undefined,
+    icon: undefined,
   },
   {
     title: 'Time Sheet',
-    img: timeSheetIcon,
+    icon: 'streamline-stopwatch-icon',
   },
   {
     title: 'Task List',
-    img: taskListIcon,
+    icon: 'streamline-task-list-icon',
   },
   {
     title: 'Resource Planning',
-    img: resourcePlanningIcon
+    icon: 'streamline-module-hand-icon'
   },
   {
     title: 'Calendar',
-    img: calendarIcon
+    icon: 'streamline-calendar-icon'
   }
 ]
 
@@ -52,10 +45,9 @@ class LandingMenu extends Component {
           <div className='landing-card__title-block'>
             <span>New project</span>
             <div className='d-flex justify-content-center'>
-              <ReactSVG
-                svgStyle={{ height: 13, width: 13, marginRight: 5 }}
-                src={blueCheck}
-              />
+              <div>
+                <i className='svg-icon blue-plus-icon mr-2' />
+              </div>
               <p className='new-project'>Add project</p>
             </div>
           </div>
@@ -78,20 +70,17 @@ class LandingMenu extends Component {
     const mainContentClass = classnames('landing-menu__card-content', { 'disable': projectsOpen })
 
     return (
-      list.map(({ title, img, project }, i) => (
+      list.map(({ title, icon, project }, i) => (
         <div className='landing-menu__card' key={i}>
           <div className={mainContentClass}>
             <div className='landing-card__title-block'>
-              {img && 
-                <React.Fragment>
-                  <span>{title}</span>
-                  <ReactSVG
-                    src={img}
-                    svgStyle={{ height: 40, width: 50 }}
-                    className='landing-menu__card-content__icon'
-                  />
-                </React.Fragment>
-              }
+              {icon && 
+              <React.Fragment>
+                <span>{title}</span>
+                <div>
+                  <i className={classnames('svg-icon gray blue', icon)} />
+                </div>
+              </React.Fragment> }
             </div>
           </div>
           <div className={contentClass}>
@@ -123,11 +112,9 @@ class LandingMenu extends Component {
             <div className='landing-menu__card-content'>
               <div className='landing-card__title-block'>
                 <span>Projects</span>
-                <ReactSVG
-                  src={projectsIcon}
-                  svgStyle={{ height: 40, width: 50 }}
-                  className='landing-menu__card-content__icon'
-                />
+                <div>
+                  <i className='svg-icon streamline-folder-icon blue' />
+                </div>
               </div>
             </div>
           </div>

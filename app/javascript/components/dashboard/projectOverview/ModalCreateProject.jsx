@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { destroy, reduxForm, formValueSelector, FormSection } from 'redux-form'
 import NewModal from '../../../elements/Modal'
-import ReactSVG from 'react-svg'
-import plus from '../../../images/add_1'
 import Terms from './Terms'
 import {
   startCreateProject,
@@ -38,7 +36,6 @@ class ModalCreateProject extends Component {
 
   changeStep = (increase) => {
     const { step } = this.state
-    const { change } = this.props
 
     this.setState({ step: step + increase })
   }
@@ -75,6 +72,7 @@ class ModalCreateProject extends Component {
     } else if (sameBillingAddress && step === 5) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))
     } else if (!sameBillingAddress && step === 5) {
+      delete values.company_data.billing_address
       return updateProject(values, (val) => this.afterUpdate(val, 6))
     } else if (step === 6) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))
@@ -142,10 +140,7 @@ class ModalCreateProject extends Component {
   renderTrigger = () => (
     <div className='col-sm-4' onClick={this.handleOpen}>
       <div className='project-card blank'>
-        <ReactSVG
-          svgStyle={{ height: 20, width: 20 }}
-          src={plus}
-        />
+        <i className='svg-icon blue-plus-icon' />
         <label>Create a new project</label>
       </div>
     </div>

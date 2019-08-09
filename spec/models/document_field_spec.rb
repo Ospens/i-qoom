@@ -295,6 +295,7 @@ RSpec.describe DocumentField, type: :model do
       field.file.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
       expect(document).to be_valid
+      allow(document).to receive(:first_document_in_chain?).and_return(true)
       field.file.purge
       expect(document).to_not be_valid
     end

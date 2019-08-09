@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import UserAvatar from 'react-user-avatar'
 import ReactSVG from 'react-svg'
-import dots from '../../../images/dots-horizontal'
 import plus from '../../../images/add_1'
 import close from '../../../images/close'
 import ConversationsBlock from './ConversationsBlock'
@@ -15,10 +14,7 @@ class DocumentPopup extends Component {
       <div className='documents-in-review-block col-4'>
         <div className='documents-in-review-block__title'>
           <label>Documents in review</label>
-          <ReactSVG
-            svgStyle={{ height: 20, width: 20, marginLeft: 'auto' }}
-            src={dots}
-          />
+          <div className='dots-container'><i className='svg-icon dots-icon' /></div>
         </div>
         <input type='text' className='search-input' placeholder='Search' />
         <div className='documents-in-review__doc-list'>

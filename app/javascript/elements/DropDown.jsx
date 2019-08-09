@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
 import classnames from 'classnames'
-import dots from '../images/dots-horizontal'
 
 class DropDown extends Component {
 
@@ -24,15 +23,7 @@ class DropDown extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
-  renderDotsIcon = () => {
-    const { dotsStyles } = this.props
-    return (
-      <ReactSVG
-        svgStyle={dotsStyles ? dotsStyles : { height: 20, width: 20 }}
-        src={dots}
-      />
-    )
-  }
+  renderDotsIcon = () => <div className='dots-container'><i className='svg-icon dots-icon' /></div>
 
   renderDefaultItems = actionDDitems => (
     actionDDitems.map(({ icon, title, onClick }, i) => (
@@ -58,7 +49,8 @@ class DropDown extends Component {
   }
 
   handleClickOutside = event => {
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target.closest('.btn-group'))) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target.closest('.btn-group'))
+        || event.target.className.includes('cancel-button')) {
       this.setState({ isOpen: false })
     }
   }
@@ -82,7 +74,6 @@ class DropDown extends Component {
       { [ulClass]: ulClass }
     )
     const iClass = classnames('arrow ml-4', { 'up': isOpen }, { 'down': !isOpen })
-    // const customBtnClass = btnClass ? btnClass : 'btn btn-white-blue'
     const customBtnClass = classnames(
       { 'btn btn-white-blue': !btnClass },
       { [btnClass]: btnClass },

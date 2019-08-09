@@ -3,13 +3,11 @@ class Api::V1::ProjectsController < ApplicationController
   
   def index
     render json: @projects,
-                 each_serializer: ProjectSerializer,
            status: :ok
   end
 
   def show
     render json: @project,
-                 serializer: ProjectSerializer,
            status: :ok
   end
 
@@ -18,7 +16,7 @@ class Api::V1::ProjectsController < ApplicationController
   # the other steps are "update" method
   # and on admins step it is better to have request like this:
   # { "project" :
-  #   { "admins_attributes":
+  #   { "admins":
   #     {
   #       "id": "",
   #       "email": "someemailaddress@gmail.com"
@@ -35,8 +33,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     if @project.save
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer),
+      render json: @project,
              status: :created
     else
       render json: @project.errors,
@@ -46,8 +43,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def update
     if @project.update(project_params)
-      render json: ActiveModel::Serializer::CollectionSerializer.new([@project],
-                                         serializer: ProjectSerializer),
+      render json: @project,
              status: :created
     else
       render json: @project.errors,

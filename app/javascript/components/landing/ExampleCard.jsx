@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
 import Arrows from '../../elements/Arrows'
-import Left from '../../images/arrow-button-left'
 import img1 from '../../images/tmpScreen.png'
 import img2 from '../../images/tmpScreen2.png'
 import img3 from '../../images/tmpScreen3.png'
@@ -49,10 +47,7 @@ class ExampleCard extends Component {
           })}
         </Slider>
         <button type='button' className='btn btn-back' onClick={toggleExamples}>
-          <ReactSVG
-            svgStyle={{ height: 15, width: 15, marginRight: 10, marginBottom: 3 }}
-            src={Left}
-          />
+          <i className='svg-icon arrow-left-icon' />
           Back
         </button>
       </section>
