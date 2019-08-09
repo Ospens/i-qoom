@@ -194,6 +194,10 @@ class Document < ApplicationRecord
     document_fields.find_by(codification_kind: :revision_date).value
   end
 
+  def first_document_in_chain?
+    !revision.document_main.revisions.first_revision.versions.any?
+  end
+
   private
 
   def original_document
