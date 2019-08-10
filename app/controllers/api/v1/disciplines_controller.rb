@@ -40,6 +40,6 @@ class Api::V1::DisciplinesController < ApplicationController
   private
 
   def discipline_params
-    params.fetch(:discipline, { }).permit(:name)
+    params.fetch(:discipline, { }).permit(:title)
   end
 end

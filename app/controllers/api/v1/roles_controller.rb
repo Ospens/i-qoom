@@ -40,6 +40,6 @@ class Api::V1::RolesController < ApplicationController
   private
 
   def role_params
-    params.fetch(:role, { }).permit(:name)
+    params.fetch(:role, { }).permit(:title)
   end
 end
