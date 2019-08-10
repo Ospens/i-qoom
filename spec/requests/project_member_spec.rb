@@ -12,12 +12,23 @@ describe "ProjectMember", type: :request do
 
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
-    context "index" do
+    context "active" do
       it 'should get a status "success" and render project_members' do
-        get "/api/v1/projects/#{project.id}/members",
+        get "/api/v1/projects/#{project.id}/members/active",
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["members"].map { |h| h["id"] }).to include(*project.members.map(&:id))
+        expect(json["members"].map { |h| h["id"] }).to\
+          include(*project.members.creation_step_active.map(&:id))
+      end
+    end
+
+    context "pending" do
+      it 'should get a status "success" and render project_members' do
+        get "/api/v1/projects/#{project.id}/members/pending",
+             headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json["members"].map { |h| h["id"] }).to\
+          include(*project.members.creation_step_pending.map(&:id))
       end
     end
     # context "show" do
@@ -141,7 +152,7 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("completed")
+          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("pending")
           expect(ProjectMember.find_by(id: project_member_company_data.id).discipline).to be_truthy
         end
         it 'should get a status "error"' do
@@ -151,15 +162,20 @@ describe "ProjectMember", type: :request do
                       }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("completed")
+          expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("pending")
         end
       end
     end
   end
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
-    it 'index' do
-      get "/api/v1/projects/#{project.id}/members",
+    it 'active' do
+      get "/api/v1/projects/#{project.id}/members/active",
+           headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'pending' do
+      get "/api/v1/projects/#{project.id}/members/pending",
            headers: headers
       expect(response).to have_http_status(:forbidden)
     end

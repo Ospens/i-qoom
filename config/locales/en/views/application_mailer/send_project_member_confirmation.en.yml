@@ -1,0 +1,7 @@
+en:
+  application_mailer:
+    send_project_member_confirmation:
+      you_have_been_added: Hello %{username}, you've been invited to
+        a project.
+        To confirm it, click the link bellow.
+      confirm_invitation: Confirm invitation

@@ -1,4 +1,4 @@
-class ProjectAdministratorConfirmation
+class ProjectMemberConfirmation
   include ActiveModel::Model
   include ActiveModel::Validations
 
@@ -10,14 +10,14 @@ class ProjectAdministratorConfirmation
     end
 
     @data = ::JsonWebToken.decode(token) || {}
-    @project_admin =
-      ProjectAdministrator.find_by(id: @data["admin_id"])
+    @project_member =
+      ProjectMember.find_by(id: @data["member_id"])
   end
 
   def save
     if valid?
-      if @project_admin.update(user: signed_in_user)
-        @project_admin.active!
+      if @project_member.update(user: signed_in_user)
+        @project_member.creation_step_active!
       end
     else
       false
@@ -28,8 +28,9 @@ class ProjectAdministratorConfirmation
                         :signed_in_user
 
   validate :token_validity,
-           :project_admin_exists,
+           :project_member_exists,
            :emails_match,
+           :pending_status,
            :already_confirmed
 
   def persisted?
@@ -42,8 +43,8 @@ class ProjectAdministratorConfirmation
     errors.add(:token, :invalid) unless ::JsonWebToken.decode(token).present?
   end
 
-  def project_admin_exists
-    errors.add(:token, :project_admin_is_not_found) unless @project_admin.present?
+  def project_member_exists
+    errors.add(:token, :project_member_is_not_found) unless @project_member.present?
   end
 
   def emails_match
@@ -52,10 +53,16 @@ class ProjectAdministratorConfirmation
     end
   end
 
-  def already_confirmed
-    if @project_admin.try(:active?)
-      errors.add(:token, :project_admin_has_already_been_confirmed)
+  def pending_status
+    unless @project_member.try(:creation_step_pending?) ||
+           @project_member.try(:creation_step_active?)
+      errors.add(:token, :project_member_cant_be_confirmed)
     end
   end
 
+  def already_confirmed
+    if @project_member.try(:creation_step_active?)
+      errors.add(:token, :project_member_has_already_been_confirmed)
+    end
+  end
 end

@@ -16,8 +16,8 @@ describe "Discipline", type: :request do
         get "/api/v1/projects/#{project.id}/disciplines",
             headers: headers
         expect(response).to have_http_status(:success)
-        expect(json.map { |h| h["name"] }).to\
-          include(*project.disciplines.map(&:name))
+        expect(json.map { |h| h["title"] }).to\
+          include(*project.disciplines.map(&:title))
       end
     end
     context "edit" do
@@ -25,20 +25,20 @@ describe "Discipline", type: :request do
         get "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}/edit",
             headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["name"]).to include(*discipline.name)
+        expect(json["title"]).to include(*discipline.title)
       end
     end
     context "create" do
       it 'should get a status "success" and create a discipline' do
         post "/api/v1/projects/#{project.id}/disciplines",
-             params: { discipline: { name: "some field" } }.to_json,
+             params: { discipline: { title: "some field" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
         expect(project.disciplines.count).to eq(11)
       end
       it "should get a status 'error' and don't create a discipline" do
         post "/api/v1/projects/#{project.id}/disciplines",
-             params: { discipline: { name: " " } }.to_json,
+             params: { discipline: { title: " " } }.to_json,
              headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(project.disciplines.count).to eq(10)
@@ -47,17 +47,17 @@ describe "Discipline", type: :request do
     context "update" do
       it 'should get a status "success" and update a discipline' do
         patch "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
-             params: { discipline: { name: "new name" } }.to_json,
+             params: { discipline: { title: "new title" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json["name"]).to eq("new name")
+        expect(json["title"]).to eq("new title")
       end
       it "should get a status 'error' and don't update the discipline" do
         patch "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
-             params: { discipline: { name: " " } }.to_json,
+             params: { discipline: { title: " " } }.to_json,
              headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(discipline.name).not_to eq(" ")
+        expect(discipline.title).not_to eq(" ")
       end
     end
     context "destroy" do
@@ -83,13 +83,13 @@ describe "Discipline", type: :request do
     end
     it 'create' do
       post "/api/v1/projects/#{project.id}/disciplines",
-           params: { discipline: { name: "some field" } }.to_json,
+           params: { discipline: { title: "some field" } }.to_json,
            headers: headers
       expect(response).to have_http_status(:forbidden)
     end
     it 'update' do
       patch "/api/v1/projects/#{project.id}/disciplines/#{discipline.id}",
-            params: { discipline: { name: "some field" } }.to_json,
+            params: { discipline: { title: "some field" } }.to_json,
             headers: headers
       expect(response).to have_http_status(:forbidden)
     end
