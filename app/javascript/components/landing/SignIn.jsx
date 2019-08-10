@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Field, getFormSubmitErrors, reduxForm } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import { Redirect } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
+import { required } from '../../elements/validations'
 
 class SignIn extends Component {
   state = {
@@ -17,7 +18,6 @@ class SignIn extends Component {
   }
 
   render() {
-    const { submitErrors } = this.props
     const { loginSuccess } = this.state
 
     const openClass = '' //`${showSignInSlider ? 'show-slider' : ''}`
@@ -39,8 +39,8 @@ class SignIn extends Component {
                       name='login'
                       id='login'
                       label='Type in e-mail adress or I-qoom ID'
-                      errorField={submitErrors}
                       placeholder='Company name'
+                      validate={[required]}
                     />
                   </div>
                   <div className='form-group pt-4'>
@@ -50,8 +50,8 @@ class SignIn extends Component {
                       name='password'
                       id='password'
                       label='Type in password'
-                      errorField={submitErrors}
                       placeholder='Password'
+                      validate={[required]}
                     />
                   </div>
                   <div className='btn-toolbar pt-4'>
@@ -79,8 +79,4 @@ const mapDispatchToProps = dispatch => ({
   signInUser: values => dispatch(signInUser(values))
 })
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('sign_in')(state)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'sign_in' })(SignIn))
+export default connect(null, mapDispatchToProps)(reduxForm({ form: 'sign_in' })(SignIn))

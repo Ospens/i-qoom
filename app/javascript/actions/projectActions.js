@@ -65,7 +65,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
       })
       .catch(({ response }) => {
         errorNotify('Something went wrong')
-        throw new SubmissionError(response.data.error_messages)
+        throw new SubmissionError(response.data)
       })
   )
 }
@@ -156,7 +156,7 @@ export const starUpdateAdmin = values => (dispatch, getState) => {
       })
       .catch(response => {
         errorNotify('Something went wrong')
-        throw new SubmissionError(response.data.error_messages)
+        throw new SubmissionError(response.data)
       })
   )
 }

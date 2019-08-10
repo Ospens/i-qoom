@@ -329,9 +329,8 @@ button:disabled {
   }
 
   .new-project-modal {
-    // max-width: 490px;
     h4 {
-      padding-left: 30px;
+      padding-left: 45px;
       padding-top: 30px;
       font-weight: 600;
     }
@@ -1479,5 +1478,22 @@ i.arrow {
   label.blue {
     color: #2196F3 !important;
     cursor: pointer;
+  }
+}
+
+.item-block {
+  border-bottom: 1px solid lightgray;
+  
+  & > div {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transition: 0s ease-in-out;
+    border-radius: 5px;
+
+    .item-block__title {
+      display: block;
+      width: 100%;
+    }
   }
 }

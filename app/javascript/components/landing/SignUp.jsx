@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Field, reduxForm, getFormSubmitErrors } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import { signUpUser } from '../../actions/userActions'
@@ -29,10 +29,7 @@ class SignUp extends Component {
 
   prevStep = () => this.setState({step: 1})
 
-  renderFirstStep = () => {
-  const { submitErrors } = this.props
-
-  return (
+  renderFirstStep = () => (
     <div id='first-step-form'>
       <div className='form-row'>
         <Field
@@ -41,7 +38,6 @@ class SignUp extends Component {
           name='first_name'
           id='first_name'
           label='Type in first name'
-          errorField={submitErrors}
           placeholder='First name'
           validate={[required]}
         />
@@ -51,7 +47,6 @@ class SignUp extends Component {
           name='last_name'
           id='last_name'
           label='Type in last name'
-          errorField={submitErrors}
           placeholder='Last name'
           validate={[required]}
         />
@@ -62,7 +57,6 @@ class SignUp extends Component {
           name='country'
           id='country'
           options={countryList}
-          errorField={submitErrors}
           component={SelectField}
           label='Select your country'
           validate={[required]}
@@ -73,7 +67,6 @@ class SignUp extends Component {
           name='state'
           id='state'
           label='State'
-          errorField={submitErrors}
           placeholder='State'
           validate={[required]}
         />
@@ -83,96 +76,86 @@ class SignUp extends Component {
           name='city'
           id='city'
           label='City'
-          errorField={submitErrors}
           placeholder='City'
           validate={[required]}
         />
       </div>
-        <div className='form-buttons col-12 text-center'>
-          <Link to='/' className='col-3 btn btn-back'>
-            <i className='svg-icon arrow-left-icon' />
+      <div className='form-buttons col-12 text-center'>
+        <Link to='/' className='col-3 btn btn-back'>
+          <i className='svg-icon arrow-left-icon' />
+          Back
+        </Link>
+        <button type='submit' className='col-3 btn btn-primary'>
+          Next
+          <i className='svg-icon arrow-right-icon' />
+        </button>
+      </div>
+    </div>
+  )
+
+  renderSecondStep = () => (
+    <div id='second-step-form'>
+      <div className='form-row'>
+        <Field
+          component={InputField}
+          className='form-group col-md-6'
+          name='email'
+          id='email'
+          label='Type in e-mail address'
+          placeholder='E-mail'
+          validate={[required, email]}
+        />
+        <Field
+          component={InputField}
+          className='form-group col-md-6'
+          type='password'
+          name='password'
+          id='password'
+          label='Type in password'
+          placeholder='Password'
+          validate={[required]}
+        />
+      </div>
+      <div className='form-row'>
+        <Field
+          component={InputField}
+          className='form-group col-md-6'
+          name='username'
+          id='username'
+          label='Define your user ID'
+          placeholder='Username'
+          validate={[required, maxValue(18)]}
+        />
+        <Field
+          component={InputField}
+          className='form-group col-md-6'
+          type='password'
+          name='password_confirmation'
+          id='password_confirmation'
+          label='Confirm password'
+          placeholder='Password'
+          validate={[required]}
+        />
+      </div>
+      <div className='form-check col-12 text-center'>
+        <Field
+          component={CheckField}
+          className='form-check-label'
+          name='accept_terms_and_conditions'
+          id='accept_terms_and_conditions'
+          text='I accept terms and Conditions'
+          validate={[required]}
+        />
+      </div>
+      <div className='form-buttons col-12 text-center mt-5'>
+        <button type='button' className='col-3 btn btn-back' onClick={this.prevStep}>
+          <i className='svg-icon arrow-left-icon' />
             Back
-          </Link>
-          <button type='submit' className='col-3 btn btn-primary'>
-            Next
-            <i className='svg-icon arrow-right-icon' />
           </button>
-        </div>
+        <button type='submit' className='col-3 btn btn-primary'>Register</button>
       </div>
-    )
-  }
-
-  renderSecondStep = () => {
-    const { submitErrors } = this.props
-
-    return (
-      <div id='second-step-form'>
-        <div className='form-row'>
-          <Field
-            component={InputField}
-            className='form-group col-md-6'
-            name='email'
-            id='email'
-            label='Type in e-mail address'
-            errorField={submitErrors}
-            placeholder='E-mail'
-            validate={[required, email]}
-          />
-          <Field
-            component={InputField}
-            className='form-group col-md-6'
-            type='password'
-            name='password'
-            id='password'
-            label='Type in password'
-            errorField={submitErrors}
-            placeholder='Password'
-            validate={[required]}
-          />
-        </div>
-        <div className='form-row'>
-          <Field
-            component={InputField}
-            className='form-group col-md-6'
-            name='username'
-            id='username'
-            label='Define your user ID'
-            errorField={submitErrors}
-            placeholder='Username'
-            validate={[required, maxValue(18)]}
-          />
-          <Field
-            component={InputField}
-            className='form-group col-md-6'
-            type='password'
-            name='password_confirmation'
-            id='password_confirmation'
-            label='Confirm password'
-            errorField={submitErrors}
-            placeholder='Password'
-            validate={[required]}
-          />
-        </div>
-        <div className='form-check col-12 text-center'>
-          <Field
-            component={CheckField}
-            className='form-check-label'
-            name='accept_terms_and_conditions'
-            id='accept_terms_and_conditions'
-            text='I accept terms and Conditions'
-            validate={[required]}
-          />
-        </div>
-        <div className='form-buttons col-12 text-center mt-5'>
-          <button type='button' className='col-3 btn btn-back' onClick={this.prevStep}>
-            <i className='svg-icon arrow-left-icon' />
-              Back
-            </button>
-          <button type='submit' className='col-3 btn btn-primary'>Register</button>
-        </div>
-      </div>
-    )
-  }
+    </div>
+  )
 
   render() {
     const { step } = this.state
@@ -196,14 +179,10 @@ class SignUp extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('sign_up')(state)
-})
-
 const mapDispatchToProps = dispatch => ({
   signUpUser: (userFields) => dispatch(signUpUser(userFields))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)
+export default connect(null, mapDispatchToProps)
   (reduxForm({ form: 'sign_up' })
   (SignUp))

@@ -48,7 +48,7 @@ export const fetchUser = userId => (dispatch, getState) => (
     })
     .catch(({ response }) => {
       errorNotify(response.data.message)
-      throw new SubmissionError(response.data.error_messages)
+      throw new SubmissionError(response.data)
     })
 )
 
@@ -66,8 +66,8 @@ export const signInUser = values => dispatch => {
         dispatch(fetchUser(decoded.user_id))
       })
       .catch(({ response }) => {
-        errorNotify(response.data.message)
-        throw new SubmissionError(response.data.error_messages)
+        errorNotify('Something went wrong')
+        throw new SubmissionError(response.data)
       })
   )
 }
