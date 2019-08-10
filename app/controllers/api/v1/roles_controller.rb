@@ -25,7 +25,7 @@ class Api::V1::RolesController < ApplicationController
   def update
     if @role.update(role_params)
       render json: @role,
-             status: :created
+             status: :ok
     else
       render json: @role.errors,
              status: :unprocessable_entity

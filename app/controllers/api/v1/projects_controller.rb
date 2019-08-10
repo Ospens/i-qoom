@@ -44,7 +44,7 @@ class Api::V1::ProjectsController < ApplicationController
   def update
     if @project.update(project_params)
       render json: @project,
-             status: :created
+             status: :ok
     else
       render json: @project.errors,
              status: :unprocessable_entity
