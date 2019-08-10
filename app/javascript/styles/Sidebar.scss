@@ -39,15 +39,6 @@
         font-size: 15px;
       }
     }
-
-    .active-project-cogs {
-      margin-left: auto;
-
-      path,
-      circle {
-        fill: #fff;
-      }
-    }
   }
 
   .sidebar-sticky {
@@ -56,6 +47,7 @@
     padding-top: .5rem;
     overflow-x: hidden;
     overflow-y: auto;
+    -webkit-overflow-scrolling:touch;
 
     .nav-items {
       margin-top: 50px;

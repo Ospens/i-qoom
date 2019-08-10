@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
-import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
-import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import NewModal from '../../../../../elements/Modal'
-import accessRightsIcon from '../../../../../images/common-file-share'
 import rightsDropDown from './RightsDropDown'
 
 export class ModalBulkAccessRights extends Component {
@@ -26,10 +21,9 @@ export class ModalBulkAccessRights extends Component {
       className='dropdown-item btn'
       onClick={this.handleOpen}
     >
-      <ReactSVG
-        svgStyle={{ height: 13, width: 13 }}
-        src={accessRightsIcon}
-      />
+      <div>
+        <i className='svg-icon gray share-file-icon mr-2' />
+      </div>
       <span className='item-text'>Edit team / add members</span>
     </button>
   )

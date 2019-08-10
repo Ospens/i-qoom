@@ -36,6 +36,10 @@ Rails.application.routes.draw do
       resources :projects, except: [:new, :edit] do
         collection do
           get :confirm_admin
+          get :confirm_member
+        end
+        member do
+          post :invite
         end
         resource :conventions, only: [:edit, :update] do
           patch :update_field_titles
@@ -59,7 +63,12 @@ Rails.application.routes.draw do
         end
         resources :project_members,
                   path: :members,
-                  except: [:show]
+                  except: [ :index, :show ] do
+          collection do
+            get  :active
+            get  :pending
+          end
+        end
         resources :disciplines,
                   except: [:new, :show]
         resources :roles,

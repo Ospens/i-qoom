@@ -15,12 +15,12 @@ const currentMembersFetched = payload => ({
   payload
 })
 
-export const getGrantAccessMembers = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
+export const getGrantAccessMembers = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/document_rights/new`, headers)
+    axios.get(`/api/v1/projects/${projectId}/document_rights/new`, headers)
       .then(response => {
         dispatch(newMembersFetched(response.data))
       })
@@ -30,12 +30,12 @@ export const getGrantAccessMembers = () => (dispatch, getState) => {
   )
 }
 
-export const getGrandedAccessMembers = () => (dispatch, getState) => {
-  const { user: { token }, projects: { current } } = getState()
+export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${current.id}/document_rights/edit`, headers)
+    axios.get(`/api/v1/projects/${projectId}/document_rights/edit`, headers)
       .then(response => {
         dispatch(currentMembersFetched(response.data))
       })

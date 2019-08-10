@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { Table } from 'semantic-ui-react'
-import ReactSVG from 'react-svg'
+import classnames from 'classnames'
 import UserAvatar from 'react-user-avatar'
+import { withRouter } from 'react-router-dom'
 import {
   getGrantAccessMembers,
   getGrandedAccessMembers
@@ -12,11 +13,6 @@ import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 import Tabs from '../../../../../elements/Tabs'
 import DropDown from '../../../../../elements/DropDown'
-import accessRightsIcon from '../../../../../images/common-file-share'
-import showProfileIcon from '../../../../../images/single-neutral-actions-text'
-import messageIcon from '../../../../../images/email-action-unread'
-import groupIcon from '../../../../../images/business-team-goal'
-import trashIcon from '../../../../../images/trash_bucket'
 import rightsDropDown from './RightsDropDown'
 
 export const columns = [
@@ -31,27 +27,27 @@ export const columns = [
 const optionBtn = [
   {
     title: 'Define access rights',
-    icon: accessRightsIcon
+    icon: 'share-file-icon'
   },
   {
     title: 'Show profile',
-    icon: showProfileIcon
+    icon: 'review-icon'
   },
   {
     title: 'Send message',
-    icon: messageIcon
+    icon: 'email-unread-icon'
   },
   {
     title: 'Add to team',
-    icon: groupIcon
+    icon: 'business-team-icon'
   },
   {
     title: 'Add to distribution G.',
-    icon: groupIcon
+    icon: 'business-team-icon'
   },
   {
     title: 'Delete',
-    icon: trashIcon
+    icon: 'trash-icon'
   }
 ]
 
@@ -63,9 +59,9 @@ class MembersAccessRights extends Component {
   }
 
   componentWillMount() {
-    const { getGrantAccessMembers, getGrandedAccessMembers } = this.props
-    getGrandedAccessMembers()
-    getGrantAccessMembers()
+    const { getGrantAccessMembers, getGrandedAccessMembers, match: { params: { project_id } } } = this.props
+    getGrandedAccessMembers(project_id)
+    getGrantAccessMembers(project_id)
   }
 
   checkItem = (type, value) => {
@@ -100,13 +96,10 @@ class MembersAccessRights extends Component {
           <DropDown btnName={optionsText}>
             {optionBtn.map(({title, icon}, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
-                <ReactSVG
-                  svgStyle={{ height: 13, width: 13 }}
-                  src={icon}
-                />
-                <span className='item-text'>
-                  {title}
-                </span>
+                <div>
+                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                </div>
+                <span className='item-text'>{title}</span>
               </button>
             ))}
         </DropDown>
@@ -218,8 +211,8 @@ const mapStateToProps = ({ accessRights }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getGrantAccessMembers: () => dispatch(getGrantAccessMembers()),
-  getGrandedAccessMembers: () => dispatch(getGrandedAccessMembers())
+  getGrantAccessMembers: projectId => dispatch(getGrantAccessMembers(projectId)),
+  getGrandedAccessMembers: projectId => dispatch(getGrandedAccessMembers(projectId))
 })
 
 export default connect(
@@ -227,5 +220,5 @@ export default connect(
   mapDispatchToProps
 )(reduxForm({
   form: 'members_access_rights_form'
-})(MembersAccessRights))
+})(withRouter(MembersAccessRights)))
 

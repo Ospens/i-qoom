@@ -1,112 +1,76 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Field, getFormSyncErrors, reduxForm } from 'redux-form'
+import { Field, reduxForm } from 'redux-form'
 import ReactSVG from 'react-svg'
-import { errorNotify } from '../../elements/Notices'
-import axios from 'axios'
 import classnames from 'classnames'
 import InputField from '../../elements/InputField'
+import TextAreaField from '../../elements/TextAreaField'
 import lines from '../../images/send-lines'
 import plan from '../../images/send-email-big'
-import TextEditor from '../../elements/TextEditor'
-
-const emailValid = value =>
-  value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? ['Invalid email address']
-    : undefined
-
-const minValue = min => value =>
-  value && value < min ? [`Must be at least ${min}`] : undefined
+// import TextEditor from '../../elements/TextEditor'
+import { required, email, minValue } from '../../elements/validations'
+import { sendEmail } from '../../actions/otherActions'
 
 class GetStarted extends Component {
   state = {
-    sent: false,
-    email: null,
-    phone: null,
-    text: null
+    sent: false
   }
 
-  sendMessage = (e) => {
-    e.preventDefault()
-    const { phone, text, email} = e.target
-    const request = {
-      contact: {
-        email: email.value,
-        text: text.value,
-        phone_number: phone.value,
-      }
-    }
+  successFunc = () => {
     const { reset } = this.props
-    axios.post('/api/v1/contacts', request)
-      .then(() => {
-        this.setState({
-          email: null,
-          phone: null,
-          text: null,
-          sent: true
-        })
-        reset()
-      })
-      .catch(({ response }) => {
-        errorNotify(response.data.message)
-      })
+    this.setState({ sent: true })
+    reset()
   }
 
-  handleChange = e => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
+  handleSubmit = values => {
+    const { sendEmail } = this.props
+    sendEmail(values, this.successFunc)
   }
 
   renderContactForm = () => {
-    const { email, phone, text } = this.state
-    const allFilled = !email || !phone || !text
-    const { synchronousError } = this.props
+    const { handleSubmit } = this.props
+
     return (
-      <form onSubmit = {this.sendMessage} className='contact-us-form'>
+      <form
+        className='contact-us-form'
+        onSubmit={handleSubmit(this.handleSubmit)}
+      >
         <div className='form-row'>
-          <div className='form-group col-md-6'>
-            <div className='form-group'>
-              <Field
-                component={InputField}
-                name='email'
-                id='email'
-                validate={emailValid}
-                errorField={synchronousError}
-                onChange={this.handleChange}
-                label='Enter your E-mail address'
-                aria-describedby='loginHelp'
-                placeholder='E-mail'
-              />
-            </div>
-            <div className='form-group form-number-group'>
-              <Field
-                component={InputField}
-                name='phone'
-                id='phone'
-                errorField={synchronousError}
-                onChange={this.handleChange}
-                label='Enter your Phone number'
-                placeholder='0049 160 000000'
-              />
-            </div>
-          </div>
-          <div className='form-group col-md-6'>
-            <label htmlFor='phone'>Enter your Text</label>
+          <div className='col-md-6'>
             <Field
-              name='text'
-              id='text'
-              component='textarea'
-              rows='6'
-              validate={minValue}
-              onChange={this.handleChange}
-              className='form-control'
-              placeholder='Text'
+              component={InputField}
+              className='form-group'
+              name='email'
+              id='email'
+              validate={[email, required]}
+              label='Enter your E-mail address'
+              placeholder='E-mail'
+            />
+            <Field
+              component={InputField}
+              className='form-group'
+              name='phone_number'
+              id='phone'
+              validate={[required]}
+              label='Enter your Phone number'
+              placeholder='0049 160 000000'
             />
           </div>
+          <Field
+            component={TextAreaField}
+            name='text'
+            id='text'
+            rows='3'
+            validate={[minValue(15), required]}
+            placeholder='Text'
+            className='form-group col-md-6'
+            label='Enter your Text'
+          />
         </div>
         <div className='text-center'>
-          <button type='submit' disabled={allFilled} className='col-4 btn btn-primary'>Send</button>
+          <button className='col-4 btn btn-primary' type='submit'>
+            Send
+          </button>
         </div>
       </form>
     )
@@ -131,18 +95,22 @@ class GetStarted extends Component {
   }
 
   render() {
-    const { authed, editable, title } = this.props
+    const { title } = this.props
     const { sent } = this.state
     const containerClass = classnames('form-container', { 'show-slider': sent })
+
     return (
       <section id='get-started-card'>
         <div className='container'>
-          {authed && editable ?
+          {/*
+            TODO: temporarily disabled
+          authed && editable ?
             (
               <TextEditor text={title} className='mb-5'/>
             ) : (
               <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5'/>
-            )}
+            )*/}
+          <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5' />
           <div className={containerClass}>
             {this.renderSuccessMsg()}
             {this.renderContactForm()}
@@ -154,9 +122,12 @@ class GetStarted extends Component {
 }
 
 const mapStateToProps = state => ({
-  synchronousError: getFormSyncErrors('contact_us')(state),
-  authed: state.user.authStatus,
+  // authed: state.user.authStatus,
   title: state.landing.getStarted.title,
 })
 
-export default connect(mapStateToProps, null)(reduxForm({ form: 'contact_us' })(GetStarted))
+const mapDispatchToProps = dispatch => ({
+  sendEmail: (values, afterUpdate) => dispatch(sendEmail(values, afterUpdate))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'contact_us' })(GetStarted))

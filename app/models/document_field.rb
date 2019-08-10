@@ -67,7 +67,7 @@ class DocumentField < ApplicationRecord
            on: :create
 
   validate :field_is_required,
-           if: -> { parent.class.name == 'Document' && required? }
+           if: -> { parent.class.name == 'Document' && (required? || upload_field?) }
 
   validate :multiselect_is_not_allowed,
            if: -> { parent.class.name == 'Document' &&
@@ -117,6 +117,9 @@ class DocumentField < ApplicationRecord
         original_attributes['document_field_values'] << field_value.build_for_new_document
       end
     end
+    if document_native_file? && parent.class.name == 'Convention'
+      original_attributes['required'] = true
+    end
     original_attributes
   end
 
@@ -142,13 +145,24 @@ class DocumentField < ApplicationRecord
     return true if user == parent.project.user
     can_build_codification_field?(user) ||
       # limitation by field is temporarily disabled
+      # Hello Yasser,
+      # We should remove Limit access link from convention form and create
+      # separate page like Access rights page but for fields access rights.
+      # This is because when we create new convention there is no fields yet,
+      # so we can't grand access to non-existent fields. When we updating
+      # convention we just creating new version of previous convention, so
+      # fields are not exist too.
+      # PS But I don't know how this page UI should look.
+      # Thanks
+      # Hi Artem,
+      # please skip this function for now. We will review an alternative when
+      # DMS is deployed.
+      # Thanks
       (!codification_kind.present? && true
       #  document_rights.where(user: user,
       #                        limit_for: DocumentRight.limit_fors[:field],
       #                        enabled: true).any?
-      #
-      #
-       )
+      )
   end
 
   def should_have_document_field_values?
@@ -184,7 +198,7 @@ class DocumentField < ApplicationRecord
   end
 
   def set_required
-    self.required = true
+    self.required = document_native_file? ? false : true
   end
 
   def can_build_codification_field?(user)
@@ -246,7 +260,11 @@ class DocumentField < ApplicationRecord
         errors.add(:document_field_values, :is_required)
       end
     elsif upload_field?
-      errors.add(:file, :is_required) if !file.attached?
+      # file only required in initial document, afterwards empty file field
+      # will be mean to copy file from previous document version
+      if !file.attached? && parent.first_document_in_chain?
+        errors.add(:file, :is_required)
+      end
     end
   end
 

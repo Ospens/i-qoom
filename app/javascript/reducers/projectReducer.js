@@ -20,12 +20,12 @@ const projectReducer = (state = initialState, action) => {
   case PROJECT_CREATED_SUCCESS:
     return {
       ...state,
-      project: action.payload.project[0]
+      project: action.payload
     }
   case PROJECT_UPDATED_SUCCESS:
     return {
       ...state,
-      current: action.payload.project[0]
+      current: action.payload
     }
   case PROJECT_ADMIN_UPDATED:
     return {

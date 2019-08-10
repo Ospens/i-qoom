@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ReactSVG from 'react-svg'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -14,7 +13,6 @@ import {
   startCreatingProjectMember,
   startCreateProjectMember
 } from '../../../../actions/projectMembersActions'
-import Left from '../../../../images/arrow-button-left'
 
 const options = [
   { value: 1, title: 'Employee' },
@@ -57,10 +55,7 @@ class AddMember extends Component {
           className='btn btn-back back-member-details'
           onClick={() => this.changeStep(step - 1)}
         >
-          <ReactSVG
-            svgStyle={{ height: 10, width: 10, marginRight: 5 }}
-            src={Left}
-          />
+          <i className="svg-icon arrow-left-icon" />
           Back
         </button>}
         <button

@@ -14,6 +14,13 @@ class ApplicationMailer < ActionMailer::Base
          subject: t(".title")
   end
 
+  def send_project_member_confirmation(project_member)
+    @project_member = project_member
+    mail to: @project_member.email,
+         subject: t(".title")
+  end
+
+
   def new_document(document, email)
     @document = document
     mail to: email, subject: document.email_title

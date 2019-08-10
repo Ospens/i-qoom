@@ -1,19 +1,24 @@
-import React from 'react'
-import { connect, useDispatch } from 'react-redux'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {
-  getFormSubmitErrors,
   formValueSelector,
   Field,
-  change
+  change,
+  initialize
 } from 'redux-form'
+import DocIdModal from '../DocIdModal'
 import SelectField from '../../../../elements/SelectField'
 import CheckboxField from '../../../../elements/CheckboxField'
 import DatePickerField from '../../../../elements/DatePickerField'
-import DropZoneField from '../../../../elements/DropZoneField'
+import DropZoneField, { fileToObject } from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
+import { required } from '../../../../elements/validations'
+import { initValues } from '../initDocId'
 
-// TODO: rewrite this method
+const selector = formValueSelector('document_form')
+
+// Select options haven't ids
 
 const updateDocFieldValues = (value, fieldValues, changeValues) => {
   const newValues = fieldValues.map(field => {
@@ -26,18 +31,21 @@ const updateDocFieldValues = (value, fieldValues, changeValues) => {
   changeValues(newValues)
 }
 
-function InputByType({ field }) {
+function InputByType({ field, modal, toggleModal }) {
   const uniqName = `document_fields[${field.index}].value`
 
   if (field.kind === 'upload_field') {
     return (
-      <Field
-        //type='file'
-        name={`document_fields[${field.index}].files`}
-        id={`document_fields[${field.index}].files`}
-        component={DropZoneField}
-        label={field.title}
-      />
+      <React.Fragment>
+        {modal && <DocIdModal toggleModal={toggleModal} open={modal}/>}
+        <Field
+          name={`document_fields[${field.index}].file`}
+          id={`document_fields[${field.index}].file`}
+          component={DropZoneField}
+          label={field.title}
+          validate={field.required ? [required] : []}
+        />
+        </React.Fragment>
     )
   } else if (field.kind === 'select_field') {
     const fieldValues = field.document_field_values
@@ -60,15 +68,18 @@ function InputByType({ field }) {
         placeholder={field.command}
         component={SelectField}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'textarea_field') {
     return (
-      <TextAreaField
+      <Field
+        component={TextAreaField}
         name={uniqName}
         id={uniqName}
         placeholder={field.command}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'date_field') {
@@ -79,6 +90,7 @@ function InputByType({ field }) {
         placeholder={field.command}
         component={DatePickerField}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   } else {
@@ -89,31 +101,59 @@ function InputByType({ field }) {
         id={uniqName}
         placeholder={field.command}
         label={field.title}
+        validate={field.required ? [required] : []}
       />
     )
   }
 }
 
-const formvalue = (fields = [], codKind) => {
+export const formvalue = (fields = [], codKind) => {
   if (fields.length < 1) return ''
 
   const field = fields.filter(values => values.codification_kind === codKind)[0]
   if (!field) return ''
+  
+  if (codKind === 'document_native_file') return field.file
 
   return field.value
-
 }
 
-function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFields }) {
+function DocumentsAndFiles() {
+  const [modal, toggleModal] = useState(false)
+  const groupedFields = useSelector(state => state.documents.documentFields.grouped_fields)
+  const documentFields = useSelector(state => selector(state, 'document_fields'))
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
   const disciplineValue = formvalue(documentFields, 'discipline')
   const docTypeValue = formvalue(documentFields, 'document_type')
   const docNumberValue = formvalue(documentFields, 'document_number')
+  const docFile = formvalue(documentFields, 'document_native_file')
+  const generateId = useSelector(state => selector(state, 'generate_id'))
+  const columns = Object.keys(groupedFields)
 
+  const dispatch = useDispatch()
+
+  const initDocIdForm = useCallback(values => {
+    dispatch(initialize('doc_id_form', values))
+  }, [dispatch])
+
+  useEffect(() => {
+    if (modal) {
+      toggleModal(false)
+      return
+    }
+    if (!generateId) return
+
+    const values = initValues(documentFields)
+    if (!values) return
+
+    initDocIdForm(values)
+    toggleModal(true)
+  }, [docFile])
+  
   return (
     <React.Fragment>
-      <div className='dms-content__header p-4'>
+      <div className='dms-contents__header p-4'>
         <h4>Add documents data & files</h4>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>
@@ -121,22 +161,22 @@ function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFiel
             <li className='col-3 active'>
               <button>
                 Planning
-                </button>
+              </button>
             </li>
             <li className='col-3'>
               <button>
                 Development
-                </button>
+              </button>
             </li>
             <li className='col-3'>
               <button>
                 Execution
-                </button>
+              </button>
             </li>
             <li className='col-3'>
               <button>
                 Operation
-                </button>
+              </button>
             </li>
           </ul>
         </div>
@@ -208,21 +248,28 @@ function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFiel
                 checkBoxId='generate_id'
                 labelClass='form-check-label mr-2'
                 text='Generate Document ID through file code'
-                errorField={submitErrors}
               />
             </div>
-            {groupedFields[1].map((field, index) => (
+            {groupedFields[columns[0]].map((field, index) => (
               <div className='form-group' key={index}>
-                <InputByType field={field} />
+                <InputByType
+                  modal={modal}
+                  toggleModal={toggleModal}
+                  field={field}
+                />
               </div>
             ))}
 
           </div>
 
           <div className='col-6'>
-            {groupedFields[2].map((field, index) => (
+            {groupedFields[columns[1]].map((field, index) => (
               <div className='form-group' key={index}>
-                <InputByType field={field}/>
+                <InputByType
+                  modal={modal}
+                  toggleModal={toggleModal}
+                  field={field}
+                />
               </div>
             ))}
           </div>
@@ -231,24 +278,11 @@ function DocumentsAndFiles({ submitErrors, nextStep, documentFields, groupedFiel
       </div>
       <div className='dms-footer'>
         <button type='button' className='btn btn-white'>Cancel</button>
-        <button
-          type='submit'
-          className='btn btn-purple'
-          onClick={nextStep}
-        >
-          Next
-        </button>
+        <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     </React.Fragment>
   )
 }
 
-const selector = formValueSelector('document_form')
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('document_form')(state),
-  groupedFields: state.documents.newDocumentFields.grouped_fields,
-  documentFields: selector(state, 'document_fields')
-})
-
-export default connect(mapStateToProps)(DocumentsAndFiles)
+export default DocumentsAndFiles

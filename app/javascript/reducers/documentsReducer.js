@@ -2,39 +2,25 @@ import {
   DOCUMENT_CREATE_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
   DOCUMENTS_FETCH_SUCCESS,
+  EDIT_DOCUMENT,
   CREATING_DOCUMENT
 } from '../actions/types'
 
 const initialState = {
-  allDocuments: [
-    {
-      id: 1,
-      codification_kind: 'AWE-ECR-EOS-LET-0113',
-      title: 'Tellus in hac habitasse',
-      revision: '12.10.2018',
-      version: '1.5'
-
-    },
-    {
-      id: 2,
-      codification_kind: 'AWE-ECR-EOS-LET-2018',
-      title: 'Nulla posuere sollicitudin aliquam',
-      revision: '12.10.2017',
-      version: '1.2'
-    }
-  ],
-  newDocumentFields: {
+  allDocuments: [],
+  documentFields: {
     grouped_fields: {
-      1: [{}],
-      2: [{}]
+      column_1: [{}],
+      column_2: [{}]
     }
+  },
+  current: {
+    document_fields: []
   }
 }
 
 const documentsReducer = (state = initialState, action) => {
   switch (action.type) {
-  case 'DOCUMENT_TEST':
-    return initialState
   case DOCUMENT_CREATE_SUCCESS:
     return {
       ...state,
@@ -43,7 +29,7 @@ const documentsReducer = (state = initialState, action) => {
   case DOCUMENTS_FETCH_SUCCESS:
     return {
       ...state,
-      allProjects: action.payload
+      allDocuments: action.payload
     }
   case DOCUMENT_FETCH_SUCCESS:
     return {
@@ -53,8 +39,16 @@ const documentsReducer = (state = initialState, action) => {
   case CREATING_DOCUMENT:
     return {
       ...state,
-      newDocumentFields: {
-        ...state.newDocumentFields,
+      documentFields: {
+        ...state.documentFields,
+        ...action.payload
+      }
+    }
+  case EDIT_DOCUMENT:
+    return {
+      ...state,
+      documentFields: {
+        ...state.documentFields,
         ...action.payload
       }
     }

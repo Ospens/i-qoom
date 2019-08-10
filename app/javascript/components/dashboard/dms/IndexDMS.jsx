@@ -1,25 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { startFetchDocuments } from '../../../actions/documentsActions'
 import { Link, Route, withRouter } from 'react-router-dom'
-import ReactSVG from 'react-svg'
 import classnames from 'classnames'
+import moment from 'moment'
 import { Table } from 'semantic-ui-react'
+import { startFetchDocuments } from '../../../actions/documentsActions'
 import DropDown from '../../../elements/DropDown'
-import xlsIcon from '../../../images/office-file-xls'
-import xmlIcon from '../../../images/xml-1'
-import csvIcon from '../../../images/csv-1'
-import downloadDetailsIcon from '../../../images/download-button'
-import pdfIcon from '../../../images/office-file-pdf'
 import DocumentPopup from './DocumentPopup'
 import { actionDDitems, reviewStatuses, foldersItems, columns, DtOptions } from './constants'
 import DmsSideBar from './DmsSideBar'
-import blueCheck from '../../../images/add_1'
-import revisionIcon from '../../../images/Revise_2'
-import editDocIcon from '../../../images/common-file-edit'
-import dlIcon from '../../../images/common-file-text_gary'
-import nativeIcon from '../../../images/common-file-text-1'
-import dots from '../../../images/dots-horizontal'
 import DMSLayout from './DMSLayout'
 
 class IndexDMS extends Component {
@@ -31,8 +20,8 @@ class IndexDMS extends Component {
   }
 
   componentWillMount() {
-    const { startFetchDocuments, match: { params: { project_id } } } = this.props
-    startFetchDocuments(project_id)
+    const { startFetchDocuments, history, match: { params: { project_id } } } = this.props
+    startFetchDocuments(project_id, history)
   }
 
   renderHeader = () => {
@@ -49,20 +38,14 @@ class IndexDMS extends Component {
               className='btn d-flex align-items-center'
               to={`/dashboard/projects/${params.project_id}/documents/new/`}
             >
-              <ReactSVG
-                svgStyle={{ height: 15, width: 15, marginRight: 5 }}
-                src={blueCheck}
-              />
+              <i className='svg-icon blue-plus-icon mr-2' />
               <span>Create new Document</span>
             </Link>
           </li>
         </Route>
         <li>
           <button type='button' className={btnClass}>
-            <ReactSVG
-              svgStyle={{ height: 15, width: 15, marginRight: 5 }}
-              src={revisionIcon}
-            />
+            <i className='svg-icon revision-icon mr-2' />
             <span>
               Add revision {checkedLength > 0 ? checkedLength : ''}
             </span>
@@ -70,11 +53,7 @@ class IndexDMS extends Component {
         </li>
         <li>
           <button type='button' className={btnClass}>
-            <ReactSVG
-              svgStyle={{ height: 15, width: 15, marginRight: 5 }}
-              src={editDocIcon}
-              svgClassName='edit-doc-icon'
-            />
+            <i className='svg-icon file-edit-icon mr-2' />
             <span className='head-button__gray-text'>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>
@@ -84,17 +63,24 @@ class IndexDMS extends Component {
     )
   }
 
-  renderDropDownItems = (pic, name) => (
-    <li className='dropdown-item' >
-      <ReactSVG
-        svgStyle={{ height: 20, width: 20 }}
-        src={pic}
-      />
-      <span className='item-text'>
-        {name}
-      </span>
-    </li>
-  )
+  renderDropDownItems = (icon, name, link) => {
+    const content = (
+      <React.Fragment>
+        <i className={classnames('svg-icon gray mr-2', icon)} />
+        <span className='item-text'>{name}</span>
+      </React.Fragment>
+    )
+
+    return (
+      <li className='dropdown-item'>
+        {link
+          ? <Link className='d-flex' to={link}>
+              {content}
+            </Link>
+          : content}
+      </li>
+    )
+  }
 
   handleChange = e => {
     const { checkedDocTypes } =  this.state
@@ -209,7 +195,7 @@ class IndexDMS extends Component {
   }
 
   renderTable = () => {
-    const { documents } = this.props
+    const { documents, match: { params: { project_id } } } = this.props
     const { checkedDocs } = this.state
     return (
       <div>
@@ -244,9 +230,9 @@ class IndexDMS extends Component {
                     dots={true}
                     className='dropdown-with-icon'
                   >
-                    {actionDDitems.map(({ icon, title }, i) => (
+                    {actionDDitems(project_id, doc.id).map(({ icon, title, link }, i) => (
                       <React.Fragment key={i}>
-                        {this.renderDropDownItems(icon, title)}
+                        {this.renderDropDownItems(icon, title, link)}
                       </React.Fragment>
                     ))}
                   </DropDown>
@@ -269,39 +255,41 @@ class IndexDMS extends Component {
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.title}
+                  {doc.title || 'Undefined'}
                 </Table.Cell>
 
                 <Table.Cell className='td-files'>
-                  <ReactSVG
-                    svgStyle={{ height: 20, width: 20 }}
-                    src={dlIcon}
-                    className='td-files-icon'
-                  />
+                  <div>
+                    <i className='svg-icon common-file-icon black' />
+                  </div>
                 </Table.Cell>
 
                 <Table.Cell className='td-files'>
-                  <ReactSVG
-                    svgStyle={{ height: 20, width: 20 }}
-                    src={nativeIcon}
-                    className='td-files-icon'
-                  />
+                  <div>
+                    <i className='svg-icon common-file-color-icon' />
+                  </div>
                 </Table.Cell>
 
                 <Table.Cell className='td-files'>
-                  <ReactSVG
-                    svgStyle={{ height: 20, width: 20 }}
-                    src={pdfIcon}
-                    className='td-files-icon'
-                  />
+                  <div>
+                    <i className='svg-icon file-pdf-icon' />
+                  </div>
+                </Table.Cell>
+
+                <Table.Cell className='td-date'>
+                  {moment(doc.created_at).format('MMMM Do YYYY')}
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.revision}
+                  {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.version}
+                  {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -332,7 +320,7 @@ class IndexDMS extends Component {
             btnName='Action'
             className='dms-sidebar-menu__dropdown'
           >
-            {actionDDitems.map(({ icon, title }, i) => (
+            {actionDDitems().map(({ icon, title }, i) => (
               <React.Fragment key={i}>
                 {this.renderDropDownItems(icon, title)}
               </React.Fragment>
@@ -342,13 +330,10 @@ class IndexDMS extends Component {
               btnClass='dropdown-submenu'
               btnComponent={
                 <React.Fragment>
-                  <ReactSVG
-                    svgStyle={{ height: 20, width: 20 }}
-                    src={downloadDetailsIcon}
-                  />
+                  <i className='svg-icon download-icon gray mr-2' />
                   <span className='dropdown-item'>
                     Download as list
-                        </span>
+                  </span>
                 </React.Fragment>
               }
             >
@@ -363,10 +348,7 @@ class IndexDMS extends Component {
                       id='download_csv'
                     />
                     <label htmlFor='download_csv' />
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20 }}
-                      src={csvIcon}
-                    />
+                    <i className='svg-icon file-csv-icon' />
                     <span>CSV</span>
                   </div>
                   <div className='col-6'>
@@ -375,10 +357,7 @@ class IndexDMS extends Component {
                       id='download_xls'
                     />
                     <label htmlFor='download_xls' />
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20 }}
-                      src={xlsIcon}
-                    />
+                    <i className='svg-icon file-xls-icon' />
                     <span>XLS</span>
                   </div>
                 </div>
@@ -389,10 +368,7 @@ class IndexDMS extends Component {
                       id='download_xml'
                     />
                     <label htmlFor='download_xml' />
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20 }}
-                      src={xmlIcon}
-                    />
+                    <i className='svg-icon file-xml-icon' />
                     <span>XML</span>
                   </div>
                   <div className='col-6'>
@@ -401,10 +377,7 @@ class IndexDMS extends Component {
                       id='download_pdf'
                     />
                     <label htmlFor='download_pdf' />
-                    <ReactSVG
-                      svgStyle={{ height: 20, width: 20 }}
-                      src={pdfIcon}
-                    />
+                    <i className='svg-icon file-pdf-icon' />
                     <span>PDF</span>
                   </div>
                 </div>
@@ -422,10 +395,7 @@ class IndexDMS extends Component {
             {foldersItems.map(({ title, icon }, i) => (
               <li className='dms-sidebar-menu__item' key={i}>
                 <button type='button' className='btn'>
-                  <ReactSVG
-                    svgStyle={{ height: 20, width: 20, marginRight: 10 }}
-                    src={icon}
-                  />
+                  <i className={classnames('svg-icon black mr-2', icon )} />
                   <span className='head-button__gray-text'>{title}</span>
                 </button>
               </li>
@@ -497,7 +467,7 @@ class IndexDMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: (projectId) => dispatch(startFetchDocuments(projectId))
+  startFetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
 })
 
 const mapStateToProps = ({ documents }) => ({

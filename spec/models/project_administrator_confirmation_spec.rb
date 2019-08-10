@@ -58,5 +58,14 @@ describe ProjectAdministratorConfirmation, type: :model do
       project_admin_confirmation.save
       expect(ProjectAdministrator.find_by(id: project_admin.id).user).not_to eq(user)
     end
+
+    it "if already confirmed" do
+      project_admin.update(email: user.email)
+      project_admin_confirmation =
+        ProjectAdministratorConfirmation.new(token: project_admin.confirmation_token,
+                                             signed_in_user: user)
+      project_admin_confirmation.save
+      expect(project_admin_confirmation.save).to be_falsy
+    end
   end
 end

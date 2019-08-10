@@ -54,7 +54,7 @@ class ModalAddComment extends Component {
               </div>
               <label>{name}</label>
               <span>Doument name transcendent ex Morti Ric...</span>
-           </div>
+            </div>
 
             <form>
               <div className='form-group'>
@@ -116,9 +116,11 @@ class ModalAddComment extends Component {
               </div>
 
               <div className='form-group mt-4'>
-                <TextAreaField
+                <Field
+                  component={TextAreaField}
                   name='comment'
                   id='comment'
+                  errorField={[submitErrors]}
                   placeholder='Comment'
                   label='Type in your comment'
                 />
