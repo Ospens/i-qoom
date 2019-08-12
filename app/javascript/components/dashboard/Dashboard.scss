@@ -1400,7 +1400,7 @@ i.arrow {
       flex-direction: column;
       max-width: 70%;
 
-      * {
+      *:not(.file-name) {
         display: flex;
         text-align: center;
         justify-content: center;
@@ -1409,7 +1409,10 @@ i.arrow {
     }
 
     .file-name {
-      font-size: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
       color: gray;
       margin-bottom: 5px;
       white-space: nowrap;

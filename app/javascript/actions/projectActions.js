@@ -10,6 +10,7 @@ import {
   PROJECT_FETCH_SUCCESS
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
+import { paramsToFormData } from './documentsActions'
 
 const projectCreated = payload => ({
   type: PROJECT_CREATED_SUCCESS,
@@ -51,14 +52,16 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
 
   const headers = { headers: { Authorization: token } }
 
-  const request = {
-    project: {
-      ...values
-    }
+  let formData = new FormData()
+
+  const formValues = {
+    project: { ...values }
   }
 
+  formData = paramsToFormData(formData, formValues, '')
+
   return (
-    axios.put(`/api/v1/projects/${values.id}`, request, headers)
+    axios.put(`/api/v1/projects/${values.id}`, formData, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
         if (afterUpdate) afterUpdate(response.data)

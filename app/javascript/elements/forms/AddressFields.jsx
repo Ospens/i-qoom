@@ -6,7 +6,7 @@ import countryList from '../../components/landing/countriesCodes'
 import { required } from '../../elements/validations'
 
 const AddressFields = ({ submitErrors }) => (
-  <React.Fragment>
+  <div>
     <Field
       component={InputField}
       name='company_name'
@@ -82,7 +82,7 @@ const AddressFields = ({ submitErrors }) => (
         placeholder='District court'
       />
     </div>
-  </React.Fragment>
+  </div>
 )
 
 export default AddressFields

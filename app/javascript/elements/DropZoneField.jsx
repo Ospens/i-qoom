@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import classnames from 'classnames'
-import ReactSVG from 'react-svg'
-import fileIcon from '../images/common-file-text_active'
 
 const fileProperties = [
   'lastModified',
@@ -23,7 +21,7 @@ export const fileToObject = fileBlob => {
   return newFile
 }
 
-function DropZoneField({ input, label, isDisabled = false, meta: { touched, error } }) {
+function DropZoneField({ input, filename, label, disabled = false, meta: { touched, error } }) {
 
   const onDrop = useCallback(acceptedFiles => {
     input.onChange(acceptedFiles)
@@ -36,7 +34,7 @@ function DropZoneField({ input, label, isDisabled = false, meta: { touched, erro
     rejectedFiles,
     acceptedFiles
   } = useDropzone({
-    disabled: isDisabled,
+    disabled,
     onDrop,
     accept: 'application/pdf',
     minSize: 0
@@ -48,28 +46,25 @@ function DropZoneField({ input, label, isDisabled = false, meta: { touched, erro
     'drop-zone-area',
     {
       'with-file': acceptedFiles[0],
-      'disabled': isDisabled
+      disabled
     }
   )
-  
+
   const sectionClass = classnames({ 'is-invalid': touched && error })
   const currentFile = input.value ? input.value[0] : acceptedFiles[0]
+  
   return (
     <section className={sectionClass}>
       {label && <label htmlFor={input.name}>{label}</label>}
       <div {...getRootProps()} className={mainClass}>
         <input {...getInputProps()}/>
         {(() => {
-          if (currentFile) {
+          if (currentFile || filename) {
             return (
               <div className='accepted-file'>
-                <ReactSVG
-                  svgStyle={{ height: 40, width: 40, marginRight: 15 }}
-                  src={fileIcon}
-                />
+                <i className='svg-icon common-file-icon black big mr-3' />
                 <div className='accepted-file__text'>
-                  <p>Old file</p>
-                  <span className='file-name'>{currentFile.name}</span>
+                  <span className='file-name'>{currentFile ? currentFile.name : filename}</span>
                   <span>Replace the document file</span>
                 </div>
               </div>
@@ -82,7 +77,7 @@ function DropZoneField({ input, label, isDisabled = false, meta: { touched, erro
                 {isFileRejected ? (
                   <span className='reject'>File type not accepted, sorry!</span>
                 ) : (
-                  !isDisabled && <span>Click here to browse your files</span>
+                  !disabled && <span>Click here to browse your files</span>
                 ) }
               </React.Fragment>
             )

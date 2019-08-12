@@ -26,10 +26,12 @@ class BillingAddress extends Component {
       <div className='new-project-modal'>
         <h4>{modalTitle ? modalTitle : 'New project'}</h4>
         <div className='modal-body company-data'>
-          <h6>Please enter the billing address</h6>
-          <FormSection name='billing_address'>
-            <AddressFields submitErrors={submitErrors} />
-          </FormSection>
+          <div>
+            <h6>Please enter the billing address</h6>
+            <FormSection name='billing_address'>
+              <AddressFields submitErrors={submitErrors} />
+            </FormSection>
+          </div>
         </div>
         {submitButtons ? submitButtons() : this.renderSubmitButtons()}
       </div>

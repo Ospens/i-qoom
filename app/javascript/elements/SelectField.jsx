@@ -115,7 +115,7 @@ const SelectField = ({
   label,
   placeholder,
   className,
-  isDisabled = false,
+  disabled = false,
   isMulti = false,
   meta: { touched, error }
 }) => {
@@ -137,7 +137,7 @@ const SelectField = ({
         onChange={v => { input.onChange(v.value || v.map(val => val.value)) }}
         onBlur={value => input.onBlur(value.value)}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
-        isDisabled={isDisabled}
+        isDisabled={disabled}
         placeholder={placeholder ? placeholder : 'Select...'}
       />
       <div className='invalid-feedback'>

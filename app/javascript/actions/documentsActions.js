@@ -9,7 +9,7 @@ import {
 import { fieldByColumn } from './conventionActions'
 import { errorNotify, successNotify } from '../elements/Notices'
 
-const paramsToFormData = (data, params, preceding = '') => {
+export const paramsToFormData = (data, params, preceding = '') => {
   let newData = data
   for (const [k, v] of Object.entries(params)) {
     if (v instanceof Object && v.constructor === Array) {

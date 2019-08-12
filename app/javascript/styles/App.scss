@@ -1425,7 +1425,9 @@ input[type=checkbox] {
 
   .nav-item, button, a {
     display: flex;
-
+    align-items: center;
+    align-content: center;
+    
     &.logout {
       color: gray;
     }

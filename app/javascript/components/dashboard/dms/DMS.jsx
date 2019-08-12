@@ -3,8 +3,7 @@ import './DMS.scss'
 import { connect } from 'react-redux'
 import { startFetchDocuments } from '../../../actions/documentsActions'
 import { Route, Switch, withRouter } from 'react-router-dom'
-import NewDocument from './user/NewDocument'
-import EditDocument from './user/EditDocument'
+import DocumentForm from './user/DocumentForm'
 import AddRevision from './AddRevision'
 import ShowDocument from '../dms/user/showDocument/ShowDocument'
 import IndexDMS from './IndexDMS'
@@ -24,8 +23,8 @@ class DMS extends Component {
     
     return (
       <Switch>
-        <Route path={`${match.path}/new/`} component={NewDocument} />
-        <Route path={`${match.path}/:document_id/edit/`} component={EditDocument} />
+        <Route path={`${match.path}/new/`} component={DocumentForm} />
+        <Route path={`${match.path}/:document_id/edit/`} component={DocumentForm} />
         <Route
           path={`${match.path}/master/edit_convention/`}
           component={EditConvention}

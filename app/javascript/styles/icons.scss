@@ -103,6 +103,11 @@ i.svg-icon {
     min-width: 19.5px;
     min-height: 21px;
     height: 21px;
+
+    &.big {
+      width: 39px;
+      height: 41px;
+    }
   }
   
   &.common-file-color-icon {
