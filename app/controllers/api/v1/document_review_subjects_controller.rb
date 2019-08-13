@@ -4,7 +4,7 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
   before_action :set_revision,
                 if: -> { @document.present? && @document_revision.blank? }
   load_resource :document_review_subject, through: :document_revision
-  authorize_resource :document_review_subject
+  authorize_resource :document_review_subject, except: [:index]
 
   def new
     render json: DocumentReviewSubject.new
@@ -19,6 +19,11 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
     else
       render json: subject.errors, status: :unprocessable_entity
     end
+  end
+
+  def index
+    authorize! :show, @document_revision
+    render json: @document_revision.document_review_subjects
   end
 
   private

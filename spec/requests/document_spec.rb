@@ -816,6 +816,7 @@ describe Document, type: :request do
       headers: credentials(document.user)
     expect(response).to have_http_status(:success)
     revision = json.first
+    expect(revision['id']).to eql(document.revision.id)
     expect(revision['codification_string']).to eql(document.codification_string)
     expect(revision['title']).to eql(title)
   end

@@ -60,4 +60,29 @@ describe DocumentReviewSubject, type: :request do
       expect(subject.comments.first.text).to eql(comment)
     end
   end
+
+  context '#index' do
+    it 'anon' do
+      get "/api/v1/document_revisions/#{revision.id}/document_review_subjects"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      FactoryBot.create(:document_review_subject, document_revision: revision)
+      expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
+      get "/api/v1/document_revisions/#{revision.id}/document_review_subjects",\
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      subject = json.first
+      expect(subject).to have_key('id')
+      expect(subject).to have_key('document_reference')
+      expect(subject).to have_key('title')
+      expect(subject).to have_key('status')
+      expect(subject).to have_key('comment')
+      expect(subject).to have_key('review_issuer_id')
+      expect(subject).to have_key('reviewer_ids')
+      expect(subject).to_not have_key('created_at')
+      expect(subject).to_not have_key('updated_at')
+    end
+  end
 end
