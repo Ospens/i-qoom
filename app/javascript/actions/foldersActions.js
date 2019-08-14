@@ -2,6 +2,7 @@ import axios from 'axios'
 import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
+  EDITING_FOLDER,
   FOLDERS_FETCHED
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
@@ -21,15 +22,35 @@ const foldersFetched = payload => ({
   payload
 })
 
-export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
+const editingFolder = payload => ({
+  type: EDITING_FOLDER,
+  payload
+})
+
+export const startFetchFolders = (projectId, docId = 28) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
-  const params = { document_id: docId }
+  const params = docId ? { document_id: docId } : {}
 
   return (
     axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers })
       .then(response => {
         dispatch(foldersFetched(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const startEditFolder = folderId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token }
+
+  return (
+    axios.get(`/api/v1/document_folders/${folderId}/edit`, { headers })
+      .then(response => {
+        dispatch(editingFolder(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -50,7 +71,6 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
   return (
     axios.post('/api/v1/document_folders/', request, headers)
       .then(response => {
-        console.log(response)
         dispatch(folderCreated(response.data))
       })
       .catch(() => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './DMS.scss'
 import { connect } from 'react-redux'
-import { startFetchDocuments } from '../../../actions/documentsActions'
+import { startFetchFolders } from '../../../actions/foldersActions'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import DocumentForm from './user/DocumentForm'
 import AddRevision from './AddRevision'
@@ -14,16 +14,24 @@ import QuickSearch from './master/quickSearch/QuickSearch'
 import Codifications from './master/codifications/Codifications'
 import CodificationSettings from './master/codifications/CodificationSettings'
 import DistributionGroup from './master/distributionGroup/DistributionGroup'
+import FolderSettings from './user/folderSettings/FolderSettings'
 
 class DMS extends Component {
+
+  componentWillMount() {
+    const { fetchFolders, match: { params: { project_id } } } = this.props
+    fetchFolders(project_id)
+  }
 
   render() {
     const { match } = this.props
     const codificationId = 1
-    
+
     return (
       <Switch>
         <Route path={`${match.path}/new/`} component={DocumentForm} />
+        <Route path={`${match.path}/folders/all/`} component={FolderSettings} />
+        <Route path={`${match.path}/folders/:folder_id/`} component={FolderSettings} />
         <Route path={`${match.path}/:document_id/edit/`} component={DocumentForm} />
         <Route
           path={`${match.path}/master/edit_convention/`}
@@ -68,7 +76,7 @@ class DMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: () => dispatch(startFetchDocuments())
+  fetchFolders: projectId => dispatch(startFetchFolders(projectId))
 })
 
 const mapStateToProps = ({ documents }) => ({

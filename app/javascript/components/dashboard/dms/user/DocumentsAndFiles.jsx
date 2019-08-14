@@ -15,6 +15,7 @@ import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
 import { required } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
+import DocumentIdInputs from '../DocumentIdInputs'
 
 const codificationString = [
   'originating_company',
@@ -24,19 +25,6 @@ const codificationString = [
 ]
 
 const selector = formValueSelector('document_form')
-
-// Select options haven't ids
-
-const updateDocFieldValues = (value, fieldValues, changeValues) => {
-  const newValues = fieldValues.map(field => {
-    const selected = field.value == value
-    return {
-      ...field,
-      selected
-    }
-  })
-  changeValues(newValues)
-}
 
 function InputByType({ field, modal, toggleModal, conventionId, changeValues }) {
   const uniqName = `document_fields[${field.index}].value`
@@ -82,7 +70,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
         {...commonProps}
         component={SelectField}
         options={fieldValues}
-        onChange={v => updateDocFieldValues(v, fieldValues, () => changeValues(field.index))}
+        onChange={v => changeValues(v, fieldValues, field.index)}
       />
     )
   } else if (field.kind === 'textarea_field') {
@@ -136,8 +124,17 @@ function DocumentsAndFiles() {
 
   const dispatch = useDispatch()
 
-  const changeValues = useCallback((position, values) => {
-    dispatch(change('document_form', `document_fields[${position}].document_field_values`, values))
+  // Select options haven't ids
+
+  const changeValues = useCallback((value, fieldValues, index) => {
+    const newValues = fieldValues.map(field => {
+      const selected = field.value == value
+      return {
+        ...field,
+        selected
+      }
+    })
+    dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
   }, [dispatch])
 
   const initDocIdForm = useCallback(values => {
@@ -193,62 +190,12 @@ function DocumentsAndFiles() {
         <div className='row new-document-table'>
 
           <div className='col-6'>
-            <div className='form-group'>
-              <label>Pleace select or generate Document ID</label>
-
-              <div className='input-container'>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_name'
-                    value='MWP'
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_orig_company'
-                    placeholder='XXX'
-                    value={origCompanyValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_discipline'
-                    placeholder='XXX'
-                    value={disciplineValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_doc_type'
-                    placeholder='XXX'
-                    value={docTypeValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_doc_number'
-                    placeholder='XXX'
-                    value={docNumberValue || ''}
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
-
+            <DocumentIdInputs
+              origCompanyValue={origCompanyValue}
+              disciplineValue={disciplineValue}
+              docTypeValue={docTypeValue}
+              docNumberValue={docNumberValue}
+            />
             <div className='form-group'>
               <CheckboxField
                 name='generate_id'
@@ -294,6 +241,5 @@ function DocumentsAndFiles() {
     </React.Fragment>
   )
 }
-
 
 export default DocumentsAndFiles

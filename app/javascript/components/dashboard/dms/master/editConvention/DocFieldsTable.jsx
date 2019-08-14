@@ -10,6 +10,7 @@ import {
 import { DragDropContext } from 'react-beautiful-dnd'
 import { DocFieldsColumn } from './DocFieldsColumn'
 import ModalCreateField from './ModalCreateField'
+import DocumentIdInputs from '../../DocumentIdInputs'
 
 const initState = {
   modalOpen: false
@@ -62,62 +63,12 @@ class DocFieldsTable extends Component {
   renderDocIdFields = () => (
     <React.Fragment>
       <div className='draggable-container undraggable'>
-        <div className='form-group'>
-          <label>Pleace select or generate Document ID</label>
-
-          <div className='input-container'>
-            <div className='document-id-code'>
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='MWP'
-                disabled
-              />
-            </div>
-            <div className='document-id-code'>
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='STX'
-                disabled
-              />
-            </div>
-            <div className='document-id-code'>
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='EOS'
-                disabled
-              />
-            </div>
-            <div className='document-id-code'>
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='XXX'
-                disabled
-              />
-            </div>
-            <div className='document-id-code'>
-              <input
-                className='form-control'
-                type='text'
-                name='document_id'
-                id='document_id'
-                placeholder='XXXX'
-                disabled
-              />
-            </div>
-          </div>
-        </div>
+        <DocumentIdInputs
+          origCompanyValue='XXX'
+          disciplineValue='XXX'
+          docTypeValue='XXX'
+          docNumberValue='XXXX'
+        />
       </div>
       <div className='draggable-container undraggable'>
         <div className='form-group'>

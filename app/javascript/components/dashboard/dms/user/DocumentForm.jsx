@@ -48,7 +48,7 @@ function DocumentForm({ initialize, handleSubmit, history, match: { params: { pr
   return (
     <DMSLayout
       sidebar={<DocumentSideBar {...{ step, toggleStep }} />}
-      content={renderForm(() => handleSubmit(submitDocument), step, () => toggleStep(1))}
+      content={renderForm(handleSubmit(submitDocument), step, () => toggleStep(1))}
     />
   )
 }

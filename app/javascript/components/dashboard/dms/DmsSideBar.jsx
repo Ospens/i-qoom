@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link, Route } from 'react-router-dom'
+import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 
 export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
@@ -34,28 +34,59 @@ export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
   </Route>
 )
 
+export const renderFoldersBlock = (folders, projectId) => {
+  return (
+    <div className='dms-sidebar-menu__block'>
+      <h4>My Folders</h4>
+      <ul className='dms-sidebar-menu__list'>
+        <li className='dms-sidebar-menu__item'>
+          <button type='button' className='btn'>
+            <i className='svg-icon black mr-2 folder-icon-2' />
+            <span className='head-button__gray-text'>All documents</span>
+          </button>
+        </li>
+        <li className='dms-sidebar-menu__item'>
+          <button type='button' className='btn'>
+            <i className='svg-icon black mr-2 folder-icon-3' />
+            <span className='head-button__gray-text'>My documents</span>
+          </button>
+        </li>
+        {folders.map(({ id, title }, i) => (
+          <DmsSideBarItem
+            key={i}
+            path={`/dashboard/projects/${projectId}/documents/folders/${id}`}
+            label={title}
+            icon='folder-icon'
+          />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 class DmsSideBar extends Component {
 
   renderMainItems = () => {
-    const { projectId } = this.props
-    const masterPath = `/dashboard/projects/${projectId}/documents/master`
-    
+    const { folders, match: { params: { folder_id, project_id } } } = this.props
+    const masterPath = `/dashboard/projects/${project_id}/documents/master`
+
     // TODO: Need check for master's permit
+
     const menuItems = [
       {
         title: 'Overview',
         icon: 'task-checklist-icon',
-        path: `/dashboard/projects/${projectId}/documents/`
+        path: `/dashboard/projects/${project_id}/documents/`
       },
       {
         title: 'DMS Settings',
         icon: 'task-list-settings-icon',
-        path: `/dashboard/projects/${projectId}/documents/settings/`
+        path: `/dashboard/projects/${project_id}/documents/settings/`
       },
       {
         title: 'Document planning',
         icon: 'calendar-icon-3',
-        path: `/dashboard/projects/${projectId}/documents/planning/`
+        path: `/dashboard/projects/${project_id}/documents/planning/`
       },
       {
         title: 'Master settings',
@@ -143,20 +174,24 @@ class DmsSideBar extends Component {
             </React.Fragment>
           ))}
         </ul>
-        <h4>Master settings</h4>
-        <ul className='dms-sidebar-menu__list'>
-          {masterMenu.map(({ path, title, icon, root, nested }, i) => (
-            <React.Fragment key={i}>
-              <DmsSideBarItem
-                path={path}
-                label={title}
-                icon={icon}
-                root={root}
-                nested={nested}
-              />
-            </React.Fragment>
-          ))}
-        </ul>
+        {folder_id
+          ? renderFoldersBlock(folders, project_id)
+          : <React.Fragment>
+              <h4>Master settings</h4>
+              <ul className='dms-sidebar-menu__list'>
+                {masterMenu.map(({ path, title, icon, root, nested }, i) => (
+                  <React.Fragment key={i}>
+                    <DmsSideBarItem
+                      path={path}
+                      label={title}
+                      icon={icon}
+                      root={root}
+                      nested={nested}
+                    />
+                  </React.Fragment>
+                ))}
+              </ul>
+            </React.Fragment>}
       </div>
     )
 
@@ -176,8 +211,8 @@ class DmsSideBar extends Component {
   }
 }
 
-const mapStateToProps = ({ projects }) => ({
-  projectId: projects.current.id
+const mapStateToProps = ({ projects, folders }) => ({
+  folders: folders.allFolders
 })
 
-export default connect(mapStateToProps)(DmsSideBar)
+export default connect(mapStateToProps)(withRouter(DmsSideBar))

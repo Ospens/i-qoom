@@ -55,4 +55,5 @@ export const ROLE_CREATED = 'ROLE_CREATED'
 /* Folders */
 export const FOLDER_CREATED = 'FOLDER_CREATED'
 export const FOLDERS_FETCHED = 'FOLDERS_FETCHED'
+export const EDITING_FOLDER = 'EDITING_FOLDER'
 export const DOCUMENT_ADDED = 'DOCUMENT_ADDED'

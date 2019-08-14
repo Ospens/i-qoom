@@ -1,11 +1,13 @@
 import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
+  EDITING_FOLDER,
   FOLDERS_FETCHED
 } from '../actions/types'
 
 const initialState = {
-  allFolders: []
+  allFolders: [],
+  editing: {}
 }
 
 const documentFolderReducer = (state = initialState, action) => {
@@ -19,6 +21,11 @@ const documentFolderReducer = (state = initialState, action) => {
     return {
       ...state,
       allFolders: action.payload
+    }
+  case EDITING_FOLDER:
+    return {
+      ...state,
+      editing: action.payload
     }
   case FOLDER_CREATED:
     return {
