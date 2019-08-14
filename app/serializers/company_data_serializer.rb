@@ -7,7 +7,7 @@ class CompanyDataSerializer < ApplicationSerializer
   end
 
   def logo
-    Rails.application.routes.url_helpers.rails_blob_path(object.logo) if object.logo.attached?
+    Rails.application.routes.url_helpers.url_for(object.logo) if object.logo.attached?
   end
 
 end
