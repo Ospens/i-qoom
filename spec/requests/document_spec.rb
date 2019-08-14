@@ -163,8 +163,6 @@ describe Document, type: :request do
     document_native_file =
       document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['file'] = fixture_file_upload('test.txt')
-    revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
-    revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
     field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')

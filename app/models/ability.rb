@@ -57,9 +57,13 @@ class Ability
         document.user == user ||
           document.can_view?(user)
       end
-      can [:edit, :update, :create_revision], Document do |document|
+      can [:edit, :create_revision], Document do |document|
         document.user == user ||
           document.can_create?(user)
+      end
+      can :update, Document do |document|
+        (document.user == user || document.can_create?(user)) &&
+          document == document.revision.versions.last_version
       end
       can [:index, :download_native_files, :download_list], Document # there should be some limitation
       # DmsSetting
