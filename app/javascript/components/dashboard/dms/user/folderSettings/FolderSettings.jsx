@@ -1,12 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+  formValueSelector,
+} from 'redux-form'
 import { withRouter } from 'react-router-dom'
-import { startEditFolder } from '../../../../../actions/foldersActions' 
+import { startEditFolder } from '../../../../../actions/foldersActions'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
-import DocumentIdInputs from '../../DocumentIdInputs'
+import FolderForm from './FolderForm'
 
-const FolderSettingsTable = () => {
+const selector = formValueSelector('folder_form')
+
+function FolderSettingsTable() {
+  const documentFields = useSelector(state => selector(state, 'document_fields'))
+
   return (
     <div className='p-4'>
       <h5>Document code</h5>
@@ -16,14 +23,13 @@ const FolderSettingsTable = () => {
           <div>Copied automatically</div>
         </div>
         <div className='folder-setting-table__row'>
-          <div><DocumentIdInputs label={false} /></div>
-          <div className='copied-automatically-code'>ABC-___-___-IJK-____</div>
-          <div />
-          <div>+</div>
-        </div>
-        <div className='folder-setting-table__row'>
-          <div><DocumentIdInputs label={false} /></div>
-          <div>ABC-DEF-FGH-IJK-1234</div>
+          <FolderForm/>
+          <div className='copied-automatically-code'>
+            {documentFields
+              ? 'ABC-___-___-IJK-____'
+              : '___-___-___-___-____' 
+            }
+            </div>
         </div>
       </div>
     </div>
@@ -37,7 +43,7 @@ const NoOptions = () => (
   </div>
 )
 
-const Content = folderId => {
+function Content(folderId) {
   const folder = useSelector(state => state.folders.editing)
 
   return (
@@ -62,7 +68,7 @@ const Content = folderId => {
   )
 }
 
-const FolderSettings = ({ match: { params: { folder_id } } }) => {
+function FolderSettings({ match: { params: { folder_id } } }) {
   const dispatch = useDispatch()
 
   const getFolder = useCallback(() => {

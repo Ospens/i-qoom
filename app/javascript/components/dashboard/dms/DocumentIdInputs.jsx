@@ -5,12 +5,11 @@ function DocumentIdInputs({
   origCompanyValue,
   disciplineValue,
   docTypeValue,
-  docNumberValue,
-  label = true
+  docNumberValue
 }) {
   return (
     <div className='form-group'>
-      {label && <label>Pleace select or generate Document ID</label>}
+      <label>Pleace select or generate Document ID</label>
       <div className='input-container'>
         <div className='document-id-code'>
           <input

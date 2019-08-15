@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { initialize } from 'redux-form'
 import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
@@ -50,6 +51,7 @@ export const startEditFolder = folderId => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/document_folders/${folderId}/edit`, { headers })
       .then(response => {
+        dispatch(initialize('folder_form', response.data))
         dispatch(editingFolder(response.data))
       })
       .catch(() => {
@@ -72,6 +74,27 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
     axios.post('/api/v1/document_folders/', request, headers)
       .then(response => {
         dispatch(folderCreated(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const startUpdateFolder = values => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  const request = {
+    document_folder: {
+      // project_id: projectId,
+      ...values
+    }
+  }
+
+  return (
+    axios.post('/api/v1/document_folders/', request, headers)
+      .then(response => {
+        console.log(response)
       })
       .catch(() => {
         errorNotify('Something went wrong')
