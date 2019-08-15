@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { change } from 'redux-form'
 import classnames from 'classnames'
+
+const initState = {
+  file: '',
+  imagePreviewUrl: ''
+}
 
 class FileField extends Component {
 
-  state = {
-    file: '',
-    imagePreviewUrl: ''
+  state = initState
+
+  discardLogo = () => {
+    this.setState(initState)
+    this.props.discardLogo()
   }
 
   onInputChange = (e, input) => {
@@ -24,16 +33,16 @@ class FileField extends Component {
     input.onChange(file)
   }
 
-  renderLogo = (imagePreviewUrl) => {
+  renderLogo = url => {
     return (
       <div className='logo-container'>
         <div className='trash-icon-container'>
           <i
             className='svg-icon trash-icon white'
-            onClick={() => this.setState({ file: '', imagePreviewUrl: '' })}
+            onClick={this.discardLogo}
           />
         </div>
-        <img src={imagePreviewUrl} /> 
+        <img src={url} /> 
       </div>
     )
   }
@@ -41,9 +50,10 @@ class FileField extends Component {
   render() {
     const { imagePreviewUrl } = this.state
     const { input, dataAllowedFileExtensions } = this.props
-    const imagePreview = imagePreviewUrl ? this.renderLogo(imagePreviewUrl) : null
+    const url = imagePreviewUrl || input.value
+    const imagePreview = url ? this.renderLogo(url) : null
     const mainClass = classnames({'image-preview': imagePreview})
-
+    
     return (
       <div className={mainClass}>
         {imagePreview}
@@ -68,4 +78,8 @@ class FileField extends Component {
   }
 }
 
-export default FileField
+const mapDispatchToProps = dispatch => ({
+  discardLogo: () => dispatch(change('company_form', 'company_data.logo', null))
+})
+
+export default connect(null, mapDispatchToProps)(FileField)
