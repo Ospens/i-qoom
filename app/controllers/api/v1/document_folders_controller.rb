@@ -5,19 +5,22 @@ class Api::V1::DocumentFoldersController < ApplicationController
     document_folder =
       signed_in_user.document_folders.new(document_folder_params(true))
     if document_folder.save
-      render json: document_folder, include: :document_fields
+      render json: document_folder
     else
       render json: document_folder.errors, status: :unprocessable_entity
     end
   end
 
   def edit
-    render json: @document_folder, include: :document_fields
+    if !@document_folder.document_fields.any?
+      @document_folder.build_default_fields
+    end
+    render json: @document_folder
   end
 
   def update
     if @document_folder.update(document_folder_params(true))
-      render json: @document_folder, include: :document_fields
+      render json: @document_folder
     else
       render json: @document_folder.errors, status: :unprocessable_entity
     end
@@ -58,7 +61,6 @@ class Api::V1::DocumentFoldersController < ApplicationController
                                             :project_id,
                                              document_fields_attributes:
                                               [ :id,
-                                                :kind,
                                                 :codification_kind,
                                                 :value ])
   end
