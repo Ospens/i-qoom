@@ -12,25 +12,34 @@ class FileField extends Component {
 
   state = initState
 
-  discardLogo = () => {
-    this.setState(initState)
-    this.props.discardLogo()
+  componentWillUpdate(nextProps) {
+    if (typeof nextProps.input.value === 'string') {
+      this.props.input.onChange(null)
+      this.setState({
+        imagePreviewUrl: nextProps.input.value
+      })
+    }
   }
 
-  onInputChange = (e, input) => {
+  discardLogo = () => {
+    this.setState(initState)
+    this.props.input.onChange({})
+  }
+
+  onInputChange = e => {
     e.preventDefault()
 
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    let reader = new FileReader()
+    let file = e.target.files[0]
 
     reader.onloadend = () => {
       this.setState({
         file: file,
         imagePreviewUrl: reader.result
-      });
+      })
     }
     reader.readAsDataURL(file)
-    input.onChange(file)
+    this.props.input.onChange(file)
   }
 
   renderLogo = url => {
@@ -49,9 +58,8 @@ class FileField extends Component {
 
   render() {
     const { imagePreviewUrl } = this.state
-    const { input, dataAllowedFileExtensions } = this.props
-    const url = imagePreviewUrl || input.value
-    const imagePreview = url ? this.renderLogo(url) : null
+    const { dataAllowedFileExtensions } = this.props
+    const imagePreview = imagePreviewUrl ? this.renderLogo(imagePreviewUrl) : null
     const mainClass = classnames({'image-preview': imagePreview})
     
     return (
@@ -60,7 +68,7 @@ class FileField extends Component {
         {!imagePreview &&
         <div>
           <input
-            onChange={(e) => this.onInputChange(e, input)}
+            onChange={e => this.onInputChange(e)}
             id='file_logo'
             type='file'
             className='inputfile'

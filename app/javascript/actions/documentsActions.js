@@ -25,6 +25,9 @@ export const paramsToFormData = (data, params, preceding = '') => {
       newData = paramsToFormData(newData, v, prefix)
     } else if (v !== null && v !== undefined) {
       newData.append(`${preceding}${k}`, v)
+    } else if (v === null && k === 'logo') {
+      // TODO: waiting a backend part
+      newData.append(`${preceding}${k}`, v)
     }
   }
   return newData

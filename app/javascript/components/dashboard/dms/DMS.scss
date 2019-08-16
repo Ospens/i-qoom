@@ -1560,21 +1560,16 @@ input.search-input {
       }
 
       label.filter-grid-row-opener {
+        display: flex;
+        align-items: center;
         margin-bottom: 0rem;
         margin-left: 10px;
         margin-right: 10px;
         -webkit-transition: margin .3s ease;
-        width: 10px;
 
         i {
-          border-style: solid;
-          border-width: 0 3px 3px 0;
-          display: inline-block;
-          padding: 3px;
-          border-color: #475859;
-          transform: rotate(45deg);
-          -webkit-transform: rotate(45deg);
-          margin-bottom: 4px;
+          transform: rotate(0deg);
+          -webkit-transform: rotate(0deg);
 
           &:hover {
             cursor: pointer;
@@ -1584,18 +1579,15 @@ input.search-input {
 
       #grid-row-opener:checked~.filter-grid-subcolumn {
         max-height: 600px;
-        overflow: auto;
-        -webkit-overflow-scrolling:touch;
+        -webkit-overflow-scrolling: touch;
         -webkit-transition: overflow .5s;
-        border-top: 1px solid lightgray;
         margin-top: 15px;
-        padding-top: 15px;
       }
 
       #grid-row-opener:checked~.d-flex .filter-grid-row-opener {
         i {
-          transform: rotate(-135deg);
-          -webkit-transform: rotate(-135deg);
+          transform: rotate(180deg);
+          -webkit-transform: rotate(180deg);
           margin-bottom: 0;
         }
       }

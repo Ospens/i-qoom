@@ -374,4 +374,13 @@ i.svg-icon {
     width: 46px;
     min-width: 46px;
   }
+
+  &.dark-arrow-icon {
+    -webkit-mask: url('../images/arrow-button-down.svg') no-repeat 50% 50%;
+    mask: url('../images/arrow-button-down.svg') no-repeat 50% 50%;
+    height: 7px;
+    min-height: 7px;
+    width: 11px;
+    min-width: 11px;
+  }
 }
