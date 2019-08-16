@@ -11,9 +11,12 @@ class Document < ApplicationRecord
 
   belongs_to :convention
 
-  belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
+  belongs_to :revision,
+             class_name: 'DocumentRevision',
+             foreign_key: 'document_revision_id'
 
-  has_one :document_main, through: :revision
+  has_one :document_main,
+          through: :revision
 
   has_many :document_fields,
            as: :parent,

@@ -42,6 +42,7 @@ Rails.application.routes.draw do
           collection do
             get :download_native_files
             get :download_list
+            get :my_documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
