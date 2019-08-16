@@ -67,7 +67,9 @@ Rails.application.routes.draw do
                   except: [:new, :show]
         resources :roles,
                   except: [:new, :show]
-        resources :document_folders, only: :index
+        resources :document_folders, only: :index do
+          get :user_index, on: :collection
+        end
       end
     end
   end

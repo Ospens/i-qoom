@@ -36,7 +36,15 @@ class Api::V1::DocumentFoldersController < ApplicationController
       DocumentFolder.select_folders_index(signed_in_user.id,
                                           params[:project_id],
                                           params[:document_id])
-    render json: document_folders, only: [:id, :title, :project_id, :enabled]
+    render json: document_folders
+  end
+
+  def user_index
+    document_folders =
+      signed_in_user.document_folders
+                    .where(project_id: params[:project_id])
+                    .order(id: :asc)
+    render json: document_folders
   end
 
   def add_document_to_folders

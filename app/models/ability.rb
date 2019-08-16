@@ -69,7 +69,7 @@ class Ability
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder
-      can :manage, DocumentFolder, user_id: user.id # there should be some limitation
+      can :manage, DocumentFolder, user_id: user.id
     end
   end
 end
