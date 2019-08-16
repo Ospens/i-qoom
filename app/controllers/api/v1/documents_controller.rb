@@ -60,12 +60,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def index
-    documents =
-      if @project.document_mains.any?
-        @project.document_mains.documents_available_for(signed_in_user)
-      else
-        []
-      end
+    documents = @project.document_mains.documents_available_for(signed_in_user)
 
     if params[:originating_companies].present? && params[:originating_companies].any?
       documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
@@ -158,6 +153,17 @@ class Api::V1::DocumentsController < ApplicationController
         send_data(stream, type: 'application/pdf', filename: "#{filename}.pdf")
       end
     end
+  end
+
+  def my_documents
+    revision_ids = @project.documents.pluck(:document_revision_id).uniq
+    revisions = DocumentRevision.find(revision_ids)
+    main_ids = revisions.pluck(:document_main_id).uniq
+    mains = DocumentMain.where(id: main_ids)
+    documents = mains.documents_available_for(signed_in_user)
+    render json: documents, include: {
+      document_fields: { include: :document_field_values }
+    }
   end
 
   private

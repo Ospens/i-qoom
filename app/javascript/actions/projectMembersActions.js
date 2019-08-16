@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
-  PROJECT_MEMBERS_FETCHED_SUCCESS,
+  ACTIVE_MEMBERS_FETCHED_SUCCESS,
+  PENDING_MEMBERS_FETCHED_SUCCESS,
   PROJECT_MEMBER_CREATED,
   PROJECT_MEMBER_UPDATED,
   CREATING_PROJECT_MEMBER
@@ -9,7 +10,12 @@ import {
 import { errorNotify } from '../elements/Notices'
 
 const projectMembersFetched = payload => ({
-  type: PROJECT_MEMBERS_FETCHED_SUCCESS,
+  type: ACTIVE_MEMBERS_FETCHED_SUCCESS,
+  payload
+})
+
+const pendingMembersFetched = payload => ({
+  type: PENDING_MEMBERS_FETCHED_SUCCESS,
   payload
 })
 
@@ -28,13 +34,27 @@ const updateProjectMember = payload => ({
   payload
 })
 
-export const startFetchProjectMembers = id => (dispatch, getState) => {
+export const startFetchActiveProjectMembers = id => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { headers: { Authorization: token } }
   return (
-    axios.get(`/api/v1/projects/${id}/members`, headers)
+    axios.get(`/api/v1/projects/${id}/members/active`, headers)
       .then(response => {
-        dispatch(projectMembersFetched(response.data))
+        dispatch(projectMembersFetched({ ...response.data }))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const startFetchPendingProjectMembers = id => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+  return (
+    axios.get(`/api/v1/projects/${id}/members/pending`, headers)
+      .then(response => {
+        dispatch(pendingMembersFetched({ ...response.data }))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -69,12 +89,12 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
   return (
     axios.post(`/api/v1/projects/${projectId}/members/`, request, headers)
       .then(response => {
-        dispatch(createProjectMember(response.data.project_member[0]))
-        dispatch(startFetchProjectMembers(projectId))
+        dispatch(createProjectMember(response.data))
+        dispatch(startFetchActiveProjectMembers(projectId))
       })
       .catch(response => {
         errorNotify('Something went wrong')
-        throw new SubmissionError(response.data.error_messages)
+        throw new SubmissionError(response.data)
       })
   )
 }
@@ -92,11 +112,11 @@ export const startUpdateProjectMember = (values, projectId) => (dispatch, getSta
   return (
     axios.patch(`/api/v1/projects/${projectId}/members/${values.id}`, request, headers)
       .then(response => {
-        dispatch(updateProjectMember(response.data.project_member[0]))
+        dispatch(updateProjectMember(response.data))
       })
       .catch(response => {
         errorNotify('Something went wrong')
-        throw new SubmissionError(response.data.error_messages)
+        throw new SubmissionError(response.data)
       })
   )
 }

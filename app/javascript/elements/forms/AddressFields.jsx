@@ -6,91 +6,83 @@ import countryList from '../../components/landing/countriesCodes'
 import { required } from '../../elements/validations'
 
 const AddressFields = ({ submitErrors }) => (
-  <div>
-    <div className='form-group'>
+  <React.Fragment>
+    <Field
+      component={InputField}
+      name='company_name'
+      id='company_name'
+      errorField={submitErrors}
+      className='form-group'
+      placeholder='Company name'
+      validate={[required]}
+    />
+    <div className='form-row'>
       <Field
         component={InputField}
-        name='company_name'
-        id='company_name'
+        name='street'
+        id='street'
         errorField={submitErrors}
-        placeholder='Company name'
+        className='form-group col-md-8'
+        placeholder='Street name'
         validate={[required]}
       />
-    </div>
-    <div className='row'>
-      <div className='form-group col-8'>
-        <Field
-          component={InputField}
-          name='street'
-          id='street'
-          errorField={submitErrors}
-          placeholder='Street name'
-          validate={[required]}
-        />
-      </div>
-      <div className='form-group col-4'>
-        <Field
-          component={InputField}
-          name='house_number'
-          id='house_number'
-          errorField={submitErrors}
-          placeholder='No.'
-          validate={[required]}
-        />
-      </div>
-    </div>
-    <div className='row'>
-      <div className='form-group col-8'>
-        <Field
-          component={InputField}
-          name='city'
-          id='city'
-          errorField={submitErrors}
-          placeholder='City'
-          validate={[required]}
-        />
-      </div>
-      <div className='form-group col-4'>
-        <Field
-          component={InputField}
-          name='postcode'
-          id='postcode'
-          errorField={submitErrors}
-          placeholder='Postcode'
-        />
-      </div>
-    </div>
-    <div className='form-group'>
       <Field
-        name='country'
-        id='country'
-        options={countryList}
+        component={InputField}
+        name='house_number'
+        id='house_number'
         errorField={submitErrors}
-        component={SelectField}
+        className='form-group col-md-4'
+        placeholder='No.'
         validate={[required]}
       />
     </div>
-    <div className='row'>
-      <div className='form-group col-6'>
-        <Field
-          component={InputField}
-          name='district'
-          id='district'
-          errorField={submitErrors}
-          placeholder='District'
-        />
-      </div>
-      <div className='form-group col-6'>
-        <Field
-          component={InputField}
-          name='district_court'
-          id='district_court'
-          errorField={submitErrors}
-          placeholder='District court'
-        />
-      </div>
+    <div className='form-row'>
+      <Field
+        component={InputField}
+        name='city'
+        id='city'
+        errorField={submitErrors}
+        className='form-group col-md-8'
+        placeholder='City'
+        validate={[required]}
+      />
+      <Field
+        component={InputField}
+        name='postcode'
+        id='postcode'
+        errorField={submitErrors}
+        className='form-group col-md-4'
+        placeholder='Postcode'
+      />
     </div>
-  </div>
+    <Field
+      name='country'
+      id='country'
+      options={countryList}
+      errorField={submitErrors}
+      className='form-group'
+      component={SelectField}
+      validate={[required]}
+    />
+    <div className='form-row'>
+      <Field
+        component={InputField}
+        name='district'
+        id='district'
+        errorField={submitErrors}
+        className='form-group col-md-6'
+        placeholder='District'
+      />
+      <Field
+        component={InputField}
+        name='district_court'
+        id='district_court'
+        errorField={submitErrors}
+        className='form-group col-md-6'
+        placeholder='District court'
+      />
+    </div>
+  </React.Fragment>
 )
 
 export default AddressFields

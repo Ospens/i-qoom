@@ -60,8 +60,8 @@ export const startFetchDocuments = (projectId, history) => (dispatch, getState) 
         dispatch(documentsFetched(response.data.documents))
       })
       .catch(({ response }) => {
-        if (response.status === 302) {
-          history.push({ pathname: `/dashboard${response.data.location}` })
+        if (response.status === 307) {
+          history.push({ pathname: `/dashboard/projects/${projectId}/documents/master/edit_convention` })
           errorNotify('Please, create a convention')
         } else {
           errorNotify('Something went wrong')

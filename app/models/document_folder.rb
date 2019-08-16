@@ -1,4 +1,11 @@
 class DocumentFolder < ApplicationRecord
+  DOCUMENT_FIELDS_KINDS = [
+    'originating_company',
+    'discipline',
+    'document_type',
+    'document_number'
+  ]
+
   belongs_to :project
 
   belongs_to :user
@@ -12,7 +19,8 @@ class DocumentFolder < ApplicationRecord
 
   has_and_belongs_to_many :document_mains
 
-  validate :document_fields_values
+  validate :document_fields_presence,
+           if: -> { document_fields.any? }
 
   def convention
     project.conventions.active
@@ -34,6 +42,12 @@ class DocumentFolder < ApplicationRecord
     document_fields.find_by(codification_kind: :document_number)
   end
 
+  def build_default_fields
+    DOCUMENT_FIELDS_KINDS.each do |kind|
+      document_fields.new(codification_kind: kind)
+    end
+  end
+
   def all_documents
     all_docs = project.document_mains.documents_available_for(user)
     if originating_company.present?
@@ -53,17 +67,6 @@ class DocumentFolder < ApplicationRecord
       all_docs = all_docs.filter_by_codification_kind(:document_number, value)
     end
     Document.find(document_mains.last_versions(user).pluck(:id) + all_docs.pluck(:id))
-  end
-
-  def document_fields_values
-    document_fields.each do |field|
-      next if !(field.originating_company? || field.discipline? || field.document_type?)
-      con_field = convention.document_fields
-                            .find_by(codification_kind: field.codification_kind)
-      if !con_field.document_field_values.pluck(:value).include?(field.value)
-        errors.add(:document_fields, :value_is_not_exist_in_convention)
-      end
-    end
   end
 
   def allowed_to_add_document?(document, user_to_check)
@@ -89,5 +92,15 @@ class DocumentFolder < ApplicationRecord
       user_id.to_i,
       project_id.to_i
     ])
+  end
+
+  private
+
+  def document_fields_presence
+    DOCUMENT_FIELDS_KINDS.each do |kind|
+      if document_fields.detect{ |i| i['codification_kind'] == kind }.blank?
+        errors.add(:document_fields, "#{kind}_field_is_missing")
+      end
+    end
   end
 end

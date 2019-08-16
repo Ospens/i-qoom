@@ -4,7 +4,8 @@ class ProjectMember < ApplicationRecord
                         :company_type,
                         :company_data,
                         :details,
-                        :completed ],
+                        :pending,
+                        :active ],
                       _prefix: true
 
   enum employment_type: [ :employee,
@@ -17,8 +18,9 @@ class ProjectMember < ApplicationRecord
                        :joint_venture_company ],
                       _prefix: true
 
-  after_save :update_creation_step_to_completed,
-             unless: :creation_step_completed?
+  after_save :update_creation_step_to_pending,
+             unless: -> { creation_step_active? ||
+                          creation_step_pending? }
 
   # before_create :add_user
 
@@ -57,12 +59,12 @@ class ProjectMember < ApplicationRecord
             if: -> {
               creation_step_company_data? ||
               creation_step_details? ||
-              creation_step_completed?
+              creation_step_pending?
             }
   # details fourth step
   with_options if: -> {
                  creation_step_details? ||
-                 creation_step_completed?
+                 creation_step_pending?
                } do
     validates :email,
               email: true,
@@ -75,11 +77,21 @@ class ProjectMember < ApplicationRecord
                         maximum: 255 }
   end
 
+  def send_confirmation_email
+    self.confirmation_sent_at = Time.now
+    ApplicationMailer.send_project_member_confirmation(self).deliver_now
+    self.save
+  end
+
+  def confirmation_token
+    ::JsonWebToken.encode(member_id: id, email: email)
+  end
+
   private
 
-  def update_creation_step_to_completed
-    update(creation_step: "completed")
-    self.reload if creation_step_completed?
+  def update_creation_step_to_pending
+    update(creation_step: "pending")
+    self.reload if creation_step_pending?
   end
 
   # # adds a user only when it is being created,

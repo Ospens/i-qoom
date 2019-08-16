@@ -163,8 +163,6 @@ describe Document, type: :request do
     document_native_file =
       document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['file'] = fixture_file_upload('test.txt')
-    revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
-    revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
     field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
@@ -805,6 +803,43 @@ describe Document, type: :request do
         expect(json['documents'][1]['id']).to eql(@doc2.id)
         expect(json['documents'].length).to eql(2)
       end
+    end
+  end
+
+  context '#my_documents' do
+    context 'no convention' do
+      before do
+        convention.destroy
+      end
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents/my_documents"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents/my_documents",\
+          headers: credentials(project.user)
+        expect(response).to have_http_status(307)
+        expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
+    it 'no documents' do
+      get "/api/v1/projects/#{project.id}/documents/my_documents",\
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json.length).to eql(0)
+    end
+
+    it 'has documents' do
+      document = FactoryBot.create(:document)
+      project = document.project
+      get "/api/v1/projects/#{project.id}/documents/my_documents",\
+        headers: credentials(document.user)
+      expect(json[0]['id']).to eql(document.id)
+      expect(json.length).to eql(1)
     end
   end
 end

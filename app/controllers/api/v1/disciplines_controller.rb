@@ -25,7 +25,7 @@ class Api::V1::DisciplinesController < ApplicationController
   def update
     if @discipline.update(discipline_params)
       render json: @discipline,
-             status: :created
+             status: :ok
     else
       render json: @discipline.errors,
              status: :unprocessable_entity
@@ -40,6 +40,6 @@ class Api::V1::DisciplinesController < ApplicationController
   private
 
   def discipline_params
-    params.fetch(:discipline, { }).permit(:name)
+    params.fetch(:discipline, { }).permit(:title)
   end
 end

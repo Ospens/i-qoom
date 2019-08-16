@@ -2,7 +2,7 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
   
   def index
-    render json: @projects,
+    render json: signed_in_user.projects,
            status: :ok
   end
 
@@ -44,7 +44,7 @@ class Api::V1::ProjectsController < ApplicationController
   def update
     if @project.update(project_params)
       render json: @project,
-             status: :created
+             status: :ok
     else
       render json: @project.errors,
              status: :unprocessable_entity
@@ -67,6 +67,26 @@ class Api::V1::ProjectsController < ApplicationController
       head :created
     else
       render json: project_admin_confirmation.errors,
+             status: :unprocessable_entity
+    end
+  end
+
+  def invite
+    if @project.invite_members(params[:project_member_ids])
+      head :ok
+    else
+      head :unprocessable_entity
+    end
+  end
+
+  def confirm_member
+    project_member_confirmation =
+      ProjectMemberConfirmation.new(token: params[:token],
+                                    signed_in_user: signed_in_user)
+    if project_member_confirmation.save
+      head :created
+    else
+      render json: project_member_confirmation.errors,
              status: :unprocessable_entity
     end
   end

@@ -64,4 +64,6 @@ Rails.application.configure do
   if ENV['enable_listen'] != 'false'
     config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   end
+
+  routes.default_url_options = { host: 'lvh.me:3000'}
 end

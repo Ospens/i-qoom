@@ -29,7 +29,8 @@ class ProjectAdministratorConfirmation
 
   validate :token_validity,
            :project_admin_exists,
-           :emails_match
+           :emails_match,
+           :already_confirmed
 
   def persisted?
     false
@@ -48,6 +49,12 @@ class ProjectAdministratorConfirmation
   def emails_match
     unless @data["email"] == signed_in_user.try(:email)
       errors.add(:token, :emails_do_not_match)
+    end
+  end
+
+  def already_confirmed
+    if @project_admin.try(:active?)
+      errors.add(:token, :project_admin_has_already_been_confirmed)
     end
   end
 

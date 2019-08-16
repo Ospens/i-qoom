@@ -3,31 +3,48 @@ require "rails_helper"
 RSpec.describe Api::V1::ProjectsController, type: :routing do
   describe "routing" do
     it "routes to #index" do
-      expect(get: "/api/v1/projects").to route_to("api/v1/projects#index")
+      expect(get: "/api/v1/projects").to\
+        route_to("api/v1/projects#index")
     end
 
     it "routes to #show" do
-      expect(get: "/api/v1/projects/1").to route_to("api/v1/projects#show", :id => "1")
+      expect(get: "/api/v1/projects/1").to\
+        route_to("api/v1/projects#show", id: "1")
     end
 
     it "routes to #create" do
-      expect(post: "/api/v1/projects").to route_to("api/v1/projects#create")
+      expect(post: "/api/v1/projects").to\
+        route_to("api/v1/projects#create")
     end
 
     it "routes to #update via PUT" do
-      expect(put: "/api/v1/projects/1").to route_to("api/v1/projects#update", :id => "1")
+      expect(put: "/api/v1/projects/1").to\
+        route_to("api/v1/projects#update", id: "1")
     end
 
     it "routes to #update via PATCH" do
-      expect(patch: "/api/v1/projects/1").to route_to("api/v1/projects#update", :id => "1")
+      expect(patch: "/api/v1/projects/1").to\
+        route_to("api/v1/projects#update", id: "1")
     end
 
     it "routes to #destroy" do
-      expect(delete: "/api/v1/projects/1").to route_to("api/v1/projects#destroy", :id => "1")
+      expect(delete: "/api/v1/projects/1").to\
+        route_to("api/v1/projects#destroy", id: "1")
     end
 
     it "routes to #confirm_admin" do
-      expect(get: "/api/v1/projects/confirm_admin").to route_to("api/v1/projects#confirm_admin")
+      expect(get: "/api/v1/projects/confirm_admin").to\
+        route_to("api/v1/projects#confirm_admin")
+    end
+
+    it "routes to #confirm_member" do
+      expect(get: "/api/v1/projects/confirm_member").to\
+        route_to("api/v1/projects#confirm_member")
+    end
+
+    it "routes to #invite" do
+      expect(post: "/api/v1/projects/1/invite").to\
+        route_to("api/v1/projects#invite", id: "1")
     end
   end
 end

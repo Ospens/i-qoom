@@ -215,6 +215,47 @@ describe "Project", type: :request do
         expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(nil)
       end
     end
+
+    context "confirm_member" do
+      it "should confirm a member" do
+        project_member =
+          FactoryBot.create(:project_member_pending)
+        project_member.update(email: user.email)
+        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+          headers: headers
+        expect(response).to have_http_status(:created)
+        expect(ProjectMember.find_by(id: project_member.id).user).to eq(user)
+      end
+      it "shouldn't confirm a member with wrong user" do
+        project_member =
+          FactoryBot.create(:project_member_pending)
+        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+          headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+      end
+    end
+
+    context "invite" do
+      it "should invite members" do
+        member_ids =
+          FactoryBot.create_list(:project_member_pending,
+                                 2,
+                                 project: project).map(&:id)
+        post "/api/v1/projects/#{project.id}/invite",
+             params: { project_member_ids: member_ids }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:ok)
+        expect(ActionMailer::Base.deliveries.count).to eq(2)
+      end
+      it "shouldn't invite members" do
+        post "/api/v1/projects/#{project.id}/invite",
+             params: { project_member_ids: [] }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
+      end
+    end
   end
 
   context 'not logged in and should get a status "forbidden" on' do
@@ -247,11 +288,30 @@ describe "Project", type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'confirm_account' do
+    it 'confirm_admin' do
       project_admin = FactoryBot.create(:project).admins.first
       get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
       expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'confirm_member' do
+      project_member = FactoryBot.create(:project_member)
+      get "/api/v1/projects/confirm_admin?token=#{project_member.confirmation_token}",
+          headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'invite' do
+      member_ids =
+        FactoryBot.create_list(:project_member_pending,
+                               2,
+                               project: project).map(&:id)
+      post "/api/v1/projects/#{project.id}/invite",
+           params: { project_member_ids: member_ids }.to_json,
+           headers: headers
+      expect(response).to have_http_status(:forbidden)
+      expect(ActionMailer::Base.deliveries.count).to eq(0)
     end
   end
 end

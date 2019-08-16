@@ -1,0 +1,4 @@
+div = t(".you_have_been_added", username: @project_member.first_name)
+
+div = link_to t(".confirm_invitation"),
+  confirm_member_api_v1_projects_url(token: @project_member.confirmation_token)
