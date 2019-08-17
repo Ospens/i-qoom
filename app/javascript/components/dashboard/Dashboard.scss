@@ -354,11 +354,6 @@ form {
   }
 }
 
-.admin-form {
-  width: 100%;
-  max-width: 440px;
-}
-
 .nav-bar {
   margin-bottom: 30px;
   margin-top: 30px;
@@ -423,6 +418,7 @@ form {
   color: #ced4da;
   display: flex;
   padding-bottom: 0.5em;
+  min-height: 31px;
 
   .dropdown {
     margin-left: auto;
@@ -912,7 +908,7 @@ span.divider {
 .table-block {
   min-height: 300px;
   overflow: auto;
-	-webkit-overflow-scrolling:touch;
+	-webkit-overflow-scrolling: touch;
   margin-top: 10px;
   max-height: 60vh;
 }
@@ -1499,4 +1495,10 @@ i.arrow {
       width: 100%;
     }
   }
+}
+
+.admins-column {
+  max-height: 30em;
+  overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }

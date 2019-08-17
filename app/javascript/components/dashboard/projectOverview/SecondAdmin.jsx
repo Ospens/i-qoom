@@ -41,7 +41,7 @@ const SecondAdmin = ({ submitErrors, fields, ...props }) => {
       {secondAdmin &&
       <React.Fragment>
         <div className='modal-body'>
-          <h6>Who is the second project administrator?</h6>
+          <h6>Who is the new project administrator?</h6>
           <label className='project-admin'>Project second administrator</label>
           <AdministratorFields submitErrors={submitErrors} admin={'admins[1]'}/>
         </div>
@@ -61,8 +61,6 @@ const SecondAdmin = ({ submitErrors, fields, ...props }) => {
     </div>
   )
 }
-
-const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
   submitErrors: getFormSubmitErrors('project_form')(state),

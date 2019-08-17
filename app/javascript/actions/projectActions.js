@@ -142,17 +142,17 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
   )
 }
 
-export const starUpdateAdmin = values => (dispatch, getState) => {
+export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     project: {
-      ...values
+      admins: [values]
     }
   }
 
   return (
-    axios.put(`/api/v1/projects/${values.id}`, request, headers)
+    axios.put(`/api/v1/projects/${projectId}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
         successNotify('The project admin were successfully saved!')

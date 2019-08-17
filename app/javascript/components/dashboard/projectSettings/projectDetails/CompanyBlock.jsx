@@ -91,7 +91,7 @@ export class CompanyBlock extends Component {
     return (
       <form
         onSubmit={this.props.handleSubmit(this.handleSubmit)}
-        className='col-lg-4'
+        className='col-lg-6'
         ref={this.nodeRef}
       >
         <FormSection name='company_data'>
