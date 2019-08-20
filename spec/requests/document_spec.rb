@@ -719,6 +719,68 @@ describe Document, type: :request do
         # end
       end
     end
+
+    context '#show' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+          headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        attrs = assign_attributes_suffix_to_document(document.attributes_for_edit)
+        doc2 = document.revision.versions.create!(attrs)
+        get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        rev = json.first
+        expect(rev['versions'].length).to eql(2)
+        expect(rev['versions'].first['id']).to eql(document.id)
+        expect(rev['versions'].last['id']).to eql(doc2.id)
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+          headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do

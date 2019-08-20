@@ -53,7 +53,10 @@ class Ability
       can [:new, :create], Document do |document|
         document.can_create?(user)
       end
-      can [:show, :download_native_file, :download_details], Document do |document|
+      can [:show,
+           :download_native_file,
+           :download_details,
+           :revisions_and_versions], Document do |document|
         document.user == user ||
           document.can_view?(user)
       end
