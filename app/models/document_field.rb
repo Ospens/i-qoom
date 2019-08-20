@@ -52,16 +52,6 @@ class DocumentField < ApplicationRecord
   after_create :update_revision_version,
                if: -> { parent.class.name == 'Document' && revision_version? }
 
-  validates :kind,
-            presence: true
-
-  validates :column,
-            inclusion: { in: [1, 2] },
-            if: -> { parent.class.name != 'DocumentFolder' }
-
-  validate :has_field_values,
-           if: -> { parent.class.name != 'DocumentFolder' && should_have_document_field_values? }
-
   validate :revision_number_valid,
            if: -> { parent.class.name == 'Document' && revision_number? },
            on: :create
@@ -74,20 +64,31 @@ class DocumentField < ApplicationRecord
                     should_have_document_field_values? &&
                     !multiselect? }
 
-  validate :must_be_select_field,
-           if: :codification_kind_as_select_field?
+  with_options unless: -> { parent.class.name == 'DocumentFolder' } do
+    validates :kind,
+              presence: true
 
-  validate :must_be_text_field,
-           if: :codification_kind_as_text_field?
+    validates :column,
+              inclusion: { in: [1, 2] }
 
-  validate :must_be_date_field,
-           if: :revision_date?
+    validate :has_field_values,
+             if: :should_have_document_field_values?
 
-  validate :must_be_upload_field,
-           if: :document_native_file?
+    validate :must_be_select_field,
+             if: :codification_kind_as_select_field?
 
-  validate :must_be_textarea_field,
-           if: :additional_information?
+    validate :must_be_text_field,
+             if: :codification_kind_as_text_field?
+
+    validate :must_be_date_field,
+             if: :revision_date?
+
+    validate :must_be_upload_field,
+             if: :document_native_file?
+
+    validate :must_be_textarea_field,
+             if: :additional_information?
+  end
 
   scope :limit_by_value, -> {
     where(codification_kind: [:originating_company, :discipline, :document_type])
@@ -215,10 +216,10 @@ class DocumentField < ApplicationRecord
   end
 
   def revision_number_valid
-    last_revision =
+    prev_revision =
       parent.revision.document_main.revisions.where.not(id: parent.revision.id).last_revision
-    if last_revision.present? && value.to_i <= last_revision.revision_number.to_i
-      errors.add(:value, :revision_number_must_be_greater_last_revision_number)
+    if prev_revision.present? && value.to_i <= prev_revision.revision_number.to_i
+      errors.add(:value, :revision_number_must_be_greater_than_last_revision_number)
     elsif value.to_i == 0 && value != '0' && value != '00'
       errors.add(:value, :revision_number_must_be_zero_or_greater)
     elsif value.to_i >= 100

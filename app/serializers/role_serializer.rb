@@ -1,4 +1,7 @@
 class RoleSerializer < ApplicationSerializer
-  attribute :id, key: :value
-  attribute :title
+  attributes :id, :title, :value
+
+  def value
+    object.id
+  end
 end

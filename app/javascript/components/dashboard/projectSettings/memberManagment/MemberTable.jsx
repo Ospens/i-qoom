@@ -128,7 +128,7 @@ class MemberTable extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {members.map(({ id, first_name, last_name, employment }) => (
+            {members.map(({ id, first_name, last_name, member_id }) => (
               <Table.Row key={id}>
                 <Table.Cell className='table-checkbox'>
                   <div>
@@ -147,7 +147,7 @@ class MemberTable extends Component {
                   </div>
                 </Table.Cell>
                 <Table.Cell className='member-id'>
-                  <span>{`${first_name}${last_name}`}</span>
+                  <span>{member_id || 'Empty'}</span>
                 </Table.Cell>
                 <Table.Cell className='td-select-dropdown'>
                   <SelectComponent
@@ -208,8 +208,4 @@ const mapDispatchToProps = dispatch => ({
   startUpdateProjectMember: (values, projectId) => dispatch(startUpdateProjectMember(values, projectId))
 })
 
-const mapStateToProps = state => ({
-  members: state.projectMembers.members
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MemberTable)
+export default connect(null, mapDispatchToProps)(MemberTable)

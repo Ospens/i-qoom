@@ -163,8 +163,6 @@ describe Document, type: :request do
     document_native_file =
       document_params['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }
     document_native_file['file'] = fixture_file_upload('test.txt')
-    revision_number = document_params['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
-    revision_number['value'] = '0'
     file1 = fixture_file_upload('test.txt')
     file2 = fixture_file_upload('test.txt')
     field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
@@ -721,6 +719,68 @@ describe Document, type: :request do
         # end
       end
     end
+
+    context '#show' do
+      context 'no convention' do
+        before do
+          document.update_columns(convention_id: nil)
+          convention.destroy
+        end
+
+        it 'anon' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions"
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'user with rights' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(user)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json['message']).to eql('DMS is not available yet')
+        end
+
+        it 'project user' do
+          get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+            headers: credentials(project.user)
+          expect(response).to have_http_status(307)
+          expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
+        end
+      end
+
+      it 'anon' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions"
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+          headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        attrs = assign_attributes_suffix_to_document(document.attributes_for_edit)
+        doc2 = document.revision.versions.create!(attrs)
+        get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        rev = json.first
+        expect(rev['versions'].length).to eql(2)
+        expect(rev['versions'].first['id']).to eql(document.id)
+        expect(rev['versions'].last['id']).to eql(doc2.id)
+      end
+
+      it 'owner' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'project user' do
+        get "/api/v1/documents/#{document.id}/revisions_and_versions",\
+          headers: credentials(project.user)
+        expect(response).to have_http_status(:success)
+      end
+    end
   end
 
   context '#index' do
@@ -819,5 +879,42 @@ describe Document, type: :request do
     expect(revision['id']).to eql(document.revision.id)
     expect(revision['codification_string']).to eql(document.codification_string)
     expect(revision['title']).to eql(title)
+  end
+
+  context '#my_documents' do
+    context 'no convention' do
+      before do
+        convention.destroy
+      end
+
+      it 'anon' do
+        get "/api/v1/projects/#{project.id}/documents/my_documents"
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json['message']).to eql('DMS is not available yet')
+      end
+
+      it 'project user' do
+        get "/api/v1/projects/#{project.id}/documents/my_documents",\
+          headers: credentials(project.user)
+        expect(response).to have_http_status(307)
+        expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
+      end
+    end
+
+    it 'no documents' do
+      get "/api/v1/projects/#{project.id}/documents/my_documents",\
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json.length).to eql(0)
+    end
+
+    it 'has documents' do
+      document = FactoryBot.create(:document)
+      project = document.project
+      get "/api/v1/projects/#{project.id}/documents/my_documents",\
+        headers: credentials(document.user)
+      expect(json[0]['id']).to eql(document.id)
+      expect(json.length).to eql(1)
+    end
   end
 end

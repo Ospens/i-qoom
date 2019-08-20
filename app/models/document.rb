@@ -11,9 +11,12 @@ class Document < ApplicationRecord
 
   belongs_to :convention
 
-  belongs_to :revision, class_name: 'DocumentRevision', foreign_key: 'document_revision_id'
+  belongs_to :revision,
+             class_name: 'DocumentRevision',
+             foreign_key: 'document_revision_id'
 
-  has_one :document_main, through: :revision
+  has_one :document_main,
+          through: :revision
 
   has_many :document_fields,
            as: :parent,
@@ -25,6 +28,9 @@ class Document < ApplicationRecord
   validates_associated :document_fields
 
   validate :prevent_update_of_codification_string,
+           on: :create
+
+  validate :prevent_update_of_revision_number,
            on: :create
 
   validate :prevent_update_of_values,
@@ -39,6 +45,9 @@ class Document < ApplicationRecord
   validate :prevent_update_of_values_from_convention,
            on: :create
 
+  validate :prevent_update_of_previous_revisions,
+           on: :create
+
   before_validation :assign_document_revision_version_field,
                     unless: :document_revision_version_present?
 
@@ -46,9 +55,11 @@ class Document < ApplicationRecord
 
   after_create :send_emails, if: -> { emails.try(:any?) }
 
-  scope :first_version, -> { order(revision_version: :asc).first }
+  scope :order_by_revision_version, -> { order(Arel.sql('revision_version::integer ASC')) }
 
-  scope :last_version, -> { order(revision_version: :asc).last }
+  scope :first_version, -> { order_by_revision_version.first }
+
+  scope :last_version, -> { order_by_revision_version.last }
 
   scope :filter_by_codification_kind, -> (codification_kind, value) {
     joins(:document_fields)
@@ -133,16 +144,19 @@ class Document < ApplicationRecord
   def codification_string
     str = ''
     # there should be project code
-    str << document_fields.detect{ |i| i['codification_kind'] == 'originating_company' }
-            .document_field_values.detect{ |i| i['selected'] == true }.value
-    str << '-'
-    str << document_fields.detect{ |i| i['codification_kind'] == 'discipline' }
-            .document_field_values.detect{ |i| i['selected'] == true }.value
-    str << '-'
-    str << document_fields.detect{ |i| i['codification_kind'] == 'document_type' }
-            .document_field_values.detect{ |i| i['selected'] == true }.value
-    str << '-'
-    str << document_fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
+    [ 'originating_company',
+      'discipline',
+      'document_type',
+      'document_number' ].each do |kind|
+      field = document_fields.detect{ |i| i['codification_kind'] == kind }
+      unless kind == 'document_number'
+        field = field.document_field_values.detect{ |i| i['selected'] == true }
+      end
+      if field.value.present?
+        str << '-' unless kind == 'document_number'
+        str << field.value
+      end
+    end
     str
   end
 
@@ -198,6 +212,10 @@ class Document < ApplicationRecord
     !revision.document_main.revisions.first_revision.versions.any?
   end
 
+  def revision_number_field
+    document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }
+  end
+
   private
 
   def original_document
@@ -205,8 +223,23 @@ class Document < ApplicationRecord
   end
 
   def prevent_update_of_codification_string
-    if original_document.present? && original_document.codification_string != codification_string
+    if original_document.present? &&
+        original_document.codification_string != codification_string
       errors.add(:document_fields, :codification_string_changed)
+    end
+  end
+
+  def prevent_update_of_previous_revisions
+    if revision != revision.document_main.revisions.last_revision
+      errors.add(:document_fields, :updating_of_previous_revisions_is_not_allowed)
+    end
+  end
+
+  def prevent_update_of_revision_number
+    last_version = revision.versions.last_version
+    if last_version.present? &&
+        last_version.revision_number_field.value != revision_number_field.value
+      errors.add(:document_fields, :revision_number_change_is_not_allowed)
     end
   end
 

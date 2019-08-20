@@ -10,8 +10,7 @@ class User < ApplicationRecord
     on: [:create, :password_changed?]
 
   validates_presence_of :first_name,
-                        :last_name,
-                        :country
+                        :last_name
 
   validates :accept_terms_and_conditions,
     acceptance: true,

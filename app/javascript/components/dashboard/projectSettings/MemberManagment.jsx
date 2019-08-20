@@ -1,47 +1,83 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import classnames from 'classnames'
 import { withRouter } from 'react-router-dom'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
 import NewModal from '../../../elements/Modal'
 import Tabs from '../../../elements/Tabs'
-import DropDown from '../../../elements/DropDown'
 import AddMember from './memberManagment/AddMember'
-import { startFetchProjectMembers } from '../../../actions/projectMembersActions'
+import DisciplineList from './memberManagment/DisciplineList'
+import RoleList from './memberManagment/RoleList'
+
+const initialState = {
+  addMemberModal: false,
+  discipline: false,
+  role: false,
+  modal: false
+}
+
+export const renderDropDownItems = (icon, name) => (
+  <a className='dropdown-item' href='#'>
+    <i className={classnames("svg-icon", icon)} />
+    <span className='item-text'>
+      {name}
+    </span>
+  </a>
+)
 
 class MemberManagment extends Component {
 
-  state = {
-    addMemberModal: false
-  }
+  state = initialState
 
-  componentWillMount() {
-    const { startFetchProjectMembers, match: { params: { project_id } } } = this.props
-    startFetchProjectMembers(project_id)
-  }
+  openModal = type => () => this.setState({ modal: true, [type]: true })
 
-  renderDropDownItems = (icon, name) => (
-    <a className='dropdown-item' href='#'>
-      <i className={classnames("svg-icon", icon)} />
-      <span className='item-text'>
-        {name}
-      </span>
-    </a>
-  )
+  closeModal = () => this.setState(initialState)
 
   renderNewMemberModal = () => {
     const { match: { params: { project_id } } } = this.props
     return (
       <AddMember
-        closeModal={() => this.setState({ addMemberModal: false })}
+        closeModal={this.closeModal}
         projectId={project_id}
       />
     )
   }
 
+  renderDisciplineModal = () => {
+    const { match: { params: { project_id } } } = this.props
+
+    return (
+      <DisciplineList
+        closeModal={this.closeModal}
+        projectId={project_id}
+      />
+    )
+  }
+
+  renderRoleModal = () => {
+    const { match: { params: { project_id } } } = this.props
+
+    return (
+      <RoleList
+        closeModal={this.closeModal}
+        projectId={project_id}
+      />
+    )
+  }
+
+  rendeModalContent = () => {
+    const { addMemberModal, discipline, role } = this.state
+    if (addMemberModal) {
+      return this.renderNewMemberModal()
+    } else if (role) {
+      return this.renderRoleModal()
+    } else if (discipline) {
+      return this.renderDisciplineModal()
+    }
+  }
+
   render() {
-    const { addMemberModal } = this.state
+    const { modal } = this.state
     const { match: { params: { project_id } } } = this.props
 
     return (
@@ -50,13 +86,21 @@ class MemberManagment extends Component {
           <h5 className='tab-title'>Define default filters</h5>
           <div className='member-managment-buttons'>
             <div>
-              <button type='button' className='btn with-icon'>
+              <button 
+                type='button'
+                className='btn with-icon'
+                onClick={this.openModal('role')}
+              >
                 <i className='svg-icon task-list-edit-icon' />
                 <span>Role list</span>
               </button>
             </div>
             <div>
-              <button type='button' className='btn with-icon'>
+              <button 
+                type='button'
+                className='btn with-icon'
+                onClick={this.openModal('discipline')}
+              >
                 <i className='svg-icon common-file-icon' />
                 <span>Discipline list</span>
               </button>
@@ -65,63 +109,30 @@ class MemberManagment extends Component {
               <button
                 type='button'
                 className='btn with-icon'
-                onClick={() => this.setState({ addMemberModal: true })}
+                onClick={this.openModal('addMemberModal')}
               >
                 <i className='svg-icon blue-plus-icon' />
-                <span>Add member</span>
+                <span>Add a member</span>
               </button>
             </div>
           </div>
         </div>
         <Tabs>
           <div label='Active members'>
-            <React.Fragment>
-              <div>
-                <span className='tab-description'>Manage members and grant access</span>
-                <DropDown
-                  btnName='Action'
-                  className='manage-members-actions-button mt-4'
-                >
-                  {this.renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
-                  {this.renderDropDownItems('pencil-icon gray', 'Edit member')}
-                  {this.renderDropDownItems('trash-icon gray', 'Delete')}
-                </DropDown>
-              </div>
-              <ActiveMembers projectId={project_id}/>
-            </React.Fragment>
+            <ActiveMembers projectId={project_id} />
           </div>
           <div label='Pending members'>
-            <React.Fragment>
-              <div>
-                <span className='tab-description'>Manage members and grant access</span>
-                <DropDown
-                  btnName='Action'
-                  className='mt-4'
-                >
-                  {this.renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
-                  {this.renderDropDownItems('pencil-icon gray', 'Edit member')}
-                  {this.renderDropDownItems('trash-icon gray', 'Delete')}
-                </DropDown>
-              </div>
-              <PendingMembers />
-            </React.Fragment>
+            <PendingMembers projectId={project_id} />
           </div>
         </Tabs>
         <NewModal
-          content={this.renderNewMemberModal()}
-          open={addMemberModal}
-          onClose={() => this.setState({ addMemberModal: false })}
+          content={this.rendeModalContent()}
+          open={modal}
+          onClose={this.closeModal}
         />
       </div>
     )
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  startFetchProjectMembers: id => dispatch(startFetchProjectMembers(id))
-})
-
-const mapStateToProps = state => ({ })
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MemberManagment))
-
+export default withRouter(MemberManagment)

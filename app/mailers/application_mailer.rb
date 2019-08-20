@@ -4,7 +4,8 @@ class ApplicationMailer < ActionMailer::Base
 
   def send_contact_form(contact)
     @contact = contact
-    mail to: 'yasserchehade@gmx.de',
+    mail to: [ 'yasserchehade@gmx.de',
+               'shamardin.k@gmail.com' ],
         subject: t(".title")
   end
 

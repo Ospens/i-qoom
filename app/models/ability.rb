@@ -53,20 +53,26 @@ class Ability
       can [:new, :create], Document do |document|
         document.can_create?(user)
       end
-      can [ :show,
-            :download_native_file,
-            :download_details,
-            :revisions ], Document do |document|
+      can [:show,
+           :download_native_file,
+           :download_details,
+           :revisions,
+           :revisions_and_versions], Document do |document|
         document.user == user ||
           document.can_view?(user)
       end
-      can [:edit, :update, :create_revision], Document do |document|
+      can [:edit, :create_revision], Document do |document|
         document.user == user ||
           document.can_create?(user)
       end
-      can [ :index,
-            :download_native_files,
-            :download_list ], Document # there should be some limitation
+      can [:index,
+           :download_native_files,
+           :download_list,
+           :my_documents], Document # there should be some limitation
+      can :update, Document do |document|
+        (document.user == user || document.can_create?(user)) &&
+          document == document.revision.versions.last_version
+      end
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder

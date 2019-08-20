@@ -5,7 +5,6 @@ describe User, type: :model do
   [:email,
    :first_name,
    :last_name,
-   :country,
    :username,
    :password].each do |value|
     it { is_expected.to validate_presence_of(value) }

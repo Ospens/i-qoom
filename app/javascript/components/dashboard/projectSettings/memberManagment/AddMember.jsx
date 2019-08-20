@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  getFormSubmitErrors,
   reduxForm,
   FormSection,
   Field
@@ -13,12 +12,7 @@ import {
   startCreatingProjectMember,
   startCreateProjectMember
 } from '../../../../actions/projectMembersActions'
-
-const options = [
-  { value: 1, title: 'Employee' },
-  { value: 2, title: 'Internal contractor' },
-  { value: 3, title: 'External contractor' }
-]
+import { required, email } from '../../../../elements/validations'
 
 class AddMember extends Component {
   state = {
@@ -31,13 +25,22 @@ class AddMember extends Component {
   }
 
   handleSubmit = values => {
+    const { step } = this.state
+
     const { startCreateProjectMember, projectId } = this.props
+    if (step < 4) {
+      this.nextStep()
+      return
+    }
+
     return startCreateProjectMember(values, projectId).then(this.closeModal)
   }
   
   changeStep = (val) => {
     this.setState({ step: val })
   }
+  
+  nextStep = () => this.setState(prevState => ({ step: prevState.step + 1 }))
 
   closeModal = () => {
     const { closeModal } = this.props
@@ -47,6 +50,7 @@ class AddMember extends Component {
 
   renderButtons = () => {
     let { step } = this.state
+
     return (
       <div className='modal-footer'>
         {step > 1 &&
@@ -67,13 +71,11 @@ class AddMember extends Component {
         </button>
         {step < 4
           ? <button
-            type='button'
-            className='btn btn-purple'
-            onClick={() => this.changeStep(step + 1)}
-            // disabled={pristine}
-          >
-            Next
-          </button>
+              type='submit'
+              className='btn btn-purple'
+            >
+              Next
+            </button>
           : <React.Fragment>
               <button type='submit' className='btn btn-purple'>Save</button>
               <button type='submit' className='btn btn-purple'>Invite</button>
@@ -84,110 +86,108 @@ class AddMember extends Component {
     )
   }
 
-  renderTypeEmployment = () => {
-    const { submitErrors } = this.props
-    return (
-      <React.Fragment>
-        <h6>Please select type of employment</h6>
-        <div className='form-group'>
-          <Field
-            name='employment_type'
-            id='employment_type'
-            options={options}
-            errorField={submitErrors}
-            component={SelectField}
-          />
-        </div>
-      </React.Fragment>
-    )
-  }
+  renderTypeEmployment = () => (
+    <React.Fragment>
+      <h6>Please select type of employment</h6>
+      <div className='form-group'>
+        <Field
+          name='employment_type'
+          id='employment_type'
+          options={this.props.employment_type_options}
+          component={SelectField}
+          validate={[required]}
+        />
+      </div>
+    </React.Fragment>
+  )
 
-  renderCompanyEmplyee = () => {
-    const { submitErrors } = this.props
-    return (
-      <React.Fragment>
-        <h6>From which company is the employee?</h6>
-        <div className='form-group'>
-          <Field
-            name='company_type'
-            id='company_type'
-            options={options}
-            errorField={submitErrors}
-            component={SelectField}
-          />
-        </div>
-      </React.Fragment>
-    )
-  }
+  renderCompanyEmplyee = () => (
+    <React.Fragment>
+      <h6>From which company is the employee?</h6>
+      <div className='form-group'>
+        <Field
+          name='company_type'
+          id='company_type'
+          options={this.props.company_type_options}
+          component={SelectField}
+          validate={[required]}
+        />
+      </div>
+    </React.Fragment>
+  )
 
-  renderMemberDetails = () => {
-    const { submitErrors } = this.props
-    return (
-      <React.Fragment>
-        <h6>Please enter member details</h6>
-        <div className='form-group'>
-          <label htmlFor='first_name'>Member details</label>
-          <Field
-            component={InputField}
-            name='first_name'
-            id='first_name'
-            errorField={submitErrors}
-            placeholder='First Name'
-          />
-        </div>
-        <div className='form-group'>
-          <Field
-            component={InputField}
-            name='last_name'
-            id='last_name'
-            errorField={submitErrors}
-            placeholder='Last name'
-          />
-        </div>
-        <div className='form-group'>
-          <Field
-            component={InputField}
-            name='email'
-            id='email'
-            errorField={submitErrors}
-            placeholder='Email address'
-          />
-        </div>
-        <div className='row'>
-          <div className='form-group col-4'>
-            <Field
-              component={InputField}
-              name='phone_code'
-              id='phone_code'
-              errorField={submitErrors}
-              placeholder='+00'
-            />
-          </div>
-          <div className='form-group col-8'>
-            <Field
-              component={InputField}
-              name='phone_number'
-              id='phone_number'
-              errorField={submitErrors}
-              placeholder='Phone number'
-            />
-          </div>
-        </div>
-      </React.Fragment>
-    )
-  }
+  renderMemberDetails = () => (
+    <div>
+      <h6>Please enter member details</h6>
+      <Field
+        component={InputField}
+        name='first_name'
+        id='first_name'
+        className='form-group'
+        placeholder='First Name'
+        validate={[required]}
+        label='Member details'
+      />
+      <Field
+        component={InputField}
+        name='last_name'
+        id='last_name'
+        className='form-group'
+        placeholder='Last name'
+        validate={[required]}
+      />
+      <Field
+        component={InputField}
+        name='email'
+        id='email'
+        className='form-group'
+        placeholder='Email address'
+        validate={[required, email]}
+      />
+      <div className='form-row'>
+        <Field
+          component={InputField}
+          className='form-group col-md-4'
+          name='phone_code'
+          id='phone_code'
+          placeholder='+00'
+        />
+        <Field
+          component={InputField}
+          className='form-group col-md-8'
+          name='phone_number'
+          id='phone_number'
+          placeholder='Phone number'
+        />
+      </div>
+      <div className='form-row'>
+        <Field
+          component={InputField}
+          className='form-group col-md-6'
+          name='job_title'
+          id='job_title'
+          placeholder='Job title'
+        />
+        <Field
+          component={SelectField}
+          className='form-group col-md-6'
+          name='discipline'
+          id='discipline'
+          options={this.props.discipline_options}
+          placeholder='Discipline'
+        />
+      </div>
+    </div>
+  )
 
-  renderCompanyData = () => {
-    const { submitErrors } = this.props
-    return (
-      <React.Fragment>
-        <h6>Please enter company data</h6>
-        <FormSection name='company_address'>
-          <AddressFields submitErrors={submitErrors}/>
-        </FormSection>
-      </React.Fragment>
-    )
-  }
+  renderCompanyData = () => (
+    <div>
+      <h6>Please enter company data</h6>
+      <FormSection name='company_address'>
+        <AddressFields />
+      </FormSection>
+    </div>
+  )
 
   render() { 
     const { step } = this.state
@@ -224,9 +224,10 @@ const mapDispatchToProps = dispatch => ({
   startCreateProjectMember: (values, projectId) => dispatch(startCreateProjectMember(values, projectId))
 })
 
-const mapStateToProps = state => ({
-  options: state.projectMembers.members,
-  submitErrors: getFormSubmitErrors('project_member_form')(state)
+const mapStateToProps = ({ projectMembers: { creating, disciplines }}) => ({
+  company_type_options: creating.company_types,
+  employment_type_options: creating.employment_types,
+  discipline_options: disciplines,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'project_member_form' })(AddMember))
