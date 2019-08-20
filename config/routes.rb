@@ -18,6 +18,7 @@ Rails.application.routes.draw do
           post :create_revision
           get :download_native_file
           get :download_details
+          get :revisions_and_versions
         end
       end
 

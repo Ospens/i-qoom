@@ -8,7 +8,8 @@ class Api::V1::DocumentsController < ApplicationController
                                    :show,
                                    :create_revision,
                                    :download_native_file,
-                                   :download_details ]
+                                   :download_details,
+                                   :revisions_and_versions ]
   load_resource :document, through: :project, only: [ :new, :create ]
   before_action :check_convention
   authorize_resource :document
@@ -164,6 +165,11 @@ class Api::V1::DocumentsController < ApplicationController
     render json: documents, include: {
       document_fields: { include: :document_field_values }
     }
+  end
+
+  def revisions_and_versions
+    @main = @document.revision.document_main
+    render formats: :json
   end
 
   private
