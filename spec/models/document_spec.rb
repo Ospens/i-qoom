@@ -278,4 +278,29 @@ RSpec.describe Document, type: :model do
     expect(dbl).to receive(:deliver_later)
     subject.save!
   end
+
+  it '#prevent_update_of_previous_revisions' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc1 = Document.create(attrs)
+    edit_attrs = assign_attributes_suffix_to_document(doc1.attributes_for_edit)
+    doc2 = doc1.revision.versions.new(edit_attrs)
+    expect(doc2).to be_valid
+    doc1.revision.document_main.revisions.create
+    doc3 = doc1.revision.versions.new(edit_attrs)
+    expect(doc3).to_not be_valid
+  end
+
+  it '#prevent_update_of_revision_number' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc1 = Document.create(attrs)
+    edit_attrs = assign_attributes_suffix_to_document(doc1.attributes_for_edit)
+    doc2 = doc1.revision.versions.new(edit_attrs)
+    expect(doc2).to be_valid
+    field = edit_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
+    field['value'] = field['value'].to_i + 1
+    doc3 = doc1.revision.versions.new(edit_attrs)
+    expect(doc3).to_not be_valid
+  end
 end

@@ -8,17 +8,10 @@ describe DocumentFolder, type: :request do
     let(:convention) { FactoryBot.create(:convention) }
     let(:project) { convention.project }
     let(:folder_params) do
-      con_field = convention.document_fields
-                            .find_by(codification_kind: :originating_company)
-      attrs =
-        FactoryBot.attributes_for(:document_field,
-                                  kind: :select_field,
-                                  codification_kind: :originating_company,
-                                  value: con_field.document_field_values.first.value)
       { document_folder: {
-          title: title,
-          project_id: project.id,
-          document_fields: [ attrs ] } }
+        title: title,
+        project_id: project.id
+      } }
     end
     let(:user) { FactoryBot.create(:user) }
 
@@ -32,8 +25,6 @@ describe DocumentFolder, type: :request do
       expect(response).to have_http_status(:success)
       folder = DocumentFolder.first
       expect(folder.title).to eql(title)
-      expect(folder.document_fields.length).to eql(1)
-      expect(json['document_fields'].length).to eql(1)
       expect(folder.user).to eql(user)
       expect(folder.project).to eql(project)
     end
@@ -52,6 +43,7 @@ describe DocumentFolder, type: :request do
       get "/api/v1/document_folders/#{document_folder.id}/edit", headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['title']).to eql(document_folder.title)
+      expect(json['document_fields'].length).to eql(4)
     end
   end
 
@@ -115,6 +107,26 @@ describe DocumentFolder, type: :request do
       expect(json[0]['enabled']).to eql(true)
       expect(json[1]['id']).to eql(document_folder2.id)
       expect(json[1]['enabled']).to eql(false)
+    end
+  end
+
+  context '#user_index' do
+    let!(:document_folder1) { FactoryBot.create(:document_folder) }
+    let(:user) { document_folder1.user }
+    let(:project) { document_folder1.project }
+    let!(:document_folder2) { FactoryBot.create(:document_folder, user: user, project: project) }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/document_folders/user_index"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/document_folders/user_index", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json.count).to eql(2)
+      expect(json[0]['id']).to eql(document_folder1.id)
+      expect(json[1]['id']).to eql(document_folder2.id)
     end
   end
 

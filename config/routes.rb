@@ -18,6 +18,7 @@ Rails.application.routes.draw do
           post :create_revision
           get :download_native_file
           get :download_details
+          get :revisions_and_versions
         end
       end
 
@@ -42,6 +43,7 @@ Rails.application.routes.draw do
           collection do
             get :download_native_files
             get :download_list
+            get :my_documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
@@ -67,7 +69,9 @@ Rails.application.routes.draw do
                   except: [:new, :show]
         resources :roles,
                   except: [:new, :show]
-        resources :document_folders, only: :index
+        resources :document_folders, only: :index do
+          get :user_index, on: :collection
+        end
       end
     end
   end
