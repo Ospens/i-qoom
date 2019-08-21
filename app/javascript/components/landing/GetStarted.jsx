@@ -8,7 +8,7 @@ import TextAreaField from '../../elements/TextAreaField'
 import lines from '../../images/send-lines'
 import plan from '../../images/send-email-big'
 // import TextEditor from '../../elements/TextEditor'
-import { required, email, minValue } from '../../elements/validations'
+import { required, email, minLength } from '../../elements/validations'
 import { sendEmail } from '../../actions/otherActions'
 
 class GetStarted extends Component {
@@ -61,7 +61,7 @@ class GetStarted extends Component {
             name='text'
             id='text'
             rows='3'
-            validate={[minValue(15), required]}
+            validate={[minLength(15), required]}
             placeholder='Text'
             className='form-group col-md-6'
             label='Enter your Text'

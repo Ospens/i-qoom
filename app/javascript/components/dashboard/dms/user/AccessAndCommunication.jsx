@@ -183,8 +183,4 @@ const AccessAndCommunication = ({ backStep }) => {
   )
 }
 
-const mapDispatchToProps = dispatch => ({
-  discardValue: () => dispatch(change('document_form', 'email_addresses', null))
-})
-
 export default AccessAndCommunication

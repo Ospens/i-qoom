@@ -225,6 +225,14 @@ button:disabled {
   }
 }
 
+
+// row with logo
+.col-65per {
+  -webkit-box-flex: 0;
+  flex: 0 0 calc(66.5% - 36px);
+  max-width: calc(66.5% - 36px);
+}
+
 .modal-window {
   min-width: 500px;
   will-change: top, left, margin, opacity !important;
@@ -284,22 +292,14 @@ button:disabled {
         }
       }
     }
+
     &.company-data {
-      .col-55per {
-        -webkit-box-flex: 0;
-        flex: 0 0 55%;
-        max-width: 55%;
-      }
-      .col-45per {
-        -webkit-box-flex: 0;
-        flex: 0 0 45%;
-        max-width: 45%;
-      }
       img {
         min-width: 100%;
         min-height: 100%;
       }
     }
+
     .custom_row {
       width: 100%;
     }
@@ -329,8 +329,20 @@ button:disabled {
   }
 
   .new-project-modal {
+
+    .modal-body {
+      h4 {
+        padding-left: 0;
+        align-self: flex-start;
+      }
+
+      .body-block {
+        width: 100%
+      }
+    }
+
     h4 {
-      padding-left: 45px;
+      padding-left: 40px;
       padding-top: 30px;
       font-weight: 600;
     }
@@ -445,6 +457,13 @@ form {
   .active-admin {
     padding-left: 1em;
   }
+}
+
+.col-logo {
+  position: relative;
+  // width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 .logo-uploader {
@@ -853,6 +872,7 @@ span.divider {
   &.left {
     right: 0 !important;
     left: auto !important;
+    margin-right: 15px;
   }
 
   .dropdown-item:not(.dropdown-submenu) {
@@ -1501,4 +1521,45 @@ i.arrow {
   max-height: 30em;
   overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
+}
+
+
+// New modal styles
+
+.new-modal {
+  display: grid;
+  grid-template-rows: 100px minmax(250px, 1fr) 60px;
+  grid-template-columns: 500px;
+  
+  &.without-header {
+    grid-template-rows: minmax(250px, 1fr) 60px;
+  }
+
+  .new-modal__header {
+    padding: 30px;
+  }
+
+  .new-modal__body {
+    padding: 30px;
+
+    h6.new-modal__body-title {
+      font-weight: 500;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+  }
+
+  .new-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: #efefef;
+    border: none;
+
+    button {
+      padding: 0.2em 2em;
+    }
+  }
 }

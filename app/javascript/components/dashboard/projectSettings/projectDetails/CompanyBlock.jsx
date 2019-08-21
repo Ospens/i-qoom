@@ -76,10 +76,10 @@ export class CompanyBlock extends Component {
   renderBillingModal = () => {
     return (
       <FormSection name='company_data'>
-        <BillingAddress
-          submitButtons={this.modalButtons}
-          modalTitle='Billing address'
-        />
+        <div className='new-modal'>
+          <div className='new-modal__header'><h4>Billing address</h4></div>
+          <BillingAddress submitButtons={this.modalButtons} />
+        </div>
       </FormSection>
     )
   }

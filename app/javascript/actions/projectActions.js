@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
+  SET_PAGE_TITLE,
   PROJECT_CREATED_SUCCESS,
   PROJECT_UPDATED_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
@@ -192,4 +193,11 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
         errorNotify('Something went wrong')
       })
   )
+}
+
+export const setPageTitle = title => dispatch => {
+  dispatch({
+    type: SET_PAGE_TITLE,
+    payload: title
+  })
 }

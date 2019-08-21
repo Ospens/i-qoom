@@ -6,6 +6,6 @@ export const email = value => (
     : undefined
 )
 
-export const minValue = min => value => (value && value < min ? `Must be at least ${min}` : undefined)
+export const minLength = min => value => (value && value.length < min ? `Must be ${min} characters or more` : undefined)
 
-export const maxValue = max => value => (value && value > max ? `Must be less then ${max}` : undefined)
+export const maxLength15 = value => (value && value.length > 15 ? 'Must be 15 characters or less' : undefined)

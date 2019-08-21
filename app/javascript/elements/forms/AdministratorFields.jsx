@@ -9,65 +9,59 @@ const AdministratorFields = ({ submitErrors, admin }) => {
   return (
     <div>
       <div className='form-row'>
-        <div className='form-group col-3'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${prefix}username`}
-            errorField={submitErrors}
-            placeholder='Username'
-            validate={[required]}
-          />
-        </div>
-        <div className='form-group col-9'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${prefix}last_name`}
-            errorField={submitErrors}
-            placeholder='Last name'
-            validate={[required]}
-          />
-        </div>
-      </div>
-      <div className='form-group'>
         <Field
           type='text'
           component={InputField}
-          name={`${prefix}first_name`}
+          name={`${prefix}username`}
           errorField={submitErrors}
-          placeholder='First name'
+          placeholder='Username'
           validate={[required]}
+          className='form-group col-3'
         />
-      </div>
-      <div className='form-group'>
         <Field
+          type='text'
           component={InputField}
-          name={`${prefix}email`}
+          name={`${prefix}last_name`}
           errorField={submitErrors}
-          placeholder='Email address'
-          validate={[email, required]}
+          placeholder='Last name'
+          validate={[required]}
+          className='form-group col-9'
         />
       </div>
+      <Field
+        type='text'
+        component={InputField}
+        name={`${prefix}first_name`}
+        errorField={submitErrors}
+        placeholder='First name'
+        validate={[required]}
+        className='form-group'
+      />
+      <Field
+        component={InputField}
+        name={`${prefix}email`}
+        errorField={submitErrors}
+        placeholder='Email address'
+        validate={[email, required]}
+        className='form-group'
+      />
       <div className='form-row'>
-        <div className='form-group col-3'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${prefix}phone_code`}
-            errorField={submitErrors}
-            placeholder='+00'
-          />
-        </div>
-        <div className='form-group col-9'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${prefix}phone_number`}
-            errorField={submitErrors}
-            placeholder='Phone number'
-          />
-        </div>
+        <Field
+          type='text'
+          component={InputField}
+          name={`${prefix}phone_code`}
+          errorField={submitErrors}
+          placeholder='+00'
+          className='form-group col-3'
+        />
+        <Field
+          type='text'
+          component={InputField}
+          name={`${prefix}phone_number`}
+          errorField={submitErrors}
+          placeholder='Phone number'
+          className='form-group col-9'
+        />
       </div>
     </div>
   )

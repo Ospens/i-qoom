@@ -98,9 +98,18 @@ export const colourStyles = errorInfo => {
   return colourStyles
 }
 
+const customFilterOption = (option, rawInput) => {
+  const words = rawInput.split(' ')
+  return words.reduce(
+    (acc, cur) => acc && option.data.title.toLowerCase().includes(cur.toLowerCase()),
+    true,
+  )
+}
+
 export const SelectComponent = props => (
   <Select
     {...props}
+    filterOption={customFilterOption}
     components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
     autoFocus={false}
     styles={colourStyles(props.errorInfo)}

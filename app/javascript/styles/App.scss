@@ -5,7 +5,6 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
-    transition: .2s ease-in-out;
 }
 
 ul {
@@ -131,10 +130,14 @@ input::placeholder {
 
 body {
   -webkit-text-size-adjust: none;
-  font-family: 'aktiv-grotesk', sans-serif;
+  font-family: 'aktiv-grotesk', sans-serif !important;
   font-size: 14px;
   line-height: 1;
   color: #373737;
+}
+
+.btn {
+  line-height: 1.3 !important;
 }
 
 .prevBtn,
@@ -165,7 +168,7 @@ footer:after,
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-	-webkit-overflow-scrolling:touch;
+	-webkit-overflow-scrolling: touch;
   flex-basis: 100%;
 }
 
@@ -174,13 +177,12 @@ footer:after,
   width: 100%;
   padding: 0 15px;
   overflow: hidden;
+
   &.info-container {
-    margin-top: 10  0px;
     margin-top: 8em;
+    margin-bottom: 8em;
     padding-top: 2em;
-    height: 100vh;
-    overflow: auto;
-    -webkit-overflow-scrolling:touch;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -232,6 +234,10 @@ header {
     .svg-icon {
       background-color: #fff;
     }
+  }
+
+  .navbar {
+    min-height: 80px;
   }
 }
 
@@ -915,6 +921,12 @@ header {
     }
 }
 
+.btn-primary {
+  color: #fff;
+  background-color: #0096FA;
+  border-color: #0096FA;
+}
+
 #sign-up-form {
   display: flex;
   align-items: center;
@@ -922,22 +934,37 @@ header {
   justify-content: center;
   background-color: white;
   margin-top: 100px;
-  padding-left: 5em;
-  padding-right: 5em;
-  // height: calc(100vh - 218px);
   min-height: 80.5vh;
   padding-top: 50px;
   padding-bottom: 50px;
+
+  form {
+    width: 100%;
+  }
+
+  .form-fields {
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
 
   .next-row {
     margin-top: 3em;
   }
 
   label {
-    color: #c8d8d9;
+    color: #8FB0B3;
+    
+    &::placeholder { 
+      color: #E9F3F5;
+    }
   }
 
   .steps {
+    width: 88%;
+    margin-left: auto;
+    margin-right: auto;
+    
     .step {
       padding-bottom: 15px;
       font-weight: 600;
@@ -953,19 +980,24 @@ header {
 
   .sign-up-form__header {
     margin-top: 2em;
-    color: #26276a;
+    margin-bottom: 2em;
+    color: #221F6D;
     font-weight: 600;
-    width: 50%;
+    width: 40%;
     margin-left: auto;
     margin-right: auto;
   }
+
   .btn-back {
     margin-left: auto !important;
     margin-right: 5px !important;
   }
 
   .form-check {
-    margin-bottom: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 63.5px;
   }
 
   .form-buttons {
@@ -973,6 +1005,7 @@ header {
     align-items: center;
     align-items: flex-end;
     justify-content: center;
+    margin-top: 2em;
     
     .btn-primary {
       display: flex;
@@ -980,7 +1013,6 @@ header {
       margin-right: auto !important;
       margin-left: 5px !important;
       font-size: 14px;
-      color: #fff;
       
       .svg-icon {
         margin-left: 5px;
@@ -1347,72 +1379,87 @@ input[type=checkbox] {
 }
 
 .landing-menu {
-    display: flex;
-    flex-direction: row;
-    margin-top: 4em;
-    .landing-menu__card {
-        background-color: #fbffff;
-        border: 1px solid lightgray;
-        border-radius: 10px;
-        cursor: pointer;
-        position: relative;
-        width: 20%;
-        overflow: hidden;
-        margin-left: 15px;
-        margin-right: 15px;
-        &:before {
-            content: "";
-            display: block;
-            padding-top: 100%;
-        }
-        &:last-of-type {
-            opacity: 0;
-            cursor: auto;
-        }
-        &.landing-project-card {
-            z-index: 999;
-            left: 20%;
-            &.open {
-                left: 0;
-            }
-        }
-    }
-    .disable {
-        opacity: 0;
-    }
-    .landing-menu__card-content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        color: white;
-        span {
-            display: table-cell;
-            text-align: center;
-            vertical-align: middle;
-            color: lightgray;
-            margin-bottom: 1em;
-            font-size: 16px;
-        }
-        a:hover {
-            text-decoration: none;
-        }
-        .landing-card__title-block {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            .landing-menu__card-content__icon {
-                max-height: 40px;
-            }
+  display: flex;
+  flex-direction: row;
+  margin-top: 4em;
 
-            p.new-project {
-              color: #0096FA;
-            }
-        }
+  .landing-menu__card {
+    background-color: #FCFFFF;
+    border: 1px solid #E9F3F5;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    width: 20%;
+    overflow: hidden;
+    margin-left: 15px;
+    margin-right: 15px;
+
+    &:before {
+      content: "";
+      display: block;
+      padding-top: 100%;
     }
+
+    &:last-of-type {
+      opacity: 0;
+      cursor: auto;
+    }
+
+    &.landing-project-card {
+      z-index: 999;
+      left: 20%;
+
+      &.open {
+        left: 0;
+      }
+    }
+  }
+
+  .disable {
+    opacity: 0;
+  }
+
+  .landing-menu__card-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: white;
+
+    span {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+      color: #8FB0B3;
+      margin-bottom: 1em;
+      font-size: 16px;
+    }
+
+    p {
+      color: #475759;
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+
+    .landing-card__title-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+
+      .landing-menu__card-content__icon {
+        max-height: 40px;
+      }
+
+      p.new-project {
+        color: #0096FA;
+      }
+    }
+  }
 }
 
 .react-datepicker-popper {
