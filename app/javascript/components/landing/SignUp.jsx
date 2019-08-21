@@ -34,7 +34,7 @@ class SignUp extends Component {
       <div className='form-row'>
         <Field
           component={InputField}
-          className='form-group col-md-6 pr-4'
+          className='form-group col-md-6 p-2_5vw-right'
           name='first_name'
           id='first_name'
           label='Type in first name*'
@@ -43,7 +43,7 @@ class SignUp extends Component {
         />
         <Field
           component={InputField}
-          className='form-group col-md-6 pl-4'
+          className='form-group col-md-6 p-2_5vw-left'
           name='last_name'
           id='last_name'
           label='Type in last name*'
@@ -53,7 +53,7 @@ class SignUp extends Component {
       </div>
       <div className='form-row'>
         <Field
-          className='form-group col-md-6 pr-4'
+          className='form-group col-md-6 p-2_5vw-right'
           name='country'
           id='country'
           options={countryList}
@@ -63,7 +63,7 @@ class SignUp extends Component {
         />
         <Field
           component={InputField}
-          className='form-group col-md-3 pl-4'
+          className='form-group col-md-3 p-2_5vw-left'
           name='state'
           id='state'
           label='State'
@@ -99,7 +99,7 @@ class SignUp extends Component {
       <div className='form-row'>
         <Field
           component={InputField}
-          className='form-group col-md-6 pr-4'
+          className='form-group col-md-6 p-2_5vw-right'
           name='email'
           id='email'
           label='Type in e-mail address*'
@@ -108,7 +108,7 @@ class SignUp extends Component {
         />
         <Field
           component={InputField}
-          className='form-group col-md-6 pl-4'
+          className='form-group col-md-6 p-2_5vw-left'
           type='password'
           name='password'
           id='password'
@@ -120,7 +120,7 @@ class SignUp extends Component {
       <div className='form-row'>
         <Field
           component={InputField}
-          className='form-group col-md-6 pr-4'
+          className='form-group col-md-6 p-2_5vw-right'
           name='username'
           id='username'
           label='Define your user ID*'
@@ -129,7 +129,7 @@ class SignUp extends Component {
         />
         <Field
           component={InputField}
-          className='form-group col-md-6 pl-4'
+          className='form-group col-md-6 p-2_5vw-left'
           type='password'
           name='password_confirmation'
           id='password_confirmation'

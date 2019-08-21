@@ -1,4 +1,13 @@
 @import "../../../node_modules/slick-carousel/slick/slick.css";
+
+/* Border-Box */
+
+html {
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 *,
 *:after,
 *:before {
@@ -7,12 +16,24 @@
     margin: 0;
 }
 
+body {
+  -webkit-text-size-adjust: none;
+  font-family: 'aktiv-grotesk', sans-serif !important;
+  font-size: 14px;
+  line-height: 1;
+  color: #373737;
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+}
+
 ul {
   list-style: none;
 }
 
 p {
   color: black;
+  line-height: 1.5;
 }
 
 a {
@@ -24,6 +45,26 @@ a {
       color: white !important;
     }
   }
+}
+
+.form-group {
+  label {
+    font-size: 15px;
+  }
+}
+
+.p-2_5vw-left {
+  padding-left: 3em;
+  padding-left: 2.5vw !important;
+}
+
+.p-2_5vw-right {
+  padding-right: 3em;
+  padding-right: 2.5vw !important;
+}
+
+.form-control {
+  max-height: 33.5px;
 }
 
 a.blue-link {
@@ -42,6 +83,7 @@ img {
 
 input::placeholder {
   color: #c8d8d9 !important;
+  font-size: 14px;
 }
 
 .landing-page {
@@ -125,19 +167,13 @@ input::placeholder {
       display: flex;
     }
   }
-
-}
-
-body {
-  -webkit-text-size-adjust: none;
-  font-family: 'aktiv-grotesk', sans-serif !important;
-  font-size: 14px;
-  line-height: 1;
-  color: #373737;
 }
 
 .btn {
+  height: 8vh;
+  max-height: 43px;
   line-height: 1.3 !important;
+  font-size: 15px;
 }
 
 .prevBtn,
@@ -184,6 +220,13 @@ footer:after,
     padding-top: 2em;
     -webkit-overflow-scrolling: touch;
   }
+
+
+  @media only screen and (min-width: 1200px) {
+    min-width: 1200px;
+    max-width: 100%;
+    width: 70vh;
+  }
 }
 
 .checkbox-field {
@@ -194,16 +237,16 @@ footer:after,
 .btn-back {
   display: flex;
   margin-right: auto !important;
-  align-items: baseline !important;
+  align-items: center !important;
   color: #a5adad;
   
   .svg-icon {
     margin-right: 5px;
     background-color: grey;
-    width: 6px;
+    width: 7px;
     min-width: 7px;
-    height: 10px;
-    min-height: 10px;
+    height: 11px;
+    min-height: 11px;
   }
 
   &.back-member-details {
@@ -229,15 +272,19 @@ header {
   }
 
   .btn-back {
+    font-size: 15px;
+    font-weight: 600;
     margin-right: 0px !important;
 
     .svg-icon {
-      background-color: #fff;
+      background-color: #8FB0B3;
     }
   }
 
   .navbar {
+    height: 11.6vh;
     min-height: 80px;
+    max-height: 115px;
   }
 }
 
@@ -272,7 +319,7 @@ header {
   color: #fff;
 
   form {
-    width: 50%;
+    width: 53%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -423,10 +470,14 @@ header {
 .nav-item {
   margin-right: 20px;
   z-index: 10;
+
+  .btn {
+    font-size: 16px !important;
+  }
 }
 
 .nav-link {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 100;
   text-transform: uppercase;
   color: #fff;
@@ -469,7 +520,7 @@ header {
 
   .nav-link {
     text-transform: capitalize;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   li {
@@ -537,6 +588,10 @@ header {
   width: 30%;
   color: #221F6D;
   margin-top: 2em;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
 }
 
 .back-button {
@@ -933,10 +988,12 @@ header {
   justify-items: center;
   justify-content: center;
   background-color: white;
-  margin-top: 100px;
-  min-height: 80.5vh;
-  padding-top: 50px;
-  padding-bottom: 50px;
+  margin-top: 245px;
+  padding-bottom: 150px;
+
+  .form-group {
+    margin-bottom: 38px;
+  }
 
   form {
     width: 100%;
@@ -966,8 +1023,9 @@ header {
     margin-right: auto;
     
     .step {
-      padding-bottom: 15px;
-      font-weight: 600;
+      padding-bottom: 30px;
+      font-size: 20px;
+      font-weight: 500;
       color: #f2f5f5;
       border-bottom: 5px solid #f2f5f5;
 
@@ -979,10 +1037,11 @@ header {
   }
 
   .sign-up-form__header {
-    margin-top: 2em;
-    margin-bottom: 2em;
+    margin-top: 65px;
+    margin-bottom: 92px;
     color: #221F6D;
     font-weight: 600;
+    font-size: 35px;
     width: 40%;
     margin-left: auto;
     margin-right: auto;
@@ -1008,11 +1067,8 @@ header {
     margin-top: 2em;
     
     .btn-primary {
-      display: flex;
-      align-items: baseline !important;
       margin-right: auto !important;
       margin-left: 5px !important;
-      font-size: 14px;
       
       .svg-icon {
         margin-left: 5px;
