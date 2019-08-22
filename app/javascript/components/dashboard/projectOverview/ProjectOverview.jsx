@@ -24,28 +24,26 @@ const ProjectOverview = () => {
   
   return (
     <div>
-      <div className='row row-projects'>
+      <div className='row-projects'>
         {allProjects.map(project => (
-          <div className='col-sm-4' key={project.id}>
-            <div className='project-card in-preparation'>
-              <Link to={`/dashboard/projects/${project.id}`}>
-                <i className='svg-icon cogs-icon' />
-              </Link>
-              <label>{project.name}</label>
-              <div className='row project-card__bottom'>
-                <div className='col-3'>
-                  Planning
-                  </div>
-                <div className='col-3'>
-                  Development
-                  </div>
-                <div className='col-3'>
-                  Execution
-                  </div>
-                <div className='col-3'>
-                  Operation
-                  </div>
-              </div>
+          <div className='project-card in-preparation' key={project.id}>
+            <Link to={`/dashboard/projects/${project.id}`}>
+              <i className='svg-icon cogs-icon' />
+            </Link>
+            <label>{project.name}</label>
+            <div className='row project-card__bottom'>
+              <div className='col-3'>
+                Planning
+                </div>
+              <div className='col-3'>
+                Development
+                </div>
+              <div className='col-3'>
+                Execution
+                </div>
+              <div className='col-3'>
+                Operation
+                </div>
             </div>
           </div>
         ))}

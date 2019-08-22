@@ -48,7 +48,7 @@ function Content(folderId) {
 
   return (
     <div className='dms-content bordered'>
-      <div className='dms-content__header folder_edit p-4'>
+      <div className='dms-content__header folder_edit'>
         <div>
           <h4>Folder Settings</h4>
           <label>{`Manage '${folder.title}'`}</label>

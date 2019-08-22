@@ -136,7 +136,7 @@ class DocFieldsTable extends Component {
 
     return (
       <React.Fragment>
-        <div className='dms-content__header p-4'>
+        <div className='dms-content__header'>
           <div className='d-flex align-items-center'>
             <h4>Add documents data & files</h4>
             <label className='rounded-label red ml-4'>

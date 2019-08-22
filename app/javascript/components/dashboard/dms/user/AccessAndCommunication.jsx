@@ -77,7 +77,7 @@ const AccessAndCommunication = ({ backStep }) => {
 
   return (
     <React.Fragment>
-      <div className='dms-content__header p-4'>
+      <div className='dms-content__header'>
         <h4>Access & communication</h4>
       </div>
 

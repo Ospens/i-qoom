@@ -39,7 +39,7 @@ const Content = () => {
 
   return (
     <div className='show-document bordered'>
-      <div className='dms-content__header px-4 pt-4'>
+      <div className='dms-content__header'>
         <h4>Document details</h4>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>

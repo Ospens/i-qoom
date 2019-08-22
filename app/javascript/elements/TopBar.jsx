@@ -108,16 +108,11 @@ class TopBar extends Component {
     <div className='top-bar-user-info'>
       {!isOpen &&
       <div className='navbar-burger-block'>
-        <button type='button' className='btn d-flex' onClick={toggle}>
-          <i className='svg-icon black burger-menu-icon-2' />
-        </button>
-      </div>}
-      <div className='navbar-burger-block'>
-        <h2 className='logo-png' >
-          {this.props.header}
-          {/* <img src={logoPurple} onClick={toggle}/> */}
+        <h2>
+          <i className='svg-icon black burger-menu-icon-2 mr-2' onClick={toggle} />
         </h2>
-      </div>
+      </div>}
+      <h2>{this.props.header}</h2>
       {this.renderUserOptions()}
     </div>
   )

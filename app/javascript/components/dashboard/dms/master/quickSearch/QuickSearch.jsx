@@ -99,7 +99,7 @@ export class QuickSearch extends Component {
     
     return (
       <div className='dms-content bordered edit-convention'>
-        <div className='dms-content__header p-4'>
+        <div className='dms-content__header'>
           <h4>Define default filters</h4>
           <label>Prioritise and enable/disable</label>
         </div>

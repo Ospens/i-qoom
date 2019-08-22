@@ -157,7 +157,7 @@ function DocumentsAndFiles() {
   
   return (
     <React.Fragment>
-      <div className='dms-contents__header p-4'>
+      <div className='dms-content__header'>
         <h4>Add documents data & files</h4>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>
@@ -186,7 +186,7 @@ function DocumentsAndFiles() {
         </div>
       </div>
 
-      <div className='form-body p-4'>
+      <div className='form-body'>
         <div className='row new-document-table'>
 
           <div className='col-6'>
