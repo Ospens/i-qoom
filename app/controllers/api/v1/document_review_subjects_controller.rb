@@ -3,7 +3,11 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
   load_resource :document_revision
   before_action :set_revision,
                 if: -> { @document.present? && @document_revision.blank? }
-  load_resource :document_review_subject, through: :document_revision
+  load_resource :document_review_subject,
+                through: :document_revision,
+                if: -> { @document_revision.present? }
+  load_resource :document_review_subject,
+                if: -> { @document_revision.blank? }
   authorize_resource :document_review_subject, except: [:index]
 
   def new
@@ -24,6 +28,10 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
   def index
     authorize! :show, @document_revision
     render json: @document_revision.document_review_subjects
+  end
+
+  def show
+    render formats: :json
   end
 
   private

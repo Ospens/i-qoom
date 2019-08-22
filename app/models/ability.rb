@@ -78,7 +78,9 @@ class Ability
       # DocumentFolder
       can :manage, DocumentFolder, user_id: user.id
       # DocumentReviewSubject
-      can [:new, :create], DocumentReviewSubject do |subject|
+      can [:new,
+           :create,
+           :show], DocumentReviewSubject do |subject|
         subject.document_revision.last_version.can_view?(user)
       end
       can [:show], DocumentRevision do |revision|

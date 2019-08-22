@@ -39,6 +39,6 @@ class DocumentReviewSubject < ApplicationRecord
   end
 
   def create_comment
-    comments.create(text: comment)
+    comments.create(text: comment, user: user)
   end
 end

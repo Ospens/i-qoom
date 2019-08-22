@@ -85,4 +85,29 @@ describe DocumentReviewSubject, type: :request do
       expect(subject).to_not have_key('updated_at')
     end
   end
+
+  context '#show' do
+    let(:review_subject) { FactoryBot.create(:document_review_subject, document_revision: revision) }
+    let!(:comment) { FactoryBot.create(:document_review_comment, document_review_subject: review_subject) }
+
+    it 'anon' do
+      get "/api/v1/document_review_subjects/#{review_subject.id}"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user without rights' do
+      get "/api/v1/document_review_subjects/#{review_subject.id}", headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
+      get "/api/v1/document_review_subjects/#{review_subject.id}", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json).to have_key('comments')
+      expect(json).to have_key('review_issuer')
+      expect(json).to have_key('reviewers')
+      expect(json['comments'].first).to have_key('user')
+    end
+  end
 end
