@@ -1,4 +1,7 @@
 class DocumentMain < ApplicationRecord
+  enum document_review_status: [:in_progress,
+                                :accepted,
+                                :rejected]
   belongs_to :project
 
   has_many :revisions, class_name: 'DocumentRevision', foreign_key: 'document_main_id'
