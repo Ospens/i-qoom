@@ -182,26 +182,14 @@ class Reviews extends Component {
 
   renderToggleButton = () => {
     const { readMore } = this.state
-    if (readMore) {
-      return (
-        <button
+    return (
+      <button
         type='button'
-        className='btn btn-primary mt-5'
-        onClick={() => this.setState({ readMore: false })}>
-          Hide
-        </button>
-        )
-    } else {
-      return (
-        <button
-          type='button'
-          className='btn btn-primary mt-5'
-          onClick={() => this.setState({ readMore: true })}>
-            Read more
-        </button>
-      )
-
-    }
+        className='btn btn-primary mt-5 mx-auto'
+        onClick={() => this.setState({ readMore: !readMore })}>
+        {readMore ? 'Hide' : 'Read more'}
+      </button>
+    )
   }
 
   render() {

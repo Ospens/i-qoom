@@ -18,7 +18,7 @@ const initialState = {
   },
   whatISIQoom: {
     title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">What is i-Qoom?</span></span></h3>',
-    description: `<p style='text-align:center;'> Largemouth bass Arctic char,
+    description: `<p style='text-align:center;font-size: 15px;'> Largemouth bass Arctic char,
     salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless
     catfish Atlantic trout velvetfish char greenling.South American darter,cornetfish
     sucker wolf-herring mrigal eel - goby golden dojo garibaldi gouramie thresher shark.
@@ -35,11 +35,11 @@ const initialState = {
     title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">Samples &amp; Contents</span></span></h3>',
     firstTab: {
       title: 'Comercial Managment',
-      description: '<h4><span class="text-small">Comercial Managment</span></h4><p>Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
+      description: '<h4><span class="text-small">Comercial Managment</span></h4><p style="font-size: 15px;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
     },
     secondTab: {
       title: 'Project Managment',
-      description: '<h4><span class="text-small">Project Managment</span></h4>Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling'
+      description: '<h4><span class="text-small">Project Managment</span></h4><p style="font-size: 15px;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
     },
     cards: [
       {

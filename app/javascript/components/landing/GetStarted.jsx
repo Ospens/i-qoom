@@ -68,7 +68,7 @@ class GetStarted extends Component {
           />
         </div>
         <div className='text-center'>
-          <button className='col-4 btn btn-primary' type='submit'>
+          <button className='col-4 btn btn-primary mx-auto' type='submit'>
             Send
           </button>
         </div>
