@@ -83,6 +83,12 @@ class Ability
            :show], DocumentReviewSubject do |subject|
         subject.document_revision.last_version.can_view?(user)
       end
+      # DocumentReviewComment
+      can [:new,
+           :create], DocumentReviewComment do |comment|
+        comment.document_review_subject.document_revision.last_version.can_view?(user)
+      end
+      # DocumentRevision
       can [:show], DocumentRevision do |revision|
         revision.last_version.can_view?(user)
       end
