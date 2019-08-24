@@ -1,0 +1,6 @@
+en:
+  application_mailer:
+    send_user_confirmation:
+      you_registered: Hello %{username}, you registered on i-qoom.com
+        To confirm your registration, click the link bellow.
+      to_confirm: Confirm registration.

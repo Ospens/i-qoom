@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :validatable
 
+  before_create :send_confirmation_email, unless: :confirmed?
+
   attr_accessor :accept_terms_and_conditions
 
   validates_presence_of :password_confirmation,
@@ -34,7 +36,20 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
 
+  def confirmed?
+    confirmed_at.present?
+  end
+
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def send_confirmation_email
+    self.confirmation_sent_at = Time.now
+    ApplicationMailer.send_user_confirmation(self).deliver_now
+  end
+
+  def confirmation_token
+    ::JsonWebToken.encode(user_id: id, email: email)
   end
 end

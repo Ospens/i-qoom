@@ -1,0 +1,4 @@
+div = t(".you_registered", username: @user.username)
+
+div = link_to t(".to_confirm"),
+  confirm_api_v1_users_url(token: @user.confirmation_token)

@@ -6,7 +6,13 @@ class ApplicationMailer < ActionMailer::Base
     @contact = contact
     mail to: [ 'yasserchehade@gmx.de',
                'shamardin.k@gmail.com' ],
-        subject: t(".title")
+         subject: t(".title")
+  end
+
+  def send_user_confirmation(user)
+    @user = user
+    mail to: @user.email,
+         subject: t(".title")
   end
 
   def send_project_admin_confirmation(project_admin)
