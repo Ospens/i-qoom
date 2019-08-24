@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import classnames from 'classnames'
 import { destroy, reduxForm, formValueSelector, FormSection } from 'redux-form'
 import NewModal from '../../../elements/Modal'
 import Terms from './Terms'
@@ -34,7 +35,7 @@ class ModalCreateProject extends Component {
     startFetchProjects()
   }
 
-  changeStep = (increase) => {
+  changeStep = increase => {
     const { step } = this.state
 
     this.setState({ step: step + increase })
@@ -66,8 +67,9 @@ class ModalCreateProject extends Component {
       sameBillingAddress,
       projectId
     } = this.props
-
-    if (step < 5 && !projectId) {
+    if (step < 4) {
+      this.changeStep(1)
+    } else if (step < 5 && !projectId) {
       return startCreateProject(values, (val) => this.afterCreate(val))
     } else if (sameBillingAddress && step === 5) {
       return updateProject(values, (val) => this.afterUpdate(val, 7))
@@ -98,9 +100,12 @@ class ModalCreateProject extends Component {
   renderModalContent = () => {
     const { step } = this.state
     const { terms } = this.props
+    const infoModals = step === 1 || step === 7
+    const mainClass = classnames('new-modal', { 'without-header': infoModals })
     
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} className={mainClass}>
+        {!infoModals && <div className='new-modal__header'><h4>New project</h4></div>}
         {step === 1 &&
         <Terms
           closeModal={this.handleClose}

@@ -11,16 +11,18 @@ class Terms extends Component {
   render() {
     const { authed, content, editable } = this.props
     return (
-      <section className='container info-container'>
-        <div className='text-center'>
-        {authed && editable ?
-          (
-            <TextEditor text={content} />
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: content }} />
-          )}
-        </div>
-      </section>
+      <div>
+        <section className='container info-container'>
+          <div className='text-center'>
+            {authed && editable ?
+              (
+                <TextEditor text={content} />
+              ) : (
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+              )}
+          </div>
+        </section>
+      </div>
     )
   }
 }

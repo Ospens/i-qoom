@@ -1,43 +1,21 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { getFormSubmitErrors, isValid } from 'redux-form'
 import AdministratorFields from '../../../elements/forms/AdministratorFields'
 
-const renderSubmitButtons = ({ closeModal, nextStep, isValid }) => {
-  return (
-    <div className='modal-footer'>
-      <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
-      <button
-        type='button'
-        className='btn btn-purple'
-        onClick={nextStep}
-        disabled={!isValid}
-      >
-        Next
-      </button>
-    </div>
-  )
-}
-
-const FirstAdmin = ({ submitErrors, ...props }) => {
+const FirstAdmin = ({ closeModal }) => {
 
   return (
-    <div className='new-project-modal'>
-      <h4>New project</h4>
-      <div className='modal-body'>
-        <h6>Who is the project administrator?</h6>
+    <React.Fragment>
+      <div className='new-modal__body'>
+        <h6 className='new-modal__body-title'>Who is the project administrator?</h6>
         <label className='project-admin'>Project administrator</label>
-        <AdministratorFields submitErrors={submitErrors} admin={'admins[0]'} />
+        <AdministratorFields admin='admins[0]' />
       </div>
-      {renderSubmitButtons(props)}
-    </div>
+      <div className='new-modal__footer'>
+        <button type='button' className='btn btn-white mr-2' onClick={closeModal}>Cancel</button>
+        <button type='submit' className='btn btn-purple'>Next</button>
+      </div>
+    </React.Fragment>
   )
 }
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('project_form')(state),
-  isValid: isValid('project_form')(state),
-})
-
-export default connect(mapStateToProps)(FirstAdmin)
-
+export default FirstAdmin

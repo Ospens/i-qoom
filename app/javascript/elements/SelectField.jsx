@@ -98,9 +98,18 @@ export const colourStyles = errorInfo => {
   return colourStyles
 }
 
+const customFilterOption = (option, rawInput) => {
+  const words = rawInput.split(' ')
+  return words.reduce(
+    (acc, cur) => acc && option.data.title.toLowerCase().includes(cur.toLowerCase()),
+    true,
+  )
+}
+
 export const SelectComponent = props => (
   <Select
     {...props}
+    filterOption={customFilterOption}
     components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
     autoFocus={false}
     styles={colourStyles(props.errorInfo)}
@@ -115,7 +124,7 @@ const SelectField = ({
   label,
   placeholder,
   className,
-  isDisabled = false,
+  disabled = false,
   isMulti = false,
   meta: { touched, error }
 }) => {
@@ -137,7 +146,7 @@ const SelectField = ({
         onChange={v => { input.onChange(v.value || v.map(val => val.value)) }}
         onBlur={value => input.onBlur(value.value)}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
-        isDisabled={isDisabled}
+        isDisabled={disabled}
         placeholder={placeholder ? placeholder : 'Select...'}
       />
       <div className='invalid-feedback'>

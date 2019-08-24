@@ -5,10 +5,7 @@ import moment from 'moment'
 import AdministratorFields from '../../../../elements/forms/AdministratorFields'
 import NewModal from '../../../../elements/Modal'
 import DropDown from '../../../../elements/DropDown'
-import pencil from '../../../../images/pencil-write'
-import trashBucket from '../../../../images/trash_bucket'
 import {
-  starUpdateAdmin,
   startDeleteAdmin,
   getAdminInfo,
   startResendConfirmAdmin
@@ -23,38 +20,15 @@ const initialState = {
 }
 
 export class AdminBlock extends Component {
-  nodeRef = React.createRef()
   state = initialState
-
-  options = (projectId, adminId) => (
-    [
-      {
-        key: 'edit_details',
-        text: 'Edit details',
-        icon: pencil,
-        onClick: () => this.toggleModals('adminErrorModal', true)
-      },
-      {
-        key: 'settings',
-        text: 'Delete',
-        icon: trashBucket,
-        onClick: () => this.props.startDeleteAdmin(projectId, adminId)
-      }
-    ]
-  )
-
 
   toggleModals = (key, val) => {
     this.setState({ [key]: val })
   }
 
-  afterUpdate = () => {
-    this.toggleModals('adminForm', false)
-  }
-
   handleSubmit = values => {
-    const { starUpdateAdmin } = this.props
-    return starUpdateAdmin(values).then(this.afterUpdate)
+    const { updateAdmin } = this.props
+    return updateAdmin(values)
   }
 
   renderAdminErrorModal = () => (
@@ -80,29 +54,9 @@ export class AdminBlock extends Component {
     </React.Fragment>
   )
 
-  modalButtonsAdmin = () => {
-    return (
-      <div className='modal-footer'>
-        <button
-          type='button'
-          className='btn btn-white'
-          onClick={() => this.toggleModals('adminForm', false)}
-        >
-          Cancel
-        </button>
-        <button
-          type='submit'
-          className='btn btn-purple'
-        >
-          Invite
-        </button>
-      </div>
-    )
-  }
-
   openInspectModal = () => {
-    const { projectId, getAdminInfo, initialValues: { admins } } = this.props
-    getAdminInfo(projectId, admins[0].id)
+    const { projectId, getAdminInfo, admin } = this.props
+    getAdminInfo(projectId, admin.id)
     this.toggleModals('adminInspectModal', true)
   }
 
@@ -173,25 +127,6 @@ export class AdminBlock extends Component {
     )
   }
 
-  renderModal = () => {
-    const { submitErrors } = this.props
-
-    return (
-      <div className='new-project-modal'>
-        <h4>New project administrator</h4>
-        <div className='modal-body'>
-          <h6>Who is the second project administrator?</h6>
-          <label className='project-admin'>Second project administrator</label>
-          <AdministratorFields
-            submitErrors={submitErrors}
-            admin='admins[0]'
-          />
-        </div>
-        {this.modalButtonsAdmin()}
-      </div>
-    )
-  }
-
   renderAdminInspectModal = admin => {
     const title = admin.status === 'active'
       ? 'Active'
@@ -229,30 +164,6 @@ export class AdminBlock extends Component {
     )
   }
 
-  renderButtonForCreate = () => {
-    const { adminForm } = this.state
-    return (
-      <React.Fragment>
-        <div className='block-title'>
-          <span>Project administrator 2</span>
-        </div>
-        <button
-          type='button'
-          className='btn btn-purple wide-button second-admin'
-          onClick={() => this.toggleModals('adminForm', true)}
-        >
-          Add project administrator
-        </button>
-        <NewModal
-          mountNode={this.nodeRef.current}
-          content={this.renderModal()}
-          open={adminForm}
-          onClose={() => this.toggleModals('adminForm', false)}
-        />
-      </React.Fragment>
-    )
-  }
-
   renderStatus = status => {
     switch (status) {
       case 'unconfirmed':
@@ -270,62 +181,43 @@ export class AdminBlock extends Component {
     }
   }
 
-  renderAdminInfo = admin => {
-    const { submitErrors, index, pristine } = this.props
+  render() {
+    const { submitErrors, index, pristine, admin } = this.props
     const { adminInspectModal } = this.state
 
     return (
-      <React.Fragment>
+      <form
+        onSubmit={this.props.handleSubmit(this.handleSubmit)}
+        className='mb-2'
+      >
         <div className='block-title'>
           <span className='mr-2'>{`Project administrator ${index}`}</span>
           {this.renderStatus(admin.status)}
           {this.renderAdminOptions(admin)}
         </div>
-        <AdministratorFields
-          submitErrors={submitErrors}
-          admin='admins[0]'
-        />
+        <AdministratorFields submitErrors={submitErrors} />
         {!pristine &&
-        <button
-          type='submit'
-          className='btn btn-purple wide-button mb-2'
-        >
-          Save changes
+          <button
+            type='submit'
+            className='btn btn-purple wide-button mb-2'
+          >
+            Save changes
         </button>}
         <NewModal
           content={this.renderAdminInspectModal(admin)}
           open={adminInspectModal}
           onClose={() => this.toggleModals('adminInspectModal', false)}
         />
-      </React.Fragment>
-    )  
-  }
-
-  render() {
-    const { initialValues: { admins } } = this.props
-
-    return (
-      <form
-        onSubmit={this.props.handleSubmit(this.handleSubmit)}
-        className='col-lg-4'
-        ref={this.nodeRef}
-      >
-        {admins[0]
-          ? this.renderAdminInfo(admins[0])
-          : this.renderButtonForCreate()}
       </form>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  initialValues: { id: state.projects.current.id, admins: [ownProps.admin] },
-  submitErrors: getFormSubmitErrors(ownProps.formName)(state),
-  form: ownProps.formName,
+  submitErrors: getFormSubmitErrors(ownProps.formName)(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  starUpdateAdmin: values => dispatch(starUpdateAdmin(values)),
   getAdminInfo: (projectId, adminId) => dispatch(getAdminInfo(projectId, adminId)),
   startResendConfirmAdmin: (projectId, adminId) => dispatch(startResendConfirmAdmin(projectId, adminId)),
   startDeleteAdmin: (projectId, adminId) => dispatch(startDeleteAdmin(projectId, adminId))

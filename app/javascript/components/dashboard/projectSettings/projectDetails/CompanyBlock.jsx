@@ -76,10 +76,10 @@ export class CompanyBlock extends Component {
   renderBillingModal = () => {
     return (
       <FormSection name='company_data'>
-        <BillingAddress
-          submitButtons={this.modalButtons}
-          modalTitle='Billing address'
-        />
+        <div className='new-modal'>
+          <div className='new-modal__header'><h4>Billing address</h4></div>
+          <BillingAddress submitButtons={this.modalButtons} />
+        </div>
       </FormSection>
     )
   }
@@ -91,11 +91,13 @@ export class CompanyBlock extends Component {
     return (
       <form
         onSubmit={this.props.handleSubmit(this.handleSubmit)}
-        className='col-lg-4'
+        className='col-lg-6 company-data-form'
         ref={this.nodeRef}
       >
         <FormSection name='company_data'>
-          <span className='block-title'>Company data</span>
+          <div className='block-title'>
+            <span>Company data</span>
+          </div>
           <CompanyFields submitErrors={submitErrors} />
           {this.renderCompanyDataButtons()}
         </FormSection>

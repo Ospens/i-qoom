@@ -15,11 +15,12 @@ function CheckField({
       <input
         {...input}
         {...props}
+        defaultChecked={input.value}
         type='checkbox'
         component='input'
         className={`form-control checkbox-input ${touched && error ? ' is-invalid' : ''}`}
       />
-      <label className={labelClass} htmlFor={input.name} />
+      <label className={labelClass} htmlFor={props.id} />
       <span>{text}</span>
       {touched && error &&
         <div className='invalid-feedback'>

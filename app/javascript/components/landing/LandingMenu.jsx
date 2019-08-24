@@ -105,29 +105,31 @@ class LandingMenu extends Component {
     ))}
 
     return (
-      <section className='container info-container text-center'>
-        <h2>Which area would you like to enter?</h2>
-        <div className='landing-menu'>
-          <div className={projectCardClass} onClick={() => this.setState({ projectsOpen: !projectsOpen })}>
-            <div className='landing-menu__card-content'>
-              <div className='landing-card__title-block'>
-                <span>Projects</span>
-                <div>
-                  <i className='svg-icon streamline-folder-icon blue' />
+      <div className='landing-page'>
+        <section className='container info-container text-center'>
+          <h2>Which area would you like to enter?</h2>
+          <div className='landing-menu'>
+            <div className={projectCardClass} onClick={() => this.setState({ projectsOpen: !projectsOpen })}>
+              <div className='landing-menu__card-content'>
+                <div className='landing-card__title-block'>
+                  <span>Projects</span>
+                  <div>
+                    <i className='svg-icon streamline-folder-icon blue' />
+                  </div>
                 </div>
               </div>
             </div>
+            {this.renderRootMenu(projectsOpen, menuListFirstRow.slice(0, 3))}
+            <div className='landing-menu__card' />
           </div>
-          {this.renderRootMenu(projectsOpen, menuListFirstRow.slice(0, 3))}
-          <div className='landing-menu__card' />
-        </div>
-        <div className='landing-menu'>
-          <div className='landing-menu__card disable' />
-          {this.renderRootMenu(projectsOpen, menuListFirstRow.slice(3, 7))}
-          <div className='landing-menu__card' />
-          <div className='landing-menu__card' />
-        </div>
-      </section>
+          <div className='landing-menu'>
+            <div className='landing-menu__card disable' />
+            {this.renderRootMenu(projectsOpen, menuListFirstRow.slice(3, 7))}
+            <div className='landing-menu__card' />
+            <div className='landing-menu__card' />
+          </div>
+        </section>
+      </div>
     )
   }
 }
