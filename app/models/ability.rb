@@ -88,6 +88,7 @@ class Ability
            :create], DocumentReviewComment do |comment|
         comment.document_review_subject.document_revision.last_version.can_view?(user)
       end
+      can :update, DocumentReviewComment, user_id: user.id
       # DocumentRevision
       can [:show], DocumentRevision do |revision|
         revision.last_version.can_view?(user)
