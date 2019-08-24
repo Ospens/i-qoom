@@ -60,19 +60,19 @@ export class QuickSearch extends Component {
   renderDropDownField = (row, index) => (
     <div className='filter-grid-row' key={index}>
       <input id='grid-row-opener' type='checkbox' />
-      <div className='d-flex'>
+      <div className='d-flex align-items-center'>
         <label htmlFor={row.title}>{row.title}</label>
         <label className='switch ml-auto'>
           <input
             type='checkbox'
             id={row.title}
             checked={row.enabled}
-            onChange={(value) => this.handleSwitch(index, value)}
+            onChange={value => this.handleSwitch(index, value)}
           />
           <span className='slider round' />
         </label>
         <label htmlFor='grid-row-opener' className='filter-grid-row-opener'>
-          <i />
+          <i className='svg-icon dark-arrow-icon black' />
         </label>
       </div>
 
@@ -99,9 +99,9 @@ export class QuickSearch extends Component {
     
     return (
       <div className='dms-content bordered edit-convention'>
-        <div className='dms-content__header p-4'>
+        <div className='dms-content__header'>
           <h4>Define default filters</h4>
-          <label> Prioritise and enable/disable</label>
+          <label>Prioritise and enable/disable</label>
         </div>
 
         <form className='form-body' >

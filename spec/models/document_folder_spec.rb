@@ -55,46 +55,6 @@ RSpec.describe DocumentFolder, type: :model do
     end
   end
 
-  context 'validates document_fields_values' do
-    let(:convention) { FactoryBot.create(:convention) }
-    let(:project) { convention.project }
-    let(:user) { FactoryBot.create(:user) }
-    let(:folder) { FactoryBot.build(:document_folder, project: project, user: user) }
-
-    def set_field(kind)
-      convention_field = convention.document_fields.find_by(codification_kind: kind)
-      @convention_field_value = convention_field.document_field_values.first.value
-      @field =
-        folder.document_fields.new(kind: :select_field,
-                                   codification_kind: kind,
-                                   value: '111')
-    end
-
-    it 'originating_company' do
-      expect(folder).to be_valid
-      set_field(:originating_company)
-      expect(folder).to_not be_valid
-      @field.value = @convention_field_value
-      expect(folder).to be_valid
-    end
-
-    it 'discipline' do
-      expect(folder).to be_valid
-      set_field(:discipline)
-      expect(folder).to_not be_valid
-      @field.value = @convention_field_value
-      expect(folder).to be_valid
-    end
-
-    it 'document_type' do
-      expect(folder).to be_valid
-      set_field(:document_type)
-      expect(folder).to_not be_valid
-      @field.value = @convention_field_value
-      expect(folder).to be_valid
-    end
-  end
-
   context 'allowed_to_add_document?' do
     let!(:folder) { FactoryBot.create(:document_folder) }
     let(:project) { folder.project }
@@ -109,5 +69,16 @@ RSpec.describe DocumentFolder, type: :model do
       allow(dbl).to receive(:documents_available_for).with(user).and_return([doc])
       expect(folder.allowed_to_add_document?(doc, user)).to eql(true)
     end
+  end
+
+  it '#document_fields_presence' do
+    folder = FactoryBot.build(:document_folder)
+    expect(folder).to be_valid
+    folder.document_fields.new(FactoryBot.attributes_for(:document_field))
+    expect(folder).to_not be_valid
+    folder.document_fields.delete_all
+    folder.build_default_fields
+    expect(folder.document_fields.length).to eql(4)
+    expect(folder).to be_valid
   end
 end

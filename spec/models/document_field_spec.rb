@@ -134,9 +134,9 @@ RSpec.describe DocumentField, type: :model do
     rev1 = doc1.revision
     main = rev1.document_main
     field = doc1.document_fields.find_by(codification_kind: :revision_number)
-    field.update!(value: 1)
-    rev2 = main.revisions.create
+    field.update!(value: 0)
     attrs = assign_attributes_suffix_to_document(doc1.reload.attributes_for_edit)
+    rev2 = main.revisions.create
     doc2 = rev2.versions.new(attrs)
     expect(doc2).to_not be_valid
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '2'
@@ -274,11 +274,13 @@ RSpec.describe DocumentField, type: :model do
 
     [:document_number, :revision_number].each do |kind|
       it kind do
-        field = FactoryBot.build(:document_field, required: true, kind: :text_field, codification_kind: kind)
-        document.document_fields << field
-        expect(document).to be_valid
-        field.value = nil
-        expect(document).to_not be_valid
+        attrs = assign_attributes_suffix_to_document(document.attributes_for_edit)
+        field = attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == kind.to_s }
+        doc2 = Document.new(attrs)
+        expect(doc2).to be_valid
+        field['value'] = nil
+        doc2 = Document.new(attrs)
+        expect(doc2).to_not be_valid
       end
     end
 
@@ -295,6 +297,7 @@ RSpec.describe DocumentField, type: :model do
       field.file.attach(fixture_file_upload('test.txt'))
       document.document_fields << field
       expect(document).to be_valid
+      allow(document).to receive(:first_document_in_chain?).and_return(true)
       field.file.purge
       expect(document).to_not be_valid
     end

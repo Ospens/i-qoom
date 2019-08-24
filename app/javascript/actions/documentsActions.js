@@ -9,7 +9,7 @@ import {
 import { fieldByColumn } from './conventionActions'
 import { errorNotify, successNotify } from '../elements/Notices'
 
-const paramsToFormData = (data, params, preceding = '') => {
+export const paramsToFormData = (data, params, preceding = '') => {
   let newData = data
   for (const [k, v] of Object.entries(params)) {
     if (v instanceof Object && v.constructor === Array) {
@@ -25,7 +25,10 @@ const paramsToFormData = (data, params, preceding = '') => {
       newData = paramsToFormData(newData, v, prefix)
     } else if (v !== null && v !== undefined) {
       newData.append(`${preceding}${k}`, v)
-    }
+    } /* else if (v === null && k === 'logo') {
+      // TODO: waiting a backend part
+      newData.append(`${preceding}${k}`, v)
+    } */
   }
   return newData
 }
@@ -60,8 +63,8 @@ export const startFetchDocuments = (projectId, history) => (dispatch, getState) 
         dispatch(documentsFetched(response.data.documents))
       })
       .catch(({ response }) => {
-        if (response.status === 302) {
-          history.push({ pathname: `/dashboard${response.data.location}` })
+        if (response.status === 307) {
+          history.push({ pathname: `/dashboard/projects/${projectId}/documents/master/edit_convention` })
           errorNotify('Please, create a convention')
         } else {
           errorNotify('Something went wrong')

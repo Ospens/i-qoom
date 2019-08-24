@@ -132,7 +132,7 @@ class SideBar extends Component {
             </button>
           </div>
           {(() => {
-            if (currentProject.id && pathname !== '/dashboard/') {
+            if (pathname.includes('/dashboard/projects')) {
               return(this.renderProjectContent())
             } else if (pathname.includes('/dashboard')) {
               return (this.renderDashboardContent())
@@ -141,7 +141,7 @@ class SideBar extends Component {
             }
           })()}
         </div>
-        {currentProject.id && 
+        {pathname.includes('/dashboard/projects')&& 
         <div className='active-project'>
           <div className='project-description'>
             <span className='active-project-text'>Active project</span>

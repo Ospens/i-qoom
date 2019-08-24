@@ -74,12 +74,12 @@ class Reviews extends Component {
         <img className='review-card-avatar' src={tmpAvatar} alt='' />
         <div className='clearfix' />
         <div className='user-name-block col-9'>
-        <div className='row'>
-          <TextEditor text={el.name} />
-          <i className='svg-icon rounded-blue-check-icon ml-2' />
-        </div>
-          <TextEditor text={el.country} />
-          <div className='user-stars'>{this.starsRender(el.stars)}
+          <div className='row'>
+            <TextEditor text={el.name} />
+            <i className='svg-icon rounded-blue-check-icon ml-2' />
+          </div>
+            <TextEditor text={el.country} />
+            <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ class Reviews extends Component {
             <div dangerouslySetInnerHTML={{ __html: el.name }} />
               <i className='svg-icon rounded-blue-check-icon ml-2' />
             </div>
-          <div dangerouslySetInnerHTML={{ __html: el.country}} />
+          <div className='user-name-block__country' dangerouslySetInnerHTML={{ __html: el.country}} />
           <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
@@ -182,26 +182,14 @@ class Reviews extends Component {
 
   renderToggleButton = () => {
     const { readMore } = this.state
-    if (readMore) {
-      return (
-        <button
+    return (
+      <button
         type='button'
-        className='btn btn-primary mt-5'
-        onClick={() => this.setState({ readMore: false })}>
-          Hide
-        </button>
-        )
-    } else {
-      return (
-        <button
-          type='button'
-          className='btn btn-primary mt-5'
-          onClick={() => this.setState({ readMore: true })}>
-            Read more
-        </button>
-      )
-
-    }
+        className='btn btn-primary mt-5 mx-auto'
+        onClick={() => this.setState({ readMore: !readMore })}>
+        {readMore ? 'Hide' : 'Read more'}
+      </button>
+    )
   }
 
   render() {

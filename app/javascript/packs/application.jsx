@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import mainStore from '../stores/mainStore'
 import { ToastContainer } from 'react-toastify'
@@ -14,7 +15,9 @@ import '../styles/icons.scss'
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <Provider store={mainStore} >
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
       <ToastContainer />
     </Provider>,
     document.getElementById('app'),

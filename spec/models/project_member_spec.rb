@@ -7,7 +7,8 @@ RSpec.describe ProjectMember, type: :model do
                            :company_type,
                            :company_data,
                            :details,
-                           :completed ])
+                           :pending,
+                           :active ])
             .with_prefix(:creation_step) }
   it { is_expected.to define_enum_for(:employment_type)
             .with_values([ :employee,
@@ -58,12 +59,12 @@ RSpec.describe ProjectMember, type: :model do
                             .for(:email) }
       it { is_expected.to validate_presence_of(:first_name) }
       it { is_expected.to validate_length_of(:first_name)
-                                .is_at_least(3)
+                                .is_at_least(2)
                                 .is_at_most(255) }
 
       it { is_expected.to validate_presence_of(:last_name) }
       it { is_expected.to validate_length_of(:last_name)
-                                .is_at_least(3)
+                                .is_at_least(2)
                                 .is_at_most(255) }
     end
   end
@@ -71,12 +72,25 @@ RSpec.describe ProjectMember, type: :model do
   context "update_creation_step_to_completed" do
     context "when is not ready" do
       subject { FactoryBot.create(:project_member_company_data) }
-      it { expect(subject.creation_step).not_to eq("completed") }
+      it { expect(subject.creation_step).not_to eq("pending") }
     end
     context "when is ready" do
       subject { FactoryBot.create(:project_member_details) }
-      it { expect(subject.creation_step).to eq("completed") }
+      it { expect(subject.creation_step).to eq("pending") }
     end
+  end
+
+  it "send_confirmation_email" do
+    project_member =
+      FactoryBot.create(:project_member,
+                        creation_step: [:employment_type,
+                                        :company_type,
+                                        :company_data,
+                                        :details,
+                                        :pending,
+                                        :active].sample)
+    project_member.send_confirmation_email
+    expect(project_member.confirmation_sent_at).to be_present
   end
 
 end

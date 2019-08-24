@@ -15,7 +15,7 @@ export class DistributionGroup extends Component {
 
     return (
       <div className='dms-content bordered'>
-        <div className='dms-content__header p-4'>
+        <div className='dms-content__header'>
           <h4>Distribution groups</h4>
           <label>Manage distribution groups</label>
         </div>

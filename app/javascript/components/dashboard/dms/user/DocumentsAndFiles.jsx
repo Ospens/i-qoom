@@ -10,98 +10,88 @@ import DocIdModal from '../DocIdModal'
 import SelectField from '../../../../elements/SelectField'
 import CheckboxField from '../../../../elements/CheckboxField'
 import DatePickerField from '../../../../elements/DatePickerField'
-import DropZoneField, { fileToObject } from '../../../../elements/DropZoneField'
+import DropZoneField from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
 import { required } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
+import DocumentIdInputs from '../DocumentIdInputs'
+
+const codificationString = [
+  'originating_company',
+  'discipline',
+  'document_type',
+  'document_number'
+]
 
 const selector = formValueSelector('document_form')
 
-// Select options haven't ids
-
-const updateDocFieldValues = (value, fieldValues, changeValues) => {
-  const newValues = fieldValues.map(field => {
-    const selected = field.value == value
-    return {
-      ...field,
-      selected
-    }
-  })
-  changeValues(newValues)
-}
-
-function InputByType({ field, modal, toggleModal }) {
+function InputByType({ field, modal, toggleModal, conventionId, changeValues }) {
   const uniqName = `document_fields[${field.index}].value`
+  const disabled = conventionId && codificationString.includes(field.codification_kind)
 
-  if (field.kind === 'upload_field') {
+  const commonProps = {
+    label: field.title,
+    name: uniqName,
+    id: uniqName,
+    validate: field.required ? [required] : [],
+    placeholder:field.command,
+    disabled
+  }
+
+  if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
     return (
       <React.Fragment>
         {modal && <DocIdModal toggleModal={toggleModal} open={modal}/>}
         <Field
+          {...commonProps}
+          component={DropZoneField}
+          filename={field.filename}
           name={`document_fields[${field.index}].file`}
           id={`document_fields[${field.index}].file`}
-          component={DropZoneField}
-          label={field.title}
-          validate={field.required ? [required] : []}
         />
         </React.Fragment>
     )
-  } else if (field.kind === 'select_field') {
-    const fieldValues = field.document_field_values
-    const dispatch = useDispatch()
-    const changeValues = (values) => {
-      dispatch(
-        change(
-          'document_form',
-          `document_fields[${field.index}].document_field_values`,
-          values
-        )
-      )
-    }
+  } else if (field.kind === 'upload_field') {
     return (
       <Field
-        name={uniqName}
-        id={uniqName}
-        options={fieldValues}
-        onChange={v => updateDocFieldValues(v, fieldValues, changeValues)}
-        placeholder={field.command}
+        {...commonProps}
+        component={DropZoneField}
+        filename={field.filename}
+        name={`document_fields[${field.index}].file`}
+        id={`document_fields[${field.index}].file`}
+      />
+    )
+  } else if (field.kind === 'select_field') {
+    const fieldValues = field.document_field_values
+    
+    return (
+      <Field
+        {...commonProps}
         component={SelectField}
-        label={field.title}
-        validate={field.required ? [required] : []}
+        options={fieldValues}
+        onChange={v => changeValues(v, fieldValues, field.index)}
       />
     )
   } else if (field.kind === 'textarea_field') {
     return (
       <Field
+        {...commonProps}
         component={TextAreaField}
-        name={uniqName}
-        id={uniqName}
-        placeholder={field.command}
-        label={field.title}
-        validate={field.required ? [required] : []}
       />
     )
   } else if (field.kind === 'date_field') {
     return (
       <Field
-        name={uniqName}
-        id={uniqName}
-        placeholder={field.command}
+        {...commonProps}
         component={DatePickerField}
-        label={field.title}
-        validate={field.required ? [required] : []}
       />
     )
   } else {
     return (
       <Field
+        {...commonProps}
         component={InputField}
-        name={uniqName}
-        id={uniqName}
-        placeholder={field.command}
-        label={field.title}
-        validate={field.required ? [required] : []}
       />
     )
   }
@@ -122,6 +112,7 @@ function DocumentsAndFiles() {
   const [modal, toggleModal] = useState(false)
   const groupedFields = useSelector(state => state.documents.documentFields.grouped_fields)
   const documentFields = useSelector(state => selector(state, 'document_fields'))
+  const conventionId = useSelector(state => selector(state, 'convention_id'))
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
   const disciplineValue = formvalue(documentFields, 'discipline')
@@ -132,6 +123,19 @@ function DocumentsAndFiles() {
   const columns = Object.keys(groupedFields)
 
   const dispatch = useDispatch()
+
+  // Select options haven't ids
+
+  const changeValues = useCallback((value, fieldValues, index) => {
+    const newValues = fieldValues.map(field => {
+      const selected = field.value == value
+      return {
+        ...field,
+        selected
+      }
+    })
+    dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
+  }, [dispatch])
 
   const initDocIdForm = useCallback(values => {
     dispatch(initialize('doc_id_form', values))
@@ -153,7 +157,7 @@ function DocumentsAndFiles() {
   
   return (
     <React.Fragment>
-      <div className='dms-contents__header p-4'>
+      <div className='dms-content__header'>
         <h4>Add documents data & files</h4>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>
@@ -182,66 +186,16 @@ function DocumentsAndFiles() {
         </div>
       </div>
 
-      <div className='form-body p-4'>
+      <div className='form-body'>
         <div className='row new-document-table'>
 
           <div className='col-6'>
-            <div className='form-group'>
-              <label>Pleace select or generate Document ID</label>
-
-              <div className='input-container'>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_name'
-                    value='MWP'
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_orig_company'
-                    placeholder='XXX'
-                    value={origCompanyValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_discipline'
-                    placeholder='XXX'
-                    value={disciplineValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_doc_type'
-                    placeholder='XXX'
-                    value={docTypeValue || ''}
-                    disabled
-                  />
-                </div>
-                <div className='document-id-code'>
-                  <input
-                    className='form-control'
-                    type='text'
-                    id='document_id_doc_number'
-                    placeholder='XXX'
-                    value={docNumberValue || ''}
-                    disabled
-                  />
-                </div>
-              </div>
-            </div>
-
+            <DocumentIdInputs
+              origCompanyValue={origCompanyValue}
+              disciplineValue={disciplineValue}
+              docTypeValue={docTypeValue}
+              docNumberValue={docNumberValue}
+            />
             <div className='form-group'>
               <CheckboxField
                 name='generate_id'
@@ -256,6 +210,8 @@ function DocumentsAndFiles() {
                   modal={modal}
                   toggleModal={toggleModal}
                   field={field}
+                  conventionId={conventionId}
+                  changeValues={changeValues}
                 />
               </div>
             ))}
@@ -269,6 +225,8 @@ function DocumentsAndFiles() {
                   modal={modal}
                   toggleModal={toggleModal}
                   field={field}
+                  conventionId={conventionId}
+                  changeValues={changeValues}
                 />
               </div>
             ))}
@@ -283,6 +241,5 @@ function DocumentsAndFiles() {
     </React.Fragment>
   )
 }
-
 
 export default DocumentsAndFiles

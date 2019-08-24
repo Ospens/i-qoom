@@ -3,4 +3,8 @@ class ProjectSerializer < ApplicationSerializer
     object.admins.order(id: :asc)
   end
   has_one :company_data, serializer: CompanyDataSerializer
+  
+  def attributes(*args)
+    object.attributes.symbolize_keys
+  end
 end

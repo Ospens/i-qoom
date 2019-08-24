@@ -167,7 +167,7 @@ export class Codifications extends Component {
   renderContent = () => {
     return (
       <div className='dms-content bordered'>
-        <div className='dms-content__header p-4'>
+        <div className='dms-content__header'>
           <h4>Convention 1 - active</h4>
           <label>Administration codes for document codification</label>
         </div>

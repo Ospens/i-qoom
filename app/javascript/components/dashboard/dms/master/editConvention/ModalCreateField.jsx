@@ -158,7 +158,7 @@ class ModalCreateField extends Component {
                 options={typeVariants}
                 component={SelectField}
                 errorField={submitErrors}
-                isDisabled={codification_kind}
+                disabled={codification_kind}
                 validate={[required]}
               />
             </div>

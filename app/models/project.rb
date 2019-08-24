@@ -45,6 +45,16 @@ class Project < ApplicationRecord
   validates_presence_of :company_data,
     unless: -> { creation_step_admins? || creation_step_name? }
 
+  def invite_members(ids)
+    members = self.members.where(id: ids)
+    if members.present?
+      members.each(&:send_confirmation_email)
+      true
+    else
+      false
+    end
+  end
+
   private
 
   def update_creation_step_to_done

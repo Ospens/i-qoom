@@ -30,23 +30,21 @@ class Ability
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
     if user.present?
       # Project
-      can :manage, Project, user_id: user.id
+      can :create, Project, user_id: user.id
+      can :manage, Project,
+          id: user.project_administrators.map(&:project_id)
       # ProjectAdministrator
-      can :manage, ProjectAdministrator do |project_admin|
-        project_admin.project.admins.map(&:user_id).include?(user.id)
-      end
+      can :manage, ProjectAdministrator,
+          project: { id: user.project_administrators.map(&:project_id) }
       # ProjectMember
-      can :manage, ProjectMember do |project_member|
-        project_member.project.admins.map(&:user_id).include?(user.id)
-      end
+      can :manage, ProjectMember,
+          project: { id: user.project_administrators.map(&:project_id) }
       # Discipline
-      can :manage, Discipline do |discipline|
-        discipline.project.admins.map(&:user_id).include?(user.id)
-      end
+      can :manage, Discipline,
+          project: { id: user.project_administrators.map(&:project_id) }
       # Role
-      can :manage, Role do |role|
-        role.project.admins.map(&:user_id).include?(user.id)
-      end
+      can :manage, Role,
+          project: { id: user.project_administrators.map(&:project_id) }
       # Convention
       can :manage, Convention do |convention|
         convention.project.user == user
@@ -55,19 +53,29 @@ class Ability
       can [:new, :create], Document do |document|
         document.can_create?(user)
       end
-      can [:show, :download_native_file, :download_details], Document do |document|
+      can [:show,
+           :download_native_file,
+           :download_details,
+           :revisions_and_versions], Document do |document|
         document.user == user ||
           document.can_view?(user)
       end
-      can [:edit, :update, :create_revision], Document do |document|
+      can [:edit, :create_revision], Document do |document|
         document.user == user ||
           document.can_create?(user)
       end
-      can [:index, :download_native_files, :download_list], Document # there should be some limitation
+      can :update, Document do |document|
+        (document.user == user || document.can_create?(user)) &&
+          document == document.revision.versions.last_version
+      end
+      can [:index,
+           :download_native_files,
+           :download_list,
+           :my_documents], Document # there should be some limitation
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder
-      can :manage, DocumentFolder, user_id: user.id # there should be some limitation
+      can :manage, DocumentFolder, user_id: user.id
     end
   end
 end

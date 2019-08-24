@@ -18,6 +18,7 @@ Rails.application.routes.draw do
           post :create_revision
           get :download_native_file
           get :download_details
+          get :revisions_and_versions
         end
       end
 
@@ -30,6 +31,10 @@ Rails.application.routes.draw do
       resources :projects, except: [:new, :edit] do
         collection do
           get :confirm_admin
+          get :confirm_member
+        end
+        member do
+          post :invite
         end
         resource :conventions, only: [:edit, :update] do
           patch :update_field_titles
@@ -38,6 +43,7 @@ Rails.application.routes.draw do
           collection do
             get :download_native_files
             get :download_list
+            get :my_documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
@@ -53,15 +59,25 @@ Rails.application.routes.draw do
         end
         resources :project_members,
                   path: :members,
-                  except: [:show]
+                  except: [ :index, :show ] do
+          collection do
+            get  :active
+            get  :pending
+          end
+        end
         resources :disciplines,
                   except: [:new, :show]
         resources :roles,
                   except: [:new, :show]
-        resources :document_folders, only: :index
+        resources :document_folders, only: :index do
+          get :user_index, on: :collection
+        end
       end
     end
   end
 
-  match '*path', to: 'pages#index', via: :all
+  match '*path', to: "pages#index", via: :all, constraints: lambda { |req|
+    req.path.exclude? 'rails/active_storage'
+  }
+
 end

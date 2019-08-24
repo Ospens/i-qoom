@@ -65,4 +65,18 @@ RSpec.describe Project, type: :model do
                          .first_confirmation_sent_at).to be_nil }
     end
   end
+
+  context "invite_members" do
+    let(:project) { FactoryBot.create(:project) }
+    it "expect to be true when there are members" do
+      member_ids =
+        FactoryBot.create_list(:project_member_pending,
+                               2,
+                               project: project).map(&:id)
+      expect(project.invite_members(member_ids)).to be_truthy
+    end
+    it "expect to be true when there're no members" do
+      expect(project.invite_members([])).to be_falsy
+    end
+  end
 end

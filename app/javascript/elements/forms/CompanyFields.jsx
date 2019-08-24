@@ -9,7 +9,7 @@ import { required } from '../../elements/validations'
 const CompanyFields = ({ submitErrors }) => (
   <div>
     <div className='row'>
-      <div className='col-3'>
+      <div className='col-logo'>
         <div className='form-group'>
           <div className='logo-uploader'>
             <Field
@@ -22,7 +22,7 @@ const CompanyFields = ({ submitErrors }) => (
           </div>
         </div>
       </div>
-      <div className='col-9'>
+      <div className='col'>
         <div className='row'>
           <div className='form-group col-12'>
             <FormSection name='company_address'>
@@ -38,25 +38,23 @@ const CompanyFields = ({ submitErrors }) => (
           </div>
         </div>
         <div className='row'>
-          <div className='form-group col col-55per'>
-            <Field
-              component={InputField}
-              name='registration_number'
-              id='registration_number'
-              errorField={submitErrors}
-              placeholder='Registration number'
-            />
-          </div>
-          <div className='form-group col col-45per'>
-            <Field
-              component={InputField}
-              name='vat_id'
-              id='vat_id'
-              errorField={submitErrors}
-              placeholder='VAT-ID'
-              validate={[required]}
-            />
-          </div>
+          <Field
+            component={InputField}
+            name='registration_number'
+            id='registration_number'
+            errorField={submitErrors}
+            placeholder='Registration number'
+            className='form-group col col-65per'
+          />
+          <Field
+            component={InputField}
+            name='vat_id'
+            id='vat_id'
+            errorField={submitErrors}
+            placeholder='VAT-ID'
+            validate={[required]}
+            className='form-group col'
+          />
         </div>
       </div>
     </div>

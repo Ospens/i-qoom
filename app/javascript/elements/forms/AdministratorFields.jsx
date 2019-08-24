@@ -4,74 +4,64 @@ import InputField from '../InputField'
 import { email, required } from '../../elements/validations'
 
 const AdministratorFields = ({ submitErrors, admin }) => {
+  const prefix = admin ? `${admin}.` : ''
+
   return (
-    <div className='admin-form'>
+    <div>
       <div className='form-row'>
-        <div className='form-group col-3'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.username`}
-            id='username'
-            errorField={submitErrors}
-            placeholder='Username'
-            validate={[required]}
-          />
-        </div>
-        <div className='form-group col-9'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.last_name`}
-            id='last_name'
-            errorField={submitErrors}
-            placeholder='Last name'
-            validate={[required]}
-          />
-        </div>
-      </div>
-      <div className='form-group'>
         <Field
           type='text'
           component={InputField}
-          name={`${admin}.first_name`}
-          id='first_name'
+          name={`${prefix}username`}
           errorField={submitErrors}
-          placeholder='First name'
+          placeholder='Username'
           validate={[required]}
+          className='form-group col-3'
         />
-      </div>
-      <div className='form-group'>
         <Field
+          type='text'
           component={InputField}
-          name={`${admin}.email`}
-          id='email'
+          name={`${prefix}last_name`}
           errorField={submitErrors}
-          placeholder='Email address'
-          validate={[email, required]}
+          placeholder='Last name'
+          validate={[required]}
+          className='form-group col-9'
         />
       </div>
+      <Field
+        type='text'
+        component={InputField}
+        name={`${prefix}first_name`}
+        errorField={submitErrors}
+        placeholder='First name'
+        validate={[required]}
+        className='form-group'
+      />
+      <Field
+        component={InputField}
+        name={`${prefix}email`}
+        errorField={submitErrors}
+        placeholder='Email address'
+        validate={[email, required]}
+        className='form-group'
+      />
       <div className='form-row'>
-        <div className='form-group col-3'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.phone_code`}
-            id='phone_code'
-            errorField={submitErrors}
-            placeholder='+00'
-          />
-        </div>
-        <div className='form-group col-9'>
-          <Field
-            type='text'
-            component={InputField}
-            name={`${admin}.phone_number`}
-            id='phone_number'
-            errorField={submitErrors}
-            placeholder='Phone number'
-          />
-        </div>
+        <Field
+          type='text'
+          component={InputField}
+          name={`${prefix}phone_code`}
+          errorField={submitErrors}
+          placeholder='+00'
+          className='form-group col-3'
+        />
+        <Field
+          type='text'
+          component={InputField}
+          name={`${prefix}phone_number`}
+          errorField={submitErrors}
+          placeholder='Phone number'
+          className='form-group col-9'
+        />
       </div>
     </div>
   )
