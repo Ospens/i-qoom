@@ -5,7 +5,7 @@ class Api::V1::DocumentReviewCommentsController < ApplicationController
                 through_association: :comments,
                 only: [ :new, :create ]
   load_resource :document_review_comment,
-                only: [ :update ]
+                only: [ :update, :download_file ]
   authorize_resource :document_review_comment
 
   def new
@@ -27,6 +27,13 @@ class Api::V1::DocumentReviewCommentsController < ApplicationController
     else
       render json: @document_review_comment.errors
     end
+  end
+
+  def download_file
+    file = @document_review_comment.file
+    send_data(file.download,
+              filename: file.filename.to_s,
+              disposition: 'attachment')
   end
 
   private

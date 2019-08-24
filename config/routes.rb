@@ -28,7 +28,9 @@ Rails.application.routes.draw do
         resources :document_review_comments, only: [:new, :create]
       end
 
-      resources :document_review_comments, only: :update
+      resources :document_review_comments, only: :update do
+        get :download_file, on: :member
+      end
 
       resources :document_revisions, only: [] do
         resources :document_review_subjects, only: :index

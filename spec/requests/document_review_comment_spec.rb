@@ -53,6 +53,7 @@ describe DocumentReviewComment, type: :request do
       comment.user = user
       comment.save! and return comment
     end
+
     let(:comment_params) do
       { document_review_comment: {
         text: '111',
@@ -74,6 +75,28 @@ describe DocumentReviewComment, type: :request do
       expect(json['text']).to_not eql('111')
       expect(comment.file).to be_attached
       expect(comment.file.download.strip).to eql('111')
+    end
+  end
+
+  context '#download_file' do
+    let(:comment) do
+      comment = FactoryBot.build(:document_review_comment)
+      comment.document_review_subject = document_review_subject
+      comment.file = fixture_file_upload('test.txt')
+      comment.save! and return comment
+    end
+
+    it 'anon' do
+      get "/api/v1/document_review_comments/#{comment.id}/download_file"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
+      get "/api/v1/document_review_comments/#{comment.id}/download_file", headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(response.body).to eql("111\n")
+      expect(response.header['Content-Disposition']).to include('test.txt')
     end
   end
 end
