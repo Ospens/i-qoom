@@ -430,7 +430,7 @@ form {
 
 .block-title {
   font-size: 15px;
-  color: #ced4da;
+  color: #8EAFB2;
   display: flex;
   padding-bottom: 0.5em;
   min-height: 31px;
@@ -614,7 +614,7 @@ form {
 }
 
 .active-admin {
-  color: #26bd5d;
+  color: #00B240;
 }
 
 .uncofirmed-admin {
@@ -763,7 +763,7 @@ input[type=checkbox]:checked+label {
     }
 
     &.access-column {
-      min-width: 180px !important;
+      min-width: 200px !important;
 
       .btn-for-switch {
         height: 33.5px;
@@ -820,6 +820,7 @@ input[type=checkbox]:checked+label {
       height: 23px;
       justify-content: center;
       align-content: center;
+      align-items: center;
       position: absolute;
       border: 2px solid white;
       background-color: #4b5b5d;
@@ -904,7 +905,7 @@ span.divider {
 
   .dots-container {
     width: 25px;
-    height: 25px;
+    height: 10px;
     display: flex;
     align-items: center;
     justify-items: center;
@@ -1203,6 +1204,8 @@ input:checked+.slider:before {
 }
 
 .dropdown-with-switch {
+  position: relative;
+
   .dropdown-item {
     padding: 5px;
     color: #475859;
@@ -1212,6 +1215,10 @@ input:checked+.slider:before {
     margin-left: auto;
     margin-right: auto;
 
+    &.mainitem {
+      width: 100%;
+    }
+
     &:first-of-type {
       margin-top: 3px;
     }
@@ -1220,8 +1227,10 @@ input:checked+.slider:before {
       border: none;
       margin-bottom: 5px;
     }
+
     &.mainitem {
-      font-size: 14px;
+      margin: 0;
+      font-size: 15px;
       font-weight: 600;
 
       .switch {

@@ -95,7 +95,9 @@ export class CompanyBlock extends Component {
         ref={this.nodeRef}
       >
         <FormSection name='company_data'>
-          <span className='block-title'>Company data</span>
+          <div className='block-title'>
+            <span>Company data</span>
+          </div>
           <CompanyFields submitErrors={submitErrors} />
           {this.renderCompanyDataButtons()}
         </FormSection>

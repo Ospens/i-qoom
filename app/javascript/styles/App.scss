@@ -174,7 +174,7 @@ input::placeholder {
   height: 4vh;
   max-height: 43px;
   font-size: 15px;
-  line-height: 1.7 !important;
+  line-height: 1;
 }
 
 .prevBtn,
@@ -738,7 +738,7 @@ header {
 
   .card-content {
     margin-bottom: 10px;
-    min-height: 110px;
+    min-height: 90px;
   }
 }
 
@@ -750,7 +750,8 @@ header {
 
   h3 {
     font-weight: normal;
-    font-size: 1.5em;
+    font-size: 30px;
+    color: #475759;
   }
 
   .btn {
@@ -861,28 +862,37 @@ header {
   }
 
   .user-name-block {
+    display: inline-block;
+
+    .user-stars {
+      margin-top: 0.5em;
+    }
+
+    .user-name {
       display: inline-block;
-      .user-stars {
-          margin-top: 0.5em;
-      }
-      .user-name {
-          display: inline-block;
-      }
-      .blue-check {
-          display: inline-block;
-          margin-left: 5px;
-      }
-      .vote-stars {
-        display: inline-block;
-      }
-      .user-country {
-          font-size: 10px;
-      }
+    }
+
+    .blue-check {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
+    .vote-stars {
+      display: inline-block;
+    }
+
+    .user-country {
+      font-size: 10px;
+    }
   }
   .card {
-      .card-text {
-          margin-bottom: 10px;
-      }
+    .card-text {
+      margin-bottom: 10px;
+    }
+  }
+
+  .user-name-block__country {
+    color:#8FB0B3;
   }
 }
 
@@ -1211,6 +1221,7 @@ input[type=checkbox] {
     font-size: 28px;
     font-weight: normal;
     margin-bottom: 0;
+    color: #293233;
   }
 }
 
@@ -1548,7 +1559,8 @@ input[type=checkbox] {
     align-content: center;
     
     &.logout {
-      color: gray;
+      color: #B1CDD0;
+      line-height: 1;
     }
   }
 

@@ -74,12 +74,12 @@ class Reviews extends Component {
         <img className='review-card-avatar' src={tmpAvatar} alt='' />
         <div className='clearfix' />
         <div className='user-name-block col-9'>
-        <div className='row'>
-          <TextEditor text={el.name} />
-          <i className='svg-icon rounded-blue-check-icon ml-2' />
-        </div>
-          <TextEditor text={el.country} />
-          <div className='user-stars'>{this.starsRender(el.stars)}
+          <div className='row'>
+            <TextEditor text={el.name} />
+            <i className='svg-icon rounded-blue-check-icon ml-2' />
+          </div>
+            <TextEditor text={el.country} />
+            <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
       </div>
@@ -98,7 +98,7 @@ class Reviews extends Component {
             <div dangerouslySetInnerHTML={{ __html: el.name }} />
               <i className='svg-icon rounded-blue-check-icon ml-2' />
             </div>
-          <div dangerouslySetInnerHTML={{ __html: el.country}} />
+          <div className='user-name-block__country' dangerouslySetInnerHTML={{ __html: el.country}} />
           <div className='user-stars'>{this.starsRender(el.stars)}
           </div>
         </div>
