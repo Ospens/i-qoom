@@ -11,7 +11,7 @@
   br
   .please-click = t('.please_click', name: "John Doe")
   br
-  = link_to t("confirm_my_email"),
+  = link_to t(".confirm_my_email"),
     confirm_member_api_v1_projects_url(token: @project_member.confirmation_token),
     class: "blue-button"
   br
