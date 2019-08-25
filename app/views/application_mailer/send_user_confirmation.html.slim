@@ -1,4 +1,23 @@
-div = t(".you_registered", username: @user.username)
-
-div = link_to t(".to_confirm"),
-  confirm_api_v1_users_url(token: @user.confirmation_token)
+.send-user-confirmation
+  .your-registration = t('.your_registration')
+  hr
+  .welcome = t('.welcome')
+  br
+  .thank-you = t('.thank_you')
+  br
+  .your-username
+    span = t('.your_username')
+    span.blue = @user.username
+  br
+  .please-click = t('.please_click')
+  br
+  = link_to t("confirm_my_email"),
+      confirm_api_v1_users_url(token: @user.confirmation_token),
+      class: "blue-button"
+  br
+  br
+  br
+  .or-follow-this-link
+    span = t('.follow_this_link')
+    = link_to nil,
+        confirm_api_v1_users_url(token: @user.confirmation_token)

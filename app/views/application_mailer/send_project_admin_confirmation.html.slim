@@ -1,4 +1,23 @@
-div = t(".you_have_been_added", username: @project_admin.username)
-
-div = link_to t(".confirm_invitation"),
-  confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token)
+.send-project-admin-confirmation
+  .your-registration = t(".becoming_an_admin")
+  hr
+  .welcome = t('.welcome')
+  br
+  .invites-you = t('.invites_you', name: "John Doe")
+  br
+  .your-username
+    span = t('.your_username')
+    span.blue = @project_admin.email
+  br
+  .please-click = t('.please_click', name: "John Doe")
+  br
+  = link_to t("confirm_my_email"),
+      confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token),
+      class: "blue-button"
+  br
+  br
+  br
+  .or-follow-this-link
+    span = t('.follow_this_link')
+    = link_to nil,
+        confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token)
