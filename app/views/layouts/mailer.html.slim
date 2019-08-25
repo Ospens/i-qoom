@@ -7,7 +7,7 @@ html
     = stylesheet_link_tag 'application_mailer'
   body.application-mailer
     .header
-      .title = image_tag "Logo_header.svg"
+      .title = image_tag attachments['Logo_header.svg'].url
       .description = t('.description')
     .content
       = yield
@@ -18,5 +18,5 @@ html
         div = t('.please_note_')
         div = t('.you_are_receiving_')
     .footer
-      .title = image_tag "Logo_header.svg"
+      .title = image_tag attachments['Logo_header.svg'].url
       .description Content Management Solutions

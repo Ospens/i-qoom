@@ -1,6 +1,7 @@
 class ApplicationMailer < ActionMailer::Base
   default from: 'I-Qoom <no-reply@i-qoom.com>'
   layout 'mailer'
+  before_action :set_logo
 
   def send_contact_form(contact)
     @contact = contact
@@ -31,5 +32,12 @@ class ApplicationMailer < ActionMailer::Base
   def new_document(document, email)
     @document = document
     mail to: email, subject: document.email_title
+  end
+
+  private
+
+  def set_logo
+    attachments.inline['Logo_header.svg'] =
+      File.read('app/assets/images/Logo_header.svg')
   end
 end
