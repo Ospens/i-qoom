@@ -5,10 +5,12 @@ class ApplicationMailerPreview < ActionMailer::Preview
   end
 
   def send_project_admin_confirmation
-    ApplicationMailer.send_project_admin_confirmation(FactoryBot.build(:project_administrator))
+    ApplicationMailer.send_project_admin_confirmation(FactoryBot.build(:project_administrator,
+                                                                       inviter: FactoryBot.build(:user)))
   end
 
   def send_project_member_confirmation
-    ApplicationMailer.send_project_member_confirmation(FactoryBot.build(:project_member))
+    ApplicationMailer.send_project_member_confirmation(FactoryBot.build(:project_member,
+                                                                        inviter: FactoryBot.build(:user)))
   end
 end

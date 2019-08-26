@@ -9,6 +9,10 @@ class ProjectAdministrator < ApplicationRecord
 
   belongs_to :user, required: false
 
+  belongs_to :inviter,
+             class_name: "User",
+             required: false
+
   validates :email,
             email: true,
             presence: true
