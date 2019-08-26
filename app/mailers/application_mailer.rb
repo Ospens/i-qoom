@@ -28,7 +28,6 @@ class ApplicationMailer < ActionMailer::Base
          subject: t(".title")
   end
 
-
   def new_document(document, email)
     @document = document
     mail to: email, subject: document.email_title
@@ -37,7 +36,7 @@ class ApplicationMailer < ActionMailer::Base
   private
 
   def set_logo
-    attachments.inline['Logo_header.svg'] =
-      File.read('app/assets/images/Logo_header.svg')
+    attachments.inline['logo.png'] =
+      File.read('app/assets/images/logo.png')
   end
 end
