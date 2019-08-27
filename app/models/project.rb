@@ -6,9 +6,11 @@ class Project < ApplicationRecord
                         :done ],
                       _prefix: true
 
+  attr_accessor :admins_inviter_id
+
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
-  after_save :send_confirmation_emails, if: :creation_step_done?
+  after_save :invite_admins, if: :creation_step_done?
 
   after_create :add_creator_as_admin
 
@@ -45,10 +47,13 @@ class Project < ApplicationRecord
   validates_presence_of :company_data,
     unless: -> { creation_step_admins? || creation_step_name? }
 
-  def invite_members(ids)
+  def invite_members(ids, inviter_id)
     members = self.members.where(id: ids)
     if members.present?
-      members.each(&:send_confirmation_email)
+      members.each do |member|
+        member.inviter_id = inviter_id
+        member.send_confirmation_email
+      end
       true
     else
       false
@@ -70,8 +75,10 @@ class Project < ApplicationRecord
     end
   end
 
-  def send_confirmation_emails
+  def invite_admins
     admins.unconfirmed.where(first_confirmation_sent_at: nil).each do |admin|
+      admin.inviter_id = user.id if admin.inviter_id.nil?
+      admin.inviter_id = admins_inviter_id if admins_inviter_id.present?
       admin.send_confirmation_email
     end
   end

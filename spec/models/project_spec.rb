@@ -73,10 +73,11 @@ RSpec.describe Project, type: :model do
         FactoryBot.create_list(:project_member_pending,
                                2,
                                project: project).map(&:id)
-      expect(project.invite_members(member_ids)).to be_truthy
+      expect(project.invite_members(member_ids, project.user.id)).to be_truthy
+      expect(project.members.first.inviter_id).to eq(project.user.id)
     end
     it "expect to be true when there're no members" do
-      expect(project.invite_members([])).to be_falsy
+      expect(project.invite_members([], project.user.id)).to be_falsy
     end
   end
 end

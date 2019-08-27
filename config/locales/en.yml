@@ -65,6 +65,17 @@ en:
                 data is not filled properly"
               project_member_has_already_been_confirmed:
                 "problem: the member has already been confirmed"
+        registration_confirmation:
+          attributes:
+            token:
+              user_is_not_found:
+                "problem: the user is not found"
+              emails_do_not_match: "problem: emails do not match"
+              project_member_cant_be_confirmed:
+                "problem: the member cant be confirmed because his
+                data is not filled properly"
+              user_is_already_confirmed:
+                "problem: the user is already confirmed"
   documents:
     list:
       codification_string: Doc-ID

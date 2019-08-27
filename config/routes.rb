@@ -11,7 +11,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :contacts, only: :create
       resources :sessions, only: :create
-      resources :users, only: [:create, :update, :destroy]
+      resources :users, only: [:create, :update, :destroy] do
+        collection do
+          get :confirm
+        end
+      end
 
       resources :documents, except: [:new, :create, :index] do
         member do
