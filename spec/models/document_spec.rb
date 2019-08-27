@@ -303,4 +303,31 @@ RSpec.describe Document, type: :model do
     doc3 = doc1.revision.versions.new(edit_attrs)
     expect(doc3).to_not be_valid
   end
+
+  it '#set_review_status_in_document_main' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['review_status'] = 'issued_for_approval'
+    doc = Document.create(attrs)
+    expect(doc.revision.document_main).to be_issued_for_approval
+  end
+
+  it '#review_status_value' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.new(attrs)
+    expect(doc).to be_valid
+    doc.review_status = 'in_progress'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'accepted'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'rejected'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_information'
+    expect(doc).to be_valid
+  end
 end

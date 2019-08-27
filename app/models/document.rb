@@ -1,7 +1,7 @@
 require 'csv'
 
 class Document < ApplicationRecord
-  enum issued_for: [ :information, :review ], _prefix: true
+  attr_accessor :review_status
 
   serialize :emails
 
@@ -27,6 +27,10 @@ class Document < ApplicationRecord
 
   validates_associated :document_fields
 
+  validates :review_status,
+            presence: true,
+            if: :first_document_in_chain?
+
   validate :prevent_update_of_codification_string,
            on: :create
 
@@ -48,10 +52,17 @@ class Document < ApplicationRecord
   validate :prevent_update_of_previous_revisions,
            on: :create
 
+  validate :review_status_value,
+           on: :create,
+           if: :first_document_in_chain?
+
   before_validation :assign_document_revision_version_field,
                     unless: :document_revision_version_present?
 
   before_validation :assign_convention
+
+  before_create :set_review_status_in_document_main,
+                if: :first_document_in_chain?
 
   after_create :send_emails, if: -> { emails.try(:any?) }
 
@@ -78,6 +89,11 @@ class Document < ApplicationRecord
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
+    doc['review_status'] = [
+      'issued_for_approval',
+      'issued_for_review',
+      'issued_for_information'
+    ]
     doc['document_fields'] = []
     convention.document_fields.each do |field|
       field_attributes = field.build_for_new_document(user)
@@ -349,6 +365,17 @@ class Document < ApplicationRecord
   def send_emails
     emails.each do |email|
       ApplicationMailer.new_document(self, email).deliver_later
+    end
+  end
+
+  def set_review_status_in_document_main
+    revision.document_main.update(document_review_status: review_status)
+  end
+
+  def review_status_value
+    if !DocumentMain.document_review_statuses.keys.include?(review_status) ||
+        ['in_progress', 'accepted', 'rejected'].include?(review_status)
+      errors.add(:review_status, :invalid)
     end
   end
 end

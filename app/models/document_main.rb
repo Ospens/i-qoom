@@ -1,10 +1,15 @@
 class DocumentMain < ApplicationRecord
-  enum document_review_status: [:in_progress,
-                                :accepted,
-                                :rejected]
+  enum document_review_status: [ :in_progress,
+                                 :accepted,
+                                 :rejected,
+                                 :issued_for_approval,
+                                 :issued_for_review,
+                                 :issued_for_information ]
   belongs_to :project
 
-  has_many :revisions, class_name: 'DocumentRevision', foreign_key: 'document_main_id'
+  has_many :revisions,
+           class_name: 'DocumentRevision',
+           foreign_key: 'document_main_id'
 
   def self.documents_available_for(user)
     return all if !all.any?

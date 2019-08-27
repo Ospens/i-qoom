@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_23_131536) do
+ActiveRecord::Schema.define(version: 2019_08_27_192534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,7 +175,6 @@ ActiveRecord::Schema.define(version: 2019_08_23_131536) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.integer "issued_for"
     t.string "email_title"
     t.boolean "email_title_like_document", default: true
     t.text "email_text"

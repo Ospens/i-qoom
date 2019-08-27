@@ -198,11 +198,8 @@ describe Document, type: :request do
         end
       end
       doc_attrs = Document.build_from_convention(convention, user)
-      doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
-      doc_attrs['document_fields_attributes'].each do |field|
-        next if field['document_field_values'].blank?
-        field['document_field_values_attributes'] = field.delete('document_field_values')
-      end
+      doc_attrs = assign_attributes_suffix_to_document(doc_attrs)
+      doc_attrs['review_status'] = 'issued_for_information'
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
       document_native_file['file'] = fixture_file_upload('test.txt')
@@ -831,11 +828,8 @@ describe Document, type: :request do
           end
         end
         doc_attrs = Document.build_from_convention(convention, user)
-        doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
-        doc_attrs['document_fields_attributes'].each do |field|
-          next if field['document_field_values'].blank?
-          field['document_field_values_attributes'] = field.delete('document_field_values')
-        end
+        doc_attrs = assign_attributes_suffix_to_document(doc_attrs)
+        doc_attrs['review_status'] = 'issued_for_information'
         document_native_file =
           doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
         document_native_file['file'] = fixture_file_upload('test.txt')

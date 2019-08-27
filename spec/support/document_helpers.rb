@@ -22,6 +22,7 @@ module DocumentHelpers
     end
     convention.save
     doc_attrs = Document.build_from_convention(convention, user)
+    doc_attrs['review_status'] = 'issued_for_information'
     doc_attrs['user_id'] = user.id
     doc_attrs['project_id'] = project.id
     doc_attrs['convention_id'] = convention.id
