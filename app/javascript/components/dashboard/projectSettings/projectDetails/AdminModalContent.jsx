@@ -12,22 +12,19 @@ function AdminModalContent({ handleSubmit, close, projectId }) {
     [dispatch])
 
   return (
-    <form
-      className='new-project-modal'
-      onSubmit={handleSubmit(updateAdmin)}
-    >
-      <h4>New project administrator</h4>
-      <div className='modal-body'>
+    <form className='new-modal' onSubmit={handleSubmit(updateAdmin)}>
+      <div className='new-modal__header'><h4>New project administrator</h4></div>
+      <div className='new-modal__body'>
         <div>
-          <h6>Who is the new project administrator?</h6>
+          <h6 className='new-modal__body-title'>Who is the new project administrator?</h6>
           <label className='project-admin'>Another project administrator</label>
           <AdministratorFields />
         </div>
       </div>
-      {<div className='modal-footer'>
+      {<div className='new-modal__footer'>
         <button
           type='button'
-          className='btn btn-white'
+          className='btn btn-white mr-2'
           onClick={close}
         >
           Cancel
