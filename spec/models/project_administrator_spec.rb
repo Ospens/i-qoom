@@ -19,11 +19,11 @@ RSpec.describe ProjectAdministrator, type: :model do
         FactoryBot.create(:project,
           admins: [FactoryBot.build(:project_administrator,
                                      email: user.email)] )
-      expect(project.admins.first.user).to eq(user)
+      expect(project.admins.last.user).to eq(user)
     end
     it "shouldn't be added if there is no such user" do
       project = FactoryBot.create(:project)
-      expect(project.admins.first.user).to eq(nil)
+      expect(project.admins.last.user).to eq(nil)
     end
     it "shouldn't be replaced after updating" do
       user = FactoryBot.create(:user)
@@ -32,13 +32,13 @@ RSpec.describe ProjectAdministrator, type: :model do
           admins: [FactoryBot.build(:project_administrator,
                                      email: user.email)] )
       second_user = FactoryBot.create(:user)
-      project.admins.first.update(email: second_user.email)
-      expect(project.admins.first.user).not_to eq(second_user)
+      project.admins.last.update(email: second_user.email)
+      expect(project.admins.last.user).not_to eq(second_user)
     end
   end
 
   it "send_confirmation_email" do
-    project_admin = FactoryBot.create(:project).admins.first
+    project_admin = FactoryBot.create(:project).admins.last
     project_admin.reload
     expect(project_admin.inviter_id).to be_present
     expect(project_admin.first_confirmation_sent_at).to be_present
