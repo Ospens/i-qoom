@@ -8,11 +8,11 @@ class Project < ApplicationRecord
 
   attr_accessor :admins_inviter_id
 
+  before_create :add_creator_as_admin
+
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
   after_save :invite_admins, if: :creation_step_done?
-
-  after_create :add_creator_as_admin
 
   validates :name,
             presence: true,
@@ -62,17 +62,18 @@ class Project < ApplicationRecord
 
   private
 
+  def add_creator_as_admin
+    first_admin = admins.try(:first)
+    admins.clear
+    admins.build(email: user.email,
+                 user_id: user.id,
+                 status: "active")
+    admins << first_admin if first_admin.present?
+  end
+
   def update_creation_step_to_done
     update(creation_step: "done")
     self.reload if creation_step_done?
-  end
-
-  def add_creator_as_admin
-    unless admins.map(&:email).include?(user.email)
-      admins.build(email: user.email,
-                   user_id: user.id,
-                   status: "active")
-    end
   end
 
   def invite_admins
