@@ -4,7 +4,7 @@ import CheckboxField from '../../../elements/CheckboxField'
 
 const Terms = ({ closeModal, termsAccepted, nextStep}) => {
   return (
-    <div>
+    <React.Fragment>
       <div className='modal-body info-modal'>
         <h5 className='text-center'>
           Please read our <Link to='/terms' target='_blank'>Terms and Conditions</Link> and check the box below
@@ -36,7 +36,7 @@ const Terms = ({ closeModal, termsAccepted, nextStep}) => {
           Next
         </button>
       </div>
-    </div>
+    </React.Fragment>
   )
 }
 

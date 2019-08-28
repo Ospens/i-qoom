@@ -1,5 +1,6 @@
 import {
   PROJECT_CREATED_SUCCESS,
+  SET_PAGE_TITLE,
   PROJECT_UPDATED_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
   PROJECT_ADMIN_DELETED,
@@ -12,11 +13,17 @@ const initialState = {
   allProjects: [],
   current: {
     admins: []
-  }
+  },
+  title: 'i-Qoom'
 }
 
 const projectReducer = (state = initialState, action) => {
   switch (action.type) {
+  case SET_PAGE_TITLE:
+    return {
+      ...state,
+      title: action.payload
+    }
   case PROJECT_CREATED_SUCCESS:
     return {
       ...state,

@@ -40,7 +40,7 @@ describe "Project", type: :request do
                   }.to_json,
           headers: headers
         expect(response).to have_http_status(:success)
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
       it 'should get a status "error"' do
         post "/api/v1/projects",
@@ -151,12 +151,13 @@ describe "Project", type: :request do
             }.to_json,
             headers: headers
 
+          updated_project =
+            Project.find_by(id: project_without_billing_address.id)
           expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project_without_billing_address.id)
-                                .company_data.billing_address).to be_present
-          expect(Project.find_by(id: project_without_billing_address.id)
-                                .creation_step).to eq("done")
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
+          expect(updated_project.company_data.billing_address).to be_present
+          expect(updated_project.creation_step).to eq("done")
+          expect(ActionMailer::Base.deliveries.count).to eq(2)
+          expect(updated_project.admins.awaiting_confirmation.first.inviter_id).to eq(user.id)
         end
         it "should get a status 'error' and don't
             add a billing_address to the project" do
@@ -246,14 +247,15 @@ describe "Project", type: :request do
              params: { project_member_ids: member_ids }.to_json,
              headers: headers
         expect(response).to have_http_status(:ok)
-        expect(ActionMailer::Base.deliveries.count).to eq(2)
+        expect(ActionMailer::Base.deliveries.count).to eq(3)
+        expect(ProjectMember.where(id: member_ids).first.inviter_id).to eq(user.id)
       end
       it "shouldn't invite members" do
         post "/api/v1/projects/#{project.id}/invite",
              params: { project_member_ids: [] }.to_json,
              headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
     end
   end
@@ -311,7 +313,7 @@ describe "Project", type: :request do
            params: { project_member_ids: member_ids }.to_json,
            headers: headers
       expect(response).to have_http_status(:forbidden)
-      expect(ActionMailer::Base.deliveries.count).to eq(0)
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
     end
   end
 end

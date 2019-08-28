@@ -10,7 +10,7 @@ class TopBar extends Component {
 
   renderLandingLinks = navClass => (
     <ul className={`nav navbar-nav menu_nav justify-content-center ${navClass}`}>
-      {/* <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>*/}
+      <li className='nav-item'><a href='#' className='nav-link'>Start</a></li>
       <li className='nav-item'><a href='#samples-card' className='nav-link'>Examples</a></li>
       <li className='nav-item'><a href='#what-is-card' className='nav-link'>i-Qoom</a></li>
       <li className='nav-item'><a href='#pricing-card' className='nav-link'>Pricing</a></li>
@@ -20,7 +20,7 @@ class TopBar extends Component {
   )
 
   renderUserOptions = (isLanding = false) => {
-    const { signOutUser } = this.props
+    const { signOutUser, firstName, lastName } = this.props
     const ulClass = classnames('header-options', { 'white': isLanding })
 
     return (
@@ -43,7 +43,7 @@ class TopBar extends Component {
         <li className='nav-item user-info-avatar'>
           <Link className='nav-link btn-transparent' to='/dashboard'>
             <button type='button' className='nav-link btn-transparent'>
-              <UserAvatar size='42' name='Anna Danielsson' />
+              <UserAvatar size='42' name={`${firstName} ${lastName}`} />
             </button>
           </Link>
         </li>
@@ -108,15 +108,11 @@ class TopBar extends Component {
     <div className='top-bar-user-info'>
       {!isOpen &&
       <div className='navbar-burger-block'>
-        <button type='button' className='btn d-flex' onClick={toggle}>
-          <i className='svg-icon black burger-menu-icon-2' />
-        </button>
-      </div>}
-      <div className='navbar-burger-block'>
-        <h2 className='logo-png' >
-          <img src={logoPurple} onClick={toggle}/>
+        <h2>
+          <i className='svg-icon black burger-menu-icon-2 mr-2' onClick={toggle} />
         </h2>
-      </div>
+      </div>}
+      <h2>{this.props.header}</h2>
       {this.renderUserOptions()}
     </div>
   )
@@ -133,8 +129,11 @@ class TopBar extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({
+const mapStateToProps = ({ user, projects }) => ({
   authed: user.authStatus,
+  header: projects.title,
+  firstName: user.first_name,
+  lastName: user.last_name,
   isAdmin: user.isAdmin
 })
 

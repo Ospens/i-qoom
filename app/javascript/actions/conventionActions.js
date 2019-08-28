@@ -1,6 +1,9 @@
 import axios from 'axios'
 import {
-  SubmissionError, initialize, arraySplice, arrayMove
+  SubmissionError,
+  initialize,
+  arraySplice,
+  arrayMove
 } from 'redux-form'
 import {
   EDITING_CONVENTION,

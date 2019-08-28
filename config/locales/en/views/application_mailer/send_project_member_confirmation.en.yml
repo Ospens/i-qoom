@@ -1,7 +1,12 @@
 en:
   application_mailer:
     send_project_member_confirmation:
-      you_have_been_added: Hello %{username}, you've been invited to
-        a project.
-        To confirm it, click the link bellow.
-      confirm_invitation: Confirm invitation
+      becoming_a_member: "Becoming a member: Your registration to
+        i-Qoom Content Management Solutions"
+      welcome: Welcome to i-Qoom.de
+      invites_you: "%{name} invites you to his project in i-Qoom."
+      your_username: "Your username:"
+      please_click: Please click the button below and confirm
+        your email address now and join %{name} in his project.
+      confirm_my_email: Confirm my Email
+      follow_this_link: "Or follow this link:"

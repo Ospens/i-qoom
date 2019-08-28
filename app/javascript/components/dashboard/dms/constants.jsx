@@ -106,14 +106,3 @@ export const reviewStatuses = [
     count: 0
   }
 ]
-
-export const foldersItems = [
-  {
-    title: 'All documents',
-    icon: 'folder-icon-2'
-  },
-  {
-    title: 'My documents',
-    icon: 'folder-icon-3'
-  }
-]

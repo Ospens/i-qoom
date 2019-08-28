@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import classnames from 'classnames'
 import moment from 'moment'
@@ -7,7 +7,9 @@ import moment from 'moment'
 const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => {
   const [date, toggleDate] = useState(null)
   const mainClass = classnames({ 'is-invalid': touched && error })
-  
+
+  useEffect(() => { toggleDate(input.value) }, [])
+
   return (
     <div className={mainClass}>
       {label && <label>{label}</label>} 

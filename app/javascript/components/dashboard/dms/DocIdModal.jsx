@@ -13,6 +13,7 @@ import NewModal from '../../../elements/Modal'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'
 import { infoNotify } from '../../../elements/Notices'
+import DocumentIdInputs from './DocumentIdInputs'
 import { fileNameReg, initValues } from './initDocId'
 
 class DocIdModal extends Component {
@@ -122,67 +123,21 @@ class DocIdModal extends Component {
   renderDocInfo = () => {
     const { documentFields, project_code } = this.props
 
-    const originating_company = formvalue(documentFields, 'originating_company')
-    const document_type = formvalue(documentFields, 'document_type')
-    const document_number = formvalue(documentFields, 'document_number')
-    const discipline = formvalue(documentFields, 'discipline')
+    const origCompanyValue = formvalue(documentFields, 'originating_company')
+    const docTypeValue = formvalue(documentFields, 'document_type')
+    const docNumberValue = formvalue(documentFields, 'document_number')
+    const disciplineValue = formvalue(documentFields, 'discipline')
     
     return (
       <div className='form-group'>
         <label>Define a Document-ID to add information</label>
-
-        <div className='input-container'>
-          <div className='document-id-code'>
-            <input
-              className='form-control'
-              type='text'
-              id='document_id_name'
-              placeholder='XXX'
-              value={project_code}
-              disabled
-            />
-          </div>
-          <div className='document-id-code'>
-            <input
-              className='form-control'
-              type='text'
-              id='document_id_orig_company'
-              placeholder='XXX'
-              value={originating_company}
-              disabled
-            />
-          </div>
-          <div className='document-id-code'>
-            <input
-              className='form-control'
-              type='text'
-              id='document_id_discipline'
-              placeholder='XXX'
-              value={discipline}
-              disabled
-            />
-          </div>
-          <div className='document-id-code'>
-            <input
-              className='form-control'
-              type='text'
-              id='document_id_doc_type'
-              placeholder='XXX'
-              value={document_type}
-              disabled
-            />
-          </div>
-          <div className='document-id-code'>
-            <input
-              className='form-control'
-              type='text'
-              id='document_id_doc_number'
-              placeholder='XXX'
-              value={document_number}
-              disabled
-            />
-          </div>
-        </div>
+        <DocumentIdInputs
+          projectCode={project_code}
+          origCompanyValue={origCompanyValue}
+          disciplineValue={disciplineValue}
+          docTypeValue={docTypeValue}
+          docNumberValue={docNumberValue}
+        />
       </div>
     )
   }

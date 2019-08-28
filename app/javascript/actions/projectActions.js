@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
+  SET_PAGE_TITLE,
   PROJECT_CREATED_SUCCESS,
   PROJECT_UPDATED_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
@@ -10,6 +11,7 @@ import {
   PROJECT_FETCH_SUCCESS
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
+import { paramsToFormData } from './documentsActions'
 
 const projectCreated = payload => ({
   type: PROJECT_CREATED_SUCCESS,
@@ -51,14 +53,16 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
 
   const headers = { headers: { Authorization: token } }
 
-  const request = {
-    project: {
-      ...values
-    }
+  let formData = new FormData()
+
+  const formValues = {
+    project: { ...values }
   }
 
+  formData = paramsToFormData(formData, formValues, '')
+
   return (
-    axios.put(`/api/v1/projects/${values.id}`, request, headers)
+    axios.put(`/api/v1/projects/${values.id}`, formData, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
         if (afterUpdate) afterUpdate(response.data)
@@ -139,17 +143,17 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
   )
 }
 
-export const starUpdateAdmin = values => (dispatch, getState) => {
+export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     project: {
-      ...values
+      admins: [values]
     }
   }
 
   return (
-    axios.put(`/api/v1/projects/${values.id}`, request, headers)
+    axios.put(`/api/v1/projects/${projectId}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
         successNotify('The project admin were successfully saved!')
@@ -189,4 +193,11 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
         errorNotify('Something went wrong')
       })
   )
+}
+
+export const setPageTitle = title => dispatch => {
+  dispatch({
+    type: SET_PAGE_TITLE,
+    payload: title
+  })
 }

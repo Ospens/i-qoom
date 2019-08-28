@@ -1,7 +1,12 @@
 en:
   application_mailer:
     send_project_admin_confirmation:
-      you_have_been_added: Hello %{username}, you've been added to
-        a new project as an admin.
-        Please confirm it, by the link bellow.
-      confirm_invitation: Confirm invitation
+      becoming_an_admin: "Becoming an admin: Your registration
+        to i-Qoom Content Management Solutions"
+      welcome: Welcome to i-Qoom.de
+      invites_you: "%{name} invites you to be an admin in his project in i-Qoom."
+      your_username: "Your username:"
+      please_click: Please click the button below and confirm
+        your email address now and join %{name} in his project as an admin.
+      confirm_my_email: Confirm my Email
+      follow_this_link: "Or follow this link:"

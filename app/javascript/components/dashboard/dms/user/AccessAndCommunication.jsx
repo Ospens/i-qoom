@@ -1,11 +1,13 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { getFormSubmitErrors, Field, FieldArray, change } from 'redux-form'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { formValueSelector, Field, FieldArray, change } from 'redux-form'
 import SelectField from '../../../../elements/SelectField'
-import CheckboxField from '../../../../elements/CheckboxField'
 import InputField from '../../../../elements/InputField'
+import CheckField from '../../../../elements/CheckField'
 import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
 import { errorNotify } from '../../../../elements/Notices'
+
+const selector = formValueSelector('document_form')
 
 const ddItems = [
   {
@@ -54,8 +56,7 @@ const EmailSubjects = ({ fields, discardValue }) => (
             name={field}
             component={renderField}
           />
-          <button type='button' onClick={() => fields.remove(index)}
-          >
+          <button type='button' onClick={() => fields.remove(index)}>
             x
           </button>
         </li>
@@ -64,95 +65,98 @@ const EmailSubjects = ({ fields, discardValue }) => (
   </React.Fragment>
 )
 
-const AccessAndCommunication = ({ submitErrors, backStep, discardValue }) => (
-  <React.Fragment>
-    <div className='dms-content__header p-4'>
-      <h4>Access & communication</h4>
-    </div>
+const AccessAndCommunication = ({ backStep }) => {
+  const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
 
-    <div className='form-body'>
-      <div className='p-4'>
-        <div className='form-group'>
-          <FieldArray
-            name='emails'
-            component={props => <EmailSubjects {...props} discardValue={discardValue}/>}
-          />
-        </div>
-        {/*<div className='form-group'>
-          <Field
-            name='сс'
-            id='сс'
-            options={ddItems}
-            errorField={submitErrors}
-            component={SelectField}
-            isMulti={true}
-            placeholder='E-mail'
-            label='CC'
-          />
-        </div>*/}
+  const dispatch = useDispatch()
 
-        <div className='row'>
-          <div className='col-6'>
-            <div className='form-group'>
+  const discardValue = useCallback(() => {
+    dispatch(change('document_form', 'email_addresses', null))
+  }, [dispatch])
+
+
+  return (
+    <React.Fragment>
+      <div className='dms-content__header'>
+        <h4>Access & communication</h4>
+      </div>
+
+      <div className='form-body'>
+        <div className='p-4'>
+          <div className='form-group'>
+            <FieldArray
+              name='emails'
+              component={props => <EmailSubjects {...props} discardValue={discardValue}/>}
+            />
+          </div>
+          {/*<div className='form-group'>
+            <Field
+              name='сс'
+              id='сс'
+              options={ddItems}
+              component={SelectField}
+              isMulti={true}
+              placeholder='E-mail'
+              label='CC'
+            />
+          </div>*/}
+
+          <div className='row'>
+            <div className='col-6'>
               <Field
                 component={InputField}
+                className='form-group'
                 name='mail_subject'
                 id='mail_subject'
                 label='Mail subject'
                 placeholder='Define a mail subject'
+                disabled={emailTitleLikeDocument}
+              />
+            </div>
+            <div className='col-6 subject-like-document'>
+              <Field
+                component={CheckField}
+                id='email_title_like_document'
+                name='email_title_like_document'
+                className='form-group'
+                labelClass='mr-2'
+                text='Subject like document title'
               />
             </div>
           </div>
-          <div className='col-6 subject-like-document'>
-            <div className='form-group'>
-              <CheckboxField
-                name='subject_like_document'
-                checkBoxId='subject_like_document'
-                labelClass='form-check-label mr-2'
-                text='Subject like document'
-                errorField={submitErrors}
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className='row'>
-          <div className='col-6'>
-            <div className='form-group'>
+          <div className='row'>
+            <div className='col-6'>
               <Field
                 name='isssued_for'
                 id='isssued_for'
+                className='form-group'
                 options={ddItems}
-                errorField={submitErrors}
                 component={SelectField}
                 label='Issued for...'
               />
             </div>
+            <div className='col-6' />
           </div>
-          <div className='col-6' />
-        </div>
 
-        <div className='row'>
-          <div className='col-6'>
-            <div className='form-group'>
+          <div className='row'>
+            <div className='col-6'>
               <Field
                 name='select_reviewers'
                 id='select_reviewers'
+                className='form-group'
                 options={ddItems}
-                errorField={submitErrors}
                 component={SelectField}
                 label='Reviewers*'
                 placeholder='Select reviwers'
               />
             </div>
-          </div>
-          <div className='col-6'>
-            <div className='form-group'>
+            <div className='col-6'>
               <Field
                 name='isssuers_review'
                 id='isssuers_review'
+                className='form-group'
                 options={ddItems}
-                errorField={submitErrors}
                 component={SelectField}
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'
@@ -160,32 +164,23 @@ const AccessAndCommunication = ({ submitErrors, backStep, discardValue }) => (
             </div>
           </div>
         </div>
+
+        <div className='form-group'>
+          <Field
+            name='document_text_editor'
+            component={renderDocumentTextEditor}
+          />
+        </div>
       </div>
 
-      <div className='form-group'>
-        <Field
-          name='document_text_editor'
-          component={renderDocumentTextEditor}
-        />
-        
+      <div className='dms-footer'>
+        <button type='button' className='btn btn-white' onClick={backStep}>Back</button>
+        <button type='button' className='btn btn-white'>Cancel</button>
+        <button type='submit' className='btn btn-purple'>Save only</button>
+        <button type='submit' className='btn btn-purple'>Save & send</button>
       </div>
-    </div>
+    </React.Fragment>
+  )
+}
 
-    <div className='dms-footer'>
-      <button type='button' className='btn btn-white' onClick={backStep}>Back</button>
-      <button type='button' className='btn btn-white'>Cancel</button>
-      <button type='submit' className='btn btn-purple'>Save only</button>
-      <button type='submit' className='btn btn-purple'>Save & send</button>
-    </div>
-  </React.Fragment>
-)
-
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('document_form')(state)
-})
-
-const mapDispatchToProps = dispatch => ({
-  discardValue: () => dispatch(change('document_form', 'email_addresses', null))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AccessAndCommunication)
+export default AccessAndCommunication

@@ -76,7 +76,7 @@
 .sidebar {
   z-index: 20;
   display: none;
-  min-width: 250px;
+  width: 300px !important;
   
   &.sidebar-admin-panel {
     background-color: #383838;

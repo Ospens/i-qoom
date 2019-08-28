@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { getFormSubmitErrors } from 'redux-form'
 import CompanyFields from '../../../elements/forms/CompanyFields'
 import CheckboxField from '../../../elements/CheckboxField'
 
@@ -10,45 +8,38 @@ class CompanyData extends Component {
     const { closeModal, changeStep } = this.props
     
     return (
-      <div className='modal-footer'>
+      <div className='new-modal__footer'>
         <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
           <i className='svg-icon arrow-left-icon' />
           Back
         </button>
-        <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
+        <button type='button' className='btn btn-white mr-2' onClick={closeModal}>Cancel</button>
         <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     )
   }
 
   render() {
-    const { submitErrors } = this.props
-
     return (
-      <div className='new-project-modal'>
-        <h4>New project</h4>
-
-        <div className='modal-body company-data'>
-          <h6>Please enter company data</h6>
-          <CompanyFields submitErrors={submitErrors}/>
+      <React.Fragment>
+        <div className='new-modal__body'>
+          <h6 className='new-modal__body-title'>
+            Please enter company data
+          </h6>
+          <CompanyFields/>
           <div className='form-group text-left rect-checkbox'>
             <CheckboxField
               name='same_for_billing_address'
               checkBoxId='billing_address'
               labelClass='form-check-label mr-2'
               text='This is also the billing address'
-              errorField={submitErrors}
             />
           </div>
         </div>
         {this.renderSubmitButtons()}
-      </div>
+      </React.Fragment>
     )
   }
 }
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('project_form')(state)
-})
-
-export default connect(mapStateToProps)(CompanyData)
+export default CompanyData

@@ -1,0 +1,9 @@
+en:
+  layouts:
+    mailer:
+      description: Content Management Solutions
+      happy_project_managing: Happy project managing!
+      please_note_: "Please note:"
+      you_are_receiving_: You are receiving this email because you signed
+        up to i-Qoom. This is a system generated e-mail. Please do not
+        reply. In case of any concerns please contact our support.

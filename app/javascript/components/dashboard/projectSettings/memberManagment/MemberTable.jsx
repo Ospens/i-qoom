@@ -23,11 +23,11 @@ const columns = [
 const accessOptions = [
   {
     label: 'Contract MS',
-    modulemaster: true
+    modulemaster: false
   },
   {
     label: 'Document MS',
-    modulemaster: true
+    modulemaster: false
   }
 ]
 
@@ -35,18 +35,6 @@ const emplOptions = [
   { value: 0, title: 'Employee' },
   { value: 1, title: 'Internal contractor' },
   { value: 2, title: 'External contractor' }
-]
-
-const roleOptions = [
-  { value: 0, title: 'Designer' },
-  { value: 1, title: 'Electrian' },
-  { value: 2, title: 'Certifier' }
-]
-
-const discOptions = [
-  { value: 1, title: 'Design' },
-  { value: 2, title: 'Electrical' },
-  { value: 3, title: 'Certification' }
 ]
 
 class MemberTable extends Component {
@@ -99,7 +87,7 @@ class MemberTable extends Component {
 
   render() {
     const { column, direction } = this.state
-    const { members } = this.props
+    const { members, roleOptions, discOptions } = this.props
 
     return (
       <div className='table-block'>
@@ -188,8 +176,8 @@ class MemberTable extends Component {
                     {accessOptions.map(({ label, modulemaster }) => {
                       return (
                         <React.Fragment key={label}>
-                          {this.renderAccessOptions(label, false, true, id)}
-                          {modulemaster && this.renderAccessOptions('Module master', true, false, id)}
+                          {this.renderAccessOptions(label, false, false, id)}
+                          {modulemaster && this.renderAccessOptions('Module master', false, false, id)}
                         </React.Fragment>
                       )
                     })}
@@ -204,8 +192,14 @@ class MemberTable extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  roleOptions: state.projectMembers.roles,
+  discOptions: state.projectMembers.disciplines
+})
+
+
 const mapDispatchToProps = dispatch => ({
   startUpdateProjectMember: (values, projectId) => dispatch(startUpdateProjectMember(values, projectId))
 })
 
-export default connect(null, mapDispatchToProps)(MemberTable)
+export default connect(mapStateToProps, mapDispatchToProps)(MemberTable)

@@ -7,6 +7,10 @@ RSpec.describe ProjectAdministrator, type: :model do
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
   it { is_expected.to validate_uniqueness_of(:email)
                           .scoped_to(:project_id) }
+  it { is_expected.to belong_to(:user).required(false) }
+  it { is_expected.to belong_to(:inviter)
+                        .class_name("User")
+                        .required(false) }
 
   context "add_user" do
     it 'should be added when created' do
@@ -35,11 +39,8 @@ RSpec.describe ProjectAdministrator, type: :model do
 
   it "send_confirmation_email" do
     project_admin = FactoryBot.create(:project).admins.first
-    expect(project_admin.first_confirmation_sent_at).to be_nil
-    expect(project_admin.confirmation_resent_at).to be_nil
-    expect(project_admin.status).to eq("unconfirmed")
-
-    project_admin.send_confirmation_email
+    project_admin.reload
+    expect(project_admin.inviter_id).to be_present
     expect(project_admin.first_confirmation_sent_at).to be_present
     expect(project_admin.confirmation_resent_at).to be_nil
     expect(project_admin.status).to eq("awaiting_confirmation")

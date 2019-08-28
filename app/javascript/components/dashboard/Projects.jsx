@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Switch, withRouter } from 'react-router-dom'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import { startFetchProject } from '../../actions/projectActions'
+import Page from '../../elements/Page'
 
 class Projects extends Component {
 
@@ -18,8 +19,16 @@ class Projects extends Component {
 
     return (
       <Switch>
-        <Route path={`${match.path}/documents`} component={DMS} />
-        <Route path={`${match.path}`} component={ProjectSettings} />
+        <Page
+          title='Documents managment system'
+          path={`${match.path}/documents`}
+          component={DMS}
+        />
+        <Page
+          title='Project settings'
+          path={`${match.path}`}
+          component={ProjectSettings}
+        />
       </Switch>
     )
   }

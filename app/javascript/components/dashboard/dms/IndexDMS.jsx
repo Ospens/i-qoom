@@ -7,9 +7,10 @@ import { Table } from 'semantic-ui-react'
 import { startFetchDocuments } from '../../../actions/documentsActions'
 import DropDown from '../../../elements/DropDown'
 import DocumentPopup from './DocumentPopup'
-import { actionDDitems, reviewStatuses, foldersItems, columns, DtOptions } from './constants'
+import { actionDDitems, reviewStatuses, columns, DtOptions } from './constants'
 import DmsSideBar from './DmsSideBar'
 import DMSLayout from './DMSLayout'
+import { renderFoldersBlock } from './DmsSideBar'
 
 class IndexDMS extends Component {
 
@@ -20,8 +21,8 @@ class IndexDMS extends Component {
   }
 
   componentWillMount() {
-    const { startFetchDocuments, history, match: { params: { project_id } } } = this.props
-    startFetchDocuments(project_id, history)
+    const { fetchDocuments, history, match: { params: { project_id } } } = this.props
+    fetchDocuments(project_id, history)
   }
 
   renderHeader = () => {
@@ -304,14 +305,13 @@ class IndexDMS extends Component {
 
   renderSideBar = () => {
     const { myReview, allReview, checkedDocs, popup } = this.state
+    const { folders, match: { params: { project_id } } } = this.props
     const allReviewlClass = classnames({ 'hidden': !allReview })
     const myReviewlClass = classnames({ 'hidden': !myReview })
 
     return (
       <DmsSideBar>
-        {popup &&
-          <DocumentPopup closePopup={() => this.setState({ popup: false })} />
-        }
+        {popup && <DocumentPopup closePopup={() => this.setState({ popup: false })} />}
         <div className='dms-sidebar-menu__block'>
           {checkedDocs.length !== 0
             ? <div className='selected-info-block'><span>{checkedDocs.length}</span> selected Doc</div>
@@ -389,19 +389,8 @@ class IndexDMS extends Component {
             </DropDown>
           </DropDown>
         </div>
-        <div className='dms-sidebar-menu__block'>
-          <h4>My Folders</h4>
-          <ul className='dms-sidebar-menu__list'>
-            {foldersItems.map(({ title, icon }, i) => (
-              <li className='dms-sidebar-menu__item' key={i}>
-                <button type='button' className='btn'>
-                  <i className={classnames('svg-icon black mr-2', icon )} />
-                  <span className='head-button__gray-text'>{title}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+
+        {renderFoldersBlock(folders, project_id)}
 
         <div className='dms-sidebar-menu__block'>
           <h4>Review process</h4>
@@ -435,7 +424,7 @@ class IndexDMS extends Component {
                 onClick={() => this.setState({ allReview: !allReview })}
               >
                 All review
-                    </button>
+              </button>
               <div className='red-rounded-info'>1</div>
             </div>
             <ul className={allReviewlClass}>
@@ -452,7 +441,6 @@ class IndexDMS extends Component {
 
       </DmsSideBar>
     )
-
   }
 
   render() {
@@ -467,11 +455,12 @@ class IndexDMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startFetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
+  fetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
 })
 
-const mapStateToProps = ({ documents }) => ({
-  documents: documents.allDocuments
+const mapStateToProps = ({ documents, folders }) => ({
+  documents: documents.allDocuments,
+  folders: folders.allFolders
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(IndexDMS))
