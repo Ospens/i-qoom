@@ -131,7 +131,7 @@ class DocumentField < ApplicationRecord
     if upload_field? && file.attached?
       original_attributes['filename'] = file.filename.to_s
     end
-    if codification_kind.present?
+    if select_field?
       original_attributes['document_field_values'] = []
       document_field_values.each do |field_value|
         field_value_attrs = field_value.build_for_new_document
