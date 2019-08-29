@@ -199,7 +199,7 @@ describe "Project", type: :request do
       it "should confirm an admin" do
         project_admin =
           FactoryBot.create(:project,
-                            user_id: user.id).admins.first
+                            user_id: user.id).admins.last
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
@@ -209,7 +209,7 @@ describe "Project", type: :request do
       it "shouldn't confirm an admin with wrong user" do
         project_admin =
           FactoryBot.create(:project,
-                            user_id: user.id).admins.first
+                            user_id: user.id).admins.last
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
@@ -291,7 +291,7 @@ describe "Project", type: :request do
     end
 
     it 'confirm_admin' do
-      project_admin = FactoryBot.create(:project).admins.first
+      project_admin = FactoryBot.create(:project).admins.last
       get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
       expect(response).to have_http_status(:forbidden)

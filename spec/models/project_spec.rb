@@ -42,12 +42,15 @@ RSpec.describe Project, type: :model do
     it { is_expected.to validate_presence_of(:company_data) }
   end
 
-  it { is_expected.to belong_to(:user) }
+  context "properly created project" do
+    subject { FactoryBot.create(:project) }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to validate_presence_of(:admins) }
+  end
   it { is_expected.to have_many(:admins).class_name('ProjectAdministrator') }
   it { is_expected.to accept_nested_attributes_for(:admins) }
   it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
-  it { is_expected.to validate_presence_of(:admins) }
   it { is_expected.to have_many(:disciplines) }
 
   context "update_creation_step_to_done" do
