@@ -21,7 +21,10 @@ describe User, type: :model do
 
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
 
-  it { is_expected.to validate_uniqueness_of(:username) }
+  context "uniqueness of username" do
+    subject { FactoryBot.create(:user) }
+    it { is_expected.to validate_uniqueness_of(:username) }
+  end
 
   it { is_expected.to validate_length_of(:username).is_at_most(18) }
 
@@ -30,4 +33,8 @@ describe User, type: :model do
   it { is_expected.not_to allow_value(Faker::Name.name)
                         .for(:username) }
 
+  it "sends confirmation email" do
+    user = FactoryBot.create(:user)
+    expect(user.confirmation_sent_at).to be_present
+  end
 end

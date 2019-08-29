@@ -19,6 +19,18 @@ class Api::V1::UsersController < ApplicationController
     head 501
   end
 
+  def confirm
+    registration_confirmation =
+      RegistrationConfirmation.new(token: params[:token],
+                                   signed_in_user: signed_in_user)
+    if registration_confirmation.save
+      head :ok
+    else
+      render json: registration_confirmation.errors,
+             status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params
@@ -33,5 +45,4 @@ class Api::V1::UsersController < ApplicationController
                                  :password_confirmation,
                                  :accept_terms_and_conditions)
   end
-
 end

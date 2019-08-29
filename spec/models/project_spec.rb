@@ -42,12 +42,15 @@ RSpec.describe Project, type: :model do
     it { is_expected.to validate_presence_of(:company_data) }
   end
 
-  it { is_expected.to belong_to(:user) }
+  context "properly created project" do
+    subject { FactoryBot.create(:project) }
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to validate_presence_of(:admins) }
+  end
   it { is_expected.to have_many(:admins).class_name('ProjectAdministrator') }
   it { is_expected.to accept_nested_attributes_for(:admins) }
   it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
-  it { is_expected.to validate_presence_of(:admins) }
   it { is_expected.to have_many(:disciplines) }
 
   context "update_creation_step_to_done" do
@@ -73,10 +76,11 @@ RSpec.describe Project, type: :model do
         FactoryBot.create_list(:project_member_pending,
                                2,
                                project: project).map(&:id)
-      expect(project.invite_members(member_ids)).to be_truthy
+      expect(project.invite_members(member_ids, project.user.id)).to be_truthy
+      expect(project.members.first.inviter_id).to eq(project.user.id)
     end
     it "expect to be true when there're no members" do
-      expect(project.invite_members([])).to be_falsy
+      expect(project.invite_members([], project.user.id)).to be_falsy
     end
   end
 end

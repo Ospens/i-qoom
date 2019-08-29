@@ -7,6 +7,10 @@ RSpec.describe ProjectAdministrator, type: :model do
   it { is_expected.to allow_value(Faker::Internet.email).for(:email) }
   it { is_expected.to validate_uniqueness_of(:email)
                           .scoped_to(:project_id) }
+  it { is_expected.to belong_to(:user).required(false) }
+  it { is_expected.to belong_to(:inviter)
+                        .class_name("User")
+                        .required(false) }
 
   context "add_user" do
     it 'should be added when created' do
@@ -15,11 +19,11 @@ RSpec.describe ProjectAdministrator, type: :model do
         FactoryBot.create(:project,
           admins: [FactoryBot.build(:project_administrator,
                                      email: user.email)] )
-      expect(project.admins.first.user).to eq(user)
+      expect(project.admins.last.user).to eq(user)
     end
     it "shouldn't be added if there is no such user" do
       project = FactoryBot.create(:project)
-      expect(project.admins.first.user).to eq(nil)
+      expect(project.admins.last.user).to eq(nil)
     end
     it "shouldn't be replaced after updating" do
       user = FactoryBot.create(:user)
@@ -28,18 +32,15 @@ RSpec.describe ProjectAdministrator, type: :model do
           admins: [FactoryBot.build(:project_administrator,
                                      email: user.email)] )
       second_user = FactoryBot.create(:user)
-      project.admins.first.update(email: second_user.email)
-      expect(project.admins.first.user).not_to eq(second_user)
+      project.admins.last.update(email: second_user.email)
+      expect(project.admins.last.user).not_to eq(second_user)
     end
   end
 
   it "send_confirmation_email" do
-    project_admin = FactoryBot.create(:project).admins.first
-    expect(project_admin.first_confirmation_sent_at).to be_nil
-    expect(project_admin.confirmation_resent_at).to be_nil
-    expect(project_admin.status).to eq("unconfirmed")
-
-    project_admin.send_confirmation_email
+    project_admin = FactoryBot.create(:project).admins.last
+    project_admin.reload
+    expect(project_admin.inviter_id).to be_present
     expect(project_admin.first_confirmation_sent_at).to be_present
     expect(project_admin.confirmation_resent_at).to be_nil
     expect(project_admin.status).to eq("awaiting_confirmation")
