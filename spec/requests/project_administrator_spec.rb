@@ -33,7 +33,7 @@ describe "ProjectAdministrator", type: :request do
     end
     context "resend_confirmation" do
       it "should work" do
-        get "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}/resend_confirmation",
+        get "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}/resend_confirmation",
                headers: headers
         expect(response).to have_http_status(:success)
         expect(ActionMailer::Base.deliveries.count).to eq(3)
@@ -43,14 +43,14 @@ describe "ProjectAdministrator", type: :request do
       it "should work" do
         project.admins << FactoryBot.build(:project_administrator)
         project.save
-        delete "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}",
+        delete "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}",
                headers: headers
 
         expect(response).to have_http_status(:success)
         expect(project.admins.count).to eq(2)
       end
       it "shouldn't work" do
-        project.admins.last.remove
+        project.admins.first.remove
         delete "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}",
                headers: headers
 
@@ -75,13 +75,13 @@ describe "ProjectAdministrator", type: :request do
     end
 
     it 'resend_confirmation' do
-      get "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}/resend_confirmation",
+      get "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}/resend_confirmation",
              headers: headers
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'destroy' do
-      delete "/api/v1/projects/#{project.id}/admins/#{project.admins.first.id}",
+      delete "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}",
              headers: headers
       expect(response).to have_http_status(:forbidden)
     end
