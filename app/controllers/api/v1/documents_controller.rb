@@ -221,6 +221,8 @@ class Api::V1::DocumentsController < ApplicationController
                                      :email_title_like_document,
                                      :email_text,
                                      emails: [],
+                                     reviewers: [],
+                                     review_issuers: [],
                                      document_fields_attributes:
                                       [ :kind,
                                         :codification_kind,

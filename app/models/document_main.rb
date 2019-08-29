@@ -11,6 +11,18 @@ class DocumentMain < ApplicationRecord
            class_name: 'DocumentRevision',
            foreign_key: 'document_main_id'
 
+  has_and_belongs_to_many :reviewers,
+                          class_name: 'User',
+                          join_table: 'document_mains_reviewers',
+                          association_foreign_key: 'reviewer_id',
+                          validate: false # for tests
+
+  has_and_belongs_to_many :review_issuers,
+                          class_name: 'User',
+                          join_table: 'document_mains_review_issuers',
+                          association_foreign_key: 'review_issuer_id',
+                          validate: false # for tests
+
   def self.documents_available_for(user)
     return all if !all.any?
     if all.first.project.dms_settings.show_all_revisions?(user)

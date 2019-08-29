@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_27_192534) do
+ActiveRecord::Schema.define(version: 2019_08_29_193457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,16 @@ ActiveRecord::Schema.define(version: 2019_08_27_192534) do
     t.bigint "project_id"
     t.integer "document_review_status", default: 0
     t.index ["project_id"], name: "index_document_mains_on_project_id"
+  end
+
+  create_table "document_mains_review_issuers", id: false, force: :cascade do |t|
+    t.bigint "document_main_id", null: false
+    t.bigint "review_issuer_id", null: false
+  end
+
+  create_table "document_mains_reviewers", id: false, force: :cascade do |t|
+    t.bigint "document_main_id", null: false
+    t.bigint "reviewer_id", null: false
   end
 
   create_table "document_review_comments", force: :cascade do |t|

@@ -1,7 +1,9 @@
 require 'csv'
 
 class Document < ApplicationRecord
-  attr_accessor :review_status
+  attr_accessor :review_status,
+                :reviewers,
+                :review_issuers
 
   serialize :emails
 
@@ -15,8 +17,8 @@ class Document < ApplicationRecord
              class_name: 'DocumentRevision',
              foreign_key: 'document_revision_id'
 
-  has_one :document_main,
-          through: :revision
+  delegate :document_main,
+           to: :revision
 
   has_many :document_fields,
            as: :parent,
@@ -30,6 +32,11 @@ class Document < ApplicationRecord
   validates :review_status,
             presence: true,
             if: :first_document_in_chain?
+
+  validates :reviewers,
+            :review_issuers,
+            length: { minimum: 1 },
+            if: :reviewers_and_review_issuers_required?
 
   validate :prevent_update_of_codification_string,
            on: :create
@@ -63,6 +70,9 @@ class Document < ApplicationRecord
 
   before_create :set_review_status_in_document_main,
                 if: :first_document_in_chain?
+
+  before_create :set_reviewers_and_review_issuers_in_document_main,
+                if: :reviewers_and_review_issuers_required?
 
   after_create :send_emails, if: -> { emails.try(:any?) }
 
@@ -225,11 +235,15 @@ class Document < ApplicationRecord
   end
 
   def first_document_in_chain?
-    !revision.document_main.revisions.first_revision.versions.any?
+    !document_main.revisions.first_revision.versions.any?
   end
 
   def revision_number_field
     document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }
+  end
+
+  def reviewers_and_review_issuers_required?
+    review_status != 'issued_for_information' && first_document_in_chain?
   end
 
   private
@@ -246,7 +260,7 @@ class Document < ApplicationRecord
   end
 
   def prevent_update_of_previous_revisions
-    if revision != revision.document_main.revisions.last_revision
+    if revision != document_main.revisions.last_revision
       errors.add(:document_fields, :updating_of_previous_revisions_is_not_allowed)
     end
   end
@@ -330,7 +344,7 @@ class Document < ApplicationRecord
 
   def additional_information
     return if additional_information_field.blank?
-    revisions = revision.document_main.revisions.order_by_revision_number
+    revisions = document_main.revisions.order_by_revision_number
     temporal_value = []
     revisions.each do |rev|
       val = rev.last_version.additional_information_field.value
@@ -377,5 +391,10 @@ class Document < ApplicationRecord
         ['in_progress', 'accepted', 'rejected'].include?(review_status)
       errors.add(:review_status, :invalid)
     end
+  end
+
+  def set_reviewers_and_review_issuers_in_document_main
+    document_main.reviewers << User.find(reviewers)
+    document_main.review_issuers << User.find(review_issuers)
   end
 end
