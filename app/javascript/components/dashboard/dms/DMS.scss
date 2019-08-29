@@ -82,7 +82,7 @@
       margin-bottom: 30px;
     }
 
-    .form-body {
+    .form-body, .content-body {
       padding-top: 45px;
       padding-top: 2.3vw;
       padding-left: 45px;
@@ -112,6 +112,13 @@
 
       .folder-info {
         color: gray;
+      }
+
+      .dms-content__header_links-block {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
   }
@@ -398,7 +405,7 @@
     }
 
     .scroll-block {
-      .revision-list {
+      .dms-sidebar-menu__ul-list {
         max-height: 250px;
         overflow: auto;
         -webkit-overflow-scrolling:touch;
@@ -412,9 +419,18 @@
           padding: 5px;
           margin-left: 15px;
 
+          button, a {
+            background: transparent;
+            border: none;
+            color: #0096FA
+          }
+
           &.active {
             background: #f0f7f7;
-            font-weight: 600;
+
+              button, a {
+                font-weight: 600;
+              }
           }
         }
       }
@@ -571,9 +587,11 @@ div.selected-info-block {
   padding: 20px;
   display: flex;
   justify-content: center;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 
   button {
-    width: 150px;
+    width: 200px;
     margin: 10px;
   }
 }
@@ -630,8 +648,8 @@ label.rounded-label {
   padding-top: 0;
   padding-bottom: 0;
   border-radius: 20px;
-  height: 25px;
-  min-width: 125px;
+  height: 35px;
+  min-width: 170px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -679,7 +697,7 @@ label.rounded-label {
   .document-show__info-row {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 3em;
+    grid-template-rows: 4em;
     grid-gap: 2em;
     align-items: center;
     
@@ -699,6 +717,10 @@ label.rounded-label {
 
 .border-divider {
   border-bottom: 1px solid lightgrey;
+  margin-right: -45px;
+  margin-right: -2.3vw;
+  margin-left: -45px;
+  margin-left: -2.3vw;
 }
 
 input.search-input {
@@ -1179,7 +1201,7 @@ input.search-input {
   margin-top: 0 !important;
 
   .edit-button {
-    bottom: -2em;
+    bottom: -33.5px;
     position: absolute;
     right: 30px;
   }
@@ -1217,22 +1239,13 @@ input.search-input {
   }
 
   .form-group {
-    min-height: 102px;
+    min-height: 110px;
     position: relative;
     padding: 10px;
     border-radius: 10px; 
     display: flex;
     flex-direction: column;
     margin: 5px;
-
-    .form-group_drop-down, .d-flex {
-      background-color: transparent;
-      height: fit-content;
-
-      div, svg {
-        background-color: transparent;
-      }
-    }
 
     label:not(.form-check-label) {
       width: fit-content;
@@ -1278,10 +1291,6 @@ input.search-input {
       background-color:#fff !important;
     }
   }
-}
-
-.form-group_drop-down {
-  margin-right: 10px;
 }
 
 .tabs.big-tabs {
@@ -1369,6 +1378,11 @@ input.search-input {
   flex-direction: column;
   align-items: center;
   text-align: center;
+
+  margin-left: -45px;
+  margin-left: -2.3vw;
+  margin-right: -45px;
+  margin-right: -2.3vw;
 
   .changes-description {
     width: 70%;

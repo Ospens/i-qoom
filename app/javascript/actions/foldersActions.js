@@ -28,13 +28,19 @@ const editingFolder = payload => ({
   payload
 })
 
-export const startFetchFolders = (projectId, docId = 28) => (dispatch, getState) => {
+export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
   const params = docId ? { document_id: docId } : {}
+  const path = docId
+    ? `/api/v1/projects/${projectId}/document_folders`
+    : `/api/v1/projects/${projectId}/document_folders/user_index`
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers })
+    axios.get(path, {
+      params,
+      headers
+    })
       .then(response => {
         dispatch(foldersFetched(response.data))
       })

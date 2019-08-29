@@ -24,7 +24,7 @@ function AdminModalContent({ handleSubmit, close, projectId }) {
       {<div className='new-modal__footer'>
         <button
           type='button'
-          className='btn btn-white mr-2'
+          className='btn btn-white'
           onClick={close}
         >
           Cancel

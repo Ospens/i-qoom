@@ -1,5 +1,7 @@
 import React from 'react'
+import moment from 'moment'
 import { useSelector } from 'react-redux'
+import { withRouter, Link } from 'react-router-dom'
 
 const renderBlock = field => {
   if (field.codification_kind === 'revision_number') {
@@ -22,7 +24,14 @@ const renderBlock = field => {
         </label>
       </React.Fragment>
     )
-  } else if (field.title) {
+  } else if (field.codification_kind === 'revision_date') {
+    return (
+      <React.Fragment>
+        <label>{field.title}</label>
+        <span>{moment(new Date(field.value)).format('MM/DD/YYYY')}</span>
+      </React.Fragment>
+    )
+  } else if (field.title && field.kind !== 'upload_field') {
     return (
       <React.Fragment>
         <label>{field.title}</label>
@@ -32,15 +41,23 @@ const renderBlock = field => {
   }
 }
 
-const Content = () => {
+const Content = ({ match: { params: { project_id, document_id } } }) => {
   const document = useSelector(state => state.documents.current)
   const firstColumn = document.document_fields.filter(el => el.column == 1 )
   const secondColumn = document.document_fields.filter(el => el.column == 2)
+  const fileFields = document.document_fields.filter(el => el.kind === 'upload_field')
 
   return (
     <div className='show-document bordered'>
       <div className='dms-content__header'>
-        <h4>Document details</h4>
+        <div className='d-flex'>
+          <h4>Document details</h4>
+          <div className='dms-content__header_links-block'>
+            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Edit document</Link>
+            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Add revision</Link>
+            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Review document</Link>
+          </div>
+        </div>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>
           <ul className='row mx-0'>
@@ -68,7 +85,7 @@ const Content = () => {
         </div>
       </div>
 
-      <div className='document-show px-4 pb-4'>
+      <div className='document-show content-body'>
         <div className='main-block'>
 
           <div className='left-column'>
@@ -119,14 +136,12 @@ const Content = () => {
 
         <div className='document-show__files-row my-4'>
           <label className='mb-4'>Files</label>
-          <div className='d-flex align-items-center mb-4'>
-            <i className='svg-icon file-pdf-icon mr-2' />
-            <span>Lorem_Ipsum_Langer_Filename.pdf</span>
-          </div>
-          <div className='d-flex align-items-center'>
-            <i className='svg-icon file-pdf-icon mr-2' />
-            <span>Short_Intro.ppt</span>
-          </div>
+          {fileFields.map((field, i) => (
+            <div className='d-flex align-items-center mb-4' key={i}>
+              <i className='svg-icon file-pdf-icon mr-2' />
+              <span>{field.filename}</span>
+            </div>
+          ))}
         </div>
 
         <div className='main-block'>
@@ -166,10 +181,10 @@ const Content = () => {
         </div>
       </div>
 
-      <div className="document-show">
+      <div className="document-show content-body">
         <div className='border-divider' />
 
-        <div className='info-block px-4 pt-4'>
+        <div className='info-block pt-4'>
           <div className='left-column'>
             <div><label>Issued on</label></div>
             <div><span>12.10.2019</span></div>
@@ -180,7 +195,7 @@ const Content = () => {
           </div>
         </div>
 
-        <div className='info-block p-4'>
+        <div className='info-block'>
           <div className='left-column'>
             <label>By</label>
           </div>
@@ -192,7 +207,7 @@ const Content = () => {
 
         <div className='border-divider' />
 
-        <div className='info-block px-4 pt-4'>
+        <div className='info-block pt-4'>
           <div className='left-column'>
             <div><label>Reissued</label></div>
             <div><span>18.10.2019</span></div>
@@ -203,7 +218,7 @@ const Content = () => {
           </div>
         </div>
 
-        <div className='info-block p-4'>
+        <div className='info-block'>
           <div className='left-column'>
             <label>By</label>
           </div>
@@ -217,9 +232,11 @@ const Content = () => {
 
       <div className='dms-footer'>
         <button type='button' className='btn btn-white'>Back</button>
+        <button type='button' className='btn btn-purple'>Edit</button>
+        <button type='button' className='btn btn-purple'>Add revision</button>
       </div>
     </div>
   )
 }
 
-export default Content
+export default withRouter(Content)
