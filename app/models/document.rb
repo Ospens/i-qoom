@@ -120,7 +120,7 @@ class Document < ApplicationRecord
   end
 
   def attributes_for_edit
-    doc = attributes.except('id', 'created_at', 'updated_at', 'revision_version')
+    doc = attributes.except('id', 'created_at', 'updated_at')
     doc['document_fields'] = []
     document_fields.each do |field|
       field_attributes = field.build_for_edit_document

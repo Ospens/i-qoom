@@ -324,4 +324,20 @@ RSpec.describe Document, type: :model do
     string = "#{value1}-#{value2}-#{value3}-#{value4}"
     expect(codes).to eql(string)
   end
+
+  it 'attributes_for_edit' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    attrs = doc.attributes_for_edit
+    expect(attrs['revision_version']).to be_present
+  end
+
+  it 'attributes_for_show' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    expect(doc).to receive(:attributes_for_edit).and_call_original
+    doc.attributes_for_show
+  end
 end
