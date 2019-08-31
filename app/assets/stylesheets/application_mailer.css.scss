@@ -1,0 +1,94 @@
+.application-mailer {
+  font-family: aktiv-grotesk, sans-serif;
+  .header,
+  .footer {
+    padding: 40px 0;
+    font-style: normal;
+    text-align: center;
+    color: white;
+    background-color: #221f6d;
+    font-size: 17.9px;
+    .title img {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  .header {
+    .title img {
+      width: 250px;
+    }
+    .description{
+      font-weight: 400;
+    }
+  }
+  .content{
+    padding: 50px 50px 80px 50px;
+    color: #475759;
+    font-size: 20px;
+  }
+
+  .happy-project-managing {
+    font-size: 20px;
+    margin: 50px 0;
+  }
+
+  .please-note{
+    font-size: 18px;
+    div{
+      display: table-cell;
+      &:first-child{
+        color: #8FB0B3;
+        white-space: nowrap;
+        padding-right: 3px;
+      }
+    }
+  }
+  .footer{
+    .title img {
+      width: 120px;
+    }
+    .description{
+      margin-top: 15px;
+      font-weight: 500;
+    }
+  }
+  .blue-button{
+    background-color: #0096FA;
+    text-align: center;
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: lighter;
+    border-radius: 8px;
+    padding: 12px 25px;
+    display: inline-block;
+  }
+  a{
+    text-decoration: none;
+    margin-left:3px;
+    color: #0096FA;
+  }
+}
+
+.send-user-confirmation,
+.send-project-member-confirmation,
+.send-project-admin-confirmation {
+  .your-registration,
+  .please-click{
+    font-weight: bold;
+  }
+  hr{
+    border: solid #f2f2f2 1px;
+    margin: 20px 0 50px;
+  }
+  .thank-you,
+  .invites-you{
+    font-size: 24px;
+  }
+  .your-username{
+    .blue{
+      margin-left:3px;
+      color: #0096FA;
+    }
+  }
+}

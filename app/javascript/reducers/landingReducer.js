@@ -17,7 +17,7 @@ const initialState = {
     secondLine: '<h3>Started & Managed</h3>'
   },
   whatISIQoom: {
-    title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">What is i-Qoom?</span></span></h3>',
+    title: '<h3 style="text-align:center;"><span style="font-size: 65px;color:#26276a;">What is i-Qoom?</span></h3>',
     description: `<p style='text-align:center;font-size: 15px;'> Largemouth bass Arctic char,
     salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless
     catfish Atlantic trout velvetfish char greenling.South American darter,cornetfish
@@ -32,44 +32,44 @@ const initialState = {
     Horsefish orbicular batfish speckled marblefish sea devil. </p>`
   },
   samplesAndContent: {
-    title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">Samples &amp; Contents</span></span></h3>',
+    title: '<h3 style="text-align:center;"><span style="font-size: 65px;color:#26276a;">Samples &amp; Contents</span></h3>',
     firstTab: {
       title: 'Comercial Managment',
-      description: '<h4><span class="text-small" style="color: #222222;font-size: 30px;">Comercial Managment</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Comercial Managment</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
     },
     secondTab: {
       title: 'Project Managment',
-      description: '<h4><span class="text-small" style="color: #222222;font-size: 30px;">Project Managment</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Project Managment</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
     },
     cards: [
       {
         image: comm,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Resources</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Resources</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       },
       {
         image: commonFileText,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       },
       {
         image: robotHead,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Technical Clarification</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Technical Clarification</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       },
       {
         image: cogBrowser,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Quality Control</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Quality Control</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       },
       {
         image: conversationImg,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Correspondences</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Correspondences</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       },
       {
         image: robotHead,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
       }
     ]
   },
   reviews: {
-    description: '<h3 style="text-align:center;"><span class="text-big"><span style="color:#26276a;">i-Qoom Reviews</span></span></h3><p style="text-align:center;color:#475759;">Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>',
+    description: '<h3 style="text-align:center;"><span style="color:#26276a;font-size: 45px;">i-Qoom Reviews</span></h3><p style="text-align:center;color:#475759;">Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>',
     cards: [
       {
         name: '<h6 style="color: #475759;">Donald Trump</h6>',
@@ -108,7 +108,7 @@ const initialState = {
     ]
   },
   getStarted: {
-    title: '<h3 style="text-align:center;"><span class="text-big"><span style="color:#26276a;">Contact - Let\'s get started!</span></span></h3>'
+    title: '<h3 style="text-align:center;"><span style="color:#26276a;font-size: 35px;">Contact - Let\'s get started!</span></h3>'
   },
   terms: {
     content: `<h2><span class="text-big"><span style="color:#26276a;"><strong>Terms</strong></span></span></h2>

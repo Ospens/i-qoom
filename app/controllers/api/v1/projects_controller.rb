@@ -42,7 +42,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params)
+    if @project.update(project_params.merge(admins_inviter_id: signed_in_user.id))
       render json: @project,
              status: :ok
     else
@@ -72,7 +72,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def invite
-    if @project.invite_members(params[:project_member_ids])
+    if @project.invite_members(params[:project_member_ids], signed_in_user.id)
       head :ok
     else
       head :unprocessable_entity

@@ -36,10 +36,10 @@ class GetStarted extends Component {
         onSubmit={handleSubmit(this.handleSubmit)}
       >
         <div className='form-row'>
-          <div className='col-md-6'>
+          <div className='col-md-6 left-column'>
             <Field
               component={InputField}
-              className='form-group'
+              className='form-group email'
               name='email'
               id='email'
               validate={[email, required]}
@@ -48,7 +48,7 @@ class GetStarted extends Component {
             />
             <Field
               component={InputField}
-              className='form-group'
+              className='form-group phone'
               name='phone_number'
               id='phone'
               validate={[required]}
@@ -68,7 +68,7 @@ class GetStarted extends Component {
           />
         </div>
         <div className='text-center'>
-          <button className='col-4 btn btn-primary mx-auto' type='submit'>
+          <button className='col-2 btn btn-primary mx-auto' type='submit'>
             Send
           </button>
         </div>

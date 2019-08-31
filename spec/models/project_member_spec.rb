@@ -31,7 +31,10 @@ RSpec.describe ProjectMember, type: :model do
                                 .is_at_most(255) }
 
   it { is_expected.to belong_to(:discipline).required(false) }
-
+  it { is_expected.to belong_to(:user).required(false) }
+  it { is_expected.to belong_to(:inviter)
+                        .class_name("User")
+                        .required(false) }
   it { is_expected.to accept_nested_attributes_for(:company_address)
                         .update_only(true) }
 
@@ -88,7 +91,8 @@ RSpec.describe ProjectMember, type: :model do
                                         :company_data,
                                         :details,
                                         :pending,
-                                        :active].sample)
+                                        :active].sample,
+                        inviter_id: FactoryBot.create(:user).id)
     project_member.send_confirmation_email
     expect(project_member.confirmation_sent_at).to be_present
   end

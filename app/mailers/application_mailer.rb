@@ -1,12 +1,19 @@
 class ApplicationMailer < ActionMailer::Base
   default from: 'I-Qoom <no-reply@i-qoom.com>'
   layout 'mailer'
+  before_action :set_logo
 
   def send_contact_form(contact)
     @contact = contact
     mail to: [ 'yasserchehade@gmx.de',
                'shamardin.k@gmail.com' ],
-        subject: t(".title")
+         subject: t(".title")
+  end
+
+  def send_user_confirmation(user)
+    @user = user
+    mail to: @user.email,
+         subject: t(".title")
   end
 
   def send_project_admin_confirmation(project_admin)
@@ -21,9 +28,15 @@ class ApplicationMailer < ActionMailer::Base
          subject: t(".title")
   end
 
-
   def new_document(document, email)
     @document = document
     mail to: email, subject: document.email_title
+  end
+
+  private
+
+  def set_logo
+    attachments.inline['logo.png'] =
+      File.read('app/assets/images/logo.png')
   end
 end

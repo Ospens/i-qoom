@@ -171,8 +171,8 @@ class AddMember extends Component {
         <Field
           component={SelectField}
           className='form-group col-md-6'
-          name='discipline'
-          id='discipline'
+          name='discipline_id'
+          id='discipline_id'
           options={this.props.discipline_options}
           placeholder='Discipline'
         />

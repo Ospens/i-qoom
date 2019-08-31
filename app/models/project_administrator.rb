@@ -9,12 +9,15 @@ class ProjectAdministrator < ApplicationRecord
 
   belongs_to :user, required: false
 
-  validates :email,
-            email: true,
-            presence: true
+  belongs_to :inviter,
+             class_name: "User",
+             required: false
 
   validates :email,
-            uniqueness: { scope: [:project_id] }
+            email: true,
+            presence: true,
+            uniqueness: { scope: [:project_id] },
+            exclusion: { in: ->(admin) { [admin.project.try(:user).try(:email)] }  }
 
   before_create :add_user
 

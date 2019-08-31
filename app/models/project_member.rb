@@ -29,6 +29,10 @@ class ProjectMember < ApplicationRecord
 
   belongs_to :user, required: false
 
+  belongs_to :inviter,
+             class_name: "User",
+             required: false
+
   belongs_to :company_address,
              class_name: "Address",
              required: false,
