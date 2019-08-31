@@ -32,6 +32,19 @@ i.svg-icon {
   &.blue-plus-icon {
     -webkit-mask: url('../images/add_1.svg') no-repeat 50% 50%;
     mask: url('../images/add_1.svg') no-repeat 50% 50%;
+    height: 19px;
+    min-height: 19px;
+    width: 19px;
+    min-width: 19px;
+  }
+
+  &.blue-plus-icon-2 {
+    background: url('../images/add_2.svg');
+    border-radius: 50%;
+    height: 19px;
+    min-height: 19px;
+    width: 19px;
+    min-width: 19px;
   }
 
   &.copy-icon {
@@ -48,7 +61,7 @@ i.svg-icon {
     mask: url('../images/folder-empty-black.svg') no-repeat 50% 50%;
     height: 18px;
     min-height: 18px;
-    width: 20px;
+    width: 21px;
   }
 
   &.folder-icon-2 {
@@ -279,8 +292,8 @@ i.svg-icon {
     mask: url('../images/email-action-unread.svg') no-repeat 50% 50%;
     height: 14.5px;
     min-height: 14.5px;
-    width: 20px;
-    min-width: 20px;
+    width: 21px;
+    min-width: 21px;
   }
 
   &.business-team-icon {

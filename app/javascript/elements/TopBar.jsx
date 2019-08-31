@@ -108,7 +108,7 @@ class TopBar extends Component {
       {!isOpen &&
       <div className='navbar-burger-block'>
         <h2>
-          <i className='svg-icon black burger-menu-icon-2 mr-2' onClick={toggle} />
+          <i className='svg-icon black burger-menu-icon-2 mr-5' onClick={toggle} />
         </h2>
       </div>}
       {this.props.header}

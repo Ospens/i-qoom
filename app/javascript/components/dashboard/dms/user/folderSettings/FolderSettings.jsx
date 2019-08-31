@@ -1,21 +1,17 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  formValueSelector,
-} from 'redux-form'
+import { getFormValues } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 import { startEditFolder } from '../../../../../actions/foldersActions'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 import FolderForm from './FolderForm'
 
-const selector = formValueSelector('folder_form')
+const infoValue = (fields, kind) => fields ? fields.find(f => f.codification_kind === kind).value || '___' : '___'
 
-function FolderSettingsTable() {
-  const documentFields = useSelector(state => selector(state, 'document_fields'))
-
+function FolderSettingsTable(fields) {
   return (
-    <div className='p-4'>
+    <div className='content-body'>
       <h5>Document code</h5>
       <div className='folder-setting-table'>
         <div className='folder-setting-table__row head-row'>
@@ -25,8 +21,8 @@ function FolderSettingsTable() {
         <div className='folder-setting-table__row'>
           <FolderForm/>
           <div className='copied-automatically-code'>
-            {documentFields
-              ? 'ABC-___-___-IJK-____'
+            {fields
+              ? `ABC-${infoValue(fields, 'originating_company')}-${infoValue(fields, 'discipline')}-${infoValue(fields, 'document_type')}-${infoValue(fields, 'document_number')}`
               : '___-___-___-___-____' 
             }
             </div>
@@ -44,26 +40,27 @@ const NoOptions = () => (
 )
 
 function Content(folderId) {
-  const folder = useSelector(state => state.folders.editing)
+  const formValues = useSelector(state => getFormValues('folder_form')(state)) || {}
+  const fields = formValues.document_fields
 
   return (
     <div className='dms-content bordered'>
       <div className='dms-content__header folder_edit'>
         <div>
           <h4>Folder Settings</h4>
-          <label>{`Manage '${folder.title}'`}</label>
+          {folderId && <label>{`Manage '${formValues.title}'`}</label>}
         </div>
-        <div className='dms-content__header folder-info'>
+        {folderId && <div className='dms-content__header folder-info'>
           Copy every document automatically with entered code to selected folder     
-        </div>
-        <div>
+        </div>}
+        {folderId && <div>
           <div><label>Examples</label></div>
           <div><label>ABC-DEF-FGH-IJK-1234</label></div>
           <div><label>ABC-DEF-FGH-___-____</label></div>
           <div><label>ABC-___-___-IJK-____</label></div>
-        </div>
+        </div>}
       </div>
-      {folderId ? FolderSettingsTable() : NoOptions()}
+      {folderId ? FolderSettingsTable(fields) : NoOptions()}
     </div>
   )
 }
@@ -71,11 +68,11 @@ function Content(folderId) {
 function FolderSettings({ match: { params: { folder_id } } }) {
   const dispatch = useDispatch()
 
-  const getFolder = useCallback(() => {
+  useEffect(() => {
+    if (!folder_id) return
+    
     dispatch(startEditFolder(folder_id))
-  }, [dispatch])
-
-  useEffect(() => { if (folder_id) getFolder() }, [])
+  }, [dispatch, folder_id])
 
   return (
     <DMSLayout

@@ -53,9 +53,27 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
         <div className='d-flex'>
           <h4>Document details</h4>
           <div className='dms-content__header_links-block'>
-            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Edit document</Link>
-            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Add revision</Link>
-            <Link to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`} className='mx-4'>Review document</Link>
+            <Link
+              to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`}
+              className='mx-4 link'
+              data-title='Edit document'
+            >
+              Edit document
+            </Link>
+            <Link 
+              to={`/dashboard/projects/${project_id}/documents/${document_id}/add_revision`}
+              className='mx-4 link'
+              data-title='Add revision'
+            >
+              Add revision
+            </Link>
+            <Link
+              to='#'
+              className='mx-4 link'
+              data-title='Review document'
+            >
+              Review document
+            </Link>
           </div>
         </div>
         <div className='dms-content__project-phases'>

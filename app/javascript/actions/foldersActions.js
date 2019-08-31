@@ -4,6 +4,7 @@ import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
   EDITING_FOLDER,
+  FOLDER_UPDATED,
   FOLDERS_FETCHED
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
@@ -25,6 +26,11 @@ const foldersFetched = payload => ({
 
 const editingFolder = payload => ({
   type: EDITING_FOLDER,
+  payload
+})
+
+const folderUpdated = payload => ({
+  type: FOLDER_UPDATED,
   payload
 })
 
@@ -98,8 +104,10 @@ export const startUpdateFolder = values => (dispatch, getState) => {
   }
 
   return (
-    axios.post('/api/v1/document_folders/', request, headers)
+    axios.put(`/api/v1/document_folders/${values.id}`, request, headers)
       .then(response => {
+        dispatch(folderUpdated(response.data))
+        dispatch(initialize('folder_form', response.data))
         console.log(response)
       })
       .catch(() => {

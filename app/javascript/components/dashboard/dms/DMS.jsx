@@ -5,7 +5,7 @@ import './DMS.scss'
 import { startFetchFolders } from '../../../actions/foldersActions'
 import Page from '../../../elements/Page'
 import DocumentForm from './user/DocumentForm'
-import AddRevision from './AddRevision'
+import AddRevision from './user/addRevision/AddRevision'
 import ShowDocument from '../dms/user/showDocument/ShowDocument'
 import IndexDMS from './IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
@@ -60,6 +60,7 @@ function DMS({ match, match: { params: { project_id } } }) {
         component={DocumentForm}
       />
       <Route path={`${match.path}/folders/all/`} component={FolderSettings} />
+      <Route path={`${match.path}/folders/my_documents/`} component={FolderSettings} />
       <Route path={`${match.path}/folders/:folder_id/`} component={FolderSettings} />
       <Route
         path={`${match.path}/master/edit_convention/`}
@@ -89,7 +90,8 @@ function DMS({ match, match: { params: { project_id } } }) {
         path={`${match.path}/master/distribution_group/`}
         component={DistributionGroup}
       />
-      <Route
+      <Page
+        title='Add revision'
         path={`${match.path}/:document_id/add_revision/`}
         component={AddRevision}
       />

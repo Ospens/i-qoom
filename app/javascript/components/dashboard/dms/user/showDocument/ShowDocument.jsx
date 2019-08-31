@@ -7,7 +7,7 @@ import Content from './Content'
 import { startFetchDocument, getRevisionsAndVersions } from '../../../../../actions/documentsActions'
 import FolderInfo from '../FolderInfo'
 
-const SideBar = ({ documentId, projectId }) => {
+export const SideBar = ({ documentId, projectId }) => {
   const document = useSelector(state => state.documents.current)
   const revisions = useSelector(state => state.documents.revisions)
   const [revision, toggleRevision] = useState(0)

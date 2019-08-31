@@ -23,8 +23,9 @@ body {
   flex-basis: 100%;
 }
 
-.light-grey {
-  color: #777696e1;
+.sidebar_section-title {
+  color: #7674A5;
+  font-size: 14px;
 }
 
 .form-group {
@@ -103,7 +104,7 @@ button:disabled {
 
     label {
       margin-top: 10px;
-      color: grey;
+      color: #8FB0B3;
       font-weight: 600;
       cursor: pointer;
     }
@@ -140,7 +141,7 @@ button:disabled {
   .statuses {
     label {
       font-size: 16px;
-      color: grey;
+      color: #8FB0B3;
     }
 
     ul {
@@ -372,7 +373,7 @@ form {
 .nav-bar {
   margin-bottom: 30px;
   margin-top: 30px;
-  border-bottom: 2px solid lightgrey;
+  border-bottom: 2px solid #F0F0F0;
   display: flex;
 
   .nav-bar-item {
@@ -380,10 +381,11 @@ form {
     margin-bottom: -2px;
 
     .nav-bar-element {
+      font-size: 15px;
       text-decoration: none;
       border: none;
       background-color: transparent;
-      color: lightgrey;
+      color: #8FB0B3;
       display: flex;
       padding: 10px;
       padding-bottom: 15px;
@@ -398,8 +400,8 @@ form {
       }
 
       &.active {
-        color: black;
-        border-bottom: 2px solid black;
+        color: #475859;
+        border-bottom: 2px solid #475859;
       }
     }
   }
@@ -582,8 +584,7 @@ form {
   justify-content: center;
 
   &.clear-form {
-    position: absolute;
-    left: 30px;
+    margin-right: auto;
   }
 
   &:hover:not(.with-dots) {
@@ -720,7 +721,7 @@ input[type=checkbox]:checked+label {
     border-radius: 0 !important;
     background: #fff !important;
     border: none !important;
-    border-bottom: 1px solid grey !important;
+    border-bottom: 1px solid #8FB0B3 !important;
     padding: 5px !important;
     color: lightgrey !important;
     font-weight: 500 !important;
@@ -852,10 +853,11 @@ span.divider {
   padding: 0;
   padding: 5px !important;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 
   .dropdown-item {
     min-width: fit-content;
-    color: grey;
+    color: #8FB0B3;
     display: flex;
     align-items: center;
     padding: 7px;
@@ -869,7 +871,7 @@ span.divider {
     }
 
     a {
-      color: grey;
+      color: #8FB0B3;
     }
   }
 
@@ -943,8 +945,8 @@ span.divider {
   span {
     font-weight: 500;
     color: #0095f9;
-    align-items: flex-end;
-    align-self: flex-end;
+    align-items: center;
+    align-self: center;
     text-align: left;
   }
 
@@ -1106,7 +1108,6 @@ div.tab-description {
 
     label {
       margin-top: 10px;
-      color: grey;
       font-weight: 600;
       cursor: pointer;
     }
@@ -1362,10 +1363,10 @@ i.arrow {
 
   .download-files-dropdown__title {
     padding-bottom: 5px;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid #8FB0B3;
 
     span {
-      color: gray;
+      color: #8FB0B3;
     }
   }
 
@@ -1408,7 +1409,7 @@ i.arrow {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px dashed lightgray;
+  border: 2px dashed #8FB0B3;
   border-radius: 5px;
   min-height: 120px;
   padding: 15px;
@@ -1423,7 +1424,7 @@ i.arrow {
   }
 
   p {
-    color: lightgray;
+    color: #8FB0B3;
   }
 
   p:first-of-type {
@@ -1460,7 +1461,7 @@ i.arrow {
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 14px;
-      color: gray;
+      color: #8FB0B3;
       margin-bottom: 5px;
       white-space: nowrap;
       overflow: hidden;
@@ -1532,7 +1533,7 @@ i.arrow {
 }
 
 .item-block {
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid #8FB0B3;
   
   & > div {
     display: flex;

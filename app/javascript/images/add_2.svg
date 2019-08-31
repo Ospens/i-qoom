@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18.559" height="18.559" viewBox="0 0 18.559 18.559">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Pfad_237" data-name="Pfad 237" d="M0-19.691H18.559V-38.25H0Z" transform="translate(0 38.25)" fill="#0096fa"/>
+    </clipPath>
+  </defs>
+  <g id="add_2" transform="translate(0 38.25)">
+    <g id="Gruppe_2183" data-name="Gruppe 2183" transform="translate(0 -38.25)" clip-path="url(#clip-path)">
+      <g id="Gruppe_2182" data-name="Gruppe 2182" transform="translate(0.485 0.485)">
+        <path id="Pfad_236" data-name="Pfad 236" d="M-9.331-18.662A8.8,8.8,0,0,0-.537-27.456,8.8,8.8,0,0,0-9.331-36.25a8.8,8.8,0,0,0-8.794,8.794A8.8,8.8,0,0,0-9.331-18.662Z" transform="translate(18.125 36.25)" fill="#0096fa"/>
+      </g>
+    </g>
+    <g id="Gruppe_2180" data-name="Gruppe 2180" transform="translate(9.279 -32.349)">
+      <path id="Pfad_234" data-name="Pfad 234" d="M0,0V6.757" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
+    </g>
+    <g id="Gruppe_2181" data-name="Gruppe 2181" transform="translate(5.901 -28.971)">
+      <path id="Pfad_235" data-name="Pfad 235" d="M-15.243,0H-22" transform="translate(22)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2"/>
+    </g>
+  </g>
+</svg>

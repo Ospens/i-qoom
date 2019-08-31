@@ -8,6 +8,8 @@ function Page({ title, titleContent, ...props }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    if (!title) return 
+    
     document.title = title
     dispatch(setPageTitle(titleContent || <h2>{title}</h2>))
   }, [dispatch, title, titleContent])

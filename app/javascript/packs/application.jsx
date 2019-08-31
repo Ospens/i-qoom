@@ -5,12 +5,12 @@ import { Provider } from 'react-redux'
 import mainStore from '../stores/mainStore'
 import { ToastContainer } from 'react-toastify'
 import '../../../node_modules/bootstrap/dist/css/bootstrap.css'
-import '../styles/App.scss'
 import 'react-toastify/dist/ReactToastify.css'
 import App from '../components/App'
 import '../styles/semantic.css'
 import 'react-datepicker/dist/react-datepicker.css'
 import '../styles/icons.scss'
+import '../styles/App.scss'
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
