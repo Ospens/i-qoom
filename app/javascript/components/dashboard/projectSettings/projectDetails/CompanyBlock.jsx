@@ -30,7 +30,7 @@ export class CompanyBlock extends Component {
   modalButtons = () => {
     const { resetSection } = this.props
     return (
-      <div className='modal-footer'>
+      <div className='new-modal__footer'>
         <button
           type='button'
           className='btn btn-white-blue clear-form'

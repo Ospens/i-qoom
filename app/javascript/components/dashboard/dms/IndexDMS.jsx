@@ -32,7 +32,7 @@ class IndexDMS extends Component {
     const btnClass = classnames('btn with-icon', { 'disable': checkedLength === 0 })
 
     return (
-      <ul className='head-buttons'>
+      <ul className='buttons-with-icons-list'>
         <Route path='/dashboard/projects/:project_id/documents/new/' exact>
           <li>
             <Link
@@ -40,14 +40,14 @@ class IndexDMS extends Component {
               to={`/dashboard/projects/${params.project_id}/documents/new/`}
             >
               <i className='svg-icon blue-plus-icon mr-2' />
-              <span>Create new Document</span>
+              <span data-title='Create new Document'>Create new Document</span>
             </Link>
           </li>
         </Route>
         <li>
           <button type='button' className={btnClass}>
             <i className='svg-icon revision-icon mr-2' />
-            <span>
+            <span data-title={`Add revision ${checkedLength > 0 ? checkedLength : ''}`}>
               Add revision {checkedLength > 0 ? checkedLength : ''}
             </span>
           </button>
@@ -55,7 +55,7 @@ class IndexDMS extends Component {
         <li>
           <button type='button' className={btnClass}>
             <i className='svg-icon file-edit-icon mr-2' />
-            <span className='head-button__gray-text'>
+            <span className='head-button__gray-text' data-title={`Edit document {checkedLength > 0 ? checkedLength : ''}`}>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>
           </button>
@@ -75,9 +75,7 @@ class IndexDMS extends Component {
     return (
       <li className='dropdown-item'>
         {link
-          ? <Link className='d-flex' to={link}>
-              {content}
-            </Link>
+          ? <Link className='d-flex' to={link}>{content}</Link>
           : content}
       </li>
     )

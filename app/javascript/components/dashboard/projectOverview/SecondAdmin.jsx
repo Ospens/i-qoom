@@ -11,7 +11,7 @@ function renderSubmitButtons(secondAdmin, { closeModal, changeStep }) {
         </button>}
       <button
         type='button'
-        className='btn btn-white mr-2'
+        className='btn btn-white'
         onClick={closeModal}
       >
         Cancel

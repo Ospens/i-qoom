@@ -13,7 +13,7 @@ class CompanyData extends Component {
           <i className='svg-icon arrow-left-icon' />
           Back
         </button>
-        <button type='button' className='btn btn-white mr-2' onClick={closeModal}>Cancel</button>
+        <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
         <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     )

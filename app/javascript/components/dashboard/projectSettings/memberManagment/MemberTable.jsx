@@ -116,7 +116,7 @@ class MemberTable extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {members.map(({ id, first_name, last_name, member_id }) => (
+            {members.map(({ id, first_name, last_name, member_id, ...member }) => (
               <Table.Row key={id}>
                 <Table.Cell className='table-checkbox'>
                   <div>
@@ -143,7 +143,7 @@ class MemberTable extends Component {
                     name='employment_type'
                     onChange={val => this.handleChange(val, id, 'employment_type')}
                     options={emplOptions}
-                    defaultValue={emplOptions[0]}
+                    defaultValue={emplOptions.filter(el => member.employment_type === el.id)}
                     className='form-control-select'
                   />
                 </Table.Cell>
@@ -151,9 +151,9 @@ class MemberTable extends Component {
                   <SelectComponent
                     id='company_type'
                     name='company_type'
-                    onChange={this.handleChange}
+                    onChange={val => this.handleChange(val, id, 'role_id')}
                     options={roleOptions}
-                    defaultValue={roleOptions[0]}
+                    defaultValue={roleOptions.filter(el => member.role_id === el.id)}
                     className='form-control-select'
                   />
                 </Table.Cell>
@@ -161,9 +161,9 @@ class MemberTable extends Component {
                   <SelectComponent
                     id='discipline'
                     name='discipline'
-                    onChange={this.handleChange}
+                    onChange={val => this.handleChange(val, id, 'discipline_id')}
                     options={discOptions}
-                    defaultValue={discOptions[0]}
+                    defaultValue={discOptions.filter(el => member.discipline_id === el.id)}
                     className='form-control-select'
                   />
                 </Table.Cell>
