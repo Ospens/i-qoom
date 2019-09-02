@@ -67,7 +67,7 @@ class DropDown extends Component {
       ulClass
     } = this.props
     const { isOpen } = this.state
-    const mainClass = classnames('btn-group', className, { 'show': isOpen })
+    const mainClass = classnames('btn-group drop-down', className, { 'show': isOpen })
     const ddClass = classnames(
       'dropdown-menu',
       { 'show': isOpen },

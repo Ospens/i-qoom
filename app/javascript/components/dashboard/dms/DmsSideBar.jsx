@@ -133,11 +133,11 @@ class DmsSideBar extends Component {
           },
           {
             title: 'Codification 2',
-            path: `${masterPath}/codifications/2/`
+            path: '#'
           },
           {
             title: 'Codification 3',
-            path: `${masterPath}/codifications/3/`
+            path: '#'
           },
           {
             title: 'Settings',

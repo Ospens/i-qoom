@@ -68,7 +68,7 @@ const checkValue = (options, input) => {
 }
 
 export const colourStyles = errorInfo => {
-  const borderColor = errorInfo ? '#fd0944' : '#ced4da'
+  const borderColor = errorInfo ? '#fd0944 !important' : '#E9F3F5 !important'
   const borderWidth = errorInfo ? '2px' : '1px'
   const boxShadow = errorInfo ? '0 0 10px rgba(0, 0, 0, 0.5)' : 'none'
   const colourStyles = {
@@ -77,22 +77,37 @@ export const colourStyles = errorInfo => {
       borderColor,
       borderWidth,
       boxShadow,
+      borderRadius: state.isFocused ? '7px 7px 0 0' : '7px',
       zIndex: '4',
       minHeight: '33.5px',
       backgroundColor: state.isDisabled ? '#e9ecef' : 'inherit'
     }),
-    menu: styles => ({
+    menu: (styles, state) => ({
       ...styles,
       marginTop: '0',
+      boxShadow: 'none',
+      border: '1px solid #E9F3F5',
+      borderRadius: '0 0 7px 7px',
       zIndex: '5'
+    }),
+    menuList: styles => ({
+      ...styles,
+      borderRadius: '7px',
+      borderTopLeftRadius: '0',
+      borderTopRightRadius: '0',
     }),
     placeholder: styles => ({
       ...styles,
       color: '#c8d8da'
     }),
-    option: styles => ({
+    option: (styles, state) => ({
       ...styles,
-      color: 'rgba(0, 0, 0, .87)'
+      color: state.isFocused ? '#0096FA' : '#475759',
+      backgroundColor: state.isFocused ? '#F5FCFC' : '#fff'
+    }),
+    singleValue: styles => ({
+      ...styles,
+      color: '#475759'
     })
   }
   return colourStyles

@@ -37,7 +37,7 @@ export class UserRow extends Component {
                 <div className='user-info-avatar'>
                   <UserAvatar size='42' name={user.name} />
                 </div>
-                <div className='user-and-conpany'>
+                <div className='user-and-company'>
                   <span>{user.name}</span>
                   <span className='text-secondary'>{user.company}</span>
                 </div>

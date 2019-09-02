@@ -129,9 +129,9 @@ class MemberTable extends Component {
                     <UserAvatar size='42' name={`${first_name} ${last_name}`} />
                     <span className='master-icon'>M</span>
                   </div>
-                  <div>
-                    <div>{first_name}</div>
-                    <div>{last_name}</div>
+                  <div className='user-and-company'>
+                    <span className='user-names'>{`${first_name} ${last_name}`}</span>
+                    <span className='company-title'>Company name</span>
                   </div>
                 </Table.Cell>
                 <Table.Cell className='member-id'>

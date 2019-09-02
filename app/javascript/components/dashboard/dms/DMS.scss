@@ -257,12 +257,11 @@
     }
 
     .dms-sidebar-menu__dropdown {
-      width: 100%;
-      padding: 10px;
+      margin-right: 10px;
+      margin-left: 10px;
 
       button {
         width: 100%;
-        padding: 7px;
       }
     }
 
@@ -1904,6 +1903,7 @@ input.search-input {
       color: #fff;
       border-top-left-radius: 0; 
       border-top-right-radius: 0; 
+      height: 100%;
     }
 
     &.active {
@@ -2101,15 +2101,15 @@ input.search-input {
     }
 
     button {
-      width: 15px;
-      height: 15px;
+      width: 17px;
+      height: 17px;
       text-align: center;
       vertical-align: middle;
       line-height: initial;
       border: none;
       border-radius: 10px;
       margin-left: 5px;
-      line-height: 1;
+      line-height: 0;
     }
   }
 }

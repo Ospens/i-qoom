@@ -427,6 +427,10 @@ form {
 
   & > button {
     width: 100%;
+
+    span {
+      font-weight: normal;
+    }
   }
 }
 
@@ -481,7 +485,7 @@ form {
   -ms-flex-pack: center;
   justify-content: center;
   background-color: #fff;
-  border: 1px solid #ced4da;
+  border: 1px solid #E9F3F5;
   height: 81px;
   width: 81px;
   border-radius: 5px;
@@ -574,7 +578,7 @@ form {
 .btn-white-blue {
   display: flex !important;
   background-color: #fff;
-  border: 1px solid #ced4da !important;
+  border: 1px solid #E9F3F5 !important;
   color: #0096FA !important;
   font-weight: 600 !important;
   border-radius: 5px !important;
@@ -588,7 +592,8 @@ form {
   }
 
   &:hover:not(.with-dots) {
-    background-color: rgba(0, 150, 250, 0.685) !important;
+    background-color: #7FCAFC !important;
+    border-color: #6AB7EA !important;
     color: #fff !important;
   }
 }
@@ -633,11 +638,16 @@ form {
 #member-managment, #project-status {
   min-height: 200px;
   border-radius: 5px;
-  border: 1px solid #ced4da;
+  border: 1px solid #F0F0F0;
   padding-left: 30px;
   padding-right: 30px;
+
+  .tab-description {
+    color: #8FB0B3;
+  }
   .nav-bar {
     max-width: fit-content;
+
     .nav-bar-element {
       align-items: center;
     }
@@ -708,8 +718,15 @@ input[type=checkbox]:checked+label {
 
 .main-table-block {
   border: none !important;
-  font-size: 12px !important;
+  font-size: 15px;
   border-collapse: collapse !important;
+
+  thead {
+    th.table-checkbox {
+      padding-left: 19.2px !important;
+      padding-left: 1.2rem !important;
+    }
+  }
 
   tbody {
     tr {
@@ -721,7 +738,7 @@ input[type=checkbox]:checked+label {
     border-radius: 0 !important;
     background: #fff !important;
     border: none !important;
-    border-bottom: 1px solid #8FB0B3 !important;
+    border-bottom: 1px solid #F0F0F0 !important;
     padding: 5px !important;
     color: lightgrey !important;
     font-weight: 500 !important;
@@ -804,10 +821,20 @@ input[type=checkbox]:checked+label {
     flex-direction: row;
     display: flex;
 
-    .user-and-conpany {
+    .user-and-company {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      margin-left: 10px;
+
+      .company-title {
+        color: #8FB0B3;
+      }
+
+      .user_names, .company-title {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
     }
 
     .UserAvatar {
@@ -818,8 +845,8 @@ input[type=checkbox]:checked+label {
 
     .master-icon {
       display: flex;
-      width: 23px;
-      height: 23px;
+      width: 25px;
+      height: 25px;
       justify-content: center;
       align-content: center;
       align-items: center;
@@ -828,8 +855,8 @@ input[type=checkbox]:checked+label {
       background-color: #4b5b5d;
       color: white;
       border-radius: 100%;
-      left: 5px;
-      top: 30px;
+      left: 3px;
+      top: 33px;
     }
   }
 }
@@ -845,6 +872,28 @@ span.divider {
   top: 3px;
 }
 
+.drop-down:not(.dropdown-with-icon) {
+  button {
+    padding-right: 24px;
+    
+    span {
+      font-weight: normal;
+    }
+  }
+
+  &.show {
+    & > button {
+      border-bottom-left-radius: 0 !important; 
+      border-bottom-right-radius: 0 !important;
+    }
+
+    .dropdown-menu {
+      border-top-left-radius: 0 !important; 
+      border-top-right-radius: 0 !important;
+    }
+  }
+}
+
 .dropdown-menu {
   min-width: fit-content;
   width: 100%;
@@ -852,8 +901,9 @@ span.divider {
   z-index: 9;
   padding: 0;
   padding: 5px !important;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
+  border-radius: 5px;
+  border-color: #E9F3F5;
+  margin-bottom: 30px;
 
   .dropdown-item {
     min-width: fit-content;
@@ -900,11 +950,21 @@ span.divider {
 
 .btn-group {
   display: block !important;
+
+  & > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
+    border-radius: 7px;
+  }
 }
 
 .dropdown-with-icon {
   display: flex !important;
   align-items: center;
+
+  .dropdown-menu {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-top: 5px;
+  }
 
   .dots-container {
     width: 25px;
@@ -1172,8 +1232,8 @@ div.tab-description {
 label.switch {
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 17px;
+  width: 40px;
+  height: 22px;
   margin: 0;
 }
 
@@ -1192,27 +1252,41 @@ label.switch {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #E9F3F5;
   -webkit-transition: .4s;
   transition: .4s;
   border-radius: 34px;
-}
+  border: 1px solid transparent;
+  
+  &:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 5px;
+    bottom: 2px;
+    background-color: #fff;
+    box-shadow: 0px 1px 2px #B2CED1;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+  }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 12px;
-  width: 12px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 50%;
+  &:hover {
+    border-color: #0096FA;
+  }
 }
 
 input:checked+.slider {
-  background-color: #2196F3;
+  background-color: #0096FA;
+
+  &:hover {
+    background-color: #0096FA80;
+
+    &:before {
+      box-shadow: 0px 1px 2px #0096FA;
+    }
+  }
 }
 
 input:focus+.slider {
@@ -1274,7 +1348,7 @@ input:checked+.slider:before {
 
   .btn-for-switch {
     background-color: #fff;
-    border: 1px solid #ced4da !important;
+    border: 1px solid #E9F3F5 !important;
     display: flex !important;
     align-items: center;
     line-height: 1.25 !important;
@@ -1409,7 +1483,7 @@ i.arrow {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #8FB0B3;
+  border: 2px dashed #E9F3F5;
   border-radius: 5px;
   min-height: 120px;
   padding: 15px;
@@ -1533,7 +1607,7 @@ i.arrow {
 }
 
 .item-block {
-  border-bottom: 1px solid #8FB0B3;
+  border-bottom: 1px solid #B8D6D9;
   
   & > div {
     display: flex;
@@ -1545,6 +1619,7 @@ i.arrow {
     .item-block__title {
       display: block;
       width: 100%;
+      color: #475859;
     }
   }
 }
@@ -1561,7 +1636,7 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(250px, 1fr) 60px;
+  grid-template-rows: 100px minmax(250px, 1fr) 70px;
   grid-template-columns: 500px;
   
   &.without-header {
@@ -1594,12 +1669,16 @@ i.arrow {
     button {
       padding: 0.2em 2em;
     }
+
+    .btn {
+      max-height: 35px;
+    }
+
+    button:last-child {
+      margin-left: 0.5rem !important;
+    }
   }
 
-  button:last-child {
-    margin-left: 8px !important;
-    margin-left: 0.5rem !important;
-  }
 }
 
 .company-data-form {

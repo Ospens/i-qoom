@@ -6,7 +6,7 @@ import SelectField from '../SelectField'
 import countryList from '../../components/landing/countriesCodes'
 import { required } from '../../elements/validations' 
 
-const CompanyFields = ({ submitErrors }) => (
+const CompanyFields = () => (
   <div>
     <div className='row'>
       <div className='col-logo'>
@@ -30,7 +30,6 @@ const CompanyFields = ({ submitErrors }) => (
                 component={InputField}
                 name='company_name'
                 id='company_name'
-                errorField={submitErrors}
                 placeholder='Company name'
                 validate={[required]}
               />
@@ -42,7 +41,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='registration_number'
             id='registration_number'
-            errorField={submitErrors}
             placeholder='Registration number'
             className='form-group col col-65per'
           />
@@ -50,7 +48,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='vat_id'
             id='vat_id'
-            errorField={submitErrors}
             placeholder='VAT-ID'
             validate={[required]}
             className='form-group col'
@@ -65,7 +62,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='street'
             id='street'
-            errorField={submitErrors}
             placeholder='Street name'
             validate={[required]}
           />
@@ -75,7 +71,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='house_number'
             id='house_number'
-            errorField={submitErrors}
             placeholder='No.'
             validate={[required]}
           />
@@ -87,7 +82,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='city'
             id='city'
-            errorField={submitErrors}
             placeholder='City'
             validate={[required]}
           />
@@ -97,7 +91,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='postcode'
             id='postcode'
-            errorField={submitErrors}
             placeholder='Postcode'
             validate={[required]}
           />
@@ -108,7 +101,6 @@ const CompanyFields = ({ submitErrors }) => (
           name='country'
           id='country'
           options={countryList}
-          errorField={submitErrors}
           component={SelectField}
           validate={[required]}
         />
@@ -119,7 +111,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='district'
             id='district'
-            errorField={submitErrors}
             placeholder='District'
           />
         </div>
@@ -128,7 +119,6 @@ const CompanyFields = ({ submitErrors }) => (
             component={InputField}
             name='district_court'
             id='district_court'
-            errorField={submitErrors}
             placeholder='District court'
           />
         </div>
