@@ -340,4 +340,13 @@ RSpec.describe DocumentField, type: :model do
       expect(file1.download).to eql(file2.download)
     end
   end
+
+  it 'check if field has values' do
+    doc = FactoryBot.create(:document)
+    field = FactoryBot.create(:document_field, kind: :select_field, title: '111')
+    field.update!(parent: doc)
+    attrs = doc.reload.attributes_for_edit
+    field_attrs = attrs['document_fields'].detect{ |i| i['title'] == '111' }
+    expect(field_attrs['document_field_values'].length).to eql(1)
+  end
 end
