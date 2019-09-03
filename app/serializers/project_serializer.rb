@@ -5,6 +5,6 @@ class ProjectSerializer < ApplicationSerializer
   has_one :company_data, serializer: CompanyDataSerializer
   
   def attributes(*args)
-    object.attributes.symbolize_keys
+    object.attributes.symbolize_keys.except(:project_code)
   end
 end
