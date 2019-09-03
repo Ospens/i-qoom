@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_070836) do
+ActiveRecord::Schema.define(version: 2019_09_03_040454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,6 +119,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_070836) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
+    t.string "project_code"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -215,6 +216,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_070836) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "creation_step", default: 0
+    t.string "project_code"
   end
 
   create_table "roles", force: :cascade do |t|

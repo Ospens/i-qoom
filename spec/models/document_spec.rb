@@ -308,6 +308,7 @@ RSpec.describe Document, type: :model do
     user = FactoryBot.create(:user)
     attrs = document_attributes(user)
     doc = Document.new(attrs)
+    doc.document_main.update(project_code: 'AAA')
     codes = doc.codification_string
     fields = doc.document_fields
     value1 =
@@ -321,7 +322,7 @@ RSpec.describe Document, type: :model do
         .document_field_values.detect{ |i| i['selected'] == true }.value
     value4 =
       fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
-    string = "#{value1}-#{value2}-#{value3}-#{value4}"
+    string = "AAA-#{value1}-#{value2}-#{value3}-#{value4}"
     expect(codes).to eql(string)
   end
 

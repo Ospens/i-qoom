@@ -23,6 +23,9 @@ class Document < ApplicationRecord
            index_errors: true,
            dependent: :destroy
 
+  delegate :project_code,
+           to: :document_main
+
   accepts_nested_attributes_for :document_fields
 
   validates_associated :document_fields
@@ -143,7 +146,7 @@ class Document < ApplicationRecord
 
   def codification_string
     str = ''
-    # there should be project code
+    str << "#{project_code}-" if project_code.present?
     [ 'originating_company',
       'discipline',
       'document_type',
