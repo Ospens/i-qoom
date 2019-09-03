@@ -208,6 +208,10 @@ ActiveRecord::Schema.define(version: 2019_09_03_040454) do
     t.integer "role_id"
     t.datetime "confirmation_sent_at"
     t.integer "inviter_id"
+    t.boolean "cms_modul_access", default: false
+    t.boolean "dms_modul_access", default: false
+    t.boolean "cms_modul_master", default: false
+    t.boolean "dms_modul_master", default: false
   end
 
   create_table "projects", force: :cascade do |t|

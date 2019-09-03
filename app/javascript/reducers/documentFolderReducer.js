@@ -2,6 +2,7 @@ import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
   EDITING_FOLDER,
+  FOLDER_UPDATED,
   FOLDERS_FETCHED
 } from '../actions/types'
 
@@ -23,6 +24,11 @@ const documentFolderReducer = (state = initialState, action) => {
       allFolders: action.payload
     }
   case EDITING_FOLDER:
+    return {
+      ...state,
+      editing: action.payload
+    }
+  case FOLDER_UPDATED:
     return {
       ...state,
       editing: action.payload

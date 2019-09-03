@@ -3,12 +3,15 @@ import {
   DOCUMENT_FETCH_SUCCESS,
   DOCUMENTS_FETCH_SUCCESS,
   EDIT_DOCUMENT,
+  REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   CREATING_DOCUMENT
 } from '../actions/types'
 
 const initialState = {
   allDocuments: [],
+  revisions: [],
   documentFields: {
+    document_fields: [],
     grouped_fields: {
       column_1: [{}],
       column_2: [{}]
@@ -51,6 +54,11 @@ const documentsReducer = (state = initialState, action) => {
         ...state.documentFields,
         ...action.payload
       }
+    }
+  case REVISIONS_AND_VERSIONS_FETCH__SUCCESS:
+    return {
+      ...state,
+      revisions: action.payload
     }
   default:
     return state

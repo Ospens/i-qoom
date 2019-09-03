@@ -111,19 +111,12 @@ class ModalCreateField extends Component {
     // TODO: Change limit access for new field to
     
     return (
-      <form onSubmit={handleSubmit(this.handleSubmit)}>
-        <div className='modal-container'>
-          <div className="modal-container__title-block">
-            <h4>{initialized ? 'Edit input field' : 'New input field'}</h4>
-            {false && <button
-              type='button'
-              className='btn color-blue p-0 ml-auto'
-              onClick={() => this.setState({ limitAccess: true })}
-            >
-              Limit access
-            </button>}
-          </div>
-          <div className="modal-container__content-block">
+      <form className='new-modal' onSubmit={handleSubmit(this.handleSubmit)}>
+        <div className='new-modal__header'>
+          <h6>{initialized ? 'Edit input field' : 'New input field'}</h6>
+        </div>
+        <div className='new-modal__body'>
+          <div className='modal-container__content-block'>
             <div className='form-group'>
               <Field
                 component={InputField}
@@ -190,7 +183,7 @@ class ModalCreateField extends Component {
             </div>}
           </div>
         </div>
-        <div className='modal-footer'>
+        <div className='new-modal__footer'>
           <button
             type='button'
             className='btn btn-white'

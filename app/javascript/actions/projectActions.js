@@ -158,7 +158,7 @@ export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
         dispatch(projectUpdated(response.data))
         successNotify('The project admin were successfully saved!')
       })
-      .catch(response => {
+      .catch(({ response }) => {
         errorNotify('Something went wrong')
         throw new SubmissionError(response.data)
       })
