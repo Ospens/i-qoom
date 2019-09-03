@@ -303,4 +303,42 @@ RSpec.describe Document, type: :model do
     doc3 = doc1.revision.versions.new(edit_attrs)
     expect(doc3).to_not be_valid
   end
+
+  it 'codification_string' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.new(attrs)
+    doc.document_main.update(project_code: 'AAA')
+    codes = doc.codification_string
+    fields = doc.document_fields
+    value1 =
+      fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value2 =
+      fields.detect{ |i| i['codification_kind'] == 'discipline' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value3 =
+      fields.detect{ |i| i['codification_kind'] == 'document_type' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value4 =
+      fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
+    string = "AAA-#{value1}-#{value2}-#{value3}-#{value4}"
+    expect(codes).to eql(string)
+  end
+
+  it 'attributes_for_edit' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    attrs = doc.attributes_for_edit
+    expect(attrs['revision_version']).to be_present
+  end
+
+  it 'attributes_for_show' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    expect(doc).to receive(:attributes_for_edit).and_call_original
+    doc.attributes_for_show
+  end
 end

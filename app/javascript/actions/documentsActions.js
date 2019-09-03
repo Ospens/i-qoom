@@ -4,6 +4,7 @@ import {
   DOCUMENTS_FETCH_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
   EDIT_DOCUMENT,
+  REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
@@ -50,6 +51,11 @@ const documentFetched = payload => ({
 
 const editDocument = payload => ({
   type: EDIT_DOCUMENT,
+  payload
+})
+
+const getRevAndVer = payload => ({
+  type: REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   payload
 })
 
@@ -167,6 +173,21 @@ export const startEditDocument = documentId => (dispatch, getState) => {
         const { data } = response
         const sortedData = fieldByColumn(data)
         dispatch(editDocument(sortedData))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const getRevisionsAndVersions = docId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/documents/${docId}/revisions_and_versions`, headers)
+      .then(response => {
+        dispatch(getRevAndVer(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')

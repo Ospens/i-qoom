@@ -20,7 +20,6 @@ class Projects extends Component {
     return (
       <Switch>
         <Page
-          title='Documents managment system'
           path={`${match.path}/documents`}
           component={DMS}
         />

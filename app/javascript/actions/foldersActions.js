@@ -4,6 +4,7 @@ import {
   FOLDER_CREATED,
   DOCUMENT_ADDED,
   EDITING_FOLDER,
+  FOLDER_UPDATED,
   FOLDERS_FETCHED
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
@@ -28,13 +29,24 @@ const editingFolder = payload => ({
   payload
 })
 
-export const startFetchFolders = (projectId, docId = 28) => (dispatch, getState) => {
+const folderUpdated = payload => ({
+  type: FOLDER_UPDATED,
+  payload
+})
+
+export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
   const params = docId ? { document_id: docId } : {}
+  const path = docId
+    ? `/api/v1/projects/${projectId}/document_folders`
+    : `/api/v1/projects/${projectId}/document_folders/user_index`
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/document_folders`, { params, headers })
+    axios.get(path, {
+      params,
+      headers
+    })
       .then(response => {
         dispatch(foldersFetched(response.data))
       })
@@ -92,8 +104,10 @@ export const startUpdateFolder = values => (dispatch, getState) => {
   }
 
   return (
-    axios.post('/api/v1/document_folders/', request, headers)
+    axios.put(`/api/v1/document_folders/${values.id}`, request, headers)
       .then(response => {
+        dispatch(folderUpdated(response.data))
+        dispatch(initialize('folder_form', response.data))
         console.log(response)
       })
       .catch(() => {

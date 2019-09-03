@@ -39,18 +39,16 @@ export const renderFoldersBlock = (folders, projectId) => {
     <div className='dms-sidebar-menu__block'>
       <h4>My Folders</h4>
       <ul className='dms-sidebar-menu__list'>
-        <li className='dms-sidebar-menu__item'>
-          <button type='button' className='btn'>
-            <i className='svg-icon black mr-2 folder-icon-2' />
-            <span className='head-button__gray-text'>All documents</span>
-          </button>
-        </li>
-        <li className='dms-sidebar-menu__item'>
-          <button type='button' className='btn'>
-            <i className='svg-icon black mr-2 folder-icon-3' />
-            <span className='head-button__gray-text'>My documents</span>
-          </button>
-        </li>
+        <DmsSideBarItem
+          path={`/dashboard/projects/${projectId}/documents/folders/my_documents`}
+          label='My documents'
+          icon='folder-icon-3'
+        />
+        <DmsSideBarItem
+          path={`/dashboard/projects/${projectId}/documents/folders/all`}
+          label='All documents'
+          icon='folder-icon-3'
+        />
         {folders.map(({ id, title }, i) => (
           <DmsSideBarItem
             key={i}
@@ -67,7 +65,7 @@ export const renderFoldersBlock = (folders, projectId) => {
 class DmsSideBar extends Component {
 
   renderMainItems = () => {
-    const { folders, match: { params: { folder_id, project_id } } } = this.props
+    const { folders, match: { path, params: {  project_id } } } = this.props
     const masterPath = `/dashboard/projects/${project_id}/documents/master`
 
     // TODO: Need check for master's permit
@@ -81,12 +79,12 @@ class DmsSideBar extends Component {
       {
         title: 'DMS Settings',
         icon: 'task-list-settings-icon',
-        path: `/dashboard/projects/${project_id}/documents/settings/`
+        path: '#' // `/dashboard/projects/${project_id}/documents/settings/`
       },
       {
         title: 'Document planning',
         icon: 'calendar-icon-3',
-        path: `/dashboard/projects/${project_id}/documents/planning/`
+        path: '#' // `/dashboard/projects/${project_id}/documents/planning/`
       },
       {
         title: 'Master settings',
@@ -155,7 +153,7 @@ class DmsSideBar extends Component {
       {
         title: 'Review managment',
         icon: 'task-list-settings-icon',
-        path: `${masterPath}/planning/`
+        path: '#' // `${masterPath}/planning/`
       }
     ]
 
@@ -174,7 +172,7 @@ class DmsSideBar extends Component {
             </React.Fragment>
           ))}
         </ul>
-        {folder_id
+        {path.includes('dashboard/projects/:project_id/documents/folders')
           ? renderFoldersBlock(folders, project_id)
           : <React.Fragment>
               <h4>Master settings</h4>

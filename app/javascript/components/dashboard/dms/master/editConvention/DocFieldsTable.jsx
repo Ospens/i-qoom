@@ -171,7 +171,7 @@ class DocFieldsTable extends Component {
             className='form-body'
             onSubmit={handleSubmit(this.handleSubmit)}
           >
-            <div className='p-4'>
+            <div>
               <div className='row'>
                 <div className='col-6'>
                   {this.renderDocIdFields()}

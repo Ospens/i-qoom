@@ -83,4 +83,32 @@ RSpec.describe Project, type: :model do
       expect(project.invite_members([], project.user.id)).to be_falsy
     end
   end
+
+  context 'validate project_code' do
+    let(:project) { FactoryBot.build(:project) }
+
+    it 'valid' do
+      project.project_code = 'AAA'
+      expect(project).to be_valid
+      project.project_code = nil
+      expect(project).to be_valid
+    end
+
+    it 'length' do
+      project.project_code = 'AA'
+      expect(project).to_not be_valid
+      project.project_code = 'AAAA'
+      expect(project).to_not be_valid
+    end
+
+    it 'upcase' do
+      project.project_code = 'aaa'
+      expect(project).to_not be_valid
+    end
+
+    it 'blank' do
+      project.project_code = ''
+      expect(project).to_not be_valid
+    end
+  end
 end

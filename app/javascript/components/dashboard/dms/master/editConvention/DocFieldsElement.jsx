@@ -156,7 +156,7 @@ class DocFieldsElement extends Component {
               <div className='d-flex'>
                 <DropDown
                   dots={true}
-                  className='dropdown-with-icon form-group_drop-down'
+                  className='dropdown-with-icon mr-2'
                 >
                   {actionConventions(index).map(({ icon, title, offset }, i) => {
                     return (
