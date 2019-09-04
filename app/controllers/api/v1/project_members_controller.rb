@@ -70,10 +70,10 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :job_title,
                              :discipline_id,
                              :role_id,
-                             :cms_modul_access,
-                             :dms_modul_access,
-                             :cms_modul_master,
-                             :dms_modul_master,
+                             :cms_module_access,
+                             :dms_module_access,
+                             :cms_module_master,
+                             :dms_module_master,
                              company_address_attributes: Address.column_names)
   end
 end
