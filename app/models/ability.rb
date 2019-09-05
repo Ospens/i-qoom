@@ -47,7 +47,8 @@ class Ability
           project: { id: user.project_administrators.map(&:project_id) }
       # Convention
       can :manage, Convention do |convention|
-        convention.project.user == user
+        convention.project.user == user ||
+          convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # Document
       can [:new, :create], Document do |document|
