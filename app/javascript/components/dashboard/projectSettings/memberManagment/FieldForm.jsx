@@ -12,7 +12,7 @@ function FieldForm({ initialized, handleSubmit, type, submitForm }) {
     : `Create a  ${type}`
 
   return (
-    <form onSubmit={handleSubmit(submitForm)} className='new-modal'>
+    <form noValidate={true} onSubmit={handleSubmit(submitForm)} className='new-modal'>
       <div className='new-modal__header'>
         <h4 className='pb-4'>{title}</h4>
       </div>

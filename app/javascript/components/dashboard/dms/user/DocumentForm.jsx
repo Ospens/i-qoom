@@ -10,7 +10,7 @@ import DocumentsAndFiles from './DocumentsAndFiles'
 import AccessAndCommunication from './AccessAndCommunication'
 
 const renderForm = (handleSubmit, step, backStep) => (
-  <form className='dms-content bordered' onSubmit={handleSubmit}>
+  <form noValidate={true} className='dms-content bordered' onSubmit={handleSubmit}>
     {step === 1
       ? <DocumentsAndFiles />
       : <AccessAndCommunication backStep={backStep} />}

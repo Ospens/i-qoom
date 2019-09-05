@@ -24,7 +24,7 @@ class ProjectStatus extends Component {
       <ModalComponent>
         <div className='new-project-modal'>
           <h4>Planning</h4>
-          <form onSubmit={this.props.handleSubmit}>
+          <form noValidate={true} onSubmit={this.props.handleSubmit}>
             <div className='modal-body project-name'>
               <h5 className='mb-5'>{`When does the project ${modalTitle.toLowerCase()} start?`}</h5>
               <div className='form-group'>
@@ -62,7 +62,7 @@ class ProjectStatus extends Component {
       <ModalComponent>
         <div className='new-project-modal'>
           <h4>Planning</h4>
-          <form onSubmit={this.props.handleSubmit}>
+          <form noValidate={true} onSubmit={this.props.handleSubmit}>
             <div className='modal-body project-name'>
               <h2 className='mb-5'>{`Do you want to set the project status to "${modalTitle}"?`}</h2>
             </div>

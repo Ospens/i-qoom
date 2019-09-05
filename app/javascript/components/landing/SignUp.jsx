@@ -163,7 +163,7 @@ class SignUp extends Component {
 
     return (
       <div id='sign-up-form'>
-        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+        <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className='steps row text-center'>
             <div className='step active col-6'>Step 1</div>
             <div className={classnames('step', 'col-6', { active: step === 2 })}>Step 2</div>

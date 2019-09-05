@@ -25,17 +25,17 @@ class TopBar extends Component {
     return (
       <ul className={ulClass}>
         <li className='nav-item'>
-          <button type='button' className='btn logout' onClick={signOutUser}>
+          <button type='button' className='logout' onClick={signOutUser}>
             Logout
           </button>
         </li>
         <li className='nav-item nav-item-icon'>
-          <button type='button' className='btn'>
+          <button type='button'>
             <i className='svg-icon email-unread-icon gray' />
           </button>
         </li>
         <li className='nav-item nav-item-icon'>
-          <button type='button' className='btn'>
+          <button type='button'>
             <i className='svg-icon alarm-bell-icon gray' />
           </button>
         </li>

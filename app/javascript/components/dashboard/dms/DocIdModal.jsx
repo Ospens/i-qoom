@@ -171,7 +171,7 @@ class DocIdModal extends Component {
     const docNumIndex = initialValues.fields.findIndex(el => el.codification_kind === 'document_number')
 
     return (
-      <form onSubmit={handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} onSubmit={handleSubmit(this.handleSubmit)}>
         <div className='modal-container'>
           <h4>Document ID via uploaded file code</h4>
           <div className='upload-file-row'>

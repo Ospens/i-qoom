@@ -105,7 +105,7 @@ button:disabled {
     label {
       margin-top: 10px;
       color: #8FB0B3;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -233,8 +233,8 @@ button:disabled {
 // row with logo
 .col-65per {
   -webkit-box-flex: 0;
-  flex: 0 0 calc(66.5% - 36px);
-  max-width: calc(66.5% - 36px);
+  flex: 0 0 calc(66.5% - 44px);
+  max-width: calc(66.5% - 44px);
 }
 
 .modal-window {
@@ -261,7 +261,7 @@ button:disabled {
     &.info-modal {
       padding-left: 60px;
       padding-right: 60px;
-      max-width: 500px;
+      max-width: 700px;
 
       a:hover {
         text-decoration: none;
@@ -348,7 +348,7 @@ button:disabled {
     h4 {
       padding-left: 40px;
       padding-top: 30px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     h6 {
@@ -429,7 +429,7 @@ form {
     width: 100%;
 
     span {
-      font-weight: normal;
+      font-weight: 400;
     }
   }
 }
@@ -484,13 +484,17 @@ form {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: #FCFFFF;
   border: 1px solid #E9F3F5;
-  height: 81px;
-  width: 81px;
+  height: 106px;
+  width: 106px;
   border-radius: 5px;
   text-align: center !important;
   cursor: pointer;
+
+  label {
+    margin: 0 !important;
+  }
 
   .logo-container {
     height: 100%;
@@ -519,6 +523,7 @@ form {
 
   strong {
     color: #ced4da;
+    line-height: 1.7;
   }
 
   .image-preview {
@@ -580,7 +585,7 @@ form {
   background-color: #fff;
   border: 1px solid #E9F3F5 !important;
   color: #0096FA !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   border-radius: 5px !important;
   display: flex;
   justify-items: center;
@@ -785,7 +790,7 @@ input[type=checkbox]:checked+label {
       min-width: 200px !important;
 
       .btn-for-switch {
-        height: 33.5px;
+        height: 45px;
       }
     }
 
@@ -877,7 +882,7 @@ span.divider {
     padding-right: 24px;
     
     span {
-      font-weight: normal;
+      font-weight: 400;
     }
   }
 
@@ -962,7 +967,7 @@ span.divider {
 
   .dropdown-menu {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    border-radius: 5px;
     margin-top: 5px;
   }
 
@@ -1039,22 +1044,17 @@ div.tab-description {
 }
 
 .btn-back-to-project {
-  width: max-content;
+  display: flex;
   margin-top: 20px;
-  display: flex !important;
+  margin-bottom: 20px;
   align-items: center;
-  font-size: 11px !important;
-  color: rgb(143, 176, 179) !important;
+  font-size: 10px;
+  color: #8FB0B3 !important;
+
   &:hover,
   &:active {
-    svg {
-      g {
-        fill: #7fc9fb;
-      }
-
-      path {
-        fill: white;
-      }
+    * {
+      color: #7fc9fb;
     }
   }
 }
@@ -1153,7 +1153,7 @@ div.tab-description {
     label {
       margin-top: 10px;
       color: #ccc;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
   }
@@ -1168,7 +1168,7 @@ div.tab-description {
 
     label {
       margin-top: 10px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -1189,7 +1189,7 @@ div.tab-description {
     label {
       margin-top: 10px;
       color: #0096FA;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -1327,7 +1327,7 @@ input:checked+.slider:before {
     &.mainitem {
       margin: 0;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
 
       .switch {
         margin-left: auto !important;
@@ -1543,8 +1543,8 @@ i.arrow {
   }
 
   &.disabled {
-    color: '#2fa7f9';
-    background-color: #e9ecef;
+    color: #2fa7f9;
+    background-color: #f5f9fa;
     cursor: default;
   }
 }
@@ -1636,11 +1636,11 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(250px, 1fr) 70px;
-  grid-template-columns: 500px;
+  grid-template-rows: 100px minmax(250px, 1fr) 90px;
+  grid-template-columns: 600px;
   
   &.without-header {
-    grid-template-rows: minmax(250px, 1fr) 60px;
+    grid-template-rows: minmax(250px, 1fr) 70px;
   }
 
   .new-modal__header {
@@ -1665,9 +1665,10 @@ i.arrow {
     padding-right: 30px;
     background-color: #efefef;
     border: none;
+    border-radius: 0 0 5px 5px;
 
     button {
-      padding: 0.2em 2em;
+      max-height: 37px;
     }
 
     .btn {

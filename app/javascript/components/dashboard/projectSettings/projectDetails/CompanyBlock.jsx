@@ -89,6 +89,7 @@ export class CompanyBlock extends Component {
 
     return (
       <form
+        noValidate={true} 
         onSubmit={this.props.handleSubmit(this.handleSubmit)}
         className='col-lg-6 company-data-form'
         ref={this.nodeRef}

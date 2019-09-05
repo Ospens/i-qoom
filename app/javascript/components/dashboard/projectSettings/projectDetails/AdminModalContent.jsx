@@ -12,7 +12,7 @@ function AdminModalContent({ handleSubmit, close, projectId }) {
     [dispatch])
 
   return (
-    <form className='new-modal' onSubmit={handleSubmit(updateAdmin)}>
+    <form noValidate={true} className='new-modal' onSubmit={handleSubmit(updateAdmin)}>
       <div className='new-modal__header'><h4>New project administrator</h4></div>
       <div className='new-modal__body'>
         <div>
