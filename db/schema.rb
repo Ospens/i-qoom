@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_040454) do
+ActiveRecord::Schema.define(version: 2019_09_03_113754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,10 +208,10 @@ ActiveRecord::Schema.define(version: 2019_09_03_040454) do
     t.integer "role_id"
     t.datetime "confirmation_sent_at"
     t.integer "inviter_id"
-    t.boolean "cms_modul_access", default: false
-    t.boolean "dms_modul_access", default: false
-    t.boolean "cms_modul_master", default: false
-    t.boolean "dms_modul_master", default: false
+    t.boolean "cms_module_access", default: false
+    t.boolean "dms_module_access", default: false
+    t.boolean "cms_module_master", default: false
+    t.boolean "dms_module_master", default: false
   end
 
   create_table "projects", force: :cascade do |t|

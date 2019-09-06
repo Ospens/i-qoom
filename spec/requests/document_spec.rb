@@ -579,10 +579,11 @@ describe Document, type: :request do
         get "/api/v1/projects/#{project.id}/documents/download_native_files",\
           params: { document_ids: [document.id] },\
           headers: credentials(FactoryBot.create(:user))
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:forbidden)
       end
 
-      it 'user with rights' do
+      it 'dms user' do
+        project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
         get "/api/v1/projects/#{project.id}/documents/download_native_files",\
           params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
@@ -594,9 +595,10 @@ describe Document, type: :request do
         expect(files.get_next_entry).to be_nil
       end
 
-      it 'owner' do
+      it 'dms master' do
+        project.members.create!(user: user, dms_module_master: true, employment_type: :employee)
         get "/api/v1/projects/#{project.id}/documents/download_native_files",\
-          params: { document_ids: [document.id] }, headers: credentials(owner)
+          params: { document_ids: [document.id] }, headers: credentials(user)
         expect(response).to have_http_status(:success)
       end
 
@@ -663,6 +665,10 @@ describe Document, type: :request do
           expect(response).to have_http_status(307)
           expect(json['location']).to eql("/api/v1/projects/#{project.id}/conventions/edit")
         end
+      end
+
+      before do
+        project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
       end
 
       it 'csv' do
@@ -785,9 +791,7 @@ describe Document, type: :request do
 
   context '#index' do
     context 'no convention' do
-      before do
-        convention.destroy
-      end
+      before { convention.destroy }
 
       it 'anon' do
         get "/api/v1/projects/#{project.id}/documents"
@@ -804,6 +808,7 @@ describe Document, type: :request do
     end
 
     it 'no documents' do
+      project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
       get "/api/v1/projects/#{project.id}/documents",\
         headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -813,6 +818,7 @@ describe Document, type: :request do
       before do
         rev1 = FactoryBot.create(:document_revision)
         @project = rev1.document_main.project
+        @project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
         convention = FactoryBot.create(:convention, project: @project)
         convention.document_fields.each do |field|
           if field.document_number? || field.revision_date?
@@ -870,9 +876,7 @@ describe Document, type: :request do
 
   context '#my_documents' do
     context 'no convention' do
-      before do
-        convention.destroy
-      end
+      before { convention.destroy }
 
       it 'anon' do
         get "/api/v1/projects/#{project.id}/documents/my_documents"
@@ -889,6 +893,7 @@ describe Document, type: :request do
     end
 
     it 'no documents' do
+      project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
       get "/api/v1/projects/#{project.id}/documents/my_documents",\
         headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -898,6 +903,7 @@ describe Document, type: :request do
     it 'has documents' do
       document = FactoryBot.create(:document)
       project = document.project
+      project.members.create!(user: document.user, dms_module_access: true, employment_type: :employee)
       get "/api/v1/projects/#{project.id}/documents/my_documents",\
         headers: credentials(document.user)
       expect(json[0]['id']).to eql(document.id)

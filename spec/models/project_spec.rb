@@ -110,5 +110,12 @@ RSpec.describe Project, type: :model do
       project.project_code = ''
       expect(project).to_not be_valid
     end
+
+    it 'not allow to set nil if already not blank' do
+      project.project_code = 'AAA'
+      project.save!
+      project.project_code = nil
+      expect(project).to_not be_valid
+    end
   end
 end

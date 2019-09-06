@@ -23,7 +23,7 @@ class Project < ApplicationRecord
   validates :project_code,
             length: { is: 3 },
             format: { with: /\A[A-Z]+\z/ },
-            allow_nil: true
+            if: -> { !project_code.nil? || !project_code_was.nil? }
 
   belongs_to :user
 
