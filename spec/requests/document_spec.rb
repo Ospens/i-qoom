@@ -56,12 +56,6 @@ describe Document, type: :request do
         headers: credentials(user)
       expect(response).to have_http_status(:success)
       expect(json['document_fields'].count).to eql(8)
-    end
-
-    it 'project user' do
-      get "/api/v1/projects/#{project.id}/documents/new",\
-        headers: credentials(project.user)
-      expect(response).to have_http_status(:success)
       expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
     end
   end
@@ -148,12 +142,6 @@ describe Document, type: :request do
       expect(dbl).to receive(:deliver_later)
       post "/api/v1/projects/#{@project_id}/documents",\
         params: @params, headers: credentials(user)
-      expect(response).to have_http_status(:success)
-    end
-
-    it 'project user' do
-      post "/api/v1/projects/#{@project_id}/documents",\
-        params: @params, headers: credentials(@project_user)
       expect(response).to have_http_status(:success)
     end
   end
@@ -294,11 +282,6 @@ describe Document, type: :request do
           params: { document: attrs }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
       end
-
-      it 'project user' do
-        post "/api/v1/documents/#{document.id}/create_revision", params: { document: attrs }, headers: credentials(project.user)
-        expect(response).to have_http_status(:success)
-      end
     end
 
     context '#edit' do
@@ -347,11 +330,6 @@ describe Document, type: :request do
 
       it 'owner' do
         get "/api/v1/documents/#{document.id}/edit", headers: credentials(owner)
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'project user' do
-        get "/api/v1/documents/#{document.id}/edit", headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -415,12 +393,6 @@ describe Document, type: :request do
         expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(document.revision.versions.length).to eql(2)
       end
-
-      it 'project user' do
-        patch "/api/v1/documents/#{document.id}",\
-          params: { document: attrs }, headers: credentials(project.user)
-        expect(response).to have_http_status(:success)
-      end
     end
 
     context '#show' do
@@ -471,12 +443,6 @@ describe Document, type: :request do
 
       it 'owner' do
         get "/api/v1/documents/#{document.id}", headers: credentials(owner)
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'project user' do
-        get "/api/v1/documents/#{document.id}",\
-          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -532,12 +498,6 @@ describe Document, type: :request do
         expect(response).to have_http_status(:success)
         expect(response.body).to eql("111\n")
         expect(response.header['Content-Disposition']).to include(document.codification_string)
-      end
-
-      it 'project user' do
-        get "/api/v1/documents/#{document.id}/download_native_file",\
-          headers: credentials(project.user)
-        expect(response).to have_http_status(:success)
       end
     end
 
@@ -599,13 +559,6 @@ describe Document, type: :request do
         project.members.create!(user: user, dms_module_master: true, employment_type: :employee)
         get "/api/v1/projects/#{project.id}/documents/download_native_files",\
           params: { document_ids: [document.id] }, headers: credentials(user)
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'project user' do
-        get "/api/v1/projects/#{project.id}/documents/download_native_files",\
-          params: { document_ids: [document.id] },\
-          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
@@ -778,12 +731,6 @@ describe Document, type: :request do
 
       it 'owner' do
         get "/api/v1/documents/#{document.id}/revisions_and_versions", headers: credentials(owner)
-        expect(response).to have_http_status(:success)
-      end
-
-      it 'project user' do
-        get "/api/v1/documents/#{document.id}/revisions_and_versions",\
-          headers: credentials(project.user)
         expect(response).to have_http_status(:success)
       end
     end
