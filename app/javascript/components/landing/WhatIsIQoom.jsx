@@ -21,7 +21,7 @@ class WhatIsIQoom extends Component {
                 <div dangerouslySetInnerHTML={{ __html: description }}></div>
               </React.Fragment>
             )*/}
-          <div className='mb-5' dangerouslySetInnerHTML={{ __html: title }}></div>
+          <div className='what-is-card__title' dangerouslySetInnerHTML={{ __html: title }}></div>
           <div dangerouslySetInnerHTML={{ __html: description }}></div>
         </div>
       </section>

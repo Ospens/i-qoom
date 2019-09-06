@@ -82,7 +82,7 @@ class UsersTable extends Component {
                   <button type='button' className='nav-link btn-transparent user-info-avatar'>
                     <UserAvatar size='42' name='Anna Danielsson' />
                   </button>
-                  <div className='user-and-conpany'>
+                  <div className='user-and-company'>
                     <span>{name}</span>
                     <span className='text-secondary'>Company</span>
                   </div>

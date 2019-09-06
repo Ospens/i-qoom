@@ -27,7 +27,7 @@ function FolderForm() {
   }, [formValues])
 
   return (
-    <form className='form-group'>
+    <form noValidate={true} className='form-group'>
       <div className='input-container'>
         <Field
           className='document-id-code'

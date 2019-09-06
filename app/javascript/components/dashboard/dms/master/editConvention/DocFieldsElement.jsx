@@ -29,7 +29,7 @@ class DocFieldsElement extends Component {
     return (
       <button
         type='button'
-        className='btn edit-button'
+        className='edit-button'
         onClick={() => {
           initModal({ ...value, row, new_section: '' })
           openInputForm()
@@ -86,6 +86,7 @@ class DocFieldsElement extends Component {
           id={uniqName}
           placeholder={field.command}
           readOnly={true}
+          disabled
         />
       )
     } else {
@@ -95,6 +96,7 @@ class DocFieldsElement extends Component {
           id={uniqName}
           placeholder={field.command}
           readOnly={true}
+          disabled
           type='text'
         />
       )

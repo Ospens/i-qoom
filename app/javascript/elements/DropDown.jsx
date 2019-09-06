@@ -67,7 +67,7 @@ class DropDown extends Component {
       ulClass
     } = this.props
     const { isOpen } = this.state
-    const mainClass = classnames('btn-group', className, { 'show': isOpen })
+    const mainClass = classnames('btn-group drop-down', className, { 'show': isOpen })
     const ddClass = classnames(
       'dropdown-menu',
       { 'show': isOpen },
@@ -75,9 +75,8 @@ class DropDown extends Component {
     )
     const iClass = classnames('arrow ml-4', { 'up': isOpen }, { 'down': !isOpen })
     const customBtnClass = classnames(
-      { 'btn-white-blue': !btnClass },
+      { 'btn-white-blue btn': !btnClass && !dots },
       { [btnClass]: btnClass },
-      { 'btn': !dots },
       { 'with-dots': dots }
     )
 

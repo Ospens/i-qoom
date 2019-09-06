@@ -155,7 +155,7 @@ class MembersAccessRights extends Component {
                       </div>}
                       <UserAvatar size='42' name={`${user.first_name} ${user.last_name}`} />
                     </div>
-                    <div className='user-and-conpany'>
+                    <div className='user-and-company'>
                       <span>{`${user.first_name} ${user.last_name}`}</span>
                       <span className='text-secondary'>Company</span>
                     </div>

@@ -104,7 +104,7 @@ class ModalCreateProject extends Component {
     const mainClass = classnames('new-modal', { 'without-header': infoModals })
     
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)} className={mainClass}>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)} className={mainClass}>
         {!infoModals && <div className='new-modal__header'><h4>New project</h4></div>}
         {step === 1 &&
         <Terms

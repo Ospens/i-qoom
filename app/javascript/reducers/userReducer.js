@@ -1,8 +1,7 @@
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
-  SIGN_OUT_USER,
-  FETCH_USER_SUCCESS
+  SIGN_OUT_USER
 } from '../actions/types'
 
 const initialState = {
@@ -35,11 +34,6 @@ const userReducer = (state = initialState, action) => {
     }
   case SIGN_OUT_USER:
     return initialState
-  case FETCH_USER_SUCCESS:
-    return {
-      ...state,
-      ...action.payload.data
-    }
   default:
     return state
   }

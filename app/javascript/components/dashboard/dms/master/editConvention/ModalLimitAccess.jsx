@@ -138,6 +138,7 @@ class ModalLimitAccess extends Component {
 
     return (
       <form
+        noValidate={true} 
         className='modal-limit-access-form'
         onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}
       >

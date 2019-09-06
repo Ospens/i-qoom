@@ -52,7 +52,7 @@ function Content() {
       <div className='dms-content__header'>
         <h4>Codificarion settings</h4>
       </div>
-      <div className='p-4'>
+      <div className='content-body bottom-padding'>
         <label>Choose your preferences</label>
         <div className='conventions-settings-table'>
           {[...Array(3)].map((_, i) => { return <Card number={i + 1} key={i} /> }) }

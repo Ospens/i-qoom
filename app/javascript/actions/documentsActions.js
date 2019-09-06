@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
+import moment from 'moment'
 import {
   DOCUMENTS_FETCH_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
@@ -193,4 +194,32 @@ export const getRevisionsAndVersions = docId => (dispatch, getState) => {
         errorNotify('Something went wrong')
       })
   )
+}
+
+export const downloadList = (projectId, docIds, types) => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { Authorization: token }
+  const params = docIds ? { document_ids: [docIds] } : {}
+
+  return types.map(type => (
+    axios({
+      url: `/api/v1/projects/${projectId}/documents/download_list.${type}`,
+      method: 'GET',
+      params,
+      headers,
+      responseType: 'blob' // important
+    })
+      .then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        // TODO: change filename
+        link.setAttribute('download', `documents_${moment().format('MMMM Do YYYY, h:mm:ss')}.${type}`)
+        document.body.appendChild(link)
+        link.click()
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  ))
 }

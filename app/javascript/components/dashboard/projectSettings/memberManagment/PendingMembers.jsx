@@ -28,7 +28,7 @@ class PendingMembers extends Component {
           </DropDown>
         </div>
         <div>
-          <MemberTable {...this.props} />
+          <MemberTable {...this.props} type='pendingMemebers' />
         </div>
       </React.Fragment>
     )
