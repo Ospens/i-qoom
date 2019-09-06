@@ -17,12 +17,12 @@ const initialState = {
 }
 
 export const renderDropDownItems = (icon, name) => (
-  <a className='dropdown-item' href='#'>
+  <button className='dropdown-item' type='button'>
     <i className={classnames("svg-icon", icon)} />
     <span className='item-text'>
       {name}
     </span>
-  </a>
+  </button>
 )
 
 class MemberManagment extends Component {
