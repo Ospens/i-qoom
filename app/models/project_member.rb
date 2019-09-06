@@ -22,7 +22,7 @@ class ProjectMember < ApplicationRecord
              unless: -> { creation_step_active? ||
                           creation_step_pending? }
 
-  # before_create :add_user
+  before_save :add_user, if: :creation_step_details?
 
   belongs_to :project,
     inverse_of: :members
@@ -98,9 +98,9 @@ class ProjectMember < ApplicationRecord
     self.reload if creation_step_pending?
   end
 
-  # # adds a user only when it is being created,
-  # # then a user can be changed only by confirmation
-  # def add_user
-  #   self.user = User.find_by(email: email) if user.nil?
-  # end
+  # adds a user only on details step,
+  # then a user can be changed only by confirmation
+  def add_user
+    self.user = User.find_by(email: email)
+  end
 end
