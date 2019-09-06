@@ -32,6 +32,8 @@ const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: {
         }}
         placeholderText={placeholder ? placeholder : ''}
         readOnly={readOnly}
+        required
+        pattern=".*\S.*"
       />
       {touched && error &&
       <div className='invalid-feedback'>

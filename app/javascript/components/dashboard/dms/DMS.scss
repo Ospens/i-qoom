@@ -70,6 +70,18 @@
 
 .buttons-with-icons-list {
   display: flex;
+  margin-bottom: 50px;
+
+  li {
+    padding-left: 20px;
+    padding-right: 20px;
+
+    &:first-of-type {
+      padding-left: 0;
+    }
+  }
+
+  
 
   button {
     align-items: center;
@@ -522,8 +534,10 @@
   border-radius: 20px !important;
   border-color: black !important;
   background-color: #fff !important;
+  padding: 8px;
 
   span {
+    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     margin-right: 10px;
@@ -554,7 +568,6 @@
 .dms-container__table-header {
   display: flex;
   align-items: center;
-  overflow: hidden;
 
   h5 {
     margin-right: 15px;
@@ -1314,12 +1327,12 @@ input.search-input {
     }
 
     &:hover {
-      background-color:#f9f9f9;
+      background-color:#f5f9fa;
       cursor: pointer;
 
       .form-group, .d-flex {
         .btn.btn-white-blue {
-          background-color:#f9f9f9;
+          background-color:#f5f9fa;
         }
       }
     }
@@ -2072,7 +2085,7 @@ input.search-input {
 
 .new-document-table {
   .form-group {
-    min-height: 70px;
+    min-height: 80px;
 
     textarea {
       min-height: 120px !important;

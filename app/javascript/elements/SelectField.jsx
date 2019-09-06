@@ -80,7 +80,7 @@ export const colourStyles = errorInfo => {
       borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
       zIndex: '4',
       minHeight: '45px',
-      backgroundColor: state.selectProps.value && state.selectProps.value.length > 0 ? '#fff' : state.isDisabled ? '#f5f9fa' : '#FCFFFF'
+      backgroundColor: state.isDisabled ? '#f5f9fa' : state.selectProps.value && state.selectProps.value.length > 0 ? '#fff' : '#FCFFFF'
     }),
     menu: styles => ({
       ...styles,
