@@ -69,10 +69,12 @@ class Ability
         (document.user == user || document.can_create?(user)) &&
           document == document.revision.versions.last_version
       end
-      can [:index,
-           :download_native_files,
-           :download_list,
-           :my_documents], Document # there should be some limitation
+      can :collection_actions, Document do |document, project|
+        member = project.members.find_by(user_id: user.id)
+        project.user == user ||
+          member.try(:dms_module_access?) ||
+          member.try(:dms_module_master?)
+      end
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder
