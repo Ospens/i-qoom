@@ -1,7 +1,7 @@
 class Api::V1::ConventionsController < ApplicationController
   load_resource :project, id_param: :project_id
-  before_action :set_convention, only: [:edit, :update_field_titles]
-  authorize_resource :convention
+  before_action :set_convention
+  before_action :authorize_convention
 
   def edit
     if !@convention.document_fields.any?
@@ -42,6 +42,10 @@ class Api::V1::ConventionsController < ApplicationController
       next if field[:document_field_values].blank?
       field[:document_field_values_attributes] = field.delete(:document_field_values)
     end
+  end
+
+  def authorize_convention
+    authorize! :manage, @convention
   end
 
   def convention_params(assign_attrs = false)

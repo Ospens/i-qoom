@@ -27,7 +27,7 @@ function TopBar({ signOut }) {
             onClick={signOut}
           >
             Logout
-            </button>
+          </button>
         </li>
         <li className='nav-item'>
           <button type='button' className='btn'>

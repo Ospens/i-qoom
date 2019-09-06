@@ -1,7 +1,11 @@
 class DocumentMain < ApplicationRecord
   belongs_to :project
 
-  has_many :revisions, class_name: 'DocumentRevision', foreign_key: 'document_main_id'
+  has_many :revisions,
+           class_name: 'DocumentRevision',
+           foreign_key: 'document_main_id'
+
+  before_create :assign_project_code
 
   def self.documents_available_for(user)
     return all if !all.any?
@@ -24,5 +28,11 @@ class DocumentMain < ApplicationRecord
       document = main.revisions.last_revision.last_version
       document if document.can_view?(user)
     end.compact
+  end
+
+  private
+
+  def assign_project_code
+    self.project_code = project.project_code
   end
 end

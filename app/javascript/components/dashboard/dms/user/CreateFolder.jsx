@@ -34,7 +34,7 @@ export class CreateFolder extends Component {
 
   renderContent = () => {
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         <div className='modal-container'>
           <div className='modal-container__title-block'>
             <h4>Create new folder</h4>

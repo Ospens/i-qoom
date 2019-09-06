@@ -7,12 +7,11 @@ import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 
 function Content() {
-
   return (
     <div className='show-document bordered'>
       <div className='dms-content__header'>
         <div className='d-flex'>
-          <h4>Add new Revision:</h4>
+          <h4>Add new revision:</h4>
           <label className='rounded-label red ml-4'>
             Revision 41
             <i className='svg-icon pink lock-icon ml-2' />

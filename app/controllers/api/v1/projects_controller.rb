@@ -1,6 +1,6 @@
 class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
-  
+
   def index
     render json: signed_in_user.projects,
            status: :ok
@@ -88,6 +88,14 @@ class Api::V1::ProjectsController < ApplicationController
     else
       render json: project_member_confirmation.errors,
              status: :unprocessable_entity
+    end
+  end
+
+  def update_project_code
+    if @project.update(project_code: params[:project_code])
+      head :ok
+    else
+      render json: @project.errors, status: :unprocessable_entity
     end
   end
 

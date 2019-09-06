@@ -103,7 +103,7 @@ class Reviews extends Component {
           </div>
         </div>
       </div>
-      <div className='card-body px-0'>
+      <div className='card-body'>
         <div dangerouslySetInnerHTML={{ __html: el.desription }} />
       </div>
     </div>
@@ -175,7 +175,7 @@ class Reviews extends Component {
     const reviewsContent = reviews.map((el, i) => this.renderCommonCard(el, i))
 
     return (
-      <Slider className={`card-deck mx-4 mb-4 ${newClassName}`} {...settings}>
+      <Slider className={`card-deck ${newClassName}`} {...settings}>
         {reviewsContent}
       </Slider>)
   }
@@ -185,7 +185,7 @@ class Reviews extends Component {
     return (
       <button
         type='button'
-        className='btn btn-primary mt-5 mx-auto'
+        className='btn btn-primary mx-auto'
         onClick={() => this.setState({ readMore: !readMore })}>
         {readMore ? 'Hide' : 'Read more'}
       </button>
@@ -205,7 +205,7 @@ class Reviews extends Component {
             ) : (
               <div dangerouslySetInnerHTML={{ __html: description }} />
             )*/}
-          <div dangerouslySetInnerHTML={{ __html: description }} />
+          <div className='reviews-card__title' dangerouslySetInnerHTML={{ __html: description }} />
         </div>
         
         {this.renderReviewsSlider(cards)}

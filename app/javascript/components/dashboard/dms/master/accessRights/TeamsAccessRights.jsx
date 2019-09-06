@@ -149,7 +149,7 @@ class TeamsAccessRights extends Component {
                         <UserAvatar size='42' name='T' />
                       </div>
                     </div>
-                    <div className='user-and-conpany'>
+                    <div className='user-and-company'>
                       <span>{`${user.first_name} ${user.last_name}`}</span>
                       <div className='d-flex'>
                         <button type='button' className='btn pl-0'>Add new members</button>

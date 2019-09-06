@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   PROJECT_CREATED_SUCCESS,
   SET_PAGE_TITLE,
@@ -14,7 +15,7 @@ const initialState = {
   current: {
     admins: []
   },
-  title: 'i-Qoom'
+  title: <h2>I-Qoom</h2>
 }
 
 const projectReducer = (state = initialState, action) => {

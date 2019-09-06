@@ -29,10 +29,6 @@ export const actionDDitems = (projectId, documentId) => (
     {
       title: 'Review document',
       icon: 'review-icon'
-    },
-    {
-      title: 'Download as list',
-      icon: 'download-icon'
     }
   ]
 )

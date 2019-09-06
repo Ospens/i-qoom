@@ -258,6 +258,23 @@ describe "Project", type: :request do
         expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
     end
+
+    context "update_project_code" do
+      it "valid" do
+        post "/api/v1/projects/#{project.id}/update_project_code",
+             params: { project_code: 'AAA' }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:ok)
+        expect(project.reload.project_code).to eql('AAA')
+      end
+
+      it "invalid" do
+        post "/api/v1/projects/#{project.id}/update_project_code",
+             params: { project_code: 'aaa' }.to_json,
+             headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
   end
 
   context 'not logged in and should get a status "forbidden" on' do
@@ -314,6 +331,14 @@ describe "Project", type: :request do
            headers: headers
       expect(response).to have_http_status(:forbidden)
       expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+
+    it 'update_project_code' do
+        post "/api/v1/projects/#{project.id}/update_project_code",
+             params: { project_code: 'AAA' }.to_json,
+             headers: headers
+      expect(response).to have_http_status(:forbidden)
+      expect(project.reload.project_code).to be_nil
     end
   end
 end

@@ -1,6 +1,7 @@
 class Session
   include ActiveModel::Model
   include ActiveModel::Validations
+  include ActiveModel::Serialization
 
   @@accessible_columns = [:login, :password, :user, :auth_token]
 

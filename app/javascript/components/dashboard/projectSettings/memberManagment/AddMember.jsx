@@ -192,7 +192,7 @@ class AddMember extends Component {
   render() { 
     const { step } = this.state
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
 
         <div className='new-project-modal'>
           <h4>New member</h4>

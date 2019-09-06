@@ -19,6 +19,8 @@ const InputField = ({
         {...props}
         type={type ? type : 'text'}
         className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
+        required
+        pattern=".*\S.*"
       />
       {touched &&
       <div className='invalid-feedback'>

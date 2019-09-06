@@ -54,6 +54,8 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
   const headers = { headers: { Authorization: token } }
 
   let formData = new FormData()
+  // TODO: change this
+  delete values.logo
 
   const formValues = {
     project: { ...values }

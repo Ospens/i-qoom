@@ -68,7 +68,7 @@ class SamplesContents extends Component {
             </DropDown>*/}
           <ReactSVG
             src={el.image}
-            svgStyle={{ height: 100, marginTop: 20 }}
+            svgStyle={{ height: 100, marginTop: 40, marginBottom: 20 }}
             className='card-img-top text-center'
           />
           <div className='card-body'>
@@ -167,8 +167,8 @@ class SamplesContents extends Component {
             ) : (
               <div dangerouslySetInnerHTML={{ __html: title }} />
             )*/}
-            <div dangerouslySetInnerHTML={{ __html: title }} />
-          <div className='managment row mt-5'>
+          <div className='samples-card__title'  dangerouslySetInnerHTML={{ __html: title }} />
+          <div className='managment'>
             <ul className='managment-buttons col-4'>
               <li>
                 {/*authed && editable ?
@@ -241,7 +241,7 @@ class SamplesContents extends Component {
             </div>
           </div>
         </div>
-        <Slider className='card-deck mx-4 mb-4' {...settings}>
+        <Slider className='card-deck' {...settings}>
           {this.renderCards()}
         </Slider>
       </section>

@@ -17,6 +17,8 @@ const TextAreaField = ({
         {...input}
         {...props}
         className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
+        required
+        pattern=".*\S.*"
       />
       {touched &&
         <div className='invalid-feedback'>

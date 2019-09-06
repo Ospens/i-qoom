@@ -38,7 +38,7 @@ class AdministratorForm extends Component {
 
     return (
       <div>
-        <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+        <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
           <div className={mainClass}>
             <h6>{titleModal}</h6>
             {label && <label className='project-admin'>{label}</label>}
