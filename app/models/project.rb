@@ -20,6 +20,11 @@ class Project < ApplicationRecord
                       maximum: 255 },
             unless: :creation_step_admins?
 
+  validates :project_code,
+            length: { is: 3 },
+            format: { with: /\A[A-Z]+\z/ },
+            if: -> { !project_code.nil? || !project_code_was.nil? }
+
   belongs_to :user
 
   has_many :conventions
