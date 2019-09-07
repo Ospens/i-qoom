@@ -37,7 +37,7 @@ class ProjectSettings extends Component {
           </div>
         </Tabs>
 
-        <Link to='/dashboard' className='btn btn-back-to-project'>
+        <Link to='/dashboard' className='btn-back-to-project'>
           <i className='svg-icon arrow-left-icon-2' />
           BACK TO THE PROJECT OVERVIEW
         </Link>

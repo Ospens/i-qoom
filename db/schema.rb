@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_29_193457) do
+ActiveRecord::Schema.define(version: 2019_09_03_113754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 2019_08_29_193457) do
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
     t.integer "document_review_status", default: 0
+    t.string "project_code"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -248,6 +249,10 @@ ActiveRecord::Schema.define(version: 2019_08_29_193457) do
     t.integer "role_id"
     t.datetime "confirmation_sent_at"
     t.integer "inviter_id"
+    t.boolean "cms_module_access", default: false
+    t.boolean "dms_module_access", default: false
+    t.boolean "cms_module_master", default: false
+    t.boolean "dms_module_master", default: false
   end
 
   create_table "projects", force: :cascade do |t|
@@ -256,6 +261,7 @@ ActiveRecord::Schema.define(version: 2019_08_29_193457) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "creation_step", default: 0
+    t.string "project_code"
   end
 
   create_table "roles", force: :cascade do |t|

@@ -1,18 +1,24 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import classnames from 'classnames'
 import DMSLayout from '../../DMSLayout'
 import Content from './Content'
-import { startFetchDocument } from '../../../../../actions/documentsActions'
+import { startFetchDocument, getRevisionsAndVersions } from '../../../../../actions/documentsActions'
 import FolderInfo from '../FolderInfo'
 
-const SideBar = () => {
+export const SideBar = ({ documentId, projectId }) => {
   const document = useSelector(state => state.documents.current)
-  let versions = document.document_fields.filter(field => field.codification_kind === 'revision_version')[0]
-  let revisions = document.document_fields.filter(field => field.codification_kind === 'revision_number')[0]
-  versions = versions ? Number(versions.value) : 0
-  revisions = revisions ? Number(revisions.value) : 0
+  const revisions = useSelector(state => state.documents.revisions)
+  const [revision, toggleRevision] = useState(0)
+  
+  let currentRevisionNumber = document.document_fields.find(field => field.codification_kind === 'revision_number')
+  currentRevisionNumber = currentRevisionNumber ? currentRevisionNumber.value : '0'
+  let versionsList = revisions.find(el => el.revision_number === currentRevisionNumber)
+  versionsList = versionsList ? versionsList.versions : []
+
+  useEffect(() => { toggleRevision(currentRevisionNumber) }, [currentRevisionNumber])
+
 
   return (
     <div className='dms-sidebar-menu'>
@@ -42,10 +48,12 @@ const SideBar = () => {
             <i className='svg-icon revision-icon black mx-2' />
             <span>Revisions</span>
           </div>
-          <ul className='revision-list'>
-            {[...Array(revisions)].map((_, i) => (
-              <li className={classnames({ 'active': i + 1 === revisions})} key={i}>
-                {i + 1}
+          <ul className='dms-sidebar-menu__ul-list'>
+            {revisions.map(({ revision_number }, i) => (
+              <li className={classnames({ 'active': revision_number === revision})} key={i}>
+                <button type='button'>
+                  {revision_number}
+                </button>
               </li>
             ))}
           </ul>
@@ -59,10 +67,10 @@ const SideBar = () => {
             <i className='svg-icon task-list-settings-icon black mx-2' />
             <span>Versions</span>
           </div>
-          <ul className='revision-list'>
-            {[...Array(versions)].map((_, i) => (
-              <li className={classnames({'active': i + 1 === versions})} key={i}>
-                  {i + 1}
+          <ul className='dms-sidebar-menu__ul-list'>
+            {versionsList.map(({ id, revision_version }, i) => (
+              <li key={i} className={classnames({ 'active': id === Number(documentId) })}>
+                <Link to={`/dashboard/projects/${projectId}/documents/${id}`}>{revision_version}</Link>
               </li>
             ))}
           </ul>
@@ -72,18 +80,17 @@ const SideBar = () => {
   )
 }
 
-function ShowDocument({ match: { params: { document_id } } }) {
+function ShowDocument({ match: { params: { project_id, document_id } } }) {
   const dispatch = useDispatch()
-  const fetchDocument = useCallback(() =>
-    dispatch(startFetchDocument(document_id)),
-    [dispatch]
-  )
   
-  useEffect(() => { fetchDocument() }, [])
+  useEffect(() => {
+    dispatch(startFetchDocument(document_id)),
+    dispatch(getRevisionsAndVersions(document_id)) 
+  }, [dispatch, document_id])
 
   return (
     <DMSLayout
-      sidebar={<SideBar />}
+      sidebar={<SideBar documentId={document_id} projectId={project_id}/>}
       content={<Content />}
     />
   )

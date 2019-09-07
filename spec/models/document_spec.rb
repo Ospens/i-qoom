@@ -100,7 +100,6 @@ RSpec.describe Document, type: :model do
     field_true.update_columns(selected: false)
     field_false.update_columns(selected: true)
     expect(doc.reload.can_view?(user)).to eql(false)
-    expect(doc.can_view?(doc.project.user)).to eql(true)
   end
 
   it 'can_create?' do
@@ -108,7 +107,6 @@ RSpec.describe Document, type: :model do
     document = document_attributes(user)
     doc = Document.new(document)
     expect(doc.can_create?(user)).to eql(true)
-    expect(doc.can_create?(doc.project.user)).to eql(true)
   end
 
   context 'prevent update of fields and values from convention' do
@@ -365,5 +363,43 @@ RSpec.describe Document, type: :model do
       attrs['review_issuers'] = [user3.id]
       expect(Document.new(attrs)).to be_valid
     end
+  end
+
+  it 'codification_string' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.new(attrs)
+    doc.document_main.update(project_code: 'AAA')
+    codes = doc.codification_string
+    fields = doc.document_fields
+    value1 =
+      fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value2 =
+      fields.detect{ |i| i['codification_kind'] == 'discipline' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value3 =
+      fields.detect{ |i| i['codification_kind'] == 'document_type' }
+        .document_field_values.detect{ |i| i['selected'] == true }.value
+    value4 =
+      fields.detect{ |i| i['codification_kind'] == 'document_number' }.value
+    string = "AAA-#{value1}-#{value2}-#{value3}-#{value4}"
+    expect(codes).to eql(string)
+  end
+
+  it 'attributes_for_edit' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    attrs = doc.attributes_for_edit
+    expect(attrs['revision_version']).to be_present
+  end
+
+  it 'attributes_for_show' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    doc = Document.create(attrs)
+    expect(doc).to receive(:attributes_for_edit).and_call_original
+    doc.attributes_for_show
   end
 end

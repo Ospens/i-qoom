@@ -171,8 +171,8 @@ class AddMember extends Component {
         <Field
           component={SelectField}
           className='form-group col-md-6'
-          name='discipline'
-          id='discipline'
+          name='discipline_id'
+          id='discipline_id'
           options={this.props.discipline_options}
           placeholder='Discipline'
         />
@@ -192,7 +192,7 @@ class AddMember extends Component {
   render() { 
     const { step } = this.state
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
 
         <div className='new-project-modal'>
           <h4>New member</h4>

@@ -54,6 +54,8 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
   const headers = { headers: { Authorization: token } }
 
   let formData = new FormData()
+  // TODO: change this
+  delete values.logo
 
   const formValues = {
     project: { ...values }
@@ -158,7 +160,7 @@ export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
         dispatch(projectUpdated(response.data))
         successNotify('The project admin were successfully saved!')
       })
-      .catch(response => {
+      .catch(({ response }) => {
         errorNotify('Something went wrong')
         throw new SubmissionError(response.data)
       })

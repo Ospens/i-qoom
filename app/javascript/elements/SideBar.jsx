@@ -64,7 +64,7 @@ class SideBar extends Component {
   renderDashboardContent = () => (
     <ul className='nav flex-column nav-items'>
       <li className='nav-item'>
-        <span className='light-grey'>Frequently used</span>
+        <span className='sidebar_section-title'>Frequently used</span>
       </li>
       <SideBarItem path='/dashboard/' label='Project overview' />
     </ul>
@@ -76,7 +76,7 @@ class SideBar extends Component {
       <div className='mb-4'>
         <ul className='nav flex-column nav-items'>
           <li className='nav-item'>
-            <span className='light-grey'>Frequently used</span>
+            <span className='sidebar_section-title'>Frequently used</span>
           </li>
           <SideBarItem path='/dashboard/' label='Dashboard' />
           <SideBarItem 
@@ -91,20 +91,20 @@ class SideBar extends Component {
         </ul>
         <ul className='nav flex-column nav-items'>
           <li className='nav-item'>
-            <span className='light-grey'>Commercial Managment</span>
+            <span className='sidebar_section-title'>Commercial Managment</span>
           </li>
-          <SideBarItem path='/dashboard/' label='Time sheet' />
-          <SideBarItem path='/dashboard/' label='Cost Managment' />
-          <SideBarItem path='/dashboard/' label='Templates' />
-          <SideBarItem path='/dashboard/' label='Invoices' />
+          <SideBarItem path='#' label='Time sheet' />
+          <SideBarItem path='#' label='Cost Managment' />
+          <SideBarItem path='#' label='Templates' />
+          <SideBarItem path='#' label='Invoices' />
         </ul>
         <ul className='nav flex-column nav-items'>
           <li className='nav-item'>
-            <span className='light-grey'>Project Managment</span>
+            <span className='sidebar_section-title'>Project Managment</span>
           </li>
-          <SideBarItem path='/dashboard/' label='Technical Clarification' />
-          <SideBarItem path='/dashboard/' label='Quality Control' />
-          <SideBarItem path='/dashboard/' label='Correspondences' />
+          <SideBarItem path='#' label='Technical Clarification' />
+          <SideBarItem path='#' label='Quality Control' />
+          <SideBarItem path='#' label='Correspondences' />
         </ul>
       </div>
     )
@@ -123,11 +123,11 @@ class SideBar extends Component {
       <aside className={mainClass}>
         <div className='sidebar-sticky'>
           <div className='side-bar-logo'>
-            <div>
+            <div className='side-bar-logo__container'>
               <i className='svg-icon logo-header sidebar' />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
-            <button type='button' className='btn d-flex' onClick={toggle}>
+            <button type='button' className='icon-button' onClick={toggle}>
               <i className='svg-icon burger-menu-icon' />
             </button>
           </div>
@@ -144,8 +144,12 @@ class SideBar extends Component {
         {pathname.includes('/dashboard/projects')&& 
         <div className='active-project'>
           <div className='project-description'>
-            <span className='active-project-text'>Active project</span>
-            <span className='active-project-title'>{currentProject.name}</span>
+            <div className='active-project-text'>
+              <span>Active project</span>
+            </div>
+            <div>
+              <span className='active-project-title'>{currentProject.name}</span>
+            </div>
           </div>
           <i className='svg-icon cogs-icon white ml-auto' />
         </div>}

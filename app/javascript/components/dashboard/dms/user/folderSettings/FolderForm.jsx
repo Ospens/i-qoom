@@ -1,17 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   reduxForm,
   Field,
+  getFormValues
 } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 import InputField from '../../../../../elements/InputField'
 import { startUpdateFolder } from '../../../../../actions/foldersActions'
 
-// TODO: waiting backend changes
+const findFieldIndex = (fields, kind) => fields ? fields.findIndex(f => f.codification_kind === kind) : undefined
 
 function FolderForm() {
   const dispatch = useDispatch()
+  const formValues = useSelector(state => getFormValues('folder_form')(state)) || {}
+  const fields = formValues.document_fields
 
   const updateFolder = useCallback(values => {
     dispatch(startUpdateFolder(values))
@@ -19,56 +22,48 @@ function FolderForm() {
 
   const blurSubmit = useCallback(e => {
     e.preventDefault()
-    const target = e.target
 
-    const field = {
-      document_fields: {
-        codification_kind: target.id,
-        value: target.value
-      }
-    }
-    console.log(field)
-    // updateFolder(field)
-  }, [])
+    updateFolder(formValues)
+  }, [formValues])
 
   return (
-    <form className='form-group'>
+    <form noValidate={true} className='form-group'>
       <div className='input-container'>
         <Field
           className='document-id-code'
           component={InputField}
-          name='document_fields[0].value'
+          name='document_fields.value'
           id='project_code'
+          placeholder='XXX'
+          disabled={true}
+        />
+        <Field
+          component={InputField}
+          className='document-id-code'
+          name={`document_fields[${findFieldIndex(fields, 'originating_company')}].value`}
           placeholder='XXX'
           onBlur={blurSubmit}
         />
         <Field
           component={InputField}
           className='document-id-code'
-          id='originating_company'
-          name='document_fields[1].value'
+          name={`document_fields[${findFieldIndex(fields, 'discipline')}].value`}
           placeholder='XXX'
+          onBlur={blurSubmit}
         />
         <Field
           component={InputField}
           className='document-id-code'
-          id='discipline'
-          name='document_fields[2].value'
+          name={`document_fields[${findFieldIndex(fields, 'document_type')}].value`}
           placeholder='XXX'
+          onBlur={blurSubmit}
         />
         <Field
           component={InputField}
           className='document-id-code'
-          id='document_type'
-          name='document_fields[3].value'
+          name={`document_fields[${findFieldIndex(fields, 'document_number')}].value`}
           placeholder='XXX'
-        />
-        <Field
-          component={InputField}
-          className='document-id-code'
-          id='document_number'
-          name='document_fields[4].value'
-          placeholder='XXXX'
+          onBlur={blurSubmit}
         />
       </div>
     </form>

@@ -5,28 +5,35 @@ import classnames from 'classnames'
 import moment from 'moment'
 
 const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => {
-  const [date, toggleDate] = useState(null)
+  const [date, toggleDate] = useState('')
   const mainClass = classnames({ 'is-invalid': touched && error })
 
-  useEffect(() => { toggleDate(input.value) }, [])
+  useEffect(() => {
+    if (typeof input.value !== 'object') return
+    
+    toggleDate(input.value)
+  }, [input.value])
+
+  const value = date ? moment(new Date(date)).format('MM/DD/YYYY') : null
 
   return (
     <div className={mainClass}>
       {label && <label>{label}</label>} 
       <DatePicker
         {...input}
-        autoComplete="off"
+        autoComplete='off'
         dateForm='MM/DD/YYYY'
         className='form-control date-input'
         selected={date}
-        value={date ? moment(new Date(date)).format('MM/DD/YYYY') : null}
+        value={value || input.value}
         onChange={value => {
-          const newDate = new Date(value)
-          input.onChange(newDate)
-          toggleDate(newDate)
+          input.onChange(value)
+          toggleDate(value)
         }}
         placeholderText={placeholder ? placeholder : ''}
         readOnly={readOnly}
+        required
+        pattern=".*\S.*"
       />
       {touched && error &&
       <div className='invalid-feedback'>

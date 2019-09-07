@@ -17,7 +17,7 @@ const initialState = {
     secondLine: '<h3>Started & Managed</h3>'
   },
   whatISIQoom: {
-    title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">What is i-Qoom?</span></span></h3>',
+    title: '<h3 style="text-align:center;"><span style="font-size: 65px;color:#26276a;">What is i-Qoom?</span></h3>',
     description: `<p style='text-align:center;font-size: 15px;'> Largemouth bass Arctic char,
     salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless
     catfish Atlantic trout velvetfish char greenling.South American darter,cornetfish
@@ -32,75 +32,75 @@ const initialState = {
     Horsefish orbicular batfish speckled marblefish sea devil. </p>`
   },
   samplesAndContent: {
-    title: '<h3 style="text-align:center;"><span class="text-huge"><span style="color:#26276a;">Samples &amp; Contents</span></span></h3>',
+    title: '<h3 style="text-align:center;"><span style="font-size: 65px;color:#26276a;">Samples &amp; Contents</span></h3>',
     firstTab: {
       title: 'Comercial Managment',
-      description: '<h4><span class="text-small" style="color: #222222;font-size: 30px;">Comercial Managment</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Comercial Managment</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
     },
     secondTab: {
       title: 'Project Managment',
-      description: '<h4><span class="text-small" style="color: #222222;font-size: 30px;">Project Managment</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Project Managment</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
     },
     cards: [
       {
         image: comm,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Resources</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Resources</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
       },
       {
         image: commonFileText,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Documents</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Sed pulvinar proin gravida hendrerit lectus a. Dignissim convallis aenean et tortor at risus viverra adipiscing at.</p>'
       },
       {
         image: robotHead,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Technical Clarification</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Technical Clarification</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Tincidunt praesent semper feugiat nibh sed pulvinar proin. Hac habitasse platea dictumst vestibulum rhoncus est.</p>'
       },
       {
         image: cogBrowser,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Quality Control</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Quality Control</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
       },
       {
         image: conversationImg,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Correspondences</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Correspondences</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
       },
       {
         image: robotHead,
-        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 14px;color: #475759;" class="text-small">Documents</span></h4><p style="color: #475759;text-align:center;">Spearfish damselfish electric knifefish amago bobtail snipe eel?</p>'
+        description: '<h4 style="text-align:center;font-size: 17px;"><span style="font-size: 17px;color: #475759;">Documents</span></h4><p style="font-size: 14px;color: #475759;text-align:center;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
       }
     ]
   },
   reviews: {
-    description: '<h3 style="text-align:center;"><span class="text-big"><span style="color:#26276a;">i-Qoom Reviews</span></span></h3><p style="text-align:center;color:#475759;">Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>',
+    description: '<h3 style="text-align:center;"><span style="color:#26276a;font-size: 45px;">i-Qoom Reviews</span></h3><p style="text-align:center;color:#475759;">Snubnose parasitic eel slimy mackerel pineconefish pearl perch, cornetfish grouper: marlin</p>',
     cards: [
       {
-        name: '<h6 style="color: #475759;">Donald Trump</h6>',
+        name: '<div style="margin-bottom: 10px;"><span style="color: #475759;">Donald Trump</span></div>',
         photo: photo1,
         country: 'California, USA',
         stars: 5,
-        desription: '<p><span style="color: #475759;">Cares about employees, work/life balance, culture</span></p><p style="color: #475759;">Great management, mentorship, and overall culture! A very youthful, casual vibe. I love how they have team meetings every morning discussing goals. The communication is excellent. It seems if you excel, you can get promoted very quickly.'
+        desription: '<p><span style="color: #475759;">Cares about employees, work/life balance, culture</span></p><p style="color: #475759;font-size: 14px;">Great management, mentorship, and overall culture! A very youthful, casual vibe. I love how they have team meetings every morning discussing goals. The communication is excellent. It seems if you excel, you can get promoted very quickly.'
       },
       {
-        name: '<h6 style="color: #475759;">Sarah Mitchell</h6>',
+        name: '<div style="margin-bottom: 10px;"><span style="color: #475759;">Sarah Mitchell</span></div>',
         photo: photo2,
         country: 'Hamburg, GER',
         stars: 5,
-        desription: '<p><span style="color: #475759;">Productive, energetic company</span></p><p style="color: #475759;">It is a great place to work. Hard to get your foot in the door.Extremely hard.But once you do, you have every opportunity to nail your interview and make a difference..'
+        desription: '<p><span style="color: #475759;">Productive, energetic company</span></p><p style="color: #475759;font-size: 14px;">It is a great place to work. Hard to get your foot in the door.Extremely hard.But once you do, you have every opportunity to nail your interview and make a difference..'
       },
       {
-        name: '<h6 style="color: #475759;">Elon Mask</h6>',
+        name: '<div style="margin-bottom: 10px;"><span style="color: #475759;">Elon Mask</span></div>',
         photo: photo3,
         country: 'Stockhorm, SE',
         stars: 5,
-        desription: '<p><span style="color: #475759;">Good Experience</span></p><p style="color: #475759;">I loved this job and the people there. I still talk to all my friends there and it’s very easy to get the hang of it. Moving up will be easy if you learn quickly.'
+        desription: '<p><span style="color: #475759;">Good Experience</span></p><p style="color: #475759;font-size: 14px;">I loved this job and the people there. I still talk to all my friends there and it’s very easy to get the hang of it. Moving up will be easy if you learn quickly.'
       },
       {
-        name: '<h6 style="color: #475759;">Humayra Samiha</h6>',
+        name: '<div style="margin-bottom: 10px;"><span style="color: #475759;">Humayra Samiha</span></div>',
         photo: photo4,
         country: 'Stockhorm, SE',
         stars: 5,
-        desription: '<p><span style="color: #475759;">The good things</span></p><p style="color: #475759;">The opportunities available to move from project to project and the support given. Also the range of workshops and support available to improve your career.'
+        desription: '<p><span style="color: #475759;">The good things</span></p><p style="color: #475759;font-size: 14px;">The opportunities available to move from project to project and the support given. Also the range of workshops and support available to improve your career.'
       },
       {
-        name: '<h6 style="color: #475759;">Humayra Samiha</h6>',
+        name: '<div style="margin-bottom: 10px;"><span style="color: #475759;">Humayra Samiha</span></div>',
         country: 'Hamburg, GER',
         stars: 5,
         desription: '<p><span style="color: #475759;">Crevice kelpfish</span></p><p style=" color: #475759;">Elephant fish channel bass pike characid perch nurse shark, North American darter sea bass sixgill shark.'
@@ -108,7 +108,7 @@ const initialState = {
     ]
   },
   getStarted: {
-    title: '<h3 style="text-align:center;"><span class="text-big"><span style="color:#26276a;">Contact - Let\'s get started!</span></span></h3>'
+    title: '<h3 style="text-align:center;"><span style="color:#26276a;font-size: 35px;">Contact - Let\'s get started!</span></h3>'
   },
   terms: {
     content: `<h2><span class="text-big"><span style="color:#26276a;"><strong>Terms</strong></span></span></h2>
@@ -120,7 +120,7 @@ const initialState = {
               <p>sablefish ghost knifefish Indian mul. Regal whiptail catfish streamer fish ribbon eel alfonsino climbing</p>
               <p>catfish! Antarctic icefish titan triggerfish pearl danio clownfish cisco medusafish, "barbel spiny dwarf</p>
               <p>catfish sea chub," salmon harelip sucker labyrinth fish? Herring regal whiptail catfish; driftwood catfish,</p>
-              <p>flathead. Spearfish damselfish electric knifefish amago bobtail snipe eel? Horsefish orbicular batfish</p>
+              <p>flathead. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Horsefish orbicular batfish</p>
               <p>speckled marblefish sea devil.</p>`
   }
 }

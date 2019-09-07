@@ -25,6 +25,9 @@ class Document < ApplicationRecord
            index_errors: true,
            dependent: :destroy
 
+  delegate :project_code,
+           to: :document_main
+
   accepts_nested_attributes_for :document_fields
 
   validates_associated :document_fields
@@ -123,7 +126,7 @@ class Document < ApplicationRecord
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false) || user == project.user
+    end.include?(false)
   end
 
   def can_view?(user)
@@ -142,11 +145,11 @@ class Document < ApplicationRecord
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
-    end.include?(false) || user == project.user
+    end.include?(false)
   end
 
   def attributes_for_edit
-    doc = attributes.except('id', 'created_at', 'updated_at', 'revision_version')
+    doc = attributes.except('id', 'created_at', 'updated_at')
     doc['document_fields'] = []
     document_fields.each do |field|
       field_attributes = field.build_for_edit_document
@@ -169,7 +172,7 @@ class Document < ApplicationRecord
 
   def codification_string
     str = ''
-    # there should be project code
+    str << "#{project_code}-" if project_code.present?
     [ 'originating_company',
       'discipline',
       'document_type',
@@ -179,7 +182,7 @@ class Document < ApplicationRecord
         field = field.document_field_values.detect{ |i| i['selected'] == true }
       end
       if field.value.present?
-        str << '-' unless kind == 'document_number'
+        str << '-' if kind != 'originating_company'
         str << field.value
       end
     end

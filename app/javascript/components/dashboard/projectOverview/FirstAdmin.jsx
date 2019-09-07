@@ -11,7 +11,7 @@ const FirstAdmin = ({ closeModal }) => {
         <AdministratorFields admin='admins[0]' />
       </div>
       <div className='new-modal__footer'>
-        <button type='button' className='btn btn-white mr-2' onClick={closeModal}>Cancel</button>
+        <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>
         <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     </React.Fragment>

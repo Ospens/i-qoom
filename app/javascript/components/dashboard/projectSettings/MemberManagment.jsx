@@ -17,12 +17,12 @@ const initialState = {
 }
 
 export const renderDropDownItems = (icon, name) => (
-  <a className='dropdown-item' href='#'>
+  <button className='dropdown-item' type='button'>
     <i className={classnames("svg-icon", icon)} />
     <span className='item-text'>
       {name}
     </span>
-  </a>
+  </button>
 )
 
 class MemberManagment extends Component {
@@ -84,38 +84,38 @@ class MemberManagment extends Component {
       <div id='member-managment'>
         <div className='member-managment-first-line'>
           <h5 className='tab-title'>Define default filters</h5>
-          <div className='member-managment-buttons'>
-            <div>
+          <ul className='member-managment-buttons buttons-with-icons-list'>
+            <li>
               <button 
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('role')}
               >
                 <i className='svg-icon task-list-edit-icon' />
-                <span>Role list</span>
+                <span data-title='Role list'>Role list</span>
               </button>
-            </div>
-            <div>
+            </li>
+            <li>
               <button 
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('discipline')}
               >
                 <i className='svg-icon common-file-icon' />
-                <span>Discipline list</span>
+                <span data-title='Discipline list'>Discipline list</span>
               </button>
-            </div>
-            <div>
+            </li>
+            <li>
               <button
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('addMemberModal')}
               >
                 <i className='svg-icon blue-plus-icon' />
-                <span>Add a member</span>
+                <span data-title='Add a member'>Add a member</span>
               </button>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
         <Tabs>
           <div label='Active members'>

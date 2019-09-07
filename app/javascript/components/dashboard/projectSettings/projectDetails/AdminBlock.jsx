@@ -187,6 +187,7 @@ export class AdminBlock extends Component {
 
     return (
       <form
+        noValidate={true} 
         onSubmit={this.props.handleSubmit(this.handleSubmit)}
         className='mb-2'
       >

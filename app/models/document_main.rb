@@ -23,6 +23,8 @@ class DocumentMain < ApplicationRecord
                           association_foreign_key: 'review_issuer_id',
                           validate: false # for tests
 
+  before_create :assign_project_code
+
   def self.documents_available_for(user)
     return all if !all.any?
     if all.first.project.dms_settings.show_all_revisions?(user)
@@ -44,5 +46,11 @@ class DocumentMain < ApplicationRecord
       document = main.revisions.last_revision.last_version
       document if document.can_view?(user)
     end.compact
+  end
+
+  private
+
+  def assign_project_code
+    self.project_code = project.project_code
   end
 end

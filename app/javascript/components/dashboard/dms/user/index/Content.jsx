@@ -1,0 +1,226 @@
+import React, { useCallback, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import classnames from 'classnames'
+import moment from 'moment'
+import { Table } from 'semantic-ui-react'
+import DropDown from '../../../../../elements/DropDown'
+import { columns, DtOptions } from '../../constants'
+import { DropDownItems } from './elements'
+import { downloadList } from '../../../../../actions/documentsActions'
+
+function renderTableHeader() {
+  const checkedDocTypes = []
+  return (
+    <div className='dms-container__table-header'>
+      <span className='mr-4'>Show</span>
+      <DropDown
+        btnName='Documents Types'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          {DtOptions.map(({ key, title }, i) => {
+            const checked = checkedDocTypes.includes(key)
+            const liClass = classnames('dms-topbar-menu__li-item', { checked })
+
+            return (
+              <li key={i} className={liClass}>
+                <input
+                  type='checkbox'
+                  id={`dt_${key}`}
+                  // checked={checked}
+                  // onChange={() => checkItem('checkedDocTypes', checkedDocTypes, key)}
+                />
+                <label htmlFor={`dt_${key}`} />
+                <span htmlFor={`dt_${key}`}>{title}</span>
+              </li>
+            )
+          })}
+          <li className='dms-topbar-menu__li-item'>
+            <span>Variation Orders</span>
+          </li>
+          <li className='dms-topbar-menu__li-item'>
+            <span>Vorem</span>
+          </li>
+        </ul>
+      </DropDown>
+
+      <DropDown
+        btnName='Documents Types'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          <li>
+            <span>Contractor</span>
+          </li>
+        </ul>
+      </DropDown>
+
+      <DropDown
+        btnName='Discipline'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          <li>
+            <span>Contractor</span>
+          </li>
+        </ul>
+      </DropDown>
+
+      <DropDown
+        btnName='Quality Reports'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          <li>
+            <span>Contractor</span>
+          </li>
+        </ul>
+      </DropDown>
+
+      <DropDown
+        btnName='Relevance'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          <li>
+            <span>Contractor</span>
+          </li>
+        </ul>
+      </DropDown>
+
+      <DropDown
+        btnName='Reports'
+        btnClass='dms-topbar-menu__dropdown'
+      >
+        <ul>
+          <li>
+            <span>Contractor</span>
+          </li>
+        </ul>
+      </DropDown>
+    </div>
+  )
+}
+
+export default function Content({ projectId, checkedDocs, checkItem }) {
+  const dispatch = useDispatch()
+  const [formats, changeFormats] = useState([])
+  const documents = useSelector(state => state.documents.allDocuments)
+  const downloadFiles = useCallback(docId => { dispatch(downloadList(projectId, docId, formats)) }, [dispatch, formats])
+
+  const toggleFormats = useCallback((checked, value) => {
+    const index = checked.indexOf(value)
+    if (index > -1) {
+      checked.splice(index, 1)
+    } else {
+      checked.splice(index, 0, value)
+    }
+    const newVal = new Array(...checked)
+    changeFormats(newVal)
+  }, [])
+
+  return (
+    <div>
+      {renderTableHeader()}
+      <Table sortable className='main-table-block'>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell />
+            <Table.HeaderCell className='table-checkbox'>
+              <div>
+                <input
+                  type='checkbox'
+                  id='check_all'
+                />
+                <label htmlFor='check_all' />
+              </div>
+            </Table.HeaderCell>
+            {columns.map(({ title, divider }, i) => (
+              <Table.HeaderCell key={i}>
+                {divider && <span className='divider' />}
+                <span>{title}</span>
+              </Table.HeaderCell>
+            ))}
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {documents.map((doc, i) => (
+            <Table.Row key={i}>
+
+              <Table.Cell>
+                <DropDown
+                  dots={true}
+                  className='dropdown-with-icon'
+                >
+                  <DropDownItems
+                    key='DropDownItems__Content'
+                    id={doc.id}
+                    projectId={projectId}
+                    downloadFiles={() => downloadFiles(doc.id)}
+                    formats={formats}
+                    toggleFormats={v => toggleFormats(formats, v)}
+                  />
+                </DropDown>
+              </Table.Cell>
+
+              <Table.Cell className='table-checkbox'>
+                <div>
+                  <input type='checkbox' id={doc.id} />
+                  <label
+                    htmlFor={doc.id}
+                    onClick={() => checkItem('checkedDocs', checkedDocs, doc.id)}
+                  />
+                </div>
+              </Table.Cell>
+
+              <Table.Cell>
+                {doc.codification_kind}
+              </Table.Cell>
+
+              <Table.Cell>
+                {doc.title || 'Undefined'}
+              </Table.Cell>
+
+              <Table.Cell className='td-files'>
+                <div>
+                  <i className='svg-icon common-file-icon black' />
+                </div>
+              </Table.Cell>
+
+              <Table.Cell className='td-files'>
+                <div>
+                  <i className='svg-icon common-file-color-icon' />
+                </div>
+              </Table.Cell>
+
+              <Table.Cell className='td-files'>
+                <div>
+                  <i className='svg-icon file-pdf-icon' />
+                </div>
+              </Table.Cell>
+
+              <Table.Cell className='td-date'>
+                {moment(doc.created_at).format('MMMM Do YYYY')}
+              </Table.Cell>
+
+              <Table.Cell>
+                {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
+              </Table.Cell>
+
+              <Table.Cell>
+                {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
+              </Table.Cell>
+
+              <Table.Cell>
+                {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+      <div className='d-flex'>
+        <span className='ml-auto'>{documents.length} total documents</span>
+      </div>
+    </div>
+  )
+}

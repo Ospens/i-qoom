@@ -28,7 +28,7 @@ class ActiveMembers extends Component {
           </DropDown>
         </div>
         <div>
-          <MemberTable {...this.props} />
+          <MemberTable {...this.props} type='activeMemebers'/>
         </div>
       </React.Fragment>
     )

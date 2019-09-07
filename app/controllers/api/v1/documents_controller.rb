@@ -14,7 +14,14 @@ class Api::V1::DocumentsController < ApplicationController
 
   load_resource :document, through: :project, only: [ :new, :create ]
   before_action :check_convention
-  authorize_resource :document
+  authorize_resource :document, except: [ :index,
+                                          :download_native_files,
+                                          :download_list,
+                                          :my_documents ]
+  before_action :authorize_collection_actions, only: [ :index,
+                                                       :download_native_files,
+                                                       :download_list,
+                                                       :my_documents ]
 
   def new
     convention = @project.conventions.active
@@ -202,6 +209,10 @@ class Api::V1::DocumentsController < ApplicationController
 
   def dms_is_unavailable
     render json: { message: 'DMS is not available yet' }, status: :unprocessable_entity
+  end
+
+  def authorize_collection_actions
+    authorize! :collection_actions, Document.new, @project
   end
 
   def document_params(assign_attrs = false)

@@ -29,7 +29,7 @@ class DocFieldsElement extends Component {
     return (
       <button
         type='button'
-        className='btn edit-button'
+        className='edit-button'
         onClick={() => {
           initModal({ ...value, row, new_section: '' })
           openInputForm()
@@ -86,6 +86,7 @@ class DocFieldsElement extends Component {
           id={uniqName}
           placeholder={field.command}
           readOnly={true}
+          disabled
         />
       )
     } else {
@@ -95,6 +96,7 @@ class DocFieldsElement extends Component {
           id={uniqName}
           placeholder={field.command}
           readOnly={true}
+          disabled
           type='text'
         />
       )
@@ -156,7 +158,7 @@ class DocFieldsElement extends Component {
               <div className='d-flex'>
                 <DropDown
                   dots={true}
-                  className='dropdown-with-icon form-group_drop-down'
+                  className='dropdown-with-icon mr-2'
                 >
                   {actionConventions(index).map(({ icon, title, offset }, i) => {
                     return (

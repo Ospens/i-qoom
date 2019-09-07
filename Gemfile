@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.3'
+ruby '2.6.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.2'
@@ -77,6 +77,8 @@ group :development do
   gem "capistrano-rails", "~> 1.4", require: false
   gem 'capistrano-webpacker-precompile', require: false
   gem 'capistrano3-puma', require: false
+
+  gem 'guard-rspec', require: false
 end
 
 group :test do

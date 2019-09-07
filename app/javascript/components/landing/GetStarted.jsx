@@ -32,14 +32,15 @@ class GetStarted extends Component {
 
     return (
       <form
+        noValidate={true} 
         className='contact-us-form'
         onSubmit={handleSubmit(this.handleSubmit)}
       >
         <div className='form-row'>
-          <div className='col-md-6'>
+          <div className='col left-column'>
             <Field
               component={InputField}
-              className='form-group'
+              className='form-group email'
               name='email'
               id='email'
               validate={[email, required]}
@@ -48,7 +49,7 @@ class GetStarted extends Component {
             />
             <Field
               component={InputField}
-              className='form-group'
+              className='form-group phone'
               name='phone_number'
               id='phone'
               validate={[required]}
@@ -63,12 +64,12 @@ class GetStarted extends Component {
             rows='3'
             validate={[minLength(15), required]}
             placeholder='Text'
-            className='form-group col-md-6'
+            className='form-group col textarea-column'
             label='Enter your Text'
           />
         </div>
         <div className='text-center'>
-          <button className='col-4 btn btn-primary mx-auto' type='submit'>
+          <button className='col-2 btn btn-primary mx-auto' type='submit'>
             Send
           </button>
         </div>
@@ -82,12 +83,14 @@ class GetStarted extends Component {
         <div className='text-center'>Your contact request has been sent!</div>
         <div className='pictures-container'>
           <ReactSVG
-            src={lines}
-            svgClassName='svg-line'
-          />
-          <ReactSVG
             src={plan}
             svgClassName='svg-plan'
+            className='svg-container'
+          />
+          <ReactSVG
+            src={lines}
+            svgClassName='svg-line'
+            className='svg-container'
           />
         </div>
       </div>
@@ -110,7 +113,7 @@ class GetStarted extends Component {
             ) : (
               <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5'/>
             )*/}
-          <div dangerouslySetInnerHTML={{ __html: title }} className='mb-5' />
+          <div dangerouslySetInnerHTML={{ __html: title }} className='get-started-card__title' />
           <div className={containerClass}>
             {this.renderSuccessMsg()}
             {this.renderContactForm()}

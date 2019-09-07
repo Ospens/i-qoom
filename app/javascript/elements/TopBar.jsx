@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import classnames from 'classnames'
 import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
-import logoPurple from '../images/i-Qoom_Brand_Logo_Gradient'
 import { signOutUser } from '../actions/userActions'
 
 class TopBar extends Component {
@@ -26,17 +25,17 @@ class TopBar extends Component {
     return (
       <ul className={ulClass}>
         <li className='nav-item'>
-          <button type='button' className='btn logout' onClick={signOutUser}>
+          <button type='button' className='logout' onClick={signOutUser}>
             Logout
           </button>
         </li>
         <li className='nav-item nav-item-icon'>
-          <button type='button' className='btn'>
+          <button type='button'>
             <i className='svg-icon email-unread-icon gray' />
           </button>
         </li>
         <li className='nav-item nav-item-icon'>
-          <button type='button' className='btn'>
+          <button type='button'>
             <i className='svg-icon alarm-bell-icon gray' />
           </button>
         </li>
@@ -109,10 +108,10 @@ class TopBar extends Component {
       {!isOpen &&
       <div className='navbar-burger-block'>
         <h2>
-          <i className='svg-icon black burger-menu-icon-2 mr-2' onClick={toggle} />
+          <i className='svg-icon black burger-menu-icon-2 mr-5' onClick={toggle} />
         </h2>
       </div>}
-      <h2>{this.props.header}</h2>
+      {this.props.header}
       {this.renderUserOptions()}
     </div>
   )

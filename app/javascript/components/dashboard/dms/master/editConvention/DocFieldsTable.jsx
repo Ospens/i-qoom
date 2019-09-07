@@ -159,7 +159,7 @@ class DocFieldsTable extends Component {
               <li className='col-3'>
                 <button>Operation</button>
               </li>
-              <button className='btn edit-button'>
+              <button className='edit-button'>
                 Edit
               </button>
             </ul>
@@ -168,10 +168,11 @@ class DocFieldsTable extends Component {
         {this.renderModalCreateField()}
         <DragDropContext onDragEnd={this.onDragEnd}>
           <form
+            noValidate={true} 
             className='form-body'
             onSubmit={handleSubmit(this.handleSubmit)}
           >
-            <div className='p-4'>
+            <div>
               <div className='row'>
                 <div className='col-6'>
                   {this.renderDocIdFields()}

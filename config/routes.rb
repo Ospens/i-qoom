@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         end
         member do
           post :invite
+          post :update_project_code
         end
         resource :conventions, only: [:edit, :update] do
           patch :update_field_titles

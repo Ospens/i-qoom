@@ -213,7 +213,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
   padding: 0.92857143em 0.78571429em;
   vertical-align: inherit;
   font-style: none;
-  font-weight: bold;
+  font-weight: 700;
   text-transform: none;
   border-bottom: 1px solid rgba(34, 36, 38, 0.1);
   border-left: none;
@@ -221,11 +221,6 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
 
 .ui.table thead tr > th:first-child {
   border-left: none;
-}
-
-.ui.table thead tr:first-child > th:first-child {
-  border-radius: 0.28571429rem 0em 0em 0em;
-  padding-left: 16.8px !important;
 }
 
 .ui.table thead tr:first-child > th:last-child {
@@ -364,7 +359,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
 
   .ui.table:not(.unstackable) th:first-child,
   .ui.table:not(.unstackable) td:first-child {
-    font-weight: bold;
+    font-weight: 700;
   }
 
   /* Definition Table */
@@ -460,7 +455,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
 .ui.definition.table tr td:first-child:not(.ignored),
 .ui.definition.table tr td.definition {
   background: rgba(0, 0, 0, 0.03);
-  font-weight: bold;
+  font-weight: 700;
   color: rgba(0, 0, 0, 0.95);
   text-transform: '';
   -webkit-box-shadow: '';
@@ -1789,7 +1784,7 @@ body.dimmable > .dimmer {
 .ui.modal > .header:not(.ui) {
   font-size: 1.42857143rem;
   line-height: 1.28571429em;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 /*--------------
@@ -2417,7 +2412,7 @@ body.dimmable > .dimmer {
   padding: 0em;
   font-size: 1.14285714em;
   line-height: 1.2;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .ui.popup > .header + .content {
