@@ -11,8 +11,11 @@ class User < ApplicationRecord
   validates_presence_of :password_confirmation,
     on: [:create, :password_changed?]
 
-  validates_presence_of :first_name,
-                        :last_name
+  validates :first_name,
+            :last_name,
+            presence: true,
+            length: { minimum: 2,
+                      maximum: 255 }
 
   validates :accept_terms_and_conditions,
     acceptance: true,
@@ -23,7 +26,7 @@ class User < ApplicationRecord
 
   validates :username,
             format: { with: /^[a-zA-Z0-9_\.\-]*$/,
-                     multiline: true },
+                      multiline: true },
             presence: true,
             length: { maximum: 18 },
             uniqueness: true

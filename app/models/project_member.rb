@@ -18,6 +18,8 @@ class ProjectMember < ApplicationRecord
                        :joint_venture_company ],
                       _prefix: true
 
+  attr_accessor :creator
+
   after_save :update_creation_step_to_pending,
              unless: -> { creation_step_active? ||
                           creation_step_pending? }
@@ -38,37 +40,42 @@ class ProjectMember < ApplicationRecord
              required: false,
              inverse_of: :project_member
 
-  validates :job_title,
-            length: { maximum: 255 }
-
   belongs_to :discipline, required: false
   belongs_to :role, required: false
 
   accepts_nested_attributes_for :company_address,
                                 update_only: true
 
+  validates :job_title,
+            length: { maximum: 255 }
+
   # employment_type first step
   validates :employment_type,
-            presence: true
+            presence: true,
+            unless: :creator?
 
   # company_type second step
   validates :company_type,
             presence: true,
             unless: -> { creation_step.nil? ||
-                         creation_step_employment_type? }
+                         creation_step_employment_type? ||
+                         creator? }
 
   # company_data third step
   validates :company_address,
             presence: true,
             if: -> {
-              creation_step_company_data? ||
+              (creation_step_company_data? ||
               creation_step_details? ||
-              creation_step_pending?
+              creation_step_pending? ||
+              creation_step_active?) &&
+              !creator?
             }
   # details fourth step
   with_options if: -> {
                  creation_step_details? ||
-                 creation_step_pending?
+                 creation_step_pending? ||
+                 creation_step_active?
                } do
     validates :email,
               email: true,
@@ -89,6 +96,10 @@ class ProjectMember < ApplicationRecord
 
   def confirmation_token
     ::JsonWebToken.encode(member_id: id, email: email)
+  end
+
+  def creator?
+    creator == true || project.try(:user) == user
   end
 
   private
