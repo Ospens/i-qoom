@@ -147,7 +147,6 @@ class MemberTable extends Component {
   render() {
     const { column, direction } = this.state
     const { members, roleOptions, discOptions } = this.props
-    console.log(members)
 
     return (
       <div className='table-block'>

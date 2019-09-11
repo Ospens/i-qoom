@@ -77,7 +77,7 @@ export const colourStyles = errorInfo => {
       borderColor,
       borderWidth: '1px',
       boxShadow,
-      borderRadius: state.menuIsOpen ? '7px 7px 0 0' : '7px',
+      borderRadius: state.menuIsOpen ? '5px 5px 0 0' : '5px',
       zIndex: '4',
       minHeight: '45px',
       backgroundColor: state.isDisabled ? '#f5f9fa' : state.selectProps.value && state.selectProps.value.length > 0 ? '#fff' : '#FCFFFF'
@@ -87,12 +87,12 @@ export const colourStyles = errorInfo => {
       marginTop: '0',
       boxShadow: 'none',
       border: '1px solid #E9F3F5',
-      borderRadius: '0 0 7px 7px',
+      borderRadius: '0 0 5px 5px',
       zIndex: '5'
     }),
     menuList: styles => ({
       ...styles,
-      borderRadius: '7px',
+      borderRadius: '5px',
       borderTopLeftRadius: '0',
       borderTopRightRadius: '0',
     }),

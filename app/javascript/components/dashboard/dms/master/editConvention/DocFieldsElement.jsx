@@ -155,7 +155,7 @@ class DocFieldsElement extends Component {
             ref={provided.innerRef}
           >
             <div className='form-group'>
-              <div className='d-flex'>
+              <div className='form-group__title'>
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon mr-2'

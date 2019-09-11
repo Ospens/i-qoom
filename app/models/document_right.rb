@@ -34,14 +34,12 @@ class DocumentRight < ApplicationRecord
     users =
       only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
     attrs = {
-      fields: [], # used just for info
+      fields: {}, # used just for info
       users: []
     }
     fields.each do |field|
       values = DocumentFieldValue.where(document_field: field).as_json(only: [:id, :value])
-      attrs[:fields] << {
-        field.codification_kind => { id: field.id, values: values }
-      }
+      attrs[:fields][field.codification_kind] = { id: field.id, values: values }
     end
     users.each do |user|
       rights_attrs = []
@@ -58,7 +56,12 @@ class DocumentRight < ApplicationRecord
                                                  'view_only')
         end
       end
-      attrs[:users] << { id: user.id, document_rights: rights_attrs }
+      attrs[:users] << {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        document_rights: rights_attrs
+      }
     end
     attrs
   end

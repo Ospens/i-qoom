@@ -1,87 +1,44 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Field } from 'redux-form'
 import DropDown from '../../../../../elements/DropDown'
-
-const disciplineList = [
-  {
-    label: 'FOU',
-    enable: true,
-    view_only: true
-  },
-  {
-    label: 'HSE',
-    enable: true,
-    view_only: true
-  },
-  {
-    label: 'LOG',
-    enable: true,
-    view_only: false
-  },
-  {
-    label: 'SAA',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'SOO',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'TTT',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'XXX',
-    enable: false,
-    view_only: false
-  },
-  {
-    label: 'YYY',
-    enable: false,
-    view_only: false
-  },
-]
+import CheckField from '../../../../../elements/CheckField'
 
 
-const renderDropDownItems = ({ label, enable, view_only }, index) => {
+function DropDownRow({ index, valueTitle, memberId }) {
   return (
-    <div className='acceess-rights__drop-down-row' key={index}>
+    <div className='acceess-rights__drop-down-row'>
       <div className='col-4'>
-        <label>{label}</label>
+        <span>{valueTitle}</span>
       </div>
       <div className='col-4'>
-        <div className='d-flex'>
-          <input
-            type='checkbox'
-            id={`enable_${index}`}
-            checked={enable}
-            onChange={() => toogleUsersRights()}
-          />
-          <label htmlFor={`enable_${index}`} />
-        </div>
+        <Field
+          component={CheckField}
+          id={`document_rights[${index}].enabled${memberId}`}
+          name={`document_rights[${index}].enabled`}
+          className='form-group'
+        />
       </div>
       <div className='col-4'>
-        <div className='d-flex'>
-          <input
-            type='checkbox'
-            id={`view_${index}`}
-            checked={view_only}
-            onChange={() => toogleUsersRights()}
-          />
-          <label htmlFor={`view_${index}`} />
-        </div>
+        <Field
+          component={CheckField}
+          id={`document_rights[${index}].view_only${memberId}`}
+          name={`document_rights[${index}].view_only`}
+          className='form-group'
+        />
       </div>
     </div>
   )
 }
 
-const rightsDropDown = (btnTitle, columnTitle, values) => {
+function RightsDropDown({ memberId, columnTitle, values, rights }) {
+  const allOptions = rights.filter(r => r.document_field_id === values.id) || []
+  const activeOption = allOptions.filter(o => o.enabled) || []
+  const title = values.values.filter(v => activeOption.map(ao => ao.document_field_value_id).includes(v.id)).map(el => el.value)
+
   return (
     <DropDown
       className='dropdown-with-switch'
-      btnName={btnTitle}
+      btnName={title.join(', ')}
       btnClass='btn btn-for-switch'
     >
       <div className='acceess-rights__drop-down'>
@@ -90,19 +47,29 @@ const rightsDropDown = (btnTitle, columnTitle, values) => {
             <label>{columnTitle}</label>
           </div>
           <div className='col-4'>
-            <label>Enable</label>
+            <label>Enabled</label>
           </div>
           <div className='col-4'>
-            <label>Disable</label>
+            <label>View only</label>
           </div>
         </div>
-        {/* TODO: There should be user.doucment_rights_attributes[0].document_field_value_ids.map((... */}
-        {disciplineList.map((element, index) => (
-          renderDropDownItems(element, index)
-        ))}
+        {values &&
+        values.values.map(({ value, id }, index) => {
+          const currentRightIndex = rights.findIndex(r => r.document_field_id === values.id && r.document_field_value_id === id)
+          if (currentRightIndex < 0) return
+
+          return (
+            <DropDownRow
+              key={index}
+              memberId={memberId}
+              rowId={values.id}
+              index={currentRightIndex}
+              valueTitle={value}
+            />
+        )})}
       </div>
     </DropDown>
   )
 }
 
-export default rightsDropDown
+export default RightsDropDown

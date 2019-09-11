@@ -54,6 +54,8 @@ a {
 }
 
 .form-group {
+  border-radius: 5px;
+
   label {
     font-size: 15px;
     margin-bottom: 16px;
@@ -73,7 +75,9 @@ a {
 .form-control:not(.checkbox-input) {
   background-color: #FCFFFF;
   max-height: 45px;
+  height  : 45px;
   border-color: #E9F3F5;
+  border-radius: 5px;
   min-height: 45px;
   font-size: 17px;
 
@@ -89,22 +93,32 @@ a {
   &::-webkit-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
+    font-weight: 400;
+    box-shadow: none;
   }
   &::-moz-placeholder  {
     color: #B2CED1;
     font-size: 17px;
+    font-weight: 400;
+    box-shadow: none;
   }
   &:-moz-placeholder {
     color: #B2CED1;
     font-size: 17px;
+    font-weight: 400;
+    box-shadow: none;
   }
   &:-ms-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
+    font-weight: 400;
+    box-shadow: none;
   }
   &::placeholder {
     color: #B2CED1;
     font-size: 17px;
+    font-weight: 400;
+    box-shadow: none;
   }
 
   &:disabled {
@@ -792,6 +806,10 @@ header {
     margin-left: 80px;
     margin-right: 80px;
 
+    .card {
+      border-radius: 5px;
+    }
+    
     .card-body {
       padding-left: 5px; 
       padding-right: 5px; 
@@ -982,6 +1000,7 @@ header {
       min-height: 400px;
       margin: 0;
       border-color: #E9F3F5;
+      border-radius: 5px;
     }
 
     .nextBtn {
@@ -1183,6 +1202,7 @@ header {
 
   textarea {
     min-height: 185px;
+    border-radius: 7px;
 
     &::placeholder,
     &::-webkit-input-placeholder,
@@ -1194,7 +1214,10 @@ header {
 
   input.form-control {
     min-height: 55px;
+    max-height: 55px;
+    height: 55px;
     font-size: 17px;
+    border-radius: 7px;
 
     &::placeholder {
       color: #c8d8d9;
