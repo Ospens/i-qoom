@@ -35,6 +35,8 @@ class Project < ApplicationRecord
 
   has_many :dms_settings
 
+  has_many :document_review_owners
+
   accepts_nested_attributes_for :dms_settings
 
   has_many :admins, class_name: "ProjectAdministrator"

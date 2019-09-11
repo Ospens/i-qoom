@@ -36,6 +36,8 @@ Rails.application.routes.draw do
         get :download_file, on: :member
       end
 
+      resource :document_review_owner, only: :update
+
       resources :document_revisions, only: [] do
         resources :document_review_subjects, only: :index
       end
@@ -91,6 +93,7 @@ Rails.application.routes.draw do
         resources :document_folders, only: :index do
           get :user_index, on: :collection
         end
+        resources :document_review_owners, only: :index
       end
     end
   end

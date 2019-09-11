@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_113754) do
+ActiveRecord::Schema.define(version: 2019_09_10_061408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,16 @@ ActiveRecord::Schema.define(version: 2019_09_03_113754) do
     t.datetime "updated_at", null: false
     t.index ["document_review_subject_id"], name: "index_document_review_comments_on_document_review_subject_id"
     t.index ["user_id"], name: "index_document_review_comments_on_user_id"
+  end
+
+  create_table "document_review_owners", force: :cascade do |t|
+    t.bigint "project_id"
+    t.bigint "user_id"
+    t.string "originating_company"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_document_review_owners_on_project_id"
+    t.index ["user_id"], name: "index_document_review_owners_on_user_id"
   end
 
   create_table "document_review_subjects", force: :cascade do |t|
@@ -299,6 +309,8 @@ ActiveRecord::Schema.define(version: 2019_09_03_113754) do
   add_foreign_key "document_mains", "projects"
   add_foreign_key "document_review_comments", "document_review_subjects"
   add_foreign_key "document_review_comments", "users"
+  add_foreign_key "document_review_owners", "projects"
+  add_foreign_key "document_review_owners", "users"
   add_foreign_key "document_review_subjects", "document_revisions"
   add_foreign_key "document_review_subjects", "users"
   add_foreign_key "document_review_subjects", "users", column: "review_issuer_id"

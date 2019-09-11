@@ -101,6 +101,13 @@ class Ability
         comment.document_review_subject.document_revision.last_version.can_view?(user)
       end
       can :update, DocumentReviewComment, user_id: user.id
+      # DocumentReviewOwner
+      can :index, DocumentReviewOwner do |owner, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
+      can :update, DocumentReviewOwner do |owner|
+        owner.project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
       # DocumentRevision
       can [:show], DocumentRevision do |revision|
         revision.last_version.can_view?(user)
