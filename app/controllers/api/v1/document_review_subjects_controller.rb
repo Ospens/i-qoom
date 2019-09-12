@@ -40,7 +40,6 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
     params.require(:document_review_subject)
           .permit(:title,
                   :document_reference,
-                  :status,
                   :review_issuer_id,
                   :comment,
                   reviewer_ids: [])

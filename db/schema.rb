@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_061408) do
   end
 
   create_table "document_review_subjects", force: :cascade do |t|
-    t.integer "status"
+    t.integer "status", default: 0
     t.string "title"
     t.string "document_reference"
     t.bigint "document_revision_id"
