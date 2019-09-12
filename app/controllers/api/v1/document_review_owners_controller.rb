@@ -17,8 +17,8 @@ class Api::V1::DocumentReviewOwnersController < ApplicationController
     authorize! :index, DocumentReviewOwner.new, @project
     user_ids =
       @project.members.where(dms_module_access: true).pluck(:user_id).compact
-    users = User.where(id: user_ids)
-    render json: users.to_json(include: :document_review_owner)
+    @users = User.where(id: user_ids)
+    render formats: :json
   end
 
   private

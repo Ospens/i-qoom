@@ -40,7 +40,7 @@ class User < ApplicationRecord
   has_many :document_folders
   has_many :document_review_subjects
   has_many :document_review_comments
-  has_one :document_review_owner
+  has_many :document_review_owners
 
   def confirmed?
     confirmed_at.present?

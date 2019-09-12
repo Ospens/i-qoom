@@ -89,8 +89,8 @@ describe DocumentReviewOwner, type: :request do
     end
 
     it 'project user' do
-      project.user.create_document_review_owner(project: project,
-                                                originating_company: 'AAA')
+      project.user.document_review_owners.create(project: project,
+                                                 originating_company: 'AAA')
       get "/api/v1/projects/#{project.id}/document_review_owners",
         headers: credentials(project.user)
       expect(response).to have_http_status(:success)
