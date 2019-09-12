@@ -51,7 +51,7 @@ function MembersTable({ type, match: { params: { project_id } } }) {
   const members = useSelector(state => state.accessRights[type])
   const [checkedMembers, changeChecked] = useState([])
   const fields = useSelector(state => state.accessRights.fields)
-  useEffect(() => { 
+  useEffect(() => {
     changeChecked([])
     if (type === 'newMembers') {
       dispatch(getGrantAccessMembers(project_id))

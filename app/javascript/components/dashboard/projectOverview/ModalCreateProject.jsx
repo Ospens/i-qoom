@@ -47,16 +47,11 @@ class ModalCreateProject extends Component {
     .then(() => this.setState({ step: 5 }))
   }
 
-  afterCreate = values => {
+  afterUpdate = (values, changeStep = 1) => {
     const { initialize } = this.props
+    const { step } = this.state
     initialize(values)
-    this.setState({ step: 5 })
-  }
-
-  afterUpdate = (values, step) => {
-    const { initialize } = this.props
-    initialize(values)
-    this.setState({ step })
+    this.setState({ step: step + changeStep })
   }
 
   handleSubmit = values => {
@@ -67,19 +62,14 @@ class ModalCreateProject extends Component {
       sameBillingAddress,
       projectId
     } = this.props
-    if (step < 4) {
-      this.changeStep(1)
-    } else if (step < 5 && !projectId) {
-      return startCreateProject(values, (val) => this.afterCreate(val))
-    } else if (sameBillingAddress && step === 5) {
-      return updateProject(values, (val) => this.afterUpdate(val, 7))
-    } else if (!sameBillingAddress && step === 5) {
-      delete values.company_data.billing_address
-      return updateProject(values, (val) => this.afterUpdate(val, 6))
-    } else if (step === 6) {
-      return updateProject(values, (val) => this.afterUpdate(val, 7))
-    } else {
-      return updateProject(values, (val) => this.afterCreate(val, step + 1))
+    
+    if (step > 1 && !projectId) {
+      return startCreateProject(values, (val) => this.afterUpdate(val))
+    } else if (step > 1 && projectId && sameBillingAddress) {
+      return updateProject(values, (val) => this.afterUpdate(val, 2))
+    } else if (step > 1 && projectId) {
+      if (values.company_data && values.company_data.billing_address) delete values.company_data.billing_address
+      return updateProject(values, (val) => this.afterUpdate(val))
     }
   }
 

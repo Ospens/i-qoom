@@ -33,7 +33,7 @@ function SecondAdmin(props) {
           ? <React.Fragment>
               <h6 className='new-modal__body-title'>Who is the new project administrator?</h6>
               <label className='project-admin'>Project second administrator</label>
-              <AdministratorFields admin='admins[1]' />
+              <AdministratorFields admin='admins[2]' />
             </React.Fragment>
           : <React.Fragment>
               <h6 className='new-modal__body-title'>

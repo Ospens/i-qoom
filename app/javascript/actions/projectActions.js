@@ -56,6 +56,13 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
   let formData = new FormData()
   // TODO: change this
   delete values.logo
+  if (values.billing_address) {
+    values.creation_step = 'billing_address'
+  } else if (values.company_data) {
+    values.creation_step = 'company_data'
+  } else if (values.name) {
+    values.creation_step = 'name'
+  }
 
   const formValues = {
     project: { ...values }

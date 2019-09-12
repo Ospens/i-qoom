@@ -6,11 +6,6 @@ import DropDown from '../../../../elements/DropDown'
 import { SelectComponent } from '../../../../elements/SelectField'
 import { startUpdateProjectMember } from '../../../../actions/projectMembersActions'
 
-const tableData = [
-  { name: 'Anna Danielson', member_id: 'ArandomnameTest12dsf345', employment: 2, access: { DMS: true } },
-  { name: 'Anna Danielsson', member_id: 'ArandomnameTest12345', employment: 1, access: { DMS: true } }
-]
-
 const columns = [
   { title: 'Person', divider: false },
   { title: 'Member-ID', divider: true },
@@ -30,7 +25,6 @@ class MemberTable extends Component {
 
   state = {
     column: null,
-    data: tableData,
     direction: null,
     accesses: []
   }
