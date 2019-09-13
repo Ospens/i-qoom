@@ -2,10 +2,10 @@ import React from 'react'
 import { FormSection } from 'redux-form'
 import AddressFields from '../../../elements/forms/AddressFields'
 
-const renderSubmitButtons = ({ closeModal, changeStep }) => {
+const renderSubmitButtons = ({ closeModal, backStep }) => {
   return (
     <div className='new-modal__footer'>
-      <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
+      <button type='button' className='btn btn-back' onClick={() => backStep('company_data.billing_address')}>
         <i className='svg-icon arrow-left-icon' />
         Back
       </button>

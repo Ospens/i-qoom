@@ -216,6 +216,12 @@ class TeamsAccessRights extends Component {
     return (
       <DMSLayout
         sidebar={<DmsSideBar />}
+        content={<div>Not available yet.</div>}
+      />
+    )
+    return (
+      <DMSLayout
+        sidebar={<DmsSideBar />}
         content={this.renderContent()}
       />
     )
@@ -224,8 +230,8 @@ class TeamsAccessRights extends Component {
 
 const mapStateToProps = ({ accessRights }) => ({
   // TODO: change it for teams
-  newTeams: accessRights.newMembers.users,
-  oldTeams: accessRights.oldMembers.users
+  newTeams: accessRights.newMembers,
+  oldTeams: accessRights.oldMembers
 })
 
 const mapDispatchToProps = dispatch => ({

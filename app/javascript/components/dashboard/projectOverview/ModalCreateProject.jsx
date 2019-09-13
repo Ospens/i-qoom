@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import classnames from 'classnames'
-import { destroy, reduxForm, formValueSelector, FormSection } from 'redux-form'
+import { destroy, reduxForm, formValueSelector, FormSection, getFormSubmitErrors } from 'redux-form'
 import NewModal from '../../../elements/Modal'
 import Terms from './Terms'
 import {
@@ -41,45 +41,41 @@ class ModalCreateProject extends Component {
     this.setState({ step: step + increase })
   }
 
+  backStep = sectionName => {
+    const { step } = this.state
+    const { change } = this.props
+    change(sectionName, null)
+
+    this.setState({ step: step - 1 })
+  }
+
   submitChanges = () => {
     const { startCreateProject } = this.props
     startCreateProject()
     .then(() => this.setState({ step: 5 }))
   }
 
-  afterCreate = values => {
+  afterUpdate = (values, changeStep = 1) => {
     const { initialize } = this.props
+    const { step } = this.state
     initialize(values)
-    this.setState({ step: 5 })
-  }
-
-  afterUpdate = (values, step) => {
-    const { initialize } = this.props
-    initialize(values)
-    this.setState({ step })
+    this.setState({ step: step + changeStep })
   }
 
   handleSubmit = values => {
-    const { step } = this.state
     const {
       startCreateProject,
       updateProject,
       sameBillingAddress,
       projectId
     } = this.props
-    if (step < 4) {
-      this.changeStep(1)
-    } else if (step < 5 && !projectId) {
-      return startCreateProject(values, (val) => this.afterCreate(val))
-    } else if (sameBillingAddress && step === 5) {
-      return updateProject(values, (val) => this.afterUpdate(val, 7))
-    } else if (!sameBillingAddress && step === 5) {
-      delete values.company_data.billing_address
-      return updateProject(values, (val) => this.afterUpdate(val, 6))
-    } else if (step === 6) {
-      return updateProject(values, (val) => this.afterUpdate(val, 7))
+    
+    if (!projectId) {
+      return startCreateProject(values, (val) => this.afterUpdate(val))
+    } else if (projectId && sameBillingAddress) {
+      return updateProject(values, (val) => this.afterUpdate(val, 2))
     } else {
-      return updateProject(values, (val) => this.afterCreate(val, step + 1))
+      return updateProject(values, (val) => this.afterUpdate(val))
     }
   }
 
@@ -87,13 +83,17 @@ class ModalCreateProject extends Component {
     <FirstAdmin
       closeModal={this.handleClose}
       nextStep={() => this.changeStep(1)}
+      projectId={this.props.projectId}
+      submitErrors={this.props.submitErrors}
     />
   )
 
   renderModalSecondAdmin = () => (
     <SecondAdmin
       closeModal={this.handleClose}
-      changeStep={(val) => this.changeStep(val)}
+      adminsLength={this.props.admins.length}
+      backStep={val => this.backStep(val)}
+      submitErrors={this.props.submitErrors}
     />
   )
 
@@ -118,20 +118,20 @@ class ModalCreateProject extends Component {
         {step === 4 &&
         <ProjectName
           closeModal={this.handleClose}
-          changeStep={(val) => this.changeStep(val)}
+          backStep={val => this.backStep(val)}
         />}
         {step === 5 &&
         <FormSection name='company_data'>
           <CompanyData
             closeModal={this.handleClose}
-            changeStep={(val) => this.changeStep(val)}
+            backStep={val => this.backStep(val)}
           />
         </FormSection>}
         {step === 6 &&
         <FormSection name='company_data'>
           <BillingAddress
             closeModal={this.handleClose}
-            changeStep={(val) => this.changeStep(val)}
+            backStep={val => this.backStep(val)}
           />
         </FormSection>}
         {step === 7 &&
@@ -168,7 +168,9 @@ class ModalCreateProject extends Component {
 const selector = formValueSelector('project_form')
 
 const mapStateToProps = state => ({
+  submitErrors: getFormSubmitErrors('project_form')(state),
   projectId: selector(state, 'id'),
+  admins: selector(state, 'admins'),
   terms: selector(state, 'terms'),
   sameBillingAddress: selector(state, 'company_data.same_for_billing_address')
 })

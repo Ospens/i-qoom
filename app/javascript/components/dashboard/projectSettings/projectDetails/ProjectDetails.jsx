@@ -1,16 +1,17 @@
 import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import CompanyBlock from './CompanyBlock'
 import AdminBlock from './AdminBlock'
 import NewAdmin from './NewAdmin'
 import { starUpdateAdmin } from '../../../../actions/projectActions'
 
-function ProjectDetails({ id }) {
+function ProjectDetails({ match: { params: { project_id } } }) {
   const admins = useSelector(state => state.projects.current.admins)
   const dispatch = useDispatch()
 
   const updateAdmin = useCallback(values =>
-    dispatch(starUpdateAdmin(id, values))
+    dispatch(starUpdateAdmin(project_id, values))
     [dispatch])
 
   return (
@@ -26,7 +27,7 @@ function ProjectDetails({ id }) {
               admin={admin}
               initialValues={admin}
               form={`admin_form_${i}`}
-              projectId={id}
+              projectId={project_id}
               updateAdmin={updateAdmin}
             />
           ))}
@@ -34,7 +35,7 @@ function ProjectDetails({ id }) {
             index={admins.length + 1}
             form={`admin_form_${admins.length + 1}`}
             updateAdmin={updateAdmin}
-            projectId={id}
+            projectId={project_id}
           />
         </div>
       </div>
@@ -42,4 +43,4 @@ function ProjectDetails({ id }) {
   )
 }
 
-export default ProjectDetails
+export default withRouter(ProjectDetails)

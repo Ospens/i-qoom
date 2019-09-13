@@ -89,7 +89,8 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
 
   const request = {
     project_member: {
-      ...values
+      ...values,
+      creation_step: 'details'
     }
   }
   return (

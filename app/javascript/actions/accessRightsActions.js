@@ -3,7 +3,7 @@ import {
   GET_NEW_MEMBERS_LIST,
   GET_CURRENT_MEMBERS_LIST
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 
 const newMembersFetched = payload => ({
   type: GET_NEW_MEMBERS_LIST,
@@ -45,21 +45,21 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
   )
 }
 
-export const startUpdateAccessMembers = (newUsers, removeUsers) => (dispatch, getState) => {
-  const {
-    user: { token },
-    projects: { current }
-    // accessRights: { newMembers }
-  } = getState()
+export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, getState) => {
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-  // let users = newMembers.filter(member => newUsers.includes(member.id))
-  // users = users.map(user => user.enabled === true)
-  const request = { newUsers, removeUsers }
+
+  const request = { users: [values] }
 
   return (
-    axios.put(`/api/v1/projects/${current.id}/document_rights/`, request, headers)
-      .then(response => {
-        dispatch(currentMembersFetched(response.data))
+    axios.put(`/api/v1/projects/${projectId}/document_rights/`, request, headers)
+      .then(() => {
+        if (type === 'newMembers') {
+          dispatch(getGrantAccessMembers(projectId))
+        } else if (type === 'oldMembers') {
+          dispatch(getGrandedAccessMembers(projectId))
+        }
+        successNotify('Rights succcessfully updated')
       })
       .catch(() => {
         errorNotify('Something went wrong')
