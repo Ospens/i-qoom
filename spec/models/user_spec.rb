@@ -9,6 +9,15 @@ describe User, type: :model do
    :password].each do |value|
     it { is_expected.to validate_presence_of(value) }
   end
+
+  it { is_expected.to validate_length_of(:first_name)
+                        .is_at_least(2)
+                        .is_at_most(255) }
+
+  it { is_expected.to validate_length_of(:last_name)
+                        .is_at_least(2)
+                        .is_at_most(255) }
+
   it { is_expected.to validate_presence_of(:password_confirmation).on(:create) }
   it { is_expected.to validate_presence_of(:password_confirmation).on(:password_changed?) }
   it { is_expected.not_to validate_presence_of(:password_confirmation).on(:update) }

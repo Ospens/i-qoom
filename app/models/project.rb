@@ -8,7 +8,7 @@ class Project < ApplicationRecord
 
   attr_accessor :admins_inviter_id
 
-  before_create :add_creator_as_admin
+  before_create :add_creator_as_admin_and_member
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
@@ -37,7 +37,7 @@ class Project < ApplicationRecord
 
   accepts_nested_attributes_for :dms_settings
 
-  has_many :admins, class_name: "ProjectAdministrator"
+  has_many :admins, class_name: "ProjectAdministrator", index_errors: true
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
   has_many :disciplines
@@ -53,7 +53,7 @@ class Project < ApplicationRecord
     unless: -> { creation_step_admins? || creation_step_name? }
 
   def invite_members(ids, inviter_id)
-    members = self.members.where(id: ids)
+    members = self.members.where(id: ids).where.not(creation_step: "active")
     if members.present?
       members.each do |member|
         member.inviter_id = inviter_id
@@ -67,12 +67,22 @@ class Project < ApplicationRecord
 
   private
 
-  def add_creator_as_admin
+  def add_creator_as_admin_and_member
     first_admin = admins.try(:first)
     admins.clear
     admins.build(email: user.email,
                  user_id: user.id,
                  status: "active")
+    members.build(creator: true,
+                  email: user.email,
+                  user_id: user.id,
+                  creation_step: "active",
+                  first_name: user.first_name,
+                  last_name: user.last_name,
+                  cms_module_access: true,
+                  dms_module_access: true,
+                  cms_module_master: true,
+                  dms_module_master: true)
     admins << first_admin if first_admin.present?
   end
 

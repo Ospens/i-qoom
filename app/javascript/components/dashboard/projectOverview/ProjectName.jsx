@@ -3,8 +3,7 @@ import { Field } from 'redux-form'
 import InputField from '../../../elements/InputField'
 import { required } from '../../../elements/validations'
 
-function ProjectName({ closeModal, changeStep }) {
-
+function ProjectName({ closeModal, backStep }) {
   return (
     <React.Fragment>
       <div className='new-modal__body'>
@@ -22,7 +21,7 @@ function ProjectName({ closeModal, changeStep }) {
         />
       </div>
       <div className='new-modal__footer'>
-        <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
+        <button type='button' className='btn btn-back' onClick={() => backStep('name')}>
           <i className='svg-icon arrow-left-icon' />
           Back
         </button>

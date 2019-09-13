@@ -100,7 +100,6 @@ RSpec.describe Document, type: :model do
     field_true.update_columns(selected: false)
     field_false.update_columns(selected: true)
     expect(doc.reload.can_view?(user)).to eql(false)
-    expect(doc.can_view?(doc.project.user)).to eql(true)
   end
 
   it 'can_create?' do
@@ -108,7 +107,6 @@ RSpec.describe Document, type: :model do
     document = document_attributes(user)
     doc = Document.new(document)
     expect(doc.can_create?(user)).to eql(true)
-    expect(doc.can_create?(doc.project.user)).to eql(true)
   end
 
   context 'prevent update of fields and values from convention' do

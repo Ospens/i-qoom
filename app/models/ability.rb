@@ -47,8 +47,18 @@ class Ability
           project: { id: user.project_administrators.map(&:project_id) }
       # Convention
       can :manage, Convention do |convention|
-        convention.project.user == user ||
-          convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
+        # When i started testing, the first thing i did was to setup a project
+        # (after i have registered). So i setup a project (project settings) and
+        # then i saw that i could access the DMS immediately. This is fine, but
+        # the user who creates a new project is automatically an administrator
+        # of the project ( meaning also a member) and shall be shown as such.
+        # So the project creator is automatically the first member of the
+        # project with full access rights to all modules (at this stage we only
+        # have one module, which is the DMS).
+        # This means that he must be shown as a member and the boxes for access
+        # rights to the DMS for "Document MS" and "Modul Master" must be active.
+        # Hope this helps. (c) Yasser
+        convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # Document
       can [:new, :create], Document do |document|
@@ -71,9 +81,7 @@ class Ability
       end
       can :collection_actions, Document do |document, project|
         member = project.members.find_by(user_id: user.id)
-        project.user == user ||
-          member.try(:dms_module_access?) ||
-          member.try(:dms_module_master?)
+        member.try(:dms_module_access?) || member.try(:dms_module_master?)
       end
       # DmsSetting
       can [:edit, :update], DmsSetting

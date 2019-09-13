@@ -10,7 +10,6 @@ const InputField = ({
   ...props
 }) => {
   const errorInfo = errorField[input.name]
-
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -27,7 +26,7 @@ const InputField = ({
       {error
         ? error
         : errorInfo
-          ? errorInfo[0]
+          ? errorInfo
           : ''}
       </div>}
     </div>

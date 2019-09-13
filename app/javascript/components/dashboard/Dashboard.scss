@@ -725,6 +725,11 @@ input[type=checkbox]:checked+label {
   background-size: 100%;
 }
 
+.member-id {
+  color:#0096FA;
+  text-transform: lowercase;
+}
+
 .main-table-block {
   border: none !important;
   font-size: 15px;
@@ -785,11 +790,6 @@ input[type=checkbox]:checked+label {
       }
     }
 
-    &.member-id {
-      padding-top: 15px !important;
-      color:#0095f9;
-    }
-
     &.access-column {
       min-width: 200px !important;
 
@@ -829,6 +829,7 @@ input[type=checkbox]:checked+label {
     position: relative;
     flex-direction: row;
     display: flex;
+    width: 200px;
 
     .user-and-company {
       display: flex;
@@ -841,8 +842,9 @@ input[type=checkbox]:checked+label {
       }
 
       .user_names, .company-title {
-        margin-top: auto;
-        margin-bottom: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
 
@@ -974,7 +976,7 @@ span.divider {
   display: block !important;
 
   & > .btn:not(:last-child):not(.dropdown-toggle), .btn-group > .btn-group:not(:last-child) > .btn {
-    border-radius: 7px;
+    border-radius: 5px;
   }
 }
 
@@ -1579,6 +1581,8 @@ i.arrow {
   padding-bottom: 1em;
 
   .acceess-rights__drop-down-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
     display: flex;
     flex-direction: row;
   }
@@ -1704,4 +1708,116 @@ i.arrow {
 .company-data-form {
   padding-right: 50px;
   padding-right: 2.5vw;
+}
+
+.table__body {
+  .row-changed {
+    background-color: #F0F7F7;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    .change-info {
+      display: flex;
+      align-items: center;
+      padding-bottom: 10px;
+      padding-left: 19.2px !important;
+      padding-left: 1.2rem !important;
+
+      span {
+        color: #475859;
+      }
+    }
+  }
+
+  .table-row {
+    padding-top: 10px; 
+    padding-bottom: 10px;
+
+    .table__row-cell {
+      &:not(:first-of-type) {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 35px 200px 150px 240px  240px  240px 1fr;
+  padding-bottom: 10px;
+
+  &.header {
+    border-bottom: 1px solid #CADFE0;
+  }
+
+  .table__row-cell {
+    display: flex;
+    align-items: center;
+    padding-left: 19.2px !important;
+    padding-left: 1.2rem !important;
+    margin-bottom: 0;
+
+    &.header {
+      height: 20px;
+      align-items: baseline;
+
+      span {
+        color: #8FB0B3;
+      }
+    }
+
+    &.table-checkbox {
+      display: flex;
+      align-content: center;
+      align-items: center;
+    }
+  }
+
+
+  .name-column, .team-title-column {
+    position: relative;
+    flex-direction: row;
+    display: flex;
+    width: 200px;
+
+    .user-and-company {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 10px;
+
+      .company-title {
+        color: #8FB0B3;
+      }
+
+      .user_names, .company-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .UserAvatar {
+      display: inline-block;
+      color: #fff;
+      margin-right: 5px;
+    }
+
+    .master-icon {
+      display: flex;
+      width: 25px;
+      height: 25px;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      position: absolute;
+      border: 2px solid white;
+      background-color: #4b5b5d;
+      color: white;
+      border-radius: 100%;
+      left: 3px;
+      top: 33px;
+    }
+  }
 }

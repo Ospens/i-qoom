@@ -29,7 +29,7 @@ class ProjectCompanyData < ApplicationRecord
   private
 
   def check_if_same_for_billing_address
-    if same_for_billing_address
+    if same_for_billing_address && !billing_address
       build_billing_address(company_address.attributes.except("id"))
     end
   end
