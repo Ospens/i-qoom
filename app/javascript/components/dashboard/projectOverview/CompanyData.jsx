@@ -5,11 +5,11 @@ import CheckboxField from '../../../elements/CheckboxField'
 class CompanyData extends Component {
 
   renderSubmitButtons = () => {
-    const { closeModal, changeStep } = this.props
+    const { closeModal, backStep } = this.props
     
     return (
       <div className='new-modal__footer'>
-        <button type='button' className='btn btn-back' onClick={() => changeStep(-1)}>
+        <button type='button' className='btn btn-back' onClick={() => backStep('company_data')}>
           <i className='svg-icon arrow-left-icon' />
           Back
         </button>
@@ -26,7 +26,7 @@ class CompanyData extends Component {
           <h6 className='new-modal__body-title'>
             Please enter company data
           </h6>
-          <CompanyFields/>
+          <CompanyFields />
           <div className='form-group text-left rect-checkbox'>
             <CheckboxField
               name='same_for_billing_address'

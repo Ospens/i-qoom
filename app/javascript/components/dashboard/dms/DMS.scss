@@ -229,6 +229,12 @@
       .dms-sidebar-menu__item {
         width: 100%;
 
+        &.add-button {
+          button > span {
+            color: #0096FA;
+          }
+        }
+
         button, a.btn {
           display: flex;
           padding: 10px;
