@@ -63,7 +63,6 @@ class ModalCreateProject extends Component {
   }
 
   handleSubmit = values => {
-    const { step } = this.state
     const {
       startCreateProject,
       updateProject,
@@ -71,12 +70,11 @@ class ModalCreateProject extends Component {
       projectId
     } = this.props
     
-    if (step > 1 && !projectId) {
+    if (!projectId) {
       return startCreateProject(values, (val) => this.afterUpdate(val))
-    } else if (step > 1 && projectId && sameBillingAddress) {
+    } else if (projectId && sameBillingAddress) {
       return updateProject(values, (val) => this.afterUpdate(val, 2))
-    } else if (step > 1 && projectId) {
-      if (values.company_data && values.company_data.billing_address) delete values.company_data.billing_address
+    } else {
       return updateProject(values, (val) => this.afterUpdate(val))
     }
   }

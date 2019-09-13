@@ -101,8 +101,9 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
         dispatch(projectCreated(response.data))
         afterCreate(response.data)
       })
-      .catch(() => {
+      .catch(({ response }) => {
         errorNotify('Something went wrong')
+        throw new SubmissionError(response.data)
       })
   )
 }
