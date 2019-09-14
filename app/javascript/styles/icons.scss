@@ -432,4 +432,9 @@ i.svg-icon {
     width: 11px;
     min-width: 11px;
   }
+
+  &.file-code-home {
+    -webkit-mask: url('../images/file-code-home.svg') no-repeat 50% 50%;
+    mask: url('../images/file-code-home.svg') no-repeat 50% 50%;
+  }
 }

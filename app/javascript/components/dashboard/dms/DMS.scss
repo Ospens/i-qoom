@@ -156,7 +156,7 @@
 
   .bordered {
     border-radius: 5px;
-    border: 1px solid lightgrey;
+    border: 1px solid #B2CED1;
   }
 
   .dms-content, .show-document {
@@ -1641,9 +1641,8 @@ input.search-input {
 
 .filter-grid {
   display: grid;
-  padding: 24px !important;
-  padding: 1.5rem !important;
-  // grid-template-rows: 1fr 1fr 1fr;
+  padding-bottom: 24px !important;
+  padding-bottom: 1.5rem !important;
   grid-template-columns: 1fr 1fr;
   grid-gap: 2vw;
 
@@ -1658,10 +1657,14 @@ input.search-input {
     .filter-grid-row {
       display: flex;
       flex-direction: column;
-      padding-top: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #8FB0B3;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #B2CED1;
       
+      &:last-of-type {
+        border-bottom: none;
+      }
+
       .common-row {
         display: flex;
         margin-right: 30px;

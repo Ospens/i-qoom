@@ -171,9 +171,11 @@ class DocIdModal extends Component {
     const docNumIndex = initialValues.fields.findIndex(el => el.codification_kind === 'document_number')
 
     return (
-      <form noValidate={true} onSubmit={handleSubmit(this.handleSubmit)}>
-        <div className='modal-container'>
+      <form noValidate={true} onSubmit={handleSubmit(this.handleSubmit)} className='new-modal'>
+        <div className='new-modal__header'>
           <h4>Document ID via uploaded file code</h4>
+        </div>
+        <div className='new-modal__body'>
           <div className='upload-file-row'>
             <Field
               index={nativeFileIndex}
@@ -234,7 +236,7 @@ class DocIdModal extends Component {
             </div>
           </div>
         </div>
-        <div className='modal-footer'>
+        <div className='new-modal__footer'>
           <button
             type='button'
             className='btn btn-white'

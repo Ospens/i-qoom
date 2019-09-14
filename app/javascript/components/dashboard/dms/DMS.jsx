@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Switch, withRouter } from 'react-router-dom'
 import './DMS.scss'
 import { startFetchFolders } from '../../../actions/foldersActions'
 import Page from '../../../elements/Page'
@@ -59,10 +59,13 @@ function DMS({ match, match: { params: { project_id } } }) {
         path={`${match.path}/:document_id/edit/`}
         component={DocumentForm}
       />
-      <Route path={`${match.path}/folders/all/`} component={FolderSettings} />
-      <Route path={`${match.path}/folders/my_documents/`} component={FolderSettings} />
-      <Route path={`${match.path}/folders/:folder_id/`} component={FolderSettings} />
-      <Route
+      <Page
+        title='Folders'
+        path={[`${match.path}/folders/all/`, `${match.path}/folders/my_documents/`, `${match.path}/folders/:folder_id/`]}
+        component={FolderSettings}
+      />
+      <Page
+        title='Edit convention'
         path={`${match.path}/master/edit_convention/`}
         component={EditConvention}
       />
@@ -71,23 +74,28 @@ function DMS({ match, match: { params: { project_id } } }) {
         path={`${match.path}/master/access_rights/members`}
         component={MembersAccessRights}
       />
-      <Route
+      <Page
+        title='Access rights'
         path={`${match.path}/master/access_rights/teams`}
         component={TeamsAccessRights}
       />
-      <Route
+      <Page
+        title='Quick search'
         path={`${match.path}/master/quick_search/`}
         component={QuickSearch}
       />
-      <Route
+      <Page
+        title='Codifications'
         path={`${match.path}/master/codifications/${codificationId}`}
         component={Codifications}
       />
-      <Route
+      <Page
+        title='Codification settings'
         path={`${match.path}/master/codifications/settings/`}
         component={CodificationSettings}
       />
-      <Route
+      <Page
+        title='Distribution group'
         path={`${match.path}/master/distribution_group/`}
         component={DistributionGroup}
       />
