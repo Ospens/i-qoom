@@ -10,7 +10,6 @@ const AdministratorFields = ({ submitErrors, admin }) => {
     <div>
       <div className='form-row'>
         <Field
-          type='text'
           component={InputField}
           name={`${prefix}username`}
           errorField={submitErrors}
@@ -19,7 +18,6 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           className='form-group col-3'
         />
         <Field
-          type='text'
           component={InputField}
           name={`${prefix}last_name`}
           errorField={submitErrors}
@@ -29,7 +27,6 @@ const AdministratorFields = ({ submitErrors, admin }) => {
         />
       </div>
       <Field
-        type='text'
         component={InputField}
         name={`${prefix}first_name`}
         errorField={submitErrors}
@@ -47,7 +44,6 @@ const AdministratorFields = ({ submitErrors, admin }) => {
       />
       <div className='form-row'>
         <Field
-          type='text'
           component={InputField}
           name={`${prefix}phone_code`}
           errorField={submitErrors}
@@ -55,7 +51,6 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           className='form-group col-3'
         />
         <Field
-          type='text'
           component={InputField}
           name={`${prefix}phone_number`}
           errorField={submitErrors}

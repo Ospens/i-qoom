@@ -4,14 +4,9 @@ import {
 } from '../actions/types'
 
 const initialState = {
-  newMembers: {
-    fields: [],
-    users: []
-  },
-  oldMembers: {
-    fields: [],
-    users: []
-  }
+  fields: {},
+  newMembers: [],
+  oldMembers: []
 }
 
 const accessRightsReducer = (state = initialState, action) => {
@@ -19,12 +14,14 @@ const accessRightsReducer = (state = initialState, action) => {
   case GET_NEW_MEMBERS_LIST:
     return {
       ...state,
-      newMembers: action.payload
+      newMembers: action.payload.users,
+      fields: action.payload.fields
     }
   case GET_CURRENT_MEMBERS_LIST:
     return {
       ...state,
-      oldMembers: action.payload
+      oldMembers: action.payload.users,
+      fields: action.payload.fields
     }
   default:
     return state

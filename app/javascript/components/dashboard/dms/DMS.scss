@@ -229,6 +229,12 @@
       .dms-sidebar-menu__item {
         width: 100%;
 
+        &.add-button {
+          button > span {
+            color: #0096FA;
+          }
+        }
+
         button, a.btn {
           display: flex;
           padding: 10px;
@@ -1280,8 +1286,12 @@ input.search-input {
   border-style: dashed;
   border-color: #fff;
 
-  label:not(.form-check-label), i {
-    margin-bottom: 10px !important
+  .form-group__title {
+    display: flex;
+
+    label:not(.form-check-label), i {
+      margin-bottom: 10px !important
+    }
   }
 
   &:not(:hover) * {
@@ -1305,7 +1315,7 @@ input.search-input {
   }
 
   .form-group {
-    min-height: 110px;
+    min-height: 120px;
     position: relative;
     padding: 10px;
     border-radius: 10px; 
@@ -1546,6 +1556,16 @@ input.search-input {
   .main-table-block {
     th:not(.table-checkbox) {
       min-width: 180px;
+    }
+  }
+
+  .btn-for-switch {
+    white-space: nowrap;
+
+    & > span {
+      width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }

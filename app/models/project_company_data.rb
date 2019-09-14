@@ -3,7 +3,8 @@ class ProjectCompanyData < ApplicationRecord
 
   has_one_attached :logo
 
-  before_validation :check_if_same_for_billing_address
+  before_validation :add_billing_address,
+    if: -> { same_for_billing_address && !billing_address }
 
   belongs_to :project
 
@@ -28,10 +29,8 @@ class ProjectCompanyData < ApplicationRecord
 
   private
 
-  def check_if_same_for_billing_address
-    if same_for_billing_address
-      build_billing_address(company_address.attributes.except("id"))
-    end
+  def add_billing_address
+    build_billing_address(company_address.attributes.except("id"))
   end
 
 end

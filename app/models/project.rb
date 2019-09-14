@@ -39,7 +39,7 @@ class Project < ApplicationRecord
 
   accepts_nested_attributes_for :dms_settings
 
-  has_many :admins, class_name: "ProjectAdministrator"
+  has_many :admins, class_name: "ProjectAdministrator", index_errors: true
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
   has_many :disciplines

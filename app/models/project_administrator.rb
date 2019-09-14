@@ -5,7 +5,7 @@ class ProjectAdministrator < ApplicationRecord
                  :active ]
 
   belongs_to :project,
-    inverse_of: :admins
+    inverse_of: :admins, autosave: true
 
   belongs_to :user, required: false
 
