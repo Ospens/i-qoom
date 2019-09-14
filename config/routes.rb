@@ -40,6 +40,7 @@ Rails.application.routes.draw do
 
       resources :document_revisions, only: [] do
         resources :document_review_subjects, only: :index
+        post :update_review_status, on: :member
       end
 
       resources :document_folders, only: [:create, :edit, :update, :show] do

@@ -5,6 +5,9 @@ class DocumentRevision < ApplicationRecord
 
   has_many :document_review_subjects
 
+  has_one :project,
+          through: :document_main
+
   scope :order_by_revision_number, -> { order(revision_number: :asc) }
 
   scope :first_revision, -> { order_by_revision_number.first }
@@ -15,5 +18,15 @@ class DocumentRevision < ApplicationRecord
 
   def last_version
     versions.last_version
+  end
+
+  def can_update_review_status?(user)
+    owner = project.document_review_owners.find_by(user_id: user.id)
+    return false if owner.blank?
+    originating_company_value =
+      last_version.document_fields
+                  .find_by(codification_kind: :originating_company)
+                  .document_field_values.find_by(selected: true).value
+    owner.originating_company == originating_company_value
   end
 end

@@ -109,8 +109,11 @@ class Ability
         owner.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # DocumentRevision
-      can [:show], DocumentRevision do |revision|
+      can :show, DocumentRevision do |revision|
         revision.last_version.can_view?(user)
+      end
+      can :update_review_status, DocumentRevision do |revision|
+        revision.can_update_review_status?(user)
       end
     end
   end
