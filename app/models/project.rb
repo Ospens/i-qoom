@@ -34,6 +34,8 @@ class Project < ApplicationRecord
   validates_presence_of :company_data,
     unless: -> { creation_step_admins? || creation_step_name? }
 
+  validates_associated :company_data
+
   validates :name,
             presence: true,
             length: { minimum: 3,
