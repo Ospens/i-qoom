@@ -5,17 +5,12 @@ import { errorNotify, successNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
-  SIGN_OUT_USER,
-  FETCH_USER_SUCCESS
+  SIGN_OUT_USER
 } from './types'
 
-const signIn = (token, exp, userId) => ({
+const signIn = payload => ({
   type: SIGN_IN_USER,
-  payload: {
-    token,
-    exp,
-    user_id: userId
-  }
+  payload
 })
 
 const signUp = (token, headers) => ({
@@ -26,13 +21,6 @@ const signUp = (token, headers) => ({
   }
 })
 
-const fetchUserSuccess = data => ({
-  type: FETCH_USER_SUCCESS,
-  payload: {
-    data
-  }
-})
-
 export const signOutUser = () => {
   localStorage.removeItem('i-qoom-user')
   return ({
@@ -40,19 +28,7 @@ export const signOutUser = () => {
   })
 }
 
-export const fetchUser = userId => (dispatch, getState) => (
-  axios.get(`/api/v1/users/${userId}`)
-    .then(response => {
-      dispatch(fetchUserSuccess(response.data.location))
-      localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
-    })
-    .catch(({ response }) => {
-      errorNotify(response.data.message)
-      throw new SubmissionError(response.data)
-    })
-)
-
-export const signInUser = values => dispatch => {
+export const signInUser = values => (dispatch, getState) => {
   const request = {
     session: {
       ...values
@@ -62,8 +38,14 @@ export const signInUser = values => dispatch => {
     axios.post('/api/v1/sessions', request)
       .then(response => {
         const decoded = jwtDecode(response.data.auth_token)
-        dispatch(signIn(response.data.auth_token, decoded.exp, decoded.user_id))
-        dispatch(fetchUser(decoded.user_id))
+        const userData = {
+          ...response.data.user,
+          token: response.data.auth_token,
+          exp: decoded.exp,
+          user_id: decoded.user_id
+        }
+        dispatch(signIn(userData))
+        localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
       })
       .catch(({ response }) => {
         errorNotify('Something went wrong')

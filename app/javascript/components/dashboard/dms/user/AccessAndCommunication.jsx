@@ -82,7 +82,7 @@ const AccessAndCommunication = ({ backStep }) => {
       </div>
 
       <div className='form-body'>
-        <div className='p-4'>
+        <div>
           <div className='form-group'>
             <FieldArray
               name='emails'

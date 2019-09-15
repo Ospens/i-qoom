@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer id='footer-card'>
       <div className='container text-center'>
-        <h3>i-Qoom</h3>
+        <i className='svg-icon logo-header' />
         <div className='row justify-content-center info-row mt-3'>
           <div className='col-md-auto imptint'>
             <Link to='/imprint'>IMPRINT</Link>
@@ -15,7 +15,7 @@ function Footer() {
           </div>
         </div>
         <div className='rights-reserved'>
-          @ 2018 Shamin yassar. All rights reserved.
+          @ 2018 Shamin yassar. All rights reserved.  
         </div>
       </div>
     </footer>

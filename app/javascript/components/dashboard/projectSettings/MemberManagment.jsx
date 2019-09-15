@@ -17,12 +17,12 @@ const initialState = {
 }
 
 export const renderDropDownItems = (icon, name) => (
-  <a className='dropdown-item' href='#'>
+  <button className='dropdown-item' type='button'>
     <i className={classnames("svg-icon", icon)} />
     <span className='item-text'>
       {name}
     </span>
-  </a>
+  </button>
 )
 
 class MemberManagment extends Component {
@@ -88,7 +88,7 @@ class MemberManagment extends Component {
             <li>
               <button 
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('role')}
               >
                 <i className='svg-icon task-list-edit-icon' />
@@ -98,7 +98,7 @@ class MemberManagment extends Component {
             <li>
               <button 
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('discipline')}
               >
                 <i className='svg-icon common-file-icon' />
@@ -108,7 +108,7 @@ class MemberManagment extends Component {
             <li>
               <button
                 type='button'
-                className='btn with-icon'
+                className='with-icon'
                 onClick={this.openModal('addMemberModal')}
               >
                 <i className='svg-icon blue-plus-icon' />

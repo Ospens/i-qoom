@@ -104,7 +104,7 @@ export class QuickSearch extends Component {
           <label>Prioritise and enable/disable</label>
         </div>
 
-        <form className='form-body' >
+        <form noValidate={true} className='form-body' >
           <div className='filter-grid'>
             {Object.keys(filters).map((column, i) => (
               <div className='filter-grid-column' key={i}>

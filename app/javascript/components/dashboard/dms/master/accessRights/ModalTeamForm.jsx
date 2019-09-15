@@ -235,7 +235,7 @@ class ModalTeamForm extends Component {
     const { handleSubmit } = this.props
 
     return (
-      <form onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
+      <form noValidate={true} onSubmit={e => handleSubmit(v => this.handleSubmit(v, e))()}>
         <div className='modal-container'>
           <div className='modal-container__title-block'>
             <h4>New team</h4>

@@ -7,9 +7,9 @@ import Page from '../../../elements/Page'
 import DocumentForm from './user/DocumentForm'
 import AddRevision from './user/addRevision/AddRevision'
 import ShowDocument from '../dms/user/showDocument/ShowDocument'
-import IndexDMS from './IndexDMS'
+import IndexDMS from './user/index/IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
-import MembersAccessRights from './master/accessRights/MembersAccessRights'
+import MembersAccessRights from './master/accessRights/index'
 import TeamsAccessRights from './master/accessRights/TeamsAccessRights'
 import QuickSearch from './master/quickSearch/QuickSearch'
 import Codifications from './master/codifications/Codifications'
@@ -66,7 +66,8 @@ function DMS({ match, match: { params: { project_id } } }) {
         path={`${match.path}/master/edit_convention/`}
         component={EditConvention}
       />
-      <Route
+      <Page
+        title='Access rights'
         path={`${match.path}/master/access_rights/members`}
         component={MembersAccessRights}
       />

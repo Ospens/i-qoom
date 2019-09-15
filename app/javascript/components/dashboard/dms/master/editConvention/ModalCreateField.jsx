@@ -111,7 +111,7 @@ class ModalCreateField extends Component {
     // TODO: Change limit access for new field to
     
     return (
-      <form className='new-modal' onSubmit={handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} className='new-modal' onSubmit={handleSubmit(this.handleSubmit)}>
         <div className='new-modal__header'>
           <h6>{initialized ? 'Edit input field' : 'New input field'}</h6>
         </div>

@@ -2,9 +2,10 @@ import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
   ACTIVE_MEMBERS_FETCHED_SUCCESS,
+  ACTIVE_MEMBERS_UPDATED,
+  PENDING_MEMBERS_UPDATED,
   PENDING_MEMBERS_FETCHED_SUCCESS,
   PROJECT_MEMBER_CREATED,
-  PROJECT_MEMBER_UPDATED,
   CREATING_PROJECT_MEMBER
 } from './types'
 import { errorNotify } from '../elements/Notices'
@@ -29,8 +30,13 @@ const createProjectMember = payload => ({
   payload
 })
 
-const updateProjectMember = payload => ({
-  type: PROJECT_MEMBER_UPDATED,
+const updateActiveMembers = payload => ({
+  type: ACTIVE_MEMBERS_UPDATED,
+  payload
+})
+
+const updatePendingMembers = payload => ({
+  type: PENDING_MEMBERS_UPDATED,
   payload
 })
 
@@ -83,7 +89,8 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
 
   const request = {
     project_member: {
-      ...values
+      ...values,
+      creation_step: 'details'
     }
   }
   return (
@@ -99,7 +106,7 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
   )
 }
 
-export const startUpdateProjectMember = (values, projectId) => (dispatch, getState) => {
+export const startUpdateProjectMember = (values, projectId, type) => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { headers: { Authorization: token } }
 
@@ -112,7 +119,11 @@ export const startUpdateProjectMember = (values, projectId) => (dispatch, getSta
   return (
     axios.patch(`/api/v1/projects/${projectId}/members/${values.id}`, request, headers)
       .then(response => {
-        dispatch(updateProjectMember(response.data))
+        if (type === 'activeMemebers') {
+          dispatch(updateActiveMembers(response.data))
+        } else if (type === 'pendingMemebers') {
+          dispatch(updatePendingMembers(response.data))
+        }
       })
       .catch(response => {
         errorNotify('Something went wrong')

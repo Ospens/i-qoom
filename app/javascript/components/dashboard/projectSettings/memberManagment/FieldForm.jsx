@@ -12,12 +12,12 @@ function FieldForm({ initialized, handleSubmit, type, submitForm }) {
     : `Create a  ${type}`
 
   return (
-    <form onSubmit={handleSubmit(submitForm)} >
-      <div className='modal-container'>
-        <div className='modal-container__title-block'>
-          <h4 className='pb-4'>{title}</h4>
-        </div>
-        <h3>{`What would you like to call this ${type}?`}</h3>
+    <form noValidate={true} onSubmit={handleSubmit(submitForm)} className='new-modal'>
+      <div className='new-modal__header'>
+        <h4 className='pb-4'>{title}</h4>
+      </div>
+      <div className='new-modal__body'>
+        <h6 className='new-modal__body-title'>{`What would you like to call this ${type}?`}</h6>
         <Field
           component={InputField}
           name='title'
@@ -26,7 +26,7 @@ function FieldForm({ initialized, handleSubmit, type, submitForm }) {
           validate={[required]}
         />
       </div>
-      <div className='modal-footer'>
+      <div className='new-modal__footer'>
         <button type='submit' className='btn btn-purple'>
           Save
         </button>

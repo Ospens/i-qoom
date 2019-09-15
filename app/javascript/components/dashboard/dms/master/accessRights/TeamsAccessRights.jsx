@@ -149,7 +149,7 @@ class TeamsAccessRights extends Component {
                         <UserAvatar size='42' name='T' />
                       </div>
                     </div>
-                    <div className='user-and-conpany'>
+                    <div className='user-and-company'>
                       <span>{`${user.first_name} ${user.last_name}`}</span>
                       <div className='d-flex'>
                         <button type='button' className='btn pl-0'>Add new members</button>
@@ -216,6 +216,12 @@ class TeamsAccessRights extends Component {
     return (
       <DMSLayout
         sidebar={<DmsSideBar />}
+        content={<div>Not available yet.</div>}
+      />
+    )
+    return (
+      <DMSLayout
+        sidebar={<DmsSideBar />}
         content={this.renderContent()}
       />
     )
@@ -224,8 +230,8 @@ class TeamsAccessRights extends Component {
 
 const mapStateToProps = ({ accessRights }) => ({
   // TODO: change it for teams
-  newTeams: accessRights.newMembers.users,
-  oldTeams: accessRights.oldMembers.users
+  newTeams: accessRights.newMembers,
+  oldTeams: accessRights.oldMembers
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -12,6 +12,23 @@ export class CreateFolder extends Component {
     modalOpen: false
   }
 
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handleClickOpenBtn)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleClickOpenBtn)
+  }
+
+  setWrapperRef = node => { this.wrapperRef = node }
+
+  handleClickOpenBtn = event => {
+    if (this.wrapperRef
+        && (event.target.className.includes('openFolderForm') || event.target.closest('.openFolderForm'))) {
+      this.handleOpen()
+    }
+  }
+
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => this.setState({ modalOpen: false })
@@ -34,7 +51,7 @@ export class CreateFolder extends Component {
 
   renderContent = () => {
     return (
-      <form onSubmit={this.props.handleSubmit(this.handleSubmit)}>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
         <div className='modal-container'>
           <div className='modal-container__title-block'>
             <h4>Create new folder</h4>
@@ -66,14 +83,17 @@ export class CreateFolder extends Component {
 
   render() {
     const { modalOpen } = this.state
+    const { trigger } = this.props
 
     return (
-      <NewModal
-        content={this.renderContent()}
-        trigger={this.renderModalTrigger()}
-        open={modalOpen}
-        onClose={this.handleClose}
-      />
+      <div ref={this.setWrapperRef}>
+        <NewModal
+          content={this.renderContent()}
+          trigger={trigger || this.renderModalTrigger()}
+          open={modalOpen}
+          onClose={this.handleClose}
+        />
+      </div>
     )
   }
 }

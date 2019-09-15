@@ -20,9 +20,11 @@ RSpec.describe Project, type: :model do
 
   context "created on admins creation step" do
     subject { FactoryBot.create(:project_admins_step) }
-    it "should add a project creator as an admin" do
+    it "should add a project creator as an admin and member" do
       expect(subject.admins.find_by(email: subject.user.email)).to be_present
       expect(subject.admins.find_by(email: subject.user.email).status).to eq("active")
+      expect(subject.members.find_by(email: subject.user.email)).to be_present
+      expect(subject.members.find_by(email: subject.user.email).creation_step).to eq("active")
     end
   end
 
@@ -77,7 +79,7 @@ RSpec.describe Project, type: :model do
                                2,
                                project: project).map(&:id)
       expect(project.invite_members(member_ids, project.user.id)).to be_truthy
-      expect(project.members.first.inviter_id).to eq(project.user.id)
+      expect(project.members.last.inviter_id).to eq(project.user.id)
     end
     it "expect to be true when there're no members" do
       expect(project.invite_members([], project.user.id)).to be_falsy

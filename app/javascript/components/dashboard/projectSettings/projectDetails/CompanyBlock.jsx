@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { reduxForm, FormSection, resetSection, getFormSubmitErrors } from 'redux-form'
+import { reduxForm, FormSection, resetSection } from 'redux-form'
 import CompanyFields from '../../../../elements/forms/CompanyFields'
 import NewModal from '../../../../elements/Modal'
 import BillingAddress from '../../projectOverview/BillingAddress'
@@ -85,11 +85,11 @@ export class CompanyBlock extends Component {
   }
 
   render() {
-    const { submitErrors } = this.props
     const { billingForm } = this.state
 
     return (
       <form
+        noValidate={true} 
         onSubmit={this.props.handleSubmit(this.handleSubmit)}
         className='col-lg-6 company-data-form'
         ref={this.nodeRef}
@@ -98,7 +98,7 @@ export class CompanyBlock extends Component {
           <div className='block-title'>
             <span>Company data</span>
           </div>
-          <CompanyFields submitErrors={submitErrors} />
+          <CompanyFields />
           {this.renderCompanyDataButtons()}
         </FormSection>
         <NewModal
@@ -112,13 +112,10 @@ export class CompanyBlock extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { company_data, id } = state.projects.current
-  return ({
-    initialValues: { id, company_data },
-    submitErrors: getFormSubmitErrors('company_form')(state)
-  })
-}
+const mapStateToProps = ({ projects: { current: { id, company_data } }}) => ({
+  initialValues: { id, company_data }
+})
+
 const mapDispatchToProps = dispatch => ({
   resetSection: () => dispatch(resetSection('company_form', 'company_data.billing_address')),
   updateProject: (values) => dispatch(startUpdateProject(values)),

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
+import CreateFolder from './user/CreateFolder'
 
 export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
   <Route path={path} exact>
@@ -57,6 +58,16 @@ export const renderFoldersBlock = (folders, projectId) => {
             icon='folder-icon'
           />
         ))}
+
+        <CreateFolder trigger={
+          <li className='dms-sidebar-menu__item add-button'>
+            <button className='btn d-flex align-items-center openFolderForm' type='button'>
+              <i className='svg-icon blue-plus-icon mr-2' />
+              <span>New folder</span>
+            </button>
+          </li>
+          }
+        />
       </ul>
     </div>
   )
@@ -133,11 +144,11 @@ class DmsSideBar extends Component {
           },
           {
             title: 'Codification 2',
-            path: `${masterPath}/codifications/2/`
+            path: '#'
           },
           {
             title: 'Codification 3',
-            path: `${masterPath}/codifications/3/`
+            path: '#'
           },
           {
             title: 'Settings',

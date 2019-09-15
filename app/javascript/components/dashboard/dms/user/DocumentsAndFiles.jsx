@@ -13,7 +13,7 @@ import DatePickerField from '../../../../elements/DatePickerField'
 import DropZoneField from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
-import { required } from '../../../../elements/validations'
+import { required, lessThan100 } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
 import DocumentIdInputs from '../DocumentIdInputs'
 
@@ -21,10 +21,22 @@ const codificationString = [
   'originating_company',
   'discipline',
   'document_type',
+  'revision_number',
   'document_number'
 ]
 
 const selector = formValueSelector('document_form')
+
+const validationList = field => {
+  const list = []
+  if (field.required) {
+    list.push(required)
+  }
+  if (['document_number', 'revision_number'].includes(field.codification_kind)) {
+    list.push(lessThan100)
+  }
+  return list
+}
 
 function InputByType({ field, modal, toggleModal, conventionId, changeValues }) {
   const uniqName = `document_fields[${field.index}].value`
@@ -34,7 +46,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     label: field.title,
     name: uniqName,
     id: uniqName,
-    validate: field.required ? [required] : [],
+    validate: validationList(field),
     placeholder:field.command,
     disabled
   }
@@ -50,7 +62,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
           name={`document_fields[${field.index}].file`}
           id={`document_fields[${field.index}].file`}
         />
-        </React.Fragment>
+      </React.Fragment>
     )
   } else if (field.kind === 'upload_field') {
     return (
