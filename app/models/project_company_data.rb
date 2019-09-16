@@ -3,9 +3,6 @@ class ProjectCompanyData < ApplicationRecord
 
   has_one_attached :logo
 
-  before_validation :add_billing_address,
-    if: -> { same_for_billing_address && !billing_address }
-
   belongs_to :project
 
   belongs_to :company_address,
@@ -26,6 +23,9 @@ class ProjectCompanyData < ApplicationRecord
     if: -> { project.present? &&
              ( project.creation_step_billing_address? ||
                project.creation_step_done? ) }
+
+  before_validation :add_billing_address,
+    if: -> { same_for_billing_address && !billing_address }
 
   private
 

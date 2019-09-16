@@ -63,7 +63,7 @@ RSpec.describe DocumentRight, type: :model do
     expect(attrs[:users].length).to eql(1)
     expect(attrs[:users].first[:id]).to eql(user.id)
     expect(attrs[:fields].length).to eql(3)
-    field = attrs[:fields].detect{ |i| i['originating_company'].present? }['originating_company']
+    field = attrs[:fields]['originating_company']
     expect(field.keys).to match_array([:id, :values])
     expect(field[:values].first.keys).to match_array(['id', 'value'])
     attrs[:users].first[:document_rights].each do |right|
