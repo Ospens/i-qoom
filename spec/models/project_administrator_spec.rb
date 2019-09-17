@@ -37,6 +37,36 @@ RSpec.describe ProjectAdministrator, type: :model do
     end
   end
 
+  context "should validate exclusion in project owner email" do
+    it "if an admin has owner's email" do
+      owner = FactoryBot.create(:user)
+      project = FactoryBot.build(:project,
+                                  user: owner,
+                                  admins: [ FactoryBot.build(:project_administrator,
+                                            email: owner.email) ])
+      expect(project.save).to be_falsy
+    end
+    it "if the creator admin's email was used for an admin in updating" do
+      owner = FactoryBot.create(:user)
+      project = FactoryBot.build(:project,
+                                  user: owner,
+                                  admins: [ FactoryBot.build(:project_administrator),
+                                            FactoryBot.build(:project_administrator) ])
+      project.update(admins_attributes: { id: project.admins.first.id, email: owner.email })
+      expect(project.save).to be_falsy
+    end
+    it "if the creator admin changed his email" do
+      owner = FactoryBot.create(:user)
+      project = FactoryBot.build(:project,
+                                  user: owner,
+                                  admins: [ FactoryBot.build(:project_administrator),
+                                            FactoryBot.build(:project_administrator) ])
+      project.admins.first.update(email: Faker::Internet.email)
+      project.update(admins_attributes: { id: project.admins.first.id, email: owner.email })
+      expect(project.save).to be_truthy
+    end
+  end
+
   it "send_confirmation_email" do
     project_admin = FactoryBot.create(:project).admins.last
     project_admin.reload

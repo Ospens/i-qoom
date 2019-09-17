@@ -6,24 +6,12 @@ class Project < ApplicationRecord
                         :done ],
                       _prefix: true
 
+  enum status: [ :planning,
+                 :development,
+                 :execution,
+                 :operation ]
+
   attr_accessor :admins_inviter_id
-
-  before_create :add_creator_as_admin_and_member
-
-  after_save :update_creation_step_to_done, unless: :creation_step_done?
-
-  after_save :invite_admins, if: :creation_step_done?
-
-  validates :name,
-            presence: true,
-            length: { minimum: 3,
-                      maximum: 255 },
-            unless: :creation_step_admins?
-
-  validates :project_code,
-            length: { is: 3 },
-            format: { with: /\A[A-Z]+\z/ },
-            if: -> { !project_code.nil? || !project_code_was.nil? }
 
   belongs_to :user
 
@@ -37,14 +25,13 @@ class Project < ApplicationRecord
 
   has_many :document_review_owners
 
-  accepts_nested_attributes_for :dms_settings
-
   has_many :admins, class_name: "ProjectAdministrator", index_errors: true
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
   has_many :disciplines
   has_many :roles
 
+  accepts_nested_attributes_for :dms_settings
   accepts_nested_attributes_for :admins
   accepts_nested_attributes_for :company_data,
                                 update_only: true
@@ -53,6 +40,25 @@ class Project < ApplicationRecord
 
   validates_presence_of :company_data,
     unless: -> { creation_step_admins? || creation_step_name? }
+
+  validates_associated :company_data
+
+  validates :name,
+            presence: true,
+            length: { minimum: 3,
+                      maximum: 255 },
+            unless: :creation_step_admins?
+
+  validates :project_code,
+            length: { is: 3 },
+            format: { with: /\A[A-Z]+\z/ },
+            if: -> { !project_code.nil? || !project_code_was.nil? }
+
+  before_create :add_creator_as_admin_and_member
+
+  after_save :update_creation_step_to_done, unless: :creation_step_done?
+
+  after_save :invite_admins, if: :creation_step_done?
 
   def invite_members(ids, inviter_id)
     members = self.members.where(id: ids).where.not(creation_step: "active")
