@@ -110,4 +110,32 @@ describe DocumentReviewSubject, type: :request do
       expect(json['comments'].first).to have_key('user')
     end
   end
+
+  context '#update_status' do
+    let(:review_subject) { FactoryBot.create(:document_review_subject, document_revision: revision) }
+
+    it 'anon' do
+      post "/api/v1/document_review_subjects/#{review_subject.id}/update_status",
+        params: { status: 'accepted' }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      user = FactoryBot.create(:user)
+      post "/api/v1/document_review_subjects/#{review_subject.id}/update_status",
+        headers: credentials(user),
+        params: { status: 'accepted' }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'review owner' do
+      review_subject.update!(status: :in_progress)
+      expect_any_instance_of(DocumentRevision).to receive(:can_update_review_status?).with(user).and_return(true)
+      post "/api/v1/document_review_subjects/#{review_subject.id}/update_status",
+        headers: credentials(user),
+        params: { status: 'accepted' }
+      expect(response).to have_http_status(:success)
+      expect(review_subject.reload).to be_accepted
+    end
+  end
 end

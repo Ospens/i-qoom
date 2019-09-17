@@ -34,6 +34,14 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
     render formats: :json
   end
 
+  def update_status
+    if @document_review_subject.update(status: params[:status])
+      head 200
+    else
+      render json: @document_review_subject.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def document_review_subject_params

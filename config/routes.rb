@@ -30,6 +30,7 @@ Rails.application.routes.draw do
 
       resources :document_review_subjects, only: :show do
         resources :document_review_comments, only: [:new, :create]
+        post :update_status, on: :member
       end
 
       resources :document_review_comments, only: :update do
