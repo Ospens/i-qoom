@@ -14,10 +14,3 @@
   = link_to t(".confirm_my_email"),
       confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token),
       class: "blue-button"
-  br
-  br
-  br
-  .or-follow-this-link
-    span = t('.follow_this_link')
-    = link_to nil,
-        confirm_admin_api_v1_projects_url(token: @project_admin.confirmation_token)
