@@ -90,7 +90,7 @@ class DmsSideBar extends Component {
       {
         title: 'DMS Settings',
         icon: 'task-list-settings-icon',
-        path: '#' // `/dashboard/projects/${project_id}/documents/settings/`
+        path: `/dashboard/projects/${project_id}/documents/settings/`
       },
       {
         title: 'Document planning',

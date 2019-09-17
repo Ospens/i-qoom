@@ -16,6 +16,7 @@ import Codifications from './master/codifications/Codifications'
 import CodificationSettings from './master/codifications/CodificationSettings'
 import DistributionGroup from './master/distributionGroup/DistributionGroup'
 import FolderSettings from './user/folderSettings/FolderSettings'
+import DmsSettings from './user/dmsSettings/index'
 
 const documentHeader = (title, isCurrent) => {
   const current = useSelector(state => isCurrent ? state.documents.current : state.documents.documentFields)
@@ -83,6 +84,11 @@ function DMS({ match, match: { params: { project_id } } }) {
         title='Quick search'
         path={`${match.path}/master/quick_search/`}
         component={QuickSearch}
+      />
+      <Page
+        title='DMS Settings'
+        path={`${match.path}/settings/`}
+        component={DmsSettings}
       />
       <Page
         title='Codifications'
