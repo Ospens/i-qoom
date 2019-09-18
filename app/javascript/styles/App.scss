@@ -618,8 +618,16 @@ header {
   overflow: hidden;
 }
 
+.navbar-brand {
+  display: flex;
+  align-content: baseline;
+  align-items: baseline;
+}
+
 .auth-buttons {
-  display: contents;
+  display: flex;
+  flex-direction: row;
+  width: 240px;
 
   .nav-item:first-of-type {
     .nav-link {

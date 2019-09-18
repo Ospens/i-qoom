@@ -23,6 +23,11 @@ class ModalCreateProject extends Component {
     step: 1
   }
   
+  componentWillMount() {
+    const { initialize, user } = this.props
+    initialize({ main_admin: { ...user }})
+  }
+  
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => {
@@ -67,9 +72,11 @@ class ModalCreateProject extends Component {
       startCreateProject,
       updateProject,
       sameBillingAddress,
+      change,
       projectId
     } = this.props
-    
+
+    change('main_admin', undefined)
     if (!projectId) {
       return startCreateProject(values, (val) => this.afterUpdate(val))
     } else if (projectId && sameBillingAddress) {
@@ -91,7 +98,7 @@ class ModalCreateProject extends Component {
   renderModalSecondAdmin = () => (
     <SecondAdmin
       closeModal={this.handleClose}
-      adminsLength={this.props.admins.length}
+      adminsLength={1} // {this.props.admins.length}
       backStep={val => this.backStep(val)}
       submitErrors={this.props.submitErrors}
     />
@@ -172,6 +179,7 @@ const mapStateToProps = state => ({
   projectId: selector(state, 'id'),
   admins: selector(state, 'admins'),
   terms: selector(state, 'terms'),
+  user: state.user,
   sameBillingAddress: selector(state, 'company_data.same_for_billing_address')
 })
 

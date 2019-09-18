@@ -48,7 +48,11 @@ export const signInUser = values => (dispatch, getState) => {
         localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        if (response.data.user) {
+          errorNotify(response.data.user[0])
+        } else {
+          errorNotify('Something went wrong')
+        }
         throw new SubmissionError(response.data)
       })
   )

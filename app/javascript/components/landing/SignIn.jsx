@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
@@ -7,9 +7,19 @@ import { withRouter } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
 import { required } from '../../elements/validations'
+import { successNotify, errorNotify } from '../../elements/Notices'
 
-function SignIn({ handleSubmit, history }) {
+function SignIn({ handleSubmit, history, ...props }) {
   const dispatch = useDispatch()
+  
+  // TODO: It is a hotfix and should be changed
+  useEffect(() => {
+    if (!props.match.params.msg) return
+    
+    props.match.params.type === 'error'
+      ? errorNotify(props.match.params.msg)
+      : successNotify(props.match.params.msg)
+  }, [])
 
   const submit = useCallback((values) => {
     return dispatch(signInUser(values)).then(() => history.push({ pathname: '/menu' }))
