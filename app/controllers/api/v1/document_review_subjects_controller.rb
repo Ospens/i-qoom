@@ -42,6 +42,18 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
     end
   end
 
+  def complete_review
+    if params['complete'] == '1'
+      unless @document_review_subject.review_completes.include?(signed_in_user)
+        @document_review_subject.review_completes << signed_in_user
+      end
+      render json: { message: 'Review completed' }
+    else
+      @document_review_subject.review_completes.delete(signed_in_user)
+      render json: { message: 'Review uncompleted' }
+    end
+  end
+
   private
 
   def document_review_subject_params

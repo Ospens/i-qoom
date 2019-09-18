@@ -20,4 +20,23 @@ RSpec.describe DocumentReviewSubject, type: :model do
     subject.comments.create(text: '111')
     expect(subject.comments.length).to eql(1)
   end
+
+  it 'has reviews completed' do
+    subject = FactoryBot.create(:document_review_subject)
+    reviewer = FactoryBot.create(:user)
+    subject.review_completes << reviewer
+    expect(subject.review_completes).to include(reviewer)
+  end
+
+  it '#can_complete_review?' do
+    subject = FactoryBot.create(:document_review_subject)
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    expect(subject.can_complete_review?(user1)).to eql(false)
+    expect(subject.can_complete_review?(user2)).to eql(false)
+    subject.reviewers << user1
+    expect(subject.can_complete_review?(user1)).to eql(true)
+    subject.update!(review_issuer: user2)
+    expect(subject.can_complete_review?(user2)).to eql(true)
+  end
 end

@@ -23,6 +23,11 @@ class DocumentReviewSubject < ApplicationRecord
   has_many :comments,
            class_name: 'DocumentReviewComment'
 
+  has_and_belongs_to_many :review_completes,
+                          class_name: 'User',
+                          join_table: 'document_review_subjects_review_completes',
+                          validate: false # for tests
+
   validates :reviewers,
             length: { minimum: 1 }
 
@@ -31,6 +36,10 @@ class DocumentReviewSubject < ApplicationRecord
 
   after_create :create_comment,
                if: -> { comment.present? }
+
+  def can_complete_review?(user)
+    user == review_issuer || reviewers.include?(user)
+  end
 
   private
 

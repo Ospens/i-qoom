@@ -138,4 +138,44 @@ describe DocumentReviewSubject, type: :request do
       expect(review_subject.reload).to be_accepted
     end
   end
+
+  context '#complete_review' do
+    let(:review_subject) { FactoryBot.create(:document_review_subject, document_revision: revision) }
+
+    it 'anon' do
+      post "/api/v1/document_review_subjects/#{review_subject.id}/complete_review",
+        params: { complete: '1' }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      user = FactoryBot.create(:user)
+      post "/api/v1/document_review_subjects/#{review_subject.id}/complete_review",
+        headers: credentials(user),
+        params: { complete: '1' }
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'reviewer complete' do
+      expect_any_instance_of(DocumentReviewSubject).to\
+        receive(:can_complete_review?).with(user).and_return(true)
+      post "/api/v1/document_review_subjects/#{review_subject.id}/complete_review",
+        headers: credentials(user),
+        params: { complete: '1' }
+      expect(response).to have_http_status(:success)
+      expect(review_subject.review_completes).to include(user)
+    end
+
+    it 'reviewer uncomplete' do
+      review_subject.review_completes << user
+      expect(review_subject.review_completes).to include(user)
+      expect_any_instance_of(DocumentReviewSubject).to\
+        receive(:can_complete_review?).with(user).and_return(true)
+      post "/api/v1/document_review_subjects/#{review_subject.id}/complete_review",
+        headers: credentials(user),
+        params: { complete: '0' }
+      expect(response).to have_http_status(:success)
+      expect(review_subject.reload.review_completes).to_not include(user)
+    end
+  end
 end

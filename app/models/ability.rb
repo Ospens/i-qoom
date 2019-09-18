@@ -97,6 +97,9 @@ class Ability
       can :update_status, DocumentReviewSubject do |subject|
         subject.document_revision.can_update_review_status?(user)
       end
+      can :complete_review, DocumentReviewSubject do |subject|
+        subject.can_complete_review?(user)
+      end
       # DocumentReviewComment
       can [:new,
            :create,
