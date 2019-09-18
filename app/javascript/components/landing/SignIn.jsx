@@ -27,8 +27,8 @@ function SignIn({ handleSubmit, history }) {
                   component={InputField}
                   name='login'
                   id='login'
-                  label='Type in e-mail adress or I-qoom ID'
-                  placeholder='Company name'
+                  label='Type in e-mail adress or i-Qoom ID'
+                  placeholder='E-mail or i-Qoom ID'
                   validate={[required]}
                 />
               </div>

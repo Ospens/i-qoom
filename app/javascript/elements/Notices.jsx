@@ -1,5 +1,15 @@
 
+import React from 'react'
 import { toast } from 'react-toastify'
+
+const Msg = ({ text, closeToast }) => (
+  <div>
+    {text}
+    <div className='d-flex'>
+      <button type='button' className='mt-2 ml-auto btn btn-white-blue' onClick={closeToast}>OK</button>
+    </div>
+  </div>
+)
 
 export const errorNotify = msg => {
   toast.error(msg, {
@@ -13,7 +23,7 @@ export const errorNotify = msg => {
   )
 }
 
-export const successNotify = msg => {
+export const successNotify =  msg => {
   toast.success(msg, {
     position: 'top-right',
     autoClose: 5000,
@@ -21,6 +31,16 @@ export const successNotify = msg => {
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true
+  }
+  )
+}
+
+export const customSuccessNotify = msg => {
+  toast.success(<Msg text={msg} />, {
+    position: 'top-right',
+    autoClose: false,
+    closeOnClick: true,
+    draggable: false
   }
   )
 }
