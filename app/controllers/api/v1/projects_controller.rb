@@ -121,6 +121,9 @@ class Api::V1::ProjectsController < ApplicationController
     params.fetch(:project,
                  { }).permit(:name,
                              :creation_step,
+                             :status,
+                             :start_date,
+                             :archived,
                              admins_attributes: [
                                :id,
                                :username,

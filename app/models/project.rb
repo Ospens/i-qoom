@@ -6,6 +6,11 @@ class Project < ApplicationRecord
                         :done ],
                       _prefix: true
 
+  enum status: [ :planning,
+                 :development,
+                 :execution,
+                 :operation ]
+
   attr_accessor :admins_inviter_id
 
   belongs_to :user

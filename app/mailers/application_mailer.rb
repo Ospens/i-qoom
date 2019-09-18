@@ -1,5 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'I-Qoom <no-reply@i-qoom.com>'
+  default from: 'i-Qoom <no-reply@i-qoom.com>'
   layout 'mailer'
   before_action :set_logo
 

@@ -6,11 +6,15 @@ describe Session, type: :model do
   context "is expected to be successfull" do
     it "with an email" do
       session = Session.new(login: user.email, password: "password1")
-      expect(session.auth_token).to be_truthy
+      expect(session.valid?).to be_truthy
     end
     it "with a username" do
       session = Session.new(login: user.username, password: "password1")
-      expect(session.auth_token).to be_truthy
+      expect(session.valid?).to be_truthy
+    end
+    it "with confirmation" do
+      session = Session.new(login: user.email, password: "password1")
+      expect(session.valid?).to be_truthy
     end
   end
 
@@ -23,7 +27,7 @@ describe Session, type: :model do
       it "password" do
         session = Session.new(login: [ user.username,
                                        user.email ].sample)
-        expect(session.auth_token).to be_falsy
+        expect(session.valid?).to be_falsy
       end
     end
     context "with a wrong" do
@@ -32,15 +36,20 @@ describe Session, type: :model do
           Session.new(login: [ Faker::Internet.email,
                                Faker::Internet.unique.user_name ].sample,
                       password: "password1")
-        expect(session.auth_token).to be_falsy
+        expect(session.valid?).to be_falsy
       end
       it "password" do
         session =
           Session.new(login: [ user.username,
                                user.email ].sample,
                       password: "password2")
-        expect(session.auth_token).to be_falsy
+        expect(session.valid?).to be_falsy
       end
+    end
+    it "without confirmation" do
+      user.update_column(:confirmed_at, nil)
+      session = Session.new(login: user.email, password: "password1")
+      expect(session.valid?).to be_falsy
     end
   end
 

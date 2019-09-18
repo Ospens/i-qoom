@@ -8,5 +8,6 @@ FactoryBot.define do
     sequence(:last_name)  { Faker::Name.last_name }
     sequence(:country)    { ISO3166::Country.codes.sample }
     accept_terms_and_conditions { "1" }
+    confirmed_at          { Time.now }
   end
 end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe RegistrationConfirmation, type: :model do
-  let(:user) { FactoryBot.create(:user) }
+  let(:user) { FactoryBot.create(:user, confirmed_at: nil) }
 
   context "should confirm a user" do
     it "in a regular case" do
