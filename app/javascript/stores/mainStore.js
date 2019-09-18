@@ -15,6 +15,7 @@ import filterReducer from '../reducers/filterReducer'
 import distributionGroupReducer from '../reducers/distributionGroupReducer'
 import documentFolderReducer from '../reducers/documentFolderReducer'
 import settingsReducer from '../reducers/settingsReducer'
+import planningReducer from '../reducers/planningReducer'
 import loadState from './localStorage'
 
 const rootReducer = combineReducers({
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   accessRights: accessRightsReducer,
   filters: filterReducer,
   settings: settingsReducer,
+  plannings: planningReducer,
   distributionGroups: distributionGroupReducer,
   folders: documentFolderReducer,
   form: reduxFormReducer

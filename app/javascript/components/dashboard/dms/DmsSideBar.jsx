@@ -95,7 +95,7 @@ class DmsSideBar extends Component {
       {
         title: 'Document planning',
         icon: 'calendar-icon-3',
-        path: '#' // `/dashboard/projects/${project_id}/documents/planning/`
+        path: `/dashboard/projects/${project_id}/documents/planning/`
       },
       {
         title: 'Master settings',

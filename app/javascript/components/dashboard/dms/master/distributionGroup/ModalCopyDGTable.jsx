@@ -77,7 +77,7 @@ export class ModalCopyDGTable extends Component {
         {type === 'DG' && this.renderDGBlock(checked)}
         
         <div className='table-contaniner'>
-          <Table sortable className='main-table-block'>
+          <Table sortable striped className='main-table-block'>
             <Table.Header>
               <Table.Row>
                 {type === 'DG' && <Table.HeaderCell />}

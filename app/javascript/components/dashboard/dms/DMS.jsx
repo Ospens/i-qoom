@@ -17,6 +17,7 @@ import CodificationSettings from './master/codifications/CodificationSettings'
 import DistributionGroup from './master/distributionGroup/DistributionGroup'
 import FolderSettings from './user/folderSettings/FolderSettings'
 import DmsSettings from './user/dmsSettings/index'
+import DocumentPlanning from './user/documentPlanning/index'
 
 const documentHeader = (title, isCurrent) => {
   const current = useSelector(state => isCurrent ? state.documents.current : state.documents.documentFields)
@@ -89,6 +90,11 @@ function DMS({ match, match: { params: { project_id } } }) {
         title='DMS Settings'
         path={`${match.path}/settings/`}
         component={DmsSettings}
+      />
+      <Page
+        title='Planned list'
+        path={`${match.path}/planning/`}
+        component={DocumentPlanning}
       />
       <Page
         title='Codifications'

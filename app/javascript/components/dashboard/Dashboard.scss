@@ -743,7 +743,7 @@ input[type=checkbox]:checked+label {
   }
 
   tbody {
-    tr {
+    tr:first-of-type {
       border-top: 1px solid rgba(34, 36, 38, .1) !important;
     }
   }
@@ -773,6 +773,10 @@ input[type=checkbox]:checked+label {
     padding-left: 1.2rem !important;
     align-content: center;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 300px;
+    text-overflow: ellipsis;
 
     &.td-select-dropdown {
       max-width: 120px !important;
@@ -1055,10 +1059,6 @@ div.tab-description {
 
   .green-check-icon {
     margin-left: 10px;
-    min-height: 13px;
-    height: 13px;
-    min-width: 15px;
-    width: 15px;
   }
 }
 
