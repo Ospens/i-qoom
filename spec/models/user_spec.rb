@@ -43,7 +43,7 @@ describe User, type: :model do
                         .for(:username) }
 
   it "sends confirmation email" do
-    user = FactoryBot.create(:user)
+    user = FactoryBot.create(:user, confirmed_at: nil)
     expect(user.confirmation_sent_at).to be_present
   end
 end
