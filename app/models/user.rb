@@ -4,9 +4,15 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :validatable
 
-  before_create :send_confirmation_email, unless: :confirmed?
-
   attr_accessor :accept_terms_and_conditions
+
+  has_many :projects
+  has_many :project_administrators
+
+  has_many :documents, class_name: 'DocumentMain'
+  has_many :document_rights
+  accepts_nested_attributes_for :document_rights
+  has_many :document_folders
 
   validates_presence_of :password_confirmation,
     on: [:create, :password_changed?]
@@ -31,13 +37,7 @@ class User < ApplicationRecord
             length: { maximum: 18 },
             uniqueness: true
 
-  has_many :projects
-  has_many :project_administrators
-
-  has_many :documents, class_name: 'DocumentMain'
-  has_many :document_rights
-  accepts_nested_attributes_for :document_rights
-  has_many :document_folders
+  after_create :send_confirmation_email, unless: :confirmed?
 
   def confirmed?
     confirmed_at.present?

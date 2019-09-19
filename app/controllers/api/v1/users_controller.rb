@@ -21,8 +21,7 @@ class Api::V1::UsersController < ApplicationController
 
   def confirm
     registration_confirmation =
-      RegistrationConfirmation.new(token: params[:token],
-                                   signed_in_user: signed_in_user)
+      RegistrationConfirmation.new(token: params[:token])
     if registration_confirmation.save
       redirect_to '/signin/success/Succcessfully confirmed'
     else
