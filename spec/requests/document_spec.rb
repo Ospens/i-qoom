@@ -826,6 +826,7 @@ describe Document, type: :request do
     expect(revision['id']).to eql(document.revision.id)
     expect(revision['codification_string']).to eql(document.codification_string)
     expect(revision['title']).to eql(title)
+    expect(revision['review_status']).to eql('issued_for_information')
   end
 
   context '#my_documents' do

@@ -1,7 +1,8 @@
 class DocumentRevisionSerializer < ActiveModel::Serializer
   attributes :id,
              :codification_string,
-             :title
+             :title,
+             :review_status
 
   def document
     object.last_version
@@ -13,5 +14,9 @@ class DocumentRevisionSerializer < ActiveModel::Serializer
 
   def title
     document.title
+  end
+
+  def review_status
+    object.document_main.document_review_status
   end
 end
