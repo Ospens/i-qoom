@@ -78,7 +78,7 @@ class LandingMenu extends Component {
               <React.Fragment>
                 <span>{title}</span>
                 <div>
-                  <i className={classnames('svg-icon gray blue', icon)} />
+                  <i className={classnames('svg-icon', icon)} />
                 </div>
               </React.Fragment> }
             </div>
@@ -114,7 +114,7 @@ class LandingMenu extends Component {
                 <div className='landing-card__title-block'>
                   <span>Projects</span>
                   <div>
-                    <i className='svg-icon streamline-folder-icon blue' />
+                    <i className='svg-icon streamline-folder-icon' />
                   </div>
                 </div>
               </div>

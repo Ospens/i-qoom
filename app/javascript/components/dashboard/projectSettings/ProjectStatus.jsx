@@ -120,13 +120,6 @@ class ProjectStatus extends Component {
           ))}
         </div>
         <span className='tab-description'>Requirements for activation:</span>
-        <div className='mt-4'>
-          <div className='tab-description d-flex'>
-            <span>Two confirmed administrators</span>
-            <i className="svg-icon green-check-icon" />
-            <i className="svg-icon green-check-icon" />
-          </div>
-        </div>
         <div className='mt-3'>
           <div className='tab-description d-flex'>
             <span>Terms & Conditions accepted</span>
@@ -135,7 +128,7 @@ class ProjectStatus extends Component {
         </div>
         <div className='mt-3'>
           <div className='tab-description d-flex'>
-            <span>Billing for agreed</span>
+            <span>Billing address confirmed</span>
             <i className="svg-icon green-check-icon" />
           </div>
         </div>
@@ -143,7 +136,7 @@ class ProjectStatus extends Component {
           <button className='btn btn-move-to-archive'>
             <i className='svg-icon common-file-lock black' />
             Move to archive
-            </button>
+          </button>
         </div>
         {modal === 1 && this.renderModalFordate()}
         {modal === 2 && this.renderModalForConfirm()}

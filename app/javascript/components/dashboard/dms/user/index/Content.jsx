@@ -7,6 +7,7 @@ import DropDown from '../../../../../elements/DropDown'
 import { columns, DtOptions } from '../../constants'
 import { DropDownItems } from './elements'
 import { downloadList } from '../../../../../actions/documentsActions'
+import toggleArray from '../../../../../elements/toggleArray'
 
 function renderTableHeader() {
   const checkedDocTypes = []
@@ -109,20 +110,13 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
   const downloadFiles = useCallback(docId => { dispatch(downloadList(projectId, docId, formats)) }, [dispatch, formats])
 
   const toggleFormats = useCallback((checked, value) => {
-    const index = checked.indexOf(value)
-    if (index > -1) {
-      checked.splice(index, 1)
-    } else {
-      checked.splice(index, 0, value)
-    }
-    const newVal = new Array(...checked)
-    changeFormats(newVal)
-  }, [])
+    changeFormats(toggleArray(checked, value))
+  }, [formats])
 
   return (
     <div>
       {renderTableHeader()}
-      <Table sortable className='main-table-block'>
+      <Table sortable striped className='main-table-block'>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell />
@@ -177,7 +171,7 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
                 {doc.codification_kind}
               </Table.Cell>
 
-              <Table.Cell>
+              <Table.Cell className='title-cell'>
                 {doc.title || 'Undefined'}
               </Table.Cell>
 

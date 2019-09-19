@@ -59,7 +59,7 @@ export class QuickSearch extends Component {
 
   renderDropDownField = (row, index) => (
     <div className='filter-grid-row' key={index}>
-      <input id='grid-row-opener' type='checkbox' />
+      <input id='grid-row-opener' className='grid-row-opener' type='checkbox' />
       <div className='d-flex align-items-center'>
         <label htmlFor={row.title}>{row.title}</label>
         <label className='switch ml-auto'>

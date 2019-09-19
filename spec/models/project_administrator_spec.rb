@@ -10,10 +10,7 @@ RSpec.describe ProjectAdministrator, type: :model do
                         .class_name("User")
                         .required(false) }
 
-  context "validate_uniqueness_of email" do
-    subject { FactoryBot.create(:project).admins.first }
-    it { is_expected.to validate_uniqueness_of(:email)
-                            .scoped_to(:project_id) }
+  context "validate email uniqueness through exclusion" do
     it "shouldn't be valid" do
       user = FactoryBot.create(:user)
       project_admin =

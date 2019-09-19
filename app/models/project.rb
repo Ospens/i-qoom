@@ -74,6 +74,8 @@ class Project < ApplicationRecord
   private
 
   def add_creator_as_admin_and_member
+    first_admins = admins.map { |a| a }
+    admins.clear
     admins.build(email: user.email,
                  first_name: user.first_name,
                  last_name: user.last_name,
@@ -90,6 +92,7 @@ class Project < ApplicationRecord
                   dms_module_access: true,
                   cms_module_master: true,
                   dms_module_master: true)
+    admins << first_admins
   end
 
   def update_creation_step_to_done

@@ -90,12 +90,12 @@ class DmsSideBar extends Component {
       {
         title: 'DMS Settings',
         icon: 'task-list-settings-icon',
-        path: '#' // `/dashboard/projects/${project_id}/documents/settings/`
+        path: `/dashboard/projects/${project_id}/documents/settings/`
       },
       {
         title: 'Document planning',
         icon: 'calendar-icon-3',
-        path: '#' // `/dashboard/projects/${project_id}/documents/planning/`
+        path: `/dashboard/projects/${project_id}/documents/planning/`
       },
       {
         title: 'Master settings',
@@ -129,12 +129,12 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Quick search',
-        icon: 'calendar-icon-3',
+        icon: 'search-icon',
         path: `${masterPath}/quick_search/`
       },
       {
         title: 'Codification',
-        icon: 'task-list-settings-icon',
+        icon: 'file-code-home',
         path: `${masterPath}/codifications/1/`,
         root: `${masterPath}/codifications/`,
         nested: [
@@ -158,7 +158,7 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Distribution groups',
-        icon: 'task-list-settings-icon',
+        icon: 'business-team-icon',
         path: `${masterPath}/distribution_group/`
       },
       {
