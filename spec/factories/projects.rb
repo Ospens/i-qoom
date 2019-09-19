@@ -2,9 +2,6 @@ FactoryBot.define do
   factory :project_admins_step, class: "Project" do
     association     :user
     creation_step   { "admins" }
-    after(:build) do |instance|
-      instance.admins << FactoryBot.build(:project_administrator)
-    end
     factory :project_name_step do
       creation_step { "name" }
       name { Faker::Lorem.sentence }
@@ -17,6 +14,11 @@ FactoryBot.define do
         end
         factory :project do
           creation_step { "done" }
+          factory :project_with_admins do
+            after(:create) do |instance|
+              instance.admins << FactoryBot.build(:project_administrator)
+            end
+          end
           factory :project_with_disciplines do
             after(:create) do |instance|
               FactoryBot.create_list(:discipline, 10, project: instance)

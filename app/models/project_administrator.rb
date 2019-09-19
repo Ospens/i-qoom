@@ -18,11 +18,10 @@ class ProjectAdministrator < ApplicationRecord
             presence: true,
             uniqueness: { scope: :project_id }
 
-  validates :email,
-            exclusion: { in: ->(admin) { [admin.project.try(:user).try(:email)] } },
-            if: -> { project.try(:new_record?) }
-
   before_create :add_user
+
+  after_create :invite_to_the_project,
+    if: -> { unconfirmed? && first_confirmation_sent_at.nil? }
 
   def send_confirmation_email
     if awaiting_confirmation!
@@ -56,6 +55,12 @@ class ProjectAdministrator < ApplicationRecord
   # then a user can be changed only by confirmation
   def add_user
     self.user = User.find_by(email: email) if user.nil?
+  end
+
+  def invite_to_the_project
+    self.inviter_id = project.user.id if inviter_id.nil?
+    self.inviter_id = project.admins_inviter_id if project.admins_inviter_id.present?
+    self.send_confirmation_email
   end
 
 end

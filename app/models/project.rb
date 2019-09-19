@@ -54,11 +54,9 @@ class Project < ApplicationRecord
             format: { with: /\A[A-Z]+\z/ },
             if: -> { !project_code.nil? || !project_code_was.nil? }
 
-  before_create :add_creator_as_admin_and_member
+  before_validation :add_creator_as_admin_and_member, on: :create
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
-
-  after_save :invite_admins, if: :creation_step_done?
 
   def invite_members(ids, inviter_id)
     members = self.members.where(id: ids).where.not(creation_step: "active")
@@ -76,9 +74,10 @@ class Project < ApplicationRecord
   private
 
   def add_creator_as_admin_and_member
-    first_admin = admins.try(:first)
-    admins.clear
     admins.build(email: user.email,
+                 first_name: user.first_name,
+                 last_name: user.last_name,
+                 username: user.username,
                  user_id: user.id,
                  status: "active")
     members.build(creator: true,
@@ -91,7 +90,6 @@ class Project < ApplicationRecord
                   dms_module_access: true,
                   cms_module_master: true,
                   dms_module_master: true)
-    admins << first_admin if first_admin.present?
   end
 
   def update_creation_step_to_done
@@ -99,11 +97,4 @@ class Project < ApplicationRecord
     self.reload if creation_step_done?
   end
 
-  def invite_admins
-    admins.unconfirmed.where(first_confirmation_sent_at: nil).each do |admin|
-      admin.inviter_id = user.id if admin.inviter_id.nil?
-      admin.inviter_id = admins_inviter_id if admins_inviter_id.present?
-      admin.send_confirmation_email
-    end
-  end
 end
