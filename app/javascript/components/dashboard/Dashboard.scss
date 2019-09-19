@@ -50,6 +50,7 @@ button:disabled {
   text-align: center !important;
   height: 250px;
   max-height: 24vh;
+  min-height: 230px;
 
   .cogs-icon {
     width: 30px;
@@ -244,8 +245,8 @@ button:disabled {
 
   h4 {
     font-family: 'aktiv-grotesk', sans-serif;
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 400;
     margin-bottom: 40px;
   }
 
@@ -743,7 +744,7 @@ input[type=checkbox]:checked+label {
   }
 
   tbody {
-    tr {
+    tr:first-of-type {
       border-top: 1px solid rgba(34, 36, 38, .1) !important;
     }
   }
@@ -773,6 +774,13 @@ input[type=checkbox]:checked+label {
     padding-left: 1.2rem !important;
     align-content: center;
     text-align: center;
+    white-space: nowrap;
+    max-width: 300px;
+    text-overflow: ellipsis;
+
+    &.title-cell {
+      overflow: hidden;
+    }
 
     &.td-select-dropdown {
       max-width: 120px !important;
@@ -1055,10 +1063,6 @@ div.tab-description {
 
   .green-check-icon {
     margin-left: 10px;
-    min-height: 13px;
-    height: 13px;
-    min-width: 15px;
-    width: 15px;
   }
 }
 

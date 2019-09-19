@@ -9,6 +9,8 @@ import {
   getGrantAccessMembers,
   getGrandedAccessMembers
 } from '../../../../../actions/accessRightsActions'
+import toggleArray from '../../../../../elements/toggleArray'
+
 
 const columns = [
   { title: 'Name', divider: true },
@@ -60,17 +62,8 @@ function MembersTable({ type, match: { params: { project_id } } }) {
     }
   }, [dispatch, type])
 
-  const toggleMemeber = useCallback((value) => {
-    let newVal = new Array()
-    newVal = newVal.concat(checkedMembers)
-    const index = newVal.indexOf(value)
-
-    if (index > -1) {
-      newVal.splice(index, 1)
-    } else {
-      newVal.splice(index, 0, value)
-    }
-    changeChecked(newVal)
+  const toggleMemeber = useCallback(value => {
+    setCheckedDocs(toggleArray(checkedMembers, value))
   }, [checkedMembers])
 
   let optionsText = 'Options'

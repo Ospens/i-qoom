@@ -69,8 +69,9 @@ class ModalCreateProject extends Component {
       sameBillingAddress,
       projectId
     } = this.props
-    
+
     if (!projectId) {
+      delete values.admins[0]
       return startCreateProject(values, (val) => this.afterUpdate(val))
     } else if (projectId && sameBillingAddress) {
       return updateProject(values, (val) => this.afterUpdate(val, 2))
@@ -79,19 +80,32 @@ class ModalCreateProject extends Component {
     }
   }
 
-  renderModalFirstAdmin = () => (
-    <FirstAdmin
-      closeModal={this.handleClose}
-      nextStep={() => this.changeStep(1)}
-      projectId={this.props.projectId}
-      submitErrors={this.props.submitErrors}
-    />
-  )
+  renderModalFirstAdmin = () => {
+    const { initialize, user, projectId } = this.props
+    if (!projectId) {
+      initialize({
+        admins: [{
+          username: user.username,
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name
+        }]
+      })
+    }
+    return (
+      <FirstAdmin
+        closeModal={this.handleClose}
+        nextStep={() => this.changeStep(1)}
+        projectId={this.props.projectId}
+        submitErrors={this.props.submitErrors}
+      />
+    )
+  }
 
   renderModalSecondAdmin = () => (
     <SecondAdmin
       closeModal={this.handleClose}
-      adminsLength={this.props.admins.length}
+      adminCreated={this.props.admins.length > 1 && this.props.admins[1].id}
       backStep={val => this.backStep(val)}
       submitErrors={this.props.submitErrors}
     />
@@ -172,6 +186,7 @@ const mapStateToProps = state => ({
   projectId: selector(state, 'id'),
   admins: selector(state, 'admins'),
   terms: selector(state, 'terms'),
+  user: state.user,
   sameBillingAddress: selector(state, 'company_data.same_for_billing_address')
 })
 

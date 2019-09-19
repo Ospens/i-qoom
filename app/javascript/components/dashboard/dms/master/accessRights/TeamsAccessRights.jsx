@@ -109,7 +109,7 @@ class TeamsAccessRights extends Component {
           <NewTeamModal />
         </div>
         <div className='access-rights-table-block'>
-          <Table sortable className='main-table-block'>
+          <Table sortable striped className='main-table-block'>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell className='table-checkbox'>

@@ -11,19 +11,20 @@ class Api::V1::ProjectsController < ApplicationController
            status: :ok
   end
 
-  # the first step of creating the project and adding an admin
+  # the first step of creating the project
   # is "create" method,
   # the other steps are "update" method
+  # on the create step you don't need to send anything
   # and on admins step it is better to have request like this:
   # { "project" :
   #   { "admins":
   #     {
-  #       "id": "",
+  #       "id": "#{project.id}",
   #       "email": "someemailaddress@gmail.com"
   #     }
   #   }
   # }
-  # Also in case the project creation_step is not done,
+  # Also when the project creation_step is not done
   # it is mandatory to send :creation_step with a value,
   # to apply the correspondent validations
 
@@ -62,9 +63,9 @@ class Api::V1::ProjectsController < ApplicationController
   def confirm_admin
     project_admin_confirmation =
       ProjectAdministratorConfirmation.new(token: params[:token],
-                                    signed_in_user: signed_in_user)
+                                           signed_in_user: signed_in_user)
     if project_admin_confirmation.save
-      head :created
+      head :ok
     else
       render json: project_admin_confirmation.errors,
              status: :unprocessable_entity
@@ -121,6 +122,9 @@ class Api::V1::ProjectsController < ApplicationController
     params.fetch(:project,
                  { }).permit(:name,
                              :creation_step,
+                             :status,
+                             :start_date,
+                             :archived,
                              admins_attributes: [
                                :id,
                                :username,

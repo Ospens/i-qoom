@@ -72,6 +72,10 @@ en:
                 data is not filled properly"
               user_is_already_confirmed:
                 "problem: the user is already confirmed"
+        session:
+          attributes:
+            user:
+              not_confirmed: Your need to confirm your account first
   documents:
     list:
       codification_string: Doc-ID

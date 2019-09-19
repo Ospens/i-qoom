@@ -20,7 +20,7 @@ export class DistributionGroup extends Component {
           <label>Manage distribution groups</label>
         </div>
         <div className='px-4'>
-          <Table sortable className='main-table-block'>
+          <Table sortable striped className='main-table-block'>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell >

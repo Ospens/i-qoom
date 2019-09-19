@@ -87,7 +87,7 @@ RSpec.describe Project, type: :model do
   end
 
   context 'validate project_code' do
-    let(:project) { FactoryBot.build(:project) }
+    let(:project) { FactoryBot.create(:project) }
 
     it 'valid' do
       project.project_code = 'AAA'

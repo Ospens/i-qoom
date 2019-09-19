@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "ProjectAdministrator", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_with_admins, user_id: user.id) }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -36,7 +36,7 @@ describe "ProjectAdministrator", type: :request do
         get "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}/resend_confirmation",
                headers: headers
         expect(response).to have_http_status(:success)
-        expect(ActionMailer::Base.deliveries.count).to eq(3)
+        expect(ActionMailer::Base.deliveries.last.to).to include(project.admins.last.email)
       end
     end
     context "destroy" do

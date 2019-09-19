@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import jwtDecode from 'jwt-decode'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { errorNotify, customSuccessNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
@@ -48,7 +48,11 @@ export const signInUser = values => (dispatch, getState) => {
         localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        if (response.data.user) {
+          errorNotify(response.data.user[0])
+        } else {
+          errorNotify('Something went wrong')
+        }
         throw new SubmissionError(response.data)
       })
   )
@@ -62,7 +66,9 @@ export const signUpUser = userFields => dispatch => {
   }
   return axios.post('/api/v1/users', request)
     .then(response => {
-      successNotify('You are successfully registered!')
+      customSuccessNotify('Thank you for your registration with i-Qoom. An email with a registration link has \
+                          been send to you. In order to complete the registration process please confirm your email \
+                          by pressing the button in the email')
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {

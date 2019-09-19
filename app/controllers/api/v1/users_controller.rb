@@ -21,13 +21,11 @@ class Api::V1::UsersController < ApplicationController
 
   def confirm
     registration_confirmation =
-      RegistrationConfirmation.new(token: params[:token],
-                                   signed_in_user: signed_in_user)
+      RegistrationConfirmation.new(token: params[:token])
     if registration_confirmation.save
-      head :ok
+      redirect_to '/signin/success/Succcessfully confirmed'
     else
-      render json: registration_confirmation.errors,
-             status: :unprocessable_entity
+      redirect_to '/signin/error/Not confirmed'
     end
   end
 

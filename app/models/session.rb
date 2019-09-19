@@ -20,6 +20,7 @@ class Session
 
   validate :login_is_valid
   validate :password_is_valid
+  validate :not_confirmed
 
   def persisted?
     false
@@ -39,6 +40,10 @@ class Session
     if user.present? && !user.valid_password?(password)
       errors.add(:password, :invalid)
     end
+  end
+
+  def not_confirmed
+    errors.add(:user, :not_confirmed) if user.present? && !user.confirmed?
   end
 
 end

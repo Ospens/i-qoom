@@ -3,7 +3,7 @@ import { Field } from 'redux-form'
 import InputField from '../InputField'
 import { email, required } from '../../elements/validations'
 
-const AdministratorFields = ({ submitErrors, admin }) => {
+const AdministratorFields = ({ submitErrors, admin, disabled = false }) => {
   const prefix = admin ? `${admin}.` : ''
 
   return (
@@ -16,6 +16,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           placeholder='Username'
           validate={[required]}
           className='form-group col-3'
+          disabled={disabled}
         />
         <Field
           component={InputField}
@@ -24,6 +25,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           placeholder='Last name'
           validate={[required]}
           className='form-group col-9'
+          disabled={disabled}
         />
       </div>
       <Field
@@ -33,6 +35,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
         placeholder='First name'
         validate={[required]}
         className='form-group'
+        disabled={disabled}
       />
       <Field
         component={InputField}
@@ -41,7 +44,9 @@ const AdministratorFields = ({ submitErrors, admin }) => {
         placeholder='Email address'
         validate={[email, required]}
         className='form-group'
+        disabled={disabled}
       />
+      {!disabled &&
       <div className='form-row'>
         <Field
           component={InputField}
@@ -57,7 +62,7 @@ const AdministratorFields = ({ submitErrors, admin }) => {
           placeholder='Phone number'
           className='form-group col-9'
         />
-      </div>
+      </div>}
     </div>
   )
 }
