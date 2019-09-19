@@ -15,8 +15,11 @@ class ProjectAdministrator < ApplicationRecord
 
   validates :email,
             email: true,
-            presence: true,
-            uniqueness: { scope: :project_id }
+            presence: true
+
+  validates :email,
+    exclusion: { in: ->(admin) { admin.project.admins.without(admin).map(&:email) } },
+    if: ->(admin) { admin.project.present? }
 
   before_create :add_user
 
