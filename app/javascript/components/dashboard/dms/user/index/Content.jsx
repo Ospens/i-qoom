@@ -171,7 +171,7 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
                 {doc.codification_kind}
               </Table.Cell>
 
-              <Table.Cell>
+              <Table.Cell className='title-cell'>
                 {doc.title || 'Undefined'}
               </Table.Cell>
 

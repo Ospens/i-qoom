@@ -9,7 +9,7 @@ const FirstAdmin = ({ submitErrors, closeModal, nextStep }) => {
         <h3>You will be the first project administrator. Please enter your details.</h3>
         <h6 className='new-modal__body-title mt-4'>After creating the first project, you can change the administrator whenever you like.</h6>
         <label className='project-admin'>Project administrator</label>
-        <AdministratorFields admin='main_admin' submitErrors={submitErrors} disabled />
+        <AdministratorFields admin='admins[0]' submitErrors={submitErrors} disabled />
       </div>
       <div className='new-modal__footer'>
         <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>

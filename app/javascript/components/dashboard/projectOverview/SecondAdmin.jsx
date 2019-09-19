@@ -4,7 +4,7 @@ import AdministratorFields from '../../../elements/forms/AdministratorFields'
 function renderSubmitButtons(secondAdmin, { closeModal, backStep }) {
   return (
     <div className='new-modal__footer'>
-      <button type='button' className='btn btn-back' onClick={() => backStep('admins[2]')}>
+      <button type='button' className='btn btn-back' onClick={() => backStep(secondAdmin ? '' : 'admins[1]')}>
         <i className='svg-icon arrow-left-icon' />
         Back
       </button>
@@ -22,9 +22,9 @@ function renderSubmitButtons(secondAdmin, { closeModal, backStep }) {
   )
 }
 
-function SecondAdmin({ adminsLength, ...props }) {
+function SecondAdmin({ adminCreated, ...props }) {
   const [secondAdmin, togglesecondAdmin] = useState(false)
-  useEffect(() => { if (adminsLength > 2) { togglesecondAdmin(true) } }, [adminsLength])
+  useEffect(() => { if (adminCreated) { togglesecondAdmin(true) } }, [adminCreated])
 
   return (
     <React.Fragment>
@@ -33,7 +33,7 @@ function SecondAdmin({ adminsLength, ...props }) {
           ? <React.Fragment>
               <h6 className='new-modal__body-title'>Who is the new project administrator?</h6>
               <label className='project-admin'>Project second administrator</label>
-            <AdministratorFields admin='admins[2]' submitErrors={props.submitErrors} />
+            <AdministratorFields admin='admins[1]' submitErrors={props.submitErrors} />
             </React.Fragment>
           : <React.Fragment>
               <h6 className='new-modal__body-title'>

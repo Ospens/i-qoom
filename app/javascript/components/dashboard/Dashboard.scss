@@ -50,6 +50,7 @@ button:disabled {
   text-align: center !important;
   height: 250px;
   max-height: 24vh;
+  min-height: 230px;
 
   .cogs-icon {
     width: 30px;
@@ -774,9 +775,12 @@ input[type=checkbox]:checked+label {
     align-content: center;
     text-align: center;
     white-space: nowrap;
-    overflow: hidden;
     max-width: 300px;
     text-overflow: ellipsis;
+
+    &.title-cell {
+      overflow: hidden;
+    }
 
     &.td-select-dropdown {
       max-width: 120px !important;
