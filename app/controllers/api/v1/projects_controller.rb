@@ -62,9 +62,9 @@ class Api::V1::ProjectsController < ApplicationController
   def confirm_admin
     project_admin_confirmation =
       ProjectAdministratorConfirmation.new(token: params[:token],
-                                    signed_in_user: signed_in_user)
+                                           signed_in_user: signed_in_user)
     if project_admin_confirmation.save
-      head :created
+      head :ok
     else
       render json: project_admin_confirmation.errors,
              status: :unprocessable_entity

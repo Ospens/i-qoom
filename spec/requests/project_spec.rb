@@ -31,22 +31,10 @@ describe "Project", type: :request do
     context  "create (creation_step 'admins')" do
       it 'should get a status "success"' do
         post "/api/v1/projects",
-          params: { project:
-                    { admins:
-                      { id: "",
-                        email: Faker::Internet.email
-                      }
-                    }
-                  }.to_json,
+          params: { }.to_json,
           headers: headers
         expect(response).to have_http_status(:success)
         expect(ActionMailer::Base.deliveries.count).to eq(0)
-      end
-      it 'should get a status "error"' do
-        post "/api/v1/projects",
-          params: { project: { name: "12" } }.to_json,
-          headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
     context "update" do
@@ -59,7 +47,7 @@ describe "Project", type: :request do
                           email: "someemail@gmail.com" } } }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).admins.count).to eq(3)
+          expect(Project.find_by(id: project.id).admins.count).to eq(2)
           expect(Project.find_by(id: project.id).admins.last.email).to\
             eq("someemail@gmail.com")
         end
@@ -72,7 +60,7 @@ describe "Project", type: :request do
                           email: "notemail" } } }.to_json,
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(Project.find_by(id: project.id).admins.count).not_to eq(3)
+          expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
           expect(Project.find_by(id: project.id).admins.last.email).not_to\
             eq("notemail")
         end
@@ -156,9 +144,6 @@ describe "Project", type: :request do
           expect(response).to have_http_status(:success)
           expect(updated_project.company_data.billing_address).to be_present
           expect(updated_project.creation_step).to eq("done")
-          expect(ActionMailer::Base.deliveries.last.to).to\
-            include(updated_project.admins.last.email)
-          expect(updated_project.admins.awaiting_confirmation.first.inviter_id).to eq(user.id)
         end
         it "should get a status 'error' and don't
             add a billing_address to the project" do
@@ -199,17 +184,16 @@ describe "Project", type: :request do
     context "confirm_admin" do
       it "should confirm an admin" do
         project_admin =
-          FactoryBot.create(:project,
-                            user_id: user.id).admins.last
+          FactoryBot.create(:project_with_admins).admins.last
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(:ok)
         expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(user)
       end
       it "shouldn't confirm an admin with wrong user" do
         project_admin =
-          FactoryBot.create(:project,
+          FactoryBot.create(:project_with_admins,
                             user_id: user.id).admins.last
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
