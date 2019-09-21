@@ -99,6 +99,9 @@ Rails.application.routes.draw do
           get :user_index, on: :collection
         end
         resources :document_review_owners, only: :index
+        resources :document_revisions, only: [] do
+          get :review_menu, on: :collection
+        end
       end
     end
   end
