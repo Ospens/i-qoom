@@ -82,12 +82,12 @@ class SignUp extends Component {
       <div className='form-check disabled' />
       <div className='form-buttons col-12 text-center'>
         <Link to='/' className='col-2 btn btn-back'>
-          <i className='svg-icon arrow-left-icon' />
+          <span className='icon-arrow-button-left' />
           Back
         </Link>
         <button type='submit' className='col-2 btn btn-primary'>
           Next
-          <i className='svg-icon arrow-right-icon' />
+          <span className='icon-arrow-button-right' />
         </button>
       </div>
     </div>
@@ -149,7 +149,7 @@ class SignUp extends Component {
       </div>
       <div className='form-buttons row text-center'>
         <button type='button' className='col-2 btn btn-back' onClick={this.prevStep}>
-          <i className='svg-icon arrow-left-icon' />
+          <span className='icon-arrow-button-left' />
           Back
         </button>
         <button type='submit' className='col-2 btn btn-primary'>Register</button>

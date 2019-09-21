@@ -47,7 +47,7 @@ class ExampleCard extends Component {
           })}
         </Slider>
         <button type='button' className='btn btn-back' onClick={toggleExamples}>
-          <i className='svg-icon arrow-left-icon' />
+          <span className='icon-arrow-button-left' />
           Back
         </button>
       </section>

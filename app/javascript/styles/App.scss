@@ -33,7 +33,7 @@ ul {
 }
 
 p {
-  color: black;
+  color: #293233;
   line-height: 1.5;
 }
 
@@ -310,6 +310,13 @@ button {
   border-radius: 5px;
   padding-left: 45px;
   padding-right: 45px;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  *,
+  *:after,
+  *:before {
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  }
+
 }
 
 .prevBtn,
@@ -387,22 +394,28 @@ footer:after,
   align-items: center !important;
   color: #a5adad;
   
-  .svg-icon {
-    margin-right: 5px;
-    background-color: #8FB0B3;
-    width: 7px;
-    min-width: 7px;
-    height: 11px;
-    min-height: 11px;
+  .icon-arrow-button-left {
+    font-size: 11px;
+
+    &:before {
+      margin-right: 10px;
+      color: #a5adad;
+    }
   }
 
   &.back-member-details {
     padding-right: 100px !important;
   }
-}
 
-.btn {
-  border-radius: 5px;
+  &:hover {
+    color: #293233;
+
+    .icon-arrow-button-left {
+      &:before {
+        color: #293233;
+      }
+    }
+  }
 }
 
 button:focus,
@@ -429,8 +442,18 @@ header {
     font-weight: 500;
     margin-right: 0px !important;
 
+    .icon-arrow-button-left {
+      font-size: 12px;
+    }
+
     &:hover {
       font-weight: 700;
+
+      .icon-arrow-button-left {
+        &:before {
+          color: #fff;
+        }
+      }
     }
 
     .svg-icon {
@@ -495,8 +518,14 @@ header {
   }
 
   .btn-back {
-    .svg-icon {
-      background-color: white;
+
+    .icon-arrow-button-left {
+      font-size: 11px;
+
+      &:before {
+        margin-right: 10px;
+        color: #fff;
+      }
     }
   }
 
@@ -1274,6 +1303,15 @@ header {
   color: #fff;
   background-color: #0096FA;
   border-color: #0096FA;
+
+  .icon-arrow-button-right {
+    font-size: 11px;
+    margin-left: auto;
+
+    &:before {
+      color: #fff;
+    }
+  }
 }
 
 #sign-up-form {
@@ -1484,7 +1522,7 @@ input[type=checkbox] {
 
   .navbar-burger-block {
     path {
-      fill: black;
+      fill: #293233;
     }
   }
 
@@ -1548,7 +1586,7 @@ input[type=checkbox] {
     position: absolute;
     bottom: -13px;
     left: calc(50% - 7px);
-    background: black;
+    background: #293233;
     padding: 3px;
     width: 25px;
     height: 25px;
@@ -1802,7 +1840,6 @@ input[type=checkbox] {
       text-align: center;
       vertical-align: middle;
       color: #8FB0B3;
-      margin-bottom: 1em;
       font-size: 16px;
     }
 
@@ -1820,6 +1857,15 @@ input[type=checkbox] {
       justify-content: center;
       width: 100%;
       height: 100%;
+
+      [class^="icon-"], [class*=" icon-"] {
+        margin-top: 20px;
+        font-size: 50px;
+
+        &:before {
+          color: #0096FA;
+        }
+      }
 
       .landing-menu__card-content__icon {
         max-height: 40px;
@@ -1860,8 +1906,8 @@ input[type=checkbox] {
     .nav-item, button, a {
       color: #fff;
 
-      .svg-icon {
-        background-color: #fff !important;
+      [class^="icon-"], [class*=" icon-"] {
+        color: #fff !important;
       }
     }
   }

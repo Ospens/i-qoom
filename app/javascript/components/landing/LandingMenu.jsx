@@ -11,19 +11,19 @@ const menuListFirstRow = [
   },
   {
     title: 'Time Sheet',
-    icon: 'streamline-stopwatch-icon',
+    icon: 'icon-streamline-icon-stopwatch24x24',
   },
   {
     title: 'Task List',
-    icon: 'streamline-task-list-icon',
+    icon: 'icon-streamline-icon-task-list-edit24x24',
   },
   {
     title: 'Resource Planning',
-    icon: 'streamline-module-hand-icon'
+    icon: 'icon-streamline-icon-module-hand-puzzle24x24'
   },
   {
     title: 'Calendar',
-    icon: 'streamline-calendar-icon'
+    icon: 'icon-streamline-icon-calendar-124x24'
   }
 ]
 
@@ -77,9 +77,7 @@ class LandingMenu extends Component {
               {icon && 
               <React.Fragment>
                 <span>{title}</span>
-                <div>
-                  <i className={classnames('svg-icon', icon)} />
-                </div>
+                <span className={icon} />
               </React.Fragment> }
             </div>
           </div>
@@ -113,9 +111,7 @@ class LandingMenu extends Component {
               <div className='landing-menu__card-content'>
                 <div className='landing-card__title-block'>
                   <span>Projects</span>
-                  <div>
-                    <i className='svg-icon streamline-folder-icon' />
-                  </div>
+                  <span className='icon-streamline-icon-folder-file24x24' />
                 </div>
               </div>
             </div>

@@ -109,10 +109,6 @@ i.svg-icon {
     background: url('../images/arrow-button-left.svg') no-repeat 50% 50%;
   }
 
-  &.arrow-left-icon-2 {
-    background: url('../images/Arrow_2_left.svg') no-repeat 50% 50%;
-  }
-
   &.arrow-right-icon {
     -webkit-mask: url('../images/arrow-button-right.svg') no-repeat 50% 50%;
     mask: url('../images/arrow-button-right.svg') no-repeat 50% 50%;
@@ -324,15 +320,6 @@ i.svg-icon {
     mask: url('../images/common-file-share.svg') no-repeat 50% 50%;
   }
 
-  &.alarm-bell-icon {
-    -webkit-mask: url('../images/alarm-bell.svg') no-repeat 50% 50%;
-    mask: url('../images/alarm-bell.svg') no-repeat 50% 50%;
-    height: 20px;
-    min-height: 20px;
-    width: 16px;
-    min-width: 16px;
-  }
-
   &.logo-colored {
     background: url('../images/i-Qoom_Brand_Logo_Gradient') no-repeat 50% 50%;
     background-size: 100%;
@@ -379,10 +366,10 @@ i.svg-icon {
     }
 
     &.sidebar {
-      height: 23px;
-      min-height: 23px;
-      width: 120px;
-      min-width: 120px;
+      height: 26px;
+      min-height: 26px;
+      width: 115px;
+      min-width: 115px;
     }
   }
 
@@ -393,46 +380,6 @@ i.svg-icon {
     min-height: 5px;
     width: 22px;
     min-width: 22px;
-  }
-
-  &.streamline-stopwatch-icon {
-    background: url('../images/streamline-icon-stopwatch.svg');
-    height: 50px;
-    min-height: 50px;
-    width: 50px;
-    min-width: 50px;
-  }
-
-  &.streamline-task-list-icon {
-    background: url('../images/streamline-icon-task-list-edit.svg');
-    height: 50px;
-    min-height: 50px;
-    width: 50px;
-    min-width: 50px;
-  }
-
-  &.streamline-module-hand-icon {
-    background: url('../images/streamline-icon-module-hand-puzzle.svg');
-    height: 50px;
-    min-height: 50px;
-    width: 50px;
-    min-width: 50px;
-  }
-
-  &.streamline-calendar-icon {
-    background: url('../images/streamline-icon-calendar-1.svg');
-    height: 50px;
-    min-height: 50px;
-    width: 50px;
-    min-width: 50px;
-  }
-
-  &.streamline-folder-icon {
-    background: url('../images/streamline-icon-folder-file.svg');
-    height: 50px;
-    min-height: 50px;
-    width: 50px;
-    min-width: 50px;
   }
 
   &.dark-arrow-icon {

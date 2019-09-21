@@ -6,7 +6,7 @@ const renderSubmitButtons = ({ closeModal, backStep }) => {
   return (
     <div className='new-modal__footer'>
       <button type='button' className='btn btn-back' onClick={() => backStep('company_data.billing_address')}>
-        <i className='svg-icon arrow-left-icon' />
+        <span className='icon-arrow-button-left' />
         Back
       </button>
       <button type='button' className='btn btn-white' onClick={closeModal}>Cancel</button>

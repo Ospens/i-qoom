@@ -31,12 +31,12 @@ class TopBar extends Component {
         </li>
         <li className='nav-item nav-item-icon'>
           <button type='button'>
-            <i className='svg-icon email-unread-icon gray' />
+            <span className='icon-email-action-unread gray' />
           </button>
         </li>
         <li className='nav-item nav-item-icon'>
           <button type='button'>
-            <i className='svg-icon alarm-bell-icon gray' />
+            <span className='icon-alarm-bell gray' />
           </button>
         </li>
         <li className='nav-item user-info-avatar'>
@@ -78,7 +78,7 @@ class TopBar extends Component {
               {this.renderLandingLinks(navClass)}
               <div className={`nav justify-content-center back-button ${navClass}`}>
                 <Link to='/' className='btn nav-link btn-back' >
-                  <i className='svg-icon arrow-left-icon' />     
+                  <span className='icon-arrow-button-left' />
                   BACK TO START PAGE
                 </Link>
               </div>

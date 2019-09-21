@@ -23,24 +23,20 @@ class DropDown extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
-  renderDotsIcon = () => <div className='dots-container'><i className='svg-icon dots-icon' /></div>
+  renderDotsIcon = () => <div className='dots-container'><span className='icon-navigation-menu-horizontal' /></div>
 
   renderDefaultItems = actionDDitems => (
     actionDDitems.map(({ icon, title, onClick }, i) => (
-      <React.Fragment key={i}>
-        <li
-          className='dropdown-item'
-          onClick={onClick}
-        >
-          <ReactSVG
-            svgStyle={{ height: 15, width: 15 }}
-            src={icon}
-          />
-          <span className='item-text'>
-            {title}
-          </span>
-        </li>
-      </React.Fragment>
+      <li
+        className='dropdown-item'
+        onClick={onClick}
+        key={i}
+      >
+        <span className={icon} />
+        <span className='item-text'>
+          {title}
+        </span>
+      </li>
     ))
   )
 

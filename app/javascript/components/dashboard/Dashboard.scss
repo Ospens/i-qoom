@@ -52,17 +52,16 @@ button:disabled {
   max-height: 24vh;
   min-height: 230px;
 
-  .cogs-icon {
-    width: 30px;
-    height: 30px;
+  .icon-cog-double-2 {
     align-self: end;
     margin-top: 5px;
     margin-left: 5px;
-    background-color: rgba(0, 0, 0, .87);
+    font-size: 30px;
+    color: rgb(41, 50, 51);
 
     &:hover {
       cursor: pointer;
-      background-color: #0096FA;
+      color: #0096FA;
     }
   }
 
@@ -931,6 +930,7 @@ span.divider {
     align-items: center;
     padding: 7px;
     cursor: pointer;
+    border-radius: 5px;
 
     .icon-container {
       height: 22px;
@@ -971,6 +971,10 @@ span.divider {
         color: #0095f9;
       }
 
+      [class^="icon-"], [class*=" icon-"] {
+        color: #0095f9 !important;
+      }
+      
       .icon-container {
         .svg-icon {
           background-color: #0095f9 !important;
@@ -999,14 +1003,13 @@ span.divider {
   }
 
   .dots-container {
-    width: 25px;
-    height: 10px;
     display: flex;
     align-items: center;
     justify-items: center;
 
-    .dots-icon {
-      background-color: rgb(163, 201, 204) !important;
+    .icon-navigation-menu-horizontal {
+      font-size: 6px;
+      color: #a3c9cc;
     }
   }
 
@@ -1016,8 +1019,8 @@ span.divider {
     background: transparent !important;
 
     &:hover, &:active {
-      .dots-icon {
-        background-color: #0096FA !important;
+      .icon-navigation-menu-horizontal{
+        color: #0096FA !important;
       }
     }
   }
@@ -1042,7 +1045,8 @@ span.divider {
     text-align: left;
   }
 
-  .svg-icon {
+  [class^="icon-"], [class*=" icon-"] {
+    font-size: 20px;
     margin-right: 10px;
   }
 

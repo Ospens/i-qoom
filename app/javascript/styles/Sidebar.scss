@@ -104,14 +104,20 @@
     padding-top: 4.4vh;
 
     .side-bar-logo__container {
+      display: flex;
       padding-left: 20px;
       align-content: center;
       align-items: center;
     }
     
-    .icon-button {
+    button {
+      display: flex;
       margin-left: auto;
       padding-right: 20px;
+    }
+
+    .icon-Burgermenu_1 {
+      font-size: 15px;
     }
   }
 }
