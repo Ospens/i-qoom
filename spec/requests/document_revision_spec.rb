@@ -85,4 +85,92 @@ describe DocumentRevision, type: :request do
       expect(json['my_review']['issued_for_information']['count']).to eql(1)
     end
   end
+
+  context '#review_index' do
+    let(:json) { JSON(response.body) }
+    let(:document) { FactoryBot.create(:document) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:project) { document.project }
+    let(:revision) { document.revision }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/document_revisions/review_index"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    context 'access' do
+      before do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+      end
+
+      it 'no scope' do
+        revision.document_review_subjects.create!(user: user,
+                                                  reviewers: [user],
+                                                  review_issuer: user)
+        get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+          headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(0)
+      end
+
+      it 'my review' do
+        originating_company =
+          document.document_fields
+             .find_by(codification_kind: :originating_company)
+             .document_field_values.find_by(selected: true).value
+        DocumentReviewOwner.create!(user: user,
+                                    project: project,
+                                    originating_company: originating_company)
+        get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+          headers: credentials(user),
+          params: { scope: 'my_review' }
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        expect(json.first['id']).to eql(revision.id)
+      end
+
+      it 'all review' do
+        revision.document_review_subjects.create!(user: user,
+                                                  reviewers: [user],
+                                                  review_issuer: user)
+        get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+          headers: credentials(user),
+          params: { scope: 'all_review' }
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        expect(json.first['id']).to eql(revision.id)
+      end
+
+      it 'review status wrong' do
+        revision.document_review_subjects.create!(user: user,
+                                                  reviewers: [user],
+                                                  review_issuer: user)
+        get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+          headers: credentials(user),
+          params: { scope: 'all_review', review_status: 'accepted' }
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(0)
+      end
+
+      it 'review status right' do
+        revision.document_review_subjects.create!(user: user,
+                                                  reviewers: [user],
+                                                  review_issuer: user)
+        get "/api/v1/projects/#{project.id}/document_revisions/review_index",
+          headers: credentials(user),
+          params: { scope: 'all_review', review_status: 'issued_for_information' }
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        expect(json.first['id']).to eql(revision.id)
+      end
+    end
+  end
 end

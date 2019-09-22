@@ -121,7 +121,8 @@ class Ability
       can :update_review_status, DocumentRevision do |revision|
         revision.can_update_review_status?(user)
       end
-      can :review_menu, DocumentRevision do |revision, project|
+      can [:review_menu,
+           :review_index], DocumentRevision do |revision, project|
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
     end
