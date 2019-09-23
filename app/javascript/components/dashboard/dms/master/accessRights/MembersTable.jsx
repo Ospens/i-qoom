@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { initialize } from 'redux-form'
 import { withRouter } from 'react-router-dom'
-import classnames from 'classnames'
 import DropDown from '../../../../../elements/DropDown'
 import MemberRow from './MemberRow'
 import {
@@ -24,27 +23,27 @@ const columns = [
 const optionBtn = [
   {
     title: 'Define access rights',
-    icon: 'share-file-icon'
+    icon: 'icon-common-file-share'
   },
   {
     title: 'Show profile',
-    icon: 'review-icon'
+    icon: 'icon-single-neutral-actions-text-1'
   },
   {
     title: 'Send message',
-    icon: 'email-unread-icon'
+    icon: 'icon-email-action-unread'
   },
   {
     title: 'Add to team',
-    icon: 'business-team-icon'
+    icon: 'icon-business-team-goal'
   },
   {
     title: 'Add to distribution G.',
-    icon: 'business-team-icon'
+    icon: 'icon-business-team-goal'
   },
   {
     title: 'Delete',
-    icon: 'trash-icon'
+    icon: 'icon-bin-1'
   }
 ]
 
@@ -76,16 +75,7 @@ function MembersTable({ type, match: { params: { project_id } } }) {
     <React.Fragment>
       <div><label>Select Access rights for members</label></div>
       <div className='d-flex my-4'>
-        <DropDown btnName={optionsText}>
-          {optionBtn.map(({ title, icon }, i) => (
-            <button type='button' className='dropdown-item btn' key={i}>
-              <div>
-                <i className={classnames('svg-icon gray mr-2', icon)} />
-              </div>
-              <span className='item-text'>{title}</span>
-            </button>
-          ))}
-        </DropDown>
+        <DropDown btnName={optionsText} defaultValues={optionBtn} />
         <input
           type='text'
           className='search-input ml-auto'

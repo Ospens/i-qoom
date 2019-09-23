@@ -46,14 +46,14 @@ class IndexDMS extends Component {
               className='d-flex align-items-center'
               to={`/dashboard/projects/${params.project_id}/documents/new/`}
             >
-              <i className='svg-icon blue-plus-icon mr-2' />
+              <span className='icon-add_1 mr-2' />
               <span data-title='Create new Document'>Create new Document</span>
             </Link>
           </li>
         </Route>
         <li>
           <button type='button' className={btnClass}>
-            <i className='svg-icon revision-icon mr-2' />
+            <span className='icon-Revise_1 mr-2' />
             <span data-title={`Add revision ${checkedLength > 0 ? checkedLength : ''}`}>
               Add revision {checkedLength > 0 ? checkedLength : ''}
             </span>
@@ -61,7 +61,7 @@ class IndexDMS extends Component {
         </li>
         <li>
           <button type='button' className={btnClass}>
-            <i className='svg-icon file-edit-icon mr-2' />
+            <span className='icon-common-file-edit mr-2' />
             <span className='head-button__gray-text' data-title={`Edit document {checkedLength > 0 ? checkedLength : ''}`}>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>

@@ -507,6 +507,10 @@ form {
       align-items: center;
       justify-content: center;
       background-color: #475859;
+
+      span {
+        font-size: 25px;
+      }
     }
 
     &:hover {
@@ -810,13 +814,6 @@ input[type=checkbox]:checked+label {
         display: flex;
         justify-content: center;
       }
-
-      .common-file-icon {
-        width: 22.5px;
-        min-width: 22.5px;
-        min-height: 24px;
-        height: 24px;
-      }
     }
 
     &.td-date {
@@ -935,7 +932,7 @@ span.divider {
     .icon-container {
       height: 22px;
       width: 22px;
-      margin-right: 8px;
+      // margin-right: 8px;
     }
 
     span.item-text {
@@ -971,8 +968,10 @@ span.divider {
         color: #0095f9;
       }
 
-      [class^="icon-"], [class*=" icon-"] {
-        color: #0095f9 !important;
+      .icon-container {
+        [class^="icon-"], [class*=" icon-"] {
+          color: #0095f9 !important;
+        }
       }
       
       .icon-container {
@@ -1064,10 +1063,6 @@ div.tab-description {
   span {
     color:#ced4da;
   }
-
-  .green-check-icon {
-    margin-left: 10px;
-  }
 }
 
 .btn-back-to-project {
@@ -1088,8 +1083,8 @@ div.tab-description {
 
 .confirm-msg {
   position: absolute;
-  left: calc(-100% - 55px);
-  top: 0;
+  left: calc(-100% - 125px) !important;
+  top: -5px !important;
   background-color: #475759 !important;
   padding: 12px !important;
 
@@ -1236,17 +1231,19 @@ div.tab-description {
   display: flex !important;
   border: 1px solid #ccc !important;
   
-  .common-file-lock {
+  .icon-common-file-lock:before {
     margin-right: 10px;
+    color: #212529;
   }
 
   &:hover, &:active {
     background-color: #daf0ff;
-    color: #2fa7f9 !important;
-    
-    .common-file-lock {
-      background-color: #2fa7f9 !important;
+    color: #2fa7f9;
+  
+    .icon-common-file-lock:before {
+      color: #2fa7f9;
     }
+    
   }
 }
 
@@ -1442,6 +1439,7 @@ i.arrow {
   button {
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 0 !important;
   }
 
@@ -1476,10 +1474,6 @@ i.arrow {
     align-items: center;
     justify-content: center;
     padding: 10px;
-
-    label {
-      margin-right: 10px; 
-    }
 
     span {
       margin-left: 10px; 
@@ -1568,6 +1562,10 @@ i.arrow {
       margin-bottom: 5px;
       white-space: nowrap;
       overflow: hidden;
+    }
+
+    .icon-common-file-text1 {
+      font-size: 45px;
     }
   }
 

@@ -46,8 +46,8 @@ class FileField extends Component {
     return (
       <div className='logo-container'>
         <div className='trash-icon-container'>
-          <i
-            className='svg-icon trash-icon white'
+          <span
+            className='icon-bin-1 white'
             onClick={this.discardLogo}
           />
         </div>

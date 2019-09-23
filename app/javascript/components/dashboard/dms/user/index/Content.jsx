@@ -177,19 +177,19 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
 
               <Table.Cell className='td-files'>
                 <div>
-                  <i className='svg-icon common-file-icon black' />
+                  <span className='icon-common-file-text1 black' />
                 </div>
               </Table.Cell>
 
               <Table.Cell className='td-files'>
                 <div>
-                  <i className='svg-icon common-file-color-icon' />
+                  <span className='icon-common-file-text_big'><span className='path1'></span><span className='path2'></span><span className='path3'></span><span className='path4'></span></span>
                 </div>
               </Table.Cell>
 
               <Table.Cell className='td-files'>
                 <div>
-                  <i className='svg-icon file-pdf-icon' />
+                  <span className='icon-Work-Office-Companies---Office-Files---office-file-pdf' />
                 </div>
               </Table.Cell>
 

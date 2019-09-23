@@ -28,23 +28,23 @@ class DropDownElement extends Component {
     const newDDElementOtions = [
       {
         title: 'New section above',
-        icon: 'section-above-icon',
-        onClick: ((index) => addNewSection(index))
+        icon: 'icon-upload-menu2',
+        onClick: (index => addNewSection(index))
       },
       {
         title: 'New section below',
-        icon: 'section-below-icon',
-        onClick: ((index) => addNewSection(index + 1))
+        icon: 'icon-upload-menu1',
+        onClick: (index => addNewSection(index + 1))
       },
       {
         title: 'Copy',
-        icon: 'copy-icon',
-        onClick: ((index) => copySection(index))
+        icon: 'icon-common-file-double-1',
+        onClick: (index => copySection(index))
       },
       {
         title: 'Delete',
-        icon: 'trash-icon',
-        onClick: ((index) => removeSection(index))
+        icon: 'icon-bin-1',
+        onClick: (index => removeSection(index))
       }
     ]
     document.body.appendChild(portal)
@@ -70,19 +70,8 @@ class DropDownElement extends Component {
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon dropleft ml-2'
-                >
-                  {newDDElementOtions.map(({icon, title, onClick }, i) => (
-                    <React.Fragment key={i}>
-                      <li
-                        className='dropdown-item'
-                        onClick={() => onClick(index)}
-                      >
-                        <i className={classnames('svg-icon gray mr-2', icon)} />
-                        <span className='item-text'>{title}</span>
-                      </li>
-                    </React.Fragment>
-                  ))}
-                </DropDown>
+                  defaultValues={newDDElementOtions}
+                />
               </div>
             </div>
           )
@@ -161,7 +150,7 @@ class DraggableDropDown extends Component {
   }
 
   addNewSection = (e, index) => {
-    e.preventDefault()
+    // e.preventDefault()
     const { discardNewSection, newSection, fields } = this.props
     if (index === undefined && newSection.length < 1) return
 

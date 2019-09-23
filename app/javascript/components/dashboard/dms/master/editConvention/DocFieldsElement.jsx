@@ -11,12 +11,17 @@ const actionConventions = index => (
   [
     {
       title: 'New field above',
-      icon: 'section-above-icon',
+      icon: 'icon-upload-menu2',
       offset: index
     },
     {
       title: 'New field below',
-      icon: 'section-below-icon',
+      icon: 'icon-upload-menu1',
+      offset: index + 1
+    },
+    {
+      title: 'Delete',
+      icon: 'icon-bin-1',
       offset: index + 1
     }
   ]
@@ -114,7 +119,7 @@ class DocFieldsElement extends Component {
           initModal({ ...val, row, column: value.column })
         }}
       >
-        <i className={classnames('svg-icon gray', icon)} />
+        <span className={classnames('gray', icon)} />
         <span className='item-text'>{title}</span>
       </li>
     )
@@ -124,7 +129,7 @@ class DocFieldsElement extends Component {
     const { input: { value } } = this.props
     const row = value.row + 1
     const val = { ...value, id: undefined }
-    return this.renderMenuItem('copy-icon', 'Copy', row, val)
+    return this.renderMenuItem('icon-common-file-double-1', 'Copy', row, val)
   }
 
   render() {
@@ -159,14 +164,8 @@ class DocFieldsElement extends Component {
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon mr-2'
+                  defaultValues={actionConventions(index, value.codification_kind)}
                 >
-                  {actionConventions(index).map(({ icon, title, offset }, i) => {
-                    return (
-                      <React.Fragment key={i}>
-                        {this.renderMenuItem(icon, title, offset)}
-                      </React.Fragment>
-                    )
-                  })}
                   {!value.codification_kind &&
                   <React.Fragment>
                     {this.renderCopyElement()}
@@ -174,7 +173,7 @@ class DocFieldsElement extends Component {
                       className='dropdown-item'
                       onClick={() => removeField(column, index)}
                     >
-                      <i className='svg-icon trash-icon gray' />
+                      <span className='' />
                       <span className='item-text'>Delete</span>
                     </li>
                   </React.Fragment>

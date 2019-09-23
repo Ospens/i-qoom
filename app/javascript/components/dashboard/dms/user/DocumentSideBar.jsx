@@ -7,12 +7,12 @@ import FolderInfo from './FolderInfo'
 const menuItems = [
   {
     title: 'Documents data & files',
-    icon: 'task-checklist-icon',
+    icon: 'icon-task-checklist-check',
     menuStep: 1
   },
   {
     title: 'Access & Communication',
-    icon: 'task-list-settings-icon',
+    icon: 'icon-task-list-settings',
     menuStep: 2
   }
 ]
@@ -55,7 +55,7 @@ const DocumentSideBar = ({ step, toggleStep }) => (
               className={classnames('btn', { 'active': step === menuStep })}
               onClick={() => toggleStep(menuStep)}
             >
-              <i className={classnames('svg-icon black mr-2', icon)} />
+              <span className={classnames('black mr-2', icon)} />
               <span className='head-button__gray-text'>{title}</span>
             </button>
           </li>

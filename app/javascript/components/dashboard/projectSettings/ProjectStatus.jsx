@@ -64,7 +64,7 @@ class ProjectStatus extends Component {
           <h4>Planning</h4>
           <form noValidate={true} onSubmit={this.props.handleSubmit}>
             <div className='modal-body project-name'>
-              <h2 className='mb-5'>{`Do you want to set the project status to "${modalTitle}"?`}</h2>
+              <h2 className='mb-5'>{`Do you want to set the project status to '${modalTitle}'?`}</h2>
             </div>
             <div className='modal-footer'>
               <button type='button' className='btn btn-back'
@@ -123,18 +123,18 @@ class ProjectStatus extends Component {
         <div className='mt-3'>
           <div className='tab-description d-flex'>
             <span>Terms & Conditions accepted</span>
-            <i className="svg-icon green-check-icon" />
+            <i className='icon-check_3 ml-2' />
           </div>
         </div>
         <div className='mt-3'>
           <div className='tab-description d-flex'>
             <span>Billing address confirmed</span>
-            <i className="svg-icon green-check-icon" />
+            <span className='icon-check_3 ml-2' />
           </div>
         </div>
         <div className='d-flex justify-content-end my-5'>
           <button className='btn btn-move-to-archive'>
-            <i className='svg-icon common-file-lock black' />
+            <span className='icon-common-file-lock' />
             Move to archive
           </button>
         </div>

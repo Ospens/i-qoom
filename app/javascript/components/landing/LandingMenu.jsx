@@ -44,11 +44,9 @@ class LandingMenu extends Component {
         <Link to={`/dashboard/`}>
           <div className='landing-card__title-block'>
             <span>New project</span>
-            <div className='d-flex justify-content-center'>
-              <div>
-                <i className='svg-icon blue-plus-icon mr-2' />
-              </div>
-              <p className='new-project'>Add project</p>
+            <div className='new-project'>
+              <span className='icon-add_1 mr-2' />
+              Add project
             </div>
           </div>
         </Link>

@@ -67,7 +67,7 @@ class TopBar extends Component {
         <nav className='navbar navbar-expand-sm'>
           {!isOpen &&
           <div className='navbar-burger-block'  onClick={toggle}>
-            <i className='svg-icon burger-menu-icon-2' />
+            <span className='icon-Burgermenu_2' />
             {isAdmin && <span className='text-white'>Admin access</span>}
           </div>}
           <div className='container'>
@@ -108,7 +108,7 @@ class TopBar extends Component {
       {!isOpen &&
       <div className='navbar-burger-block'>
         <h2>
-          <i className='svg-icon black burger-menu-icon-2 mr-5' onClick={toggle} />
+          <i className='icon-Burgermenu_2 mr-5' onClick={toggle} />
         </h2>
       </div>}
       {this.props.header}

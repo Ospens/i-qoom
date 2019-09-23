@@ -1,7 +1,26 @@
 import React, { Component } from 'react'
-import ReactSVG from 'react-svg'
+import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 
+export const defaultItems = items => (
+  items.map(({ icon, title, onClick, link }, i) => (
+    link 
+      ? <li className='dropdown-item' onClick={onClick} key={i}>
+          <Link className='d-flex' to={link}>
+            <div className='icon-container'>
+              <span className={icon} />
+            </div>
+          <span className='item-text'>{title}</span>
+          </Link>
+        </li>
+      : <li className='dropdown-item' onClick={onClick} key={i}>
+          <div className='icon-container'>
+            <span className={icon} />
+          </div>
+          <span className='item-text'>{title}</span>
+        </li>
+  ))
+)
 class DropDown extends Component {
 
   state = {
@@ -24,21 +43,6 @@ class DropDown extends Component {
   }
 
   renderDotsIcon = () => <div className='dots-container'><span className='icon-navigation-menu-horizontal' /></div>
-
-  renderDefaultItems = actionDDitems => (
-    actionDDitems.map(({ icon, title, onClick }, i) => (
-      <li
-        className='dropdown-item'
-        onClick={onClick}
-        key={i}
-      >
-        <span className={icon} />
-        <span className='item-text'>
-          {title}
-        </span>
-      </li>
-    ))
-  )
 
   setWrapperRef = node => {
     this.wrapperRef = node
@@ -103,7 +107,7 @@ class DropDown extends Component {
           })()}
         </button>
         <ul className={ddClass}>
-          {defaultValues ? this.renderDefaultItems(defaultValues) : children}
+          {defaultValues ? defaultItems(defaultValues) : children}
         </ul>
       </div>
     )

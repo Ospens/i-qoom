@@ -41,7 +41,7 @@ class SideBar extends Component {
         >
           <Dropdown.Menu>
             <Input
-              icon={ <i className='svg-icon search-icon' /> }
+              icon={<span className='icon-search-alternate' /> }
               placeholder='Choose language'
             />
             <Dropdown.Menu scrolling>
@@ -151,7 +151,7 @@ class SideBar extends Component {
               <span className='active-project-title'>{currentProject.name}</span>
             </div>
           </div>
-          <i className='svg-icon cogs-icon white ml-auto' />
+          <span className='icon-cog-double-2 white' />
         </div>}
       </aside>
     )

@@ -39,7 +39,7 @@ export class CreateFolder extends Component {
       className='btn'
       onClick={this.handleOpen}
     >
-      <i className='svg-icon blue-plus-icon' />
+      <span className='icon-add_1' />
       <span>New folder</span>
     </button>
   )

@@ -98,7 +98,7 @@ class TeamsAccessRights extends Component {
             {optionBtn.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}
@@ -178,18 +178,8 @@ class TeamsAccessRights extends Component {
                       dots={true}
                       className='dropdown-with-icon'
                       ulClass='left'
-                    >
-                      {optionBtn.map(({ title, icon }, i) => (
-                        <button type='button' className='dropdown-item btn' key={i}>
-                          <div>
-                            <i className={classnames('svg-icon gray mr-2', icon)} />
-                          </div>
-                          <span className='item-text'>
-                            {title}
-                          </span>
-                        </button>
-                      ))}
-                    </DropDown>
+                      defaultValues={optionBtn}
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))}

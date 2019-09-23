@@ -58,7 +58,7 @@ class SamplesContents extends Component {
             {options.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('gray mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}
@@ -102,7 +102,7 @@ class SamplesContents extends Component {
             {options.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('gray mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}

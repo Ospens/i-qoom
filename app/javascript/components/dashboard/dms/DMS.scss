@@ -126,17 +126,9 @@
     font-size: 16px;
   }
 
-  .svg-icon {
-    background-color: #0096FA;
-  }
-
   button.disable {
     span {
       color: #8FB0B3;
-    }
-
-    .svg-icon {
-      background-color: #8FB0B3;
     }
   }
 }
@@ -425,9 +417,8 @@
               i {
                 margin-right: 10px;
 
-                &.folder-icon,
-                &.folder-icon-2,
-                &.folder-icon-3 {
+                &.icon-folder-empty,
+                &.icon-folder-check {
                   margin-left: 10px;
                 }
               }
@@ -721,6 +712,10 @@ label.rounded-label {
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  span {
+    font-size: 16px;
+  }
 
   &.red {
     color: #ff448e !important;

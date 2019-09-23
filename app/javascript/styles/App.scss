@@ -1084,7 +1084,7 @@ header {
     display: inline-block;
     padding-top: 10px;
 
-    span {
+    span:not(.icon-choose_2) {
       font-size: 16px;
       font-weight: 500;
     }
@@ -1859,8 +1859,10 @@ input[type=checkbox] {
       height: 100%;
 
       [class^="icon-"], [class*=" icon-"] {
-        margin-top: 20px;
-        font-size: 50px;
+        &:not(.icon-add_1) {
+          margin-top: 20px;
+          font-size: 50px;
+        }
 
         &:before {
           color: #0096FA;
@@ -1871,7 +1873,10 @@ input[type=checkbox] {
         max-height: 40px;
       }
 
-      p.new-project {
+      .new-project {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: #0096FA;
       }
     }
