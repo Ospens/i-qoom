@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import MemberTable from './MemberTable'
 import DropDown from '../../../../elements/DropDown'
-import { renderDropDownItems } from '../MemberManagment'
+import { actionDDitems } from './ActiveMembers'
 import { startFetchPendingProjectMembers } from '../../../../actions/projectMembersActions'
 
 function PendingMembers({ projectId }) {
@@ -17,11 +17,8 @@ function PendingMembers({ projectId }) {
         <DropDown
           btnName='Action'
           className='manage-members-actions-button mt-4'
-        >
-          {renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
-          {renderDropDownItems('pencil-icon gray', 'Edit member')}
-          {renderDropDownItems('trash-icon gray', 'Delete')}
-        </DropDown>
+          defaultValues={actionDDitems}
+        />
       </div>
       <div>
         <MemberTable members={members} projectId={projectId} type='pendingMemebers' />

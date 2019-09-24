@@ -4,7 +4,6 @@ import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
 import classnames from 'classnames'
 import Arrows from '../../elements/Arrows'
-import Right from '../../images/arrow-button-right'
 // import TextEditor from '../../elements/TextEditor'
 // import FileField from '../../elements/FileField'
 
@@ -83,7 +82,7 @@ class SamplesContents extends Component {
             <button className='show-example' onClick={toggleExamples}>
               Show Examples
               <ReactSVG
-                src={Right}
+                src={'Right'}
                 svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
               />
             </button>

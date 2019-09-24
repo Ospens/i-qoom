@@ -4,7 +4,7 @@ import MemberTable from './MemberTable'
 import DropDown from '../../../../elements/DropDown'
 import { startFetchActiveProjectMembers } from '../../../../actions/projectMembersActions'
 
-const actionDDitems = [
+export const actionDDitems = [
   {
     title: 'Send invite',
     icon: 'icon-email-action-send-2 gray'

@@ -6,8 +6,6 @@ import InputField from '../../../elements/InputField'
 import TextAreaField from '../../../elements/TextAreaField'
 import SelectField from '../../../elements/SelectField'
 import DropZoneField from '../../../elements/DropZoneField'
-import searchIcon from '../../../images/search-alternate-gray'
-import attachIcon from '../../../images/attachment-1'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -39,11 +37,11 @@ class ModalAddComment extends Component {
                 <div className="d-flex ml-auto">
                   <ReactSVG
                     svgStyle={{ height: 15, width: 15, marginRight: 15 }}
-                    src={searchIcon}
+                    src={'searchIcon'}
                   />
                   <ReactSVG
                     svgStyle={{ height: 15, width: 15, marginRight: 15 }}
-                    src={attachIcon}
+                    src={'attachIcon'}
                   />
                   <ReactSVG
                     svgStyle={{ height: 15, width: 15, marginRight: 15 }}
