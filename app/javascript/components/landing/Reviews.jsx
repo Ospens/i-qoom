@@ -123,8 +123,8 @@ class Reviews extends Component {
       speed: 1000,
       slidesToShow: cardCount,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
     // const { authed, editable } = this.props
     /*if (authed && editable) {

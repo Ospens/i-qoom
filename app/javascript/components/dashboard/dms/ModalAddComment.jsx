@@ -8,7 +8,6 @@ import SelectField from '../../../elements/SelectField'
 import DropZoneField from '../../../elements/DropZoneField'
 import searchIcon from '../../../images/search-alternate-gray'
 import attachIcon from '../../../images/attachment-1'
-import dotsIcon from '../../../images/dots-horizontal'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -48,7 +47,7 @@ class ModalAddComment extends Component {
                   />
                   <ReactSVG
                     svgStyle={{ height: 15, width: 15, marginRight: 15 }}
-                    src={dotsIcon}
+                    src={'dotsIcon'}
                   />
                 </div>
               </div>

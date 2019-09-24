@@ -30,8 +30,8 @@ class ExampleCard extends Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
 
     return (

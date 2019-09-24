@@ -76,7 +76,7 @@ class FileField extends Component {
           />
           <label htmlFor='file_logo'>
             <div>
-              <i className='svg-icon blue-plus-icon' />
+              <span className='icon-add_1' />
             </div>
             <strong>Add a logo</strong>
           </label>

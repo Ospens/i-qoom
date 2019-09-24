@@ -62,7 +62,7 @@ export const renderFoldersBlock = (folders, projectId) => {
         <CreateFolder trigger={
           <li className='dms-sidebar-menu__item add-button'>
             <button className='btn d-flex align-items-center openFolderForm' type='button'>
-              <i className='svg-icon blue-plus-icon mr-2' />
+              <span className='icon-add_1 mr-2' />
               <span>New folder</span>
             </button>
           </li>

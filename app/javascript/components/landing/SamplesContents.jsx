@@ -153,8 +153,8 @@ class SamplesContents extends Component {
       speed: 1000,
       slidesToShow: cardCount,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
     return (
       <section id='samples-card'>

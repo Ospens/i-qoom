@@ -319,8 +319,8 @@ button {
 
 }
 
-.prevBtn,
-.nextBtn {
+.icon-arrow-button-right,
+.icon-arrow-button-left {
   cursor: pointer;
 }
 
@@ -454,10 +454,6 @@ header {
           color: #fff;
         }
       }
-    }
-
-    .svg-icon {
-      background-color: #8FB0B3;
     }
   }
 
@@ -859,13 +855,13 @@ header {
         margin-right: 30px;
       }
     }
-    .nextBtn {
+    .icon-arrow-button-right {
       position: absolute;
       right: 150px;
       bottom: -50px;
     }
 
-    .prevBtn {
+    .icon-arrow-button-left {
       position: absolute;
       right: 185px;
       bottom: -50px;
@@ -1040,13 +1036,13 @@ header {
       border-radius: 5px;
     }
 
-    .nextBtn {
+    .icon-arrow-button-right {
       position: absolute;
       right: 150px;
       bottom: -50px;
     }
 
-    .prevBtn {
+    .icon-arrow-button-left {
       position: absolute;
       right: 185px;
       bottom: -50px;
@@ -1401,15 +1397,6 @@ header {
     .btn-primary {
       margin-right: auto !important;
       margin-left: 5px !important;
-      
-      .svg-icon {
-        margin-left: 5px;
-        background-color: #fff;
-        width: 6px;
-        min-width: 6.5px;
-        height: 10px;
-        min-height: 10px;
-      }
     }
     
     button,
@@ -1480,13 +1467,13 @@ input[type=checkbox] {
     }
   }
 
-  .nextBtn {
+  .icon-arrow-button-right {
     position: absolute;
     right: 460px;
     bottom: -40px;
   }
 
-  .prevBtn {
+  .icon-arrow-button-left {
     position: absolute;
     right: 500px;
     bottom: -40px;
@@ -1720,23 +1707,9 @@ input[type=checkbox] {
     .logo-container {
       height: 100%;
       width: 100%;
-
       cursor: pointer;
-      .trash-icon {
-        display: none;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-        background-color: #475859;
-        path {
-          fill: white;
-        }
-      }
+
       &:hover {
-        .trash-icon {
-          display: flex;
-        }
         img {
           display: none;
         }
