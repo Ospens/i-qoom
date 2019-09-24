@@ -100,12 +100,23 @@ RSpec.describe Document, type: :model do
     field_true.update_columns(selected: false)
     field_false.update_columns(selected: true)
     expect(doc.reload.can_view?(user)).to eql(false)
+    doc.project.members.create!(user: user,
+                                dms_module_master: true,
+                                employment_type: :employee)
+    expect(doc.can_view?(user)).to eql(true)
+
   end
 
   it 'can_create?' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)
     doc = Document.new(document)
+    expect(doc.can_create?(user)).to eql(true)
+    DocumentRight.destroy_all
+    expect(doc.can_create?(user)).to eql(false)
+    doc.project.members.create!(user: user,
+                                dms_module_master: true,
+                                employment_type: :employee)
     expect(doc.can_create?(user)).to eql(true)
   end
 

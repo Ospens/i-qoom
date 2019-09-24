@@ -100,7 +100,7 @@ class Document < ApplicationRecord
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false)
+    end.include?(false) || user.dms_master?(project)
   end
 
   def can_view?(user)
@@ -119,7 +119,7 @@ class Document < ApplicationRecord
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
-    end.include?(false)
+    end.include?(false) || user.dms_master?(project)
   end
 
   def attributes_for_edit
