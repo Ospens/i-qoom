@@ -1,4 +1,6 @@
 class Convention < ApplicationRecord
+  attr_accessor :project_code
+
   has_many :document_fields,
            as: :parent,
            index_errors: true,
@@ -94,7 +96,30 @@ class Convention < ApplicationRecord
   end
 
   def attributes_for_edit
-    json = as_json(include: { document_fields: { include: :document_field_values } })
+    json = as_json(include: {
+      document_fields: {
+        include: {
+          document_field_values: { except: :id } },
+          except: :id
+        }
+      },
+      except: :id)
+    fields = json['document_fields']
+    version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
+    fields.delete(version)
+    json['project_code'] = project.project_code
+    json
+  end
+
+  def attributes_for_update_field_titles
+    json = as_json(include: {
+      document_fields: {
+        include: {
+          document_field_values: { only: [:id, :title, :value] } },
+          only: [:id, :codification_kind]
+        }
+      },
+      except: :id)
     fields = json['document_fields']
     version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
     fields.delete(version)

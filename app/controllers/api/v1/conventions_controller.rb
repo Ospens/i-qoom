@@ -19,6 +19,11 @@ class Api::V1::ConventionsController < ApplicationController
     end
   end
 
+  def get_field_titles
+    raise ActiveRecord::RecordNotFound if @convention.new_record?
+    render json: @convention.attributes_for_update_field_titles
+  end
+
   def update_field_titles
     raise ActiveRecord::RecordNotFound if @convention.new_record?
     if @convention.update(convention_field_params(true))

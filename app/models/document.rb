@@ -346,7 +346,12 @@ class Document < ApplicationRecord
   end
 
   def assign_convention
-    self.convention = project.conventions.active
+    self.convention =
+      if first_document_in_chain?
+        project.conventions.active
+      else
+        original_document.convention
+      end
   end
 
   def send_emails
