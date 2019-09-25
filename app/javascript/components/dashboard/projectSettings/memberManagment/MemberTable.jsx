@@ -144,7 +144,7 @@ class MemberTable extends Component {
 
     return (
       <div className='table-block'>
-        <Table sortable className='main-table-block'>
+        <Table sortable striped className='main-table-block'>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell className='table-checkbox'>

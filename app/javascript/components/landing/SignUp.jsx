@@ -68,7 +68,6 @@ class SignUp extends Component {
           id='state'
           label='State'
           placeholder='State'
-          validate={[required]}
         />
         <Field
           component={InputField}
@@ -123,7 +122,7 @@ class SignUp extends Component {
           className='form-group col-md-6 p-2_5vw-right'
           name='username'
           id='username'
-          label='Define your user ID*'
+          label='Please chose your username*'
           placeholder='Username'
           validate={[required, maxLength15]}
         />

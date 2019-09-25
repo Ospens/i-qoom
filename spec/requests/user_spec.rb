@@ -23,19 +23,19 @@ describe "User", type: :request do
 
   context "confirm registration" do
     it "should confirm a user" do
-      user = FactoryBot.create(:user)
+      user = FactoryBot.create(:user, confirmed_at: nil)
       get "/api/v1/users/confirm?token=#{user.confirmation_token}",
         headers: headers
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(302)
       expect(User.find_by(id: user.id).confirmed?).to be_truthy
     end
     it "shouldn't confirm a user with wrong data" do
-      user = FactoryBot.create(:user)
+      user = FactoryBot.create(:user, confirmed_at: nil)
       token = ::JsonWebToken.encode(user_id: rand(999),
                                     email: user.email)
       get "/api/v1/users/confirm?token=#{token}",
         headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(302)
       expect(User.find_by(id: user.id).confirmed?).to be_falsy
     end
   end

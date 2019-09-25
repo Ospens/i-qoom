@@ -79,17 +79,24 @@ describe Convention, type: :request do
       expect(field_value.value).to eql(title)
     end
 
+    it '#get_field_titles' do
+      get "/api/v1/projects/#{project.id}/conventions/get_field_titles",
+        headers: credentials(project.user)
+      expect(response).to have_http_status(:success)
+      expect(json['document_fields'].count).to eql(8)
+    end
+
     it '#update_field_titles' do
       title = Faker::Lorem.sentence
-      attrs = convention.attributes_for_edit
+      attrs = convention.attributes_for_update_field_titles
       convention_field =
         attrs['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
       field_value = convention_field['document_field_values'].first
       expect(field_value['title']).to_not eql(title)
       field_value['title'] = title
       project.members.create!(user: project.user, dms_module_master: true, employment_type: :employee)
-      patch "/api/v1/projects/#{project.id}/conventions/update_field_titles",\
-        params: { convention: attrs },\
+      patch "/api/v1/projects/#{project.id}/conventions/update_field_titles",
+        params: { convention: attrs },
         headers: credentials(project.user)
       expect(response).to have_http_status(:success)
       field = convention.document_fields.find_by(codification_kind: :originating_company)

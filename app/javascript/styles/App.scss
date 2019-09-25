@@ -21,7 +21,7 @@ body {
   font-family: 'aktiv-grotesk', sans-serif !important;
   font-size: 15px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.5;
   color: #373737;
   overflow: hidden;
   height: 100%;
@@ -618,8 +618,16 @@ header {
   overflow: hidden;
 }
 
+.navbar-brand {
+  display: flex;
+  align-content: baseline;
+  align-items: baseline;
+}
+
 .auth-buttons {
-  display: contents;
+  display: flex;
+  flex-direction: row;
+  width: 240px;
 
   .nav-item:first-of-type {
     .nav-link {

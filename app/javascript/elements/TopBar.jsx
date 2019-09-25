@@ -57,9 +57,9 @@ class TopBar extends Component {
       location: { pathname }
     } = this.props
 
-    const backPaths = ['/signin', '/signup', '/terms', '/imprint', '/menu']
-    const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel' && location.pathname !== '/signin'
-    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) })
+    const backPaths = ['signin', '/signup', '/terms', '/imprint', '/menu']
+    const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel' && !location.pathname.includes('signin')
+    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') })
     const headerClass = classnames({ 'colorful': nonMain })
 
     return (
@@ -120,7 +120,7 @@ class TopBar extends Component {
     const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/menu']
     const { location: { pathname }, isOpen, toggle } = this.props
 
-    if (landingBarPath.includes(pathname) || pathname === '/admin_panel') {
+    if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin')) {
       return (this.renderLandingBar(isOpen, toggle))
     } else {
       return (this.renderDashboardBar(isOpen, toggle))

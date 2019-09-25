@@ -100,7 +100,7 @@ class Document < ApplicationRecord
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false)
+    end.include?(false) || user.dms_master?(project)
   end
 
   def can_view?(user)
@@ -119,7 +119,7 @@ class Document < ApplicationRecord
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
-    end.include?(false)
+    end.include?(false) || user.dms_master?(project)
   end
 
   def attributes_for_edit
@@ -346,7 +346,12 @@ class Document < ApplicationRecord
   end
 
   def assign_convention
-    self.convention = project.conventions.active
+    self.convention =
+      if first_document_in_chain?
+        project.conventions.active
+      else
+        original_document.convention
+      end
   end
 
   def send_emails

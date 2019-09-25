@@ -42,6 +42,7 @@ Rails.application.routes.draw do
           post :update_project_code
         end
         resource :conventions, only: [:edit, :update] do
+          get :get_field_titles
           patch :update_field_titles
         end
         resources :documents, only: [:new, :create, :index] do

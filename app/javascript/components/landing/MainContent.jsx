@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
 import FirstCard from './FirstCard'
 import WhatIsIQoom from './WhatIsIQoom'
 import SamplesContents from './SamplesContents'
@@ -7,27 +8,19 @@ import Reviews from './Reviews'
 import GetStarted from './GetStarted'
 import ExampleCard from './ExampleCard'
 
-class MainContent extends Component {
+function MainContent({ showExamples, toggleExamples, editable, ...props }) {
 
-  render() {
-    const {
-      showExamples,
-      toggleExamples,
-      editable
-    } = this.props
-
-    return (
-      <React.Fragment>
-        <FirstCard editable={editable}/>
-        <WhatIsIQoom editable={editable}/>
-        {!showExamples && <SamplesContents toggleExamples={toggleExamples} editable={editable}/>}
-        {showExamples && <ExampleCard toggleExamples={toggleExamples} editable={editable}/>}
-        <Pricing editable={editable}/>
-        <Reviews editable={editable}/>
-        <GetStarted editable={editable}/>
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <FirstCard editable={editable} />
+      <WhatIsIQoom editable={editable} />
+      {!showExamples && <SamplesContents toggleExamples={toggleExamples} editable={editable} />}
+      {showExamples && <ExampleCard toggleExamples={toggleExamples} editable={editable} />}
+      <Pricing editable={editable} />
+      <Reviews editable={editable} />
+      <GetStarted editable={editable} />
+    </React.Fragment>
+  )
 }
 
-export default MainContent
+export default withRouter(MainContent)

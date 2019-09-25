@@ -12,12 +12,5 @@
   .please-click = t('.please_click', name: @project_member.inviter.full_name)
   br
   = link_to t(".confirm_my_email"),
-    confirm_member_api_v1_projects_url(token: @project_member.confirmation_token),
-    class: "blue-button"
-  br
-  br
-  br
-  .or-follow-this-link
-    span = t('.follow_this_link')
-    = link_to nil,
-        confirm_member_api_v1_projects_url(token: @project_member.confirmation_token)
+      confirm_member_api_v1_projects_url(token: @project_member.confirmation_token),
+      class: "blue-button"
