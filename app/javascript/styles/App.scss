@@ -28,6 +28,14 @@ body {
   margin: 0;
 }
 
+.black {
+  color: #293233 !important;
+}
+
+.grey {
+  color: #475859 !important;
+}
+
 ul {
   list-style: none;
 }
@@ -93,31 +101,31 @@ a {
   &::-webkit-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &::-moz-placeholder  {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &:-moz-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &:-ms-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &::placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
 

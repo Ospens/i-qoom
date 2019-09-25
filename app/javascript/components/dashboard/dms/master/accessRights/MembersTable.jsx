@@ -75,7 +75,7 @@ function MembersTable({ type, match: { params: { project_id } } }) {
     <React.Fragment>
       <div><label>Select Access rights for members</label></div>
       <div className='d-flex my-4'>
-        <DropDown btnName={optionsText} defaultValues={optionBtn} />
+        <DropDown btnName={optionsText} defaultValues={optionBtn} className='d-flex align-self-center' />
         <input
           type='text'
           className='search-input ml-auto'

@@ -2,33 +2,33 @@ export const actionDDitems = (projectId, documentId) => (
   [
     {
       title: 'Email',
-      icon: 'icon-email-action-send-2 gray'
+      icon: 'icon-email-action-send-2'
     },
     {
       title: 'Copy to folder',
-      icon: 'icon-folder-empty gray'
+      icon: 'icon-folder-empty'
     },
     {
       title: 'Show details',
-      icon: 'icon-common-file-text-1 gray',
+      icon: 'icon-common-file-text-1',
       link: `/dashboard/projects/${projectId}/documents/${documentId}`
     },
     {
       title: 'Download Files',
-      icon: 'icon-download-button gray'
+      icon: 'icon-download-button'
     },
     {
       title: 'Edit document',
-      icon: 'icon-common-file-edit gray',
+      icon: 'icon-common-file-edit',
       link: `/dashboard/projects/${projectId}/documents/${documentId}/edit`
     },
     {
       title: 'Add revision',
-      icon: 'icon-Revise_1 gray'
+      icon: 'icon-Revise_1'
     },
     {
       title: 'Review document',
-      icon: 'icon-single-neutral-actions-text-1 gray'
+      icon: 'icon-single-neutral-actions-text-1'
     }
   ]
 )

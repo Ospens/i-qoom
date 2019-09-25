@@ -29,22 +29,22 @@ class DropDownElement extends Component {
       {
         title: 'New section above',
         icon: 'icon-upload-menu2',
-        onClick: (index => addNewSection(index))
+        onClick: (e => addNewSection(e, index))
       },
       {
         title: 'New section below',
         icon: 'icon-upload-menu1',
-        onClick: (index => addNewSection(index + 1))
+        onClick: (e => addNewSection(e, index + 1))
       },
       {
         title: 'Copy',
         icon: 'icon-common-file-double-1',
-        onClick: (index => copySection(index))
+        onClick: (() => copySection(index))
       },
       {
         title: 'Delete',
         icon: 'icon-bin-1',
-        onClick: (index => removeSection(index))
+        onClick: (() => removeSection(index))
       }
     ]
     document.body.appendChild(portal)
@@ -110,7 +110,7 @@ class DropDownColumn extends Component {
       <Droppable droppableId='column_1'>
         {provided => (
           <div
-            className='dropdown-section-block form-group'
+            className='dropdown-section-block'
             ref={provided.innerRef}
             style={{}}
             {...provided.droppableProps}
@@ -150,7 +150,7 @@ class DraggableDropDown extends Component {
   }
 
   addNewSection = (e, index) => {
-    // e.preventDefault()
+    e.preventDefault()
     const { discardNewSection, newSection, fields } = this.props
     if (index === undefined && newSection.length < 1) return
 
@@ -179,25 +179,29 @@ class DraggableDropDown extends Component {
     const { fields } = this.props
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <DropDownColumn
-          {...this.props}
-          addNewSection={this.addNewSection}
-          removeSection={this.removeSection}
-          copySection={this.copySection}
-        />
-        <div className='new-dropdown-section-block form-froup'>
-          <div className='new-dropdown-section'>
-            <Field
-              component={InputField}
-              id='new_section'
-              name='new_section'
-              placeholder={`Section ${fields.length + 1}`}
-              onBlur={e => this.addNewSection(e)}
-            />
+      <React.Fragment>
+        <div><label className={classnames({ 'form-group': fields.length < 1 })}>Define selections</label></div>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <DropDownColumn
+            {...this.props}
+            addNewSection={this.addNewSection}
+            removeSection={this.removeSection}
+            copySection={this.copySection}
+          />
+          <div className='new-dropdown-section-block'>
+            <div><label>Selections</label></div>
+            <div className='new-dropdown-section'>
+              <Field
+                component={InputField}
+                id='new_section'
+                name='new_section'
+                placeholder={`Section ${fields.length + 1}`}
+                onBlur={e => this.addNewSection(e)}
+              />
+            </div>
           </div>
-        </div>
-      </DragDropContext>
+        </DragDropContext>
+      </React.Fragment>
     )
   }
 }

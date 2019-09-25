@@ -11,7 +11,7 @@ export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
       return (
         <li className='dms-sidebar-menu__item'>
           <Link className={classnames('btn', { 'active': matched })} to={path}>
-            <span className={classnames('black mr-2', icon)} />
+            <span className={classnames('dark-gray mr-2', icon)} />
             <span className='head-button__gray-text'>{label}</span>
           </Link>
           {matched && nested &&
@@ -167,7 +167,7 @@ class DmsSideBar extends Component {
         path: '#' // `${masterPath}/planning/`
       }
     ]
-
+    
     return (
       <div className='dms-sidebar-menu__block'>
         <h4>DMS menu</h4>
@@ -183,24 +183,28 @@ class DmsSideBar extends Component {
             </React.Fragment>
           ))}
         </ul>
-        {path.includes('dashboard/projects/:project_id/documents/folders')
-          ? renderFoldersBlock(folders, project_id)
-          : <React.Fragment>
-              <h4>Master settings</h4>
-              <ul className='dms-sidebar-menu__list'>
-                {masterMenu.map(({ path, title, icon, root, nested }, i) => (
-                  <React.Fragment key={i}>
-                    <DmsSideBarItem
-                      path={path}
-                      label={title}
-                      icon={icon}
-                      root={root}
-                      nested={nested}
-                    />
-                  </React.Fragment>
-                ))}
-              </ul>
-            </React.Fragment>}
+        {(() => {
+          if (path.includes('dashboard/projects/:project_id/documents/folders')) {
+            return renderFoldersBlock(folders, project_id)
+          } else if (path.includes('/master/')) {
+            return (
+              <React.Fragment>
+                <h4>Master settings</h4>
+                <ul className='dms-sidebar-menu__list'>
+                  {masterMenu.map(({ path, title, icon, root, nested }, i) => (
+                    <React.Fragment key={i}>
+                      <DmsSideBarItem
+                        path={path}
+                        label={title}
+                        icon={icon}
+                        root={root}
+                        nested={nested}
+                      />
+                    </React.Fragment>
+                  ))}
+                </ul>
+              </React.Fragment>)}
+        })()}
       </div>
     )
 

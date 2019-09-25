@@ -65,18 +65,18 @@
     -webkit-overflow-scrolling: touch;
 
     .nav-items {
-      margin-top: 50px;
+      margin-top: 80px;
 
       .nav-item {
-        padding-left: 20px;
+        padding-left: 45px;
         padding-right: 20px;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        padding-top: 5px;
+        padding-bottom: 5px;
 
         .nav-link {
-          line-height: 30px !important;
+          line-height: 1 !important;
           text-transform: initial;
-          font-size: 18px;
+          font-size: 20px;
           font-weight: 400;
           color: #9A98D9;
         }
@@ -86,7 +86,7 @@
           border-radius: 2px;
 
           .nav-link {
-            font-weight: 700;
+            font-weight: 500;
             color: #fff;
           }
         }

@@ -7,15 +7,15 @@ import { startFetchActiveProjectMembers } from '../../../../actions/projectMembe
 export const actionDDitems = [
   {
     title: 'Send invite',
-    icon: 'icon-email-action-send-2 gray'
+    icon: 'icon-email-action-send-2'
   },
   {
     title: 'Edit member',
-    icon: 'icon-pencil-write gray'
+    icon: 'icon-pencil-write'
   },
   {
     title: 'Delete',
-    icon: 'icon-bin-1 gray'
+    icon: 'icon-bin-1'
   },
 ]
 

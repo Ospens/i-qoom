@@ -242,6 +242,7 @@
 
         .head-button__gray-text {
           font-size: 15px;
+          color: #475859;
         }
 
         .dms-sidebar-menu__sublitem {
@@ -249,8 +250,8 @@
           margin-left: 30px;
 
           .dms-sidebar-menu__sublink {
-            padding-top: 10px;
-            padding-bottom: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             
             a {
               font-size: 15px;
@@ -529,7 +530,7 @@
 .dms-topbar-menu__dropdown {
   border-width: 1px !important;
   border-radius: 20px !important;
-  border-color: black !important;
+  border-color: #475859 !important;
   background-color: #fff !important;
   padding: 8px;
 
@@ -538,6 +539,7 @@
     white-space: nowrap;
     overflow: hidden;
     margin-right: 10px;
+    color: #475859;
   }
 }
 
@@ -565,7 +567,7 @@
 .dms-container__table-header {
   display: flex;
   align-items: center;
-
+  
   h5 {
     margin-right: 15px;
   }
@@ -787,15 +789,29 @@ label.rounded-label {
 }
 
 input.search-input {
-  background: url('../../../images/search-alternate-gray.svg');
-  padding-left: 30px;
-  background-size: 15px;
+  background: url('../../../images/search-alternate.svg');
+  padding-left: 50px;
+  background-size: 20px;
   background-repeat: no-repeat;
-  border-radius: 20px;
-  width: 150px;
-  background-position: 7px 4px;
+  border-radius: 25px;
+  width: 320px;
+  background-position-y: center;
+  background-position: 17px;
   border: 1px solid #ced4da;
-  height: 25px;
+  height: 45px;
+  outline: none !important;
+  color: #475859;
+
+  &:hover, &:active {
+    outline: none !important;
+  }
+
+  &::placeholder {
+    color: #B2CED1;
+    font-size: 17px;
+    font-weight: 400 !important;
+    box-shadow: none;
+  }
 }
 
 .tags-review-label-block {
@@ -1299,7 +1315,7 @@ input.search-input {
   }
 
   .form-group {
-    min-height: 120px;
+    min-height: 128px;
     position: relative;
     padding: 10px;
     border-radius: 10px; 
@@ -1475,6 +1491,8 @@ input.search-input {
 .dropdown-section {
   display: flex;
   padding: 10px;
+  margin-left: -10px;
+  margin-right: -10px;
   transition: 0s ease-in-out;
   border-radius: 5px;
 
@@ -1498,8 +1516,9 @@ input.search-input {
 }
 
 .new-dropdown-section {
-  padding: 10px;
-  border-top: 1px solid #8FB0B3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: 1px solid #14191A14;
 }
 
 .modal-limit-access-form {
@@ -2295,4 +2314,9 @@ span.column-title {
     max-width: 250px;
     width: 250px;
   }
+}
+
+.checkboxes-row {
+  display: flex;
+  margin-top: 20px;
 }

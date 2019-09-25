@@ -13,7 +13,7 @@ function renderTableHeader() {
   const checkedDocTypes = []
   return (
     <div className='dms-container__table-header'>
-      <span className='mr-4'>Show</span>
+      <span className='mr-4 grey'>Show</span>
       <DropDown
         btnName='Documents Types'
         btnClass='dms-topbar-menu__dropdown'
@@ -213,7 +213,7 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
         </Table.Body>
       </Table>
       <div className='d-flex'>
-        <span className='ml-auto'>{documents.length} total documents</span>
+        <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 } )}>{documents.length} total documents</span>
       </div>
     </div>
   )

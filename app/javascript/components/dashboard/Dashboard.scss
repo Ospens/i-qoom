@@ -380,6 +380,15 @@ form {
     display: inline-flex;
     margin-bottom: -2px;
 
+    &:not(:first-of-type) {
+      margin-left: 25px;
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 25px;
+    }
+
+
     .nav-bar-element {
       font-size: 15px;
       text-decoration: none;
@@ -915,7 +924,10 @@ span.divider {
   margin-top: -1px; 
   z-index: 9;
   padding: 0;
-  padding: 5px !important;
+  padding-left: 7px !important;
+  padding-right: 7px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
   border-radius: 5px;
   border-color: #E9F3F5;
   margin-bottom: 30px;
@@ -925,7 +937,7 @@ span.divider {
     color: #8FB0B3;
     display: flex;
     align-items: center;
-    padding: 7px;
+    padding: 9px;
     cursor: pointer;
     border-radius: 5px;
 
@@ -943,7 +955,7 @@ span.divider {
     }
 
     a, span {
-      color: #8FB0B3;
+      color:#4B595A;
     }
 
     .dropdown-submenu {
@@ -990,7 +1002,9 @@ span.divider {
   align-items: center;
 
   .dropdown-menu {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
+    -moz-box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
+    box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
     border-radius: 5px;
     margin-top: 5px;
   }
@@ -1031,7 +1045,7 @@ span.divider {
   display: flex !important;
   
   span {
-    font-weight: 500;
+    font-weight: 400;
     color: #0095f9;
     align-items: center;
     align-self: center;
@@ -1338,11 +1352,13 @@ input:checked+.slider:before {
     &.mainitem {
       font-size: 15px;
       font-weight: 700;
+      border-radius: 0px !important;
     }
 
     &.subitem {
       font-weight: 500;
       padding-left: 40px;
+      border-radius: 0px !important;
     }
 
     &:first-of-type {
@@ -1585,6 +1601,10 @@ i.arrow {
     padding-bottom: 10px;
     display: flex;
     flex-direction: row;
+
+    label {
+      white-space: initial;
+    }
   }
 }
 
@@ -1659,19 +1679,38 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(250px, 1fr) 90px;
+  grid-template-rows: 100px minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.modal-create-field {
+    .form-group {
+      margin-bottom: 45px;
+    }
+  }
+
   &.without-header {
     grid-template-rows: minmax(250px, 1fr) 70px;
   }
 
   .new-modal__header {
-    padding: 30px;
+    padding-bottom: 30px;
+    margin-right: 45px;
+    margin-left: 45px;
+    padding-top: 50px;
+    border-bottom: 1px solid #14191A14;
+
+    h6 {
+      font-size: 20px;
+      font-weight: 400;
+      margin: 0;
+    }
   }
 
   .new-modal__body {
-    padding: 30px;
+    padding-right: 45px;
+    padding-left: 45px;
+    padding-top: 45px;
+    padding-bottom: 60px;
 
     h6.new-modal__body-title {
       font-weight: 500;
@@ -1684,8 +1723,8 @@ i.arrow {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 45px;
+    padding-right: 45px;
     background-color: #efefef;
     border: none;
     border-radius: 0 0 5px 5px;
