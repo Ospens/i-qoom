@@ -6,7 +6,7 @@ describe Document, type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:project) { FactoryBot.create(:project) }
   let!(:convention) do
-    convention = FactoryBot.create(:convention, project: project)
+    convention = project.conventions.active
     convention.document_fields.limit_by_value.each do |field|
       field.document_rights
            .create(user: user,
@@ -766,7 +766,7 @@ describe Document, type: :request do
         rev1 = FactoryBot.create(:document_revision)
         @project = rev1.document_main.project
         @project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
-        convention = FactoryBot.create(:convention, project: @project)
+        convention = @project.conventions.active
         convention.document_fields.each do |field|
           if field.document_number? || field.revision_date?
             field.update(value: rand(1000..9999))

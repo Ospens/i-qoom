@@ -1,23 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe Convention, type: :model do
-  context  'create_default_fields' do
-    let(:convention) { FactoryBot.create(:convention) }
+  context 'create_default_fields' do
+    let(:project) { FactoryBot.create(:project) }
+    let(:convention) { project.conventions.active }
+    let(:convention2) { project.conventions.create(number: 2) }
+    let(:kinds) do
+      [ 'originating_company',
+        'discipline',
+        'additional_information',
+        'document_native_file',
+        'document_type',
+        'document_number',
+        'revision_number',
+        'revision_date',
+        'revision_version' ]
+    end
 
     it { expect(convention.document_fields.count).to eql(9) }
-    it { expect(convention.document_fields.pluck(:codification_kind).compact).to\
-      eq(['originating_company', 'discipline', 'additional_information', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date', 'revision_version']) }
+
+    it { expect(convention2.document_fields.count).to eql(10) }
+
     it do
-      convention2 = FactoryBot.create(:convention, number: 2)
-      expect(convention2.document_fields.pluck(:codification_kind).compact).to\
-        eq(['originating_company', 'receiving_company', 'discipline', 'additional_information', 'document_native_file', 'document_type', 'document_number', 'revision_number', 'revision_date', 'revision_version'])
+      existent_kinds =
+        convention.document_fields.pluck(:codification_kind).compact
+      kinds.each do |kind|
+        expect(existent_kinds).to include(kind)
+      end
+    end
+
+    it do
+      existent_kinds =
+        convention2.document_fields.pluck(:codification_kind).compact
+      expect(existent_kinds).to include('receiving_company')
+      kinds.each do |kind|
+        expect(existent_kinds).to include(kind)
+      end
     end
 
     context 'should set column and row' do
-      before do
-        convention.build_default_fields
-      end
-
       def find_field(kind)
         convention.document_fields.find_by(codification_kind: kind)
       end
@@ -29,9 +50,7 @@ RSpec.describe Convention, type: :model do
       end
 
       it do
-        convention = FactoryBot.create(:convention, number: 2)
-        convention.build_default_fields
-        field = convention.document_fields.find_by(codification_kind: :receiving_company)
+        field = convention2.document_fields.find_by(codification_kind: :receiving_company)
         expect(field.column).to eql(1)
         expect(field.row).to eql(4)
       end
@@ -40,9 +59,7 @@ RSpec.describe Convention, type: :model do
         field = find_field(:discipline)
         expect(field.column).to eql(1)
         expect(field.row).to eql(4)
-        convention = FactoryBot.create(:convention, number: 2)
-        convention.build_default_fields
-        field = convention.document_fields.find_by(codification_kind: :discipline)
+        field = convention2.document_fields.find_by(codification_kind: :discipline)
         expect(field.column).to eql(1)
         expect(field.row).to eql(5)
       end
@@ -63,9 +80,7 @@ RSpec.describe Convention, type: :model do
         field = find_field(:additional_information)
         expect(field.column).to eql(1)
         expect(field.row).to eql(5)
-        convention = FactoryBot.create(:convention, number: 2)
-        convention.build_default_fields
-        field = convention.document_fields.find_by(codification_kind: :additional_information)
+        field = convention2.document_fields.find_by(codification_kind: :additional_information)
         expect(field.column).to eql(1)
         expect(field.row).to eql(6)
       end
@@ -74,9 +89,7 @@ RSpec.describe Convention, type: :model do
         field = find_field(:document_native_file)
         expect(field.column).to eql(1)
         expect(field.row).to eql(6)
-        convention = FactoryBot.create(:convention, number: 2)
-        convention.build_default_fields
-        field = convention.document_fields.find_by(codification_kind: :document_native_file)
+        field = convention2.document_fields.find_by(codification_kind: :document_native_file)
         expect(field.column).to eql(1)
         expect(field.row).to eql(7)
       end
@@ -87,15 +100,6 @@ RSpec.describe Convention, type: :model do
     project = FactoryBot.create(:project)
     convention = project.conventions.new(number: 1)
     convention.build_default_fields
-    expect(convention).to_not be_valid
-    convention.document_fields.each do |field|
-      next unless field.select_field?
-      value =
-        field.document_field_values.new(value: Faker::Name.initials,
-                                        position: 1,
-                                        title: '')
-    end
-    expect(convention).to be_valid
     convention.save
     json = convention.attributes_for_edit
     fields = json['document_fields']
@@ -107,20 +111,12 @@ RSpec.describe Convention, type: :model do
     project = FactoryBot.create(:project)
     convention = project.conventions.new(number: 1)
     convention.build_default_fields
-    expect(convention).to_not be_valid
-    expect(convention.version).to eql(1)
-    convention.document_fields.each do |field|
-      next unless field.select_field?
-      value =
-        field.document_field_values.new(value: Faker::Name.initials,
-                                        position: 1,
-                                        title: '')
-    end
-    expect(convention).to be_valid
+    convention.valid?
+    expect(convention.version).to eql(2)
     convention.save
     convention = project.conventions.new(number: 1)
     convention.valid?
-    expect(convention.version).to eql(2)
+    expect(convention.version).to eql(3)
   end
 
   context 'validates old convention document_fields' do
@@ -172,16 +168,9 @@ RSpec.describe Convention, type: :model do
 
   it 'validate_presence_of_required_fields' do
     project = FactoryBot.create(:project)
+    project.conventions.active.destroy
     convention = project.conventions.new(number: 1)
-    convention.build_default_fields
-    convention.document_fields.each do |field|
-      next unless field.select_field?
-      value =
-        field.document_field_values.new(value: Faker::Name.initials,
-                                        position: 1,
-                                        title: '')
-    end
-    expect(convention).to be_valid
+    convention.valid?
     field =
       convention.document_fields
                 .detect{ |i| i['codification_kind'] == 'originating_company' }
@@ -189,5 +178,10 @@ RSpec.describe Convention, type: :model do
     expect(convention).to_not be_valid
     expect(convention.errors[:document_fields]).to\
       eql(['originating_company_field_in_not_present'])
+  end
+
+  it '#build_default_fields' do
+    project = FactoryBot.create(:project)
+    expect(project.conventions.active).to be_present
   end
 end

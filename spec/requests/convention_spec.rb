@@ -18,13 +18,6 @@ describe Convention, type: :request do
     let!(:convention) do
       convention = project.conventions.new(number: 1)
       convention.build_default_fields
-      convention.document_fields.each do |field|
-        next unless field.select_field?
-        value =
-          field.document_field_values.new(value: Faker::Name.initials,
-                                          position: 1,
-                                          title: '')
-      end
       convention.save!
       convention
     end
