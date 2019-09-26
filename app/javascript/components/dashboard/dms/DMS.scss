@@ -52,7 +52,7 @@
   }
 }
 
-.link {
+.link, .add-button {
   &:hover {
     font-weight: 700;
     color: #0096FA !important;
@@ -1728,6 +1728,37 @@ input.search-input {
   }
 }
 
+.dash-symbol {
+  color: #8FB0B3;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  padding-top: 10px;
+}
+
+.codification-codes_modal {
+  display: grid;
+  grid-template-columns: repeat(4, 66px) 88px 66px 1fr;
+
+  .codification-codes-title-column {
+    display: grid;
+    grid-template-rows: 60px 60px;
+
+    span {
+      color: #8FB0B3;
+      font-size: 15px;
+    }
+
+    &.document_number {
+      .codification-codes-title-column__code {
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
+      }
+    }
+  }
+}
+
 .codification-codes-title-row {
   display: grid;
   grid-template-columns: repeat(4, 130px 0.3fr) 176px 0.3fr 130px 0.3fr 1fr;
@@ -1744,16 +1775,6 @@ input.search-input {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-    }
-
-    .dash-symbol {
-      color: #8FB0B3;
-      font-size: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      vertical-align: middle;
-      padding-top: 10px;
     }
     
     .codification-codes-title-column__title {
@@ -1783,8 +1804,8 @@ input.search-input {
 
     &.company {
       .codification-codes-title-column__title {
-        color: #5300b2;
-        border-color: #5300b2;
+        color: #5300B3;
+        border-color: #5300B3;
       }
     }
 
@@ -1858,6 +1879,26 @@ input.search-input {
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 4vh;
 
+  .codification-input-group {
+    display: flex;
+    margin-bottom: 15px;
+
+    .codification-input {
+      &:first-of-type {
+        max-width: 23%;
+        margin-right: 23px;
+
+        input {
+          text-align: center;
+        }
+      }
+    }
+
+    button {
+      margin-left: 23px;
+    }
+  }
+
   .codification-codes-values-column {
     display: flex;
     flex-direction: column;
@@ -1869,11 +1910,19 @@ input.search-input {
       margin-bottom: 15px;
 
       &.originating_company {
-        border-color: #5300b2;
+        border-color: #5300B3;
       }
 
       &.discipline {
         border-color: #0cb4b5;
+      }
+
+      &.document_type {
+        border-color: #fe6b1f;
+      }
+
+      .codification-codes-values-block__title {
+        margin-bottom: 45px;
       }
 
       .codification-codes-values-block__values-list {

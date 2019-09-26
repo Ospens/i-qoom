@@ -2,6 +2,7 @@ import React from 'react'
 import SecondCodeStructure from './SecondCodeStructure'
 import CodeStructure from './CodeStructure'
 import CodificationTable from './CodificationTable'
+import ModalInfo from './ModalInfo'
 
 export const fields = [
     {
@@ -68,13 +69,15 @@ export const freeTextPlaceholders = el => (
 function Content({ current }) {
   return (
     <div className='dms-content bordered'>
+      <ModalInfo />
       <div className='dms-content__header'>
         <h4>Convention 1 - active</h4>
         <label>Administration codes for document codification</label>
       </div>
       {/* TODO: make switch for number of convention */}
       <div className='content-body'>
-        {current ? <CodeStructure /> : <SecondCodeStructure />}
+        {/*current ? <CodeStructure /> : <SecondCodeStructure />*/}
+        <CodeStructure />
         <CodificationTable />
       </div>
     </div>
