@@ -4,9 +4,6 @@ class Api::V1::ConventionsController < ApplicationController
   before_action :authorize_convention
 
   def edit
-    if !@convention.document_fields.any?
-      @convention.build_default_fields
-    end
     render json: @convention.attributes_for_edit
   end
 

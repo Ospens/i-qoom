@@ -1,5 +1,5 @@
 class Convention < ApplicationRecord
-  attr_accessor :project_code
+  attr_accessor :project_code # for tests
 
   has_many :document_fields,
            as: :parent,
@@ -152,7 +152,10 @@ class Convention < ApplicationRecord
   private
 
   def assign_revision_version_field
-    document_fields.create(kind: :hidden_field, codification_kind: :revision_version, column: 1)
+    # this is for validation with document
+    document_fields.create(kind: :hidden_field,
+                           codification_kind: :revision_version,
+                           column: 1)
   end
 
   def set_version
