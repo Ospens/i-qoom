@@ -139,7 +139,7 @@ class DmsSideBar extends Component {
         root: `${masterPath}/codifications/`,
         nested: [
           {
-            title: 'Codification 1',
+            title: <div>Codification 1 < span className='icon-check_1 ml-2' /></div>,
             path: `${masterPath}/codifications/1/`
           },
           {

@@ -15,7 +15,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
           btnComponent={
             <React.Fragment>
               <div className='icon-container'>
-                <span className='icon-download-button gray' />
+                <span className='icon-download-button' />
               </div>
               <span className='item-text'>
                 Download as list

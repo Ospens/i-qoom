@@ -80,6 +80,7 @@ class IndexDMS extends Component {
         header={this.renderHeader()}
         sidebar={<Sidebar projectId={project_id} checkedDocs={checkedDocs} />}
         content={<Content projectId={project_id} checkItem={this.checkItem} checkedDocs={checkedDocs} />}
+        classNames='with-header'
       />
     )
   }

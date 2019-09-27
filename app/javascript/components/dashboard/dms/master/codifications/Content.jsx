@@ -33,7 +33,7 @@ export const fields = [
     {
       title: 'Revision',
       className: 'revision',
-      symbols: 3
+      symbols: 2
     },
     {
       title: 'Free text',
@@ -60,7 +60,6 @@ export const placeholders = el => (
 
 export const freeTextPlaceholders = el => (
   <React.Fragment>
-    <span />
     <span>...</span>
     <span />
   </React.Fragment>
@@ -68,14 +67,14 @@ export const freeTextPlaceholders = el => (
 
 function Content({ current }) {
   return (
-    <div className='dms-content bordered'>
+    <div className='dms-content'>
       <ModalInfo />
       <div className='dms-content__header'>
-        <h4>Convention 1 - active</h4>
-        <label>Administration codes for document codification</label>
+        <h4>Convention 1 - <span className='green'>active</span></h4>
       </div>
       {/* TODO: make switch for number of convention */}
       <div className='content-body'>
+        <label>Administration codes for document codification</label>
         {/*current ? <CodeStructure /> : <SecondCodeStructure />*/}
         <CodeStructure />
         <CodificationTable />

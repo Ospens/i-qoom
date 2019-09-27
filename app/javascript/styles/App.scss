@@ -36,6 +36,10 @@ body {
   color: #475859 !important;
 }
 
+.green {
+  color: #28bc58 !important;
+}
+
 ul {
   list-style: none;
 }
@@ -365,12 +369,12 @@ footer:after,
   &.dashboard {
     display: grid;
     grid-template-rows: 90px 1fr;
-    grid-gap: 90px;
-    grid-gap: 8vh;
+    grid-gap: 100px;
+    grid-gap: 10vh;
     padding-left: 50px;
-    padding-left: 2.5vw;
+    padding-left: 2.5%;
     padding-right: 50px;
-    padding-right: 2.5vw;
+    padding-right: 2.5%;
   }
 }
 

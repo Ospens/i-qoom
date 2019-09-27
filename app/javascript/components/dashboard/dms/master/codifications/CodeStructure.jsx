@@ -4,7 +4,7 @@ import { fields, projectInputs, placeholders, freeTextPlaceholders } from './Con
 
 function CodeStructure({ disabled }) {
   return (
-    <div className='codification-codes-title-row py-4'>
+    <div className='codification-codes-title-row'>
       {fields.map((el, i) => {
         const labelText = i === 0
           ? 'Change project code'
@@ -38,7 +38,7 @@ function CodeStructure({ disabled }) {
               </div>
             </div>
             {i !== 6 &&
-              <div className={classnames('codification-codes-title-column', el.className, { disabled })}>
+              <div className={classnames('codification-codes-title-column', { disabled })}>
                 {!disabled && <div />}
                 <div className='codification-codes-title-column__title' />
                 <span className='dash-symbol'>&mdash;</span>
