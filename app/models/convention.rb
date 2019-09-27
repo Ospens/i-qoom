@@ -125,7 +125,6 @@ class Convention < ApplicationRecord
     fields = json['document_fields']
     version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
     fields.delete(version)
-    json['project_code'] = project.project_code
     json
   end
 
@@ -141,7 +140,6 @@ class Convention < ApplicationRecord
     fields = json['document_fields']
     version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
     fields.delete(version)
-    json['project_code'] = project.project_code
     json
   end
 
