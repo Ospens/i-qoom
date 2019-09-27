@@ -6,7 +6,7 @@ class ProjectSerializer < ApplicationSerializer
 
   def attributes(*args)
     object.attributes.symbolize_keys.tap do |keys|
-      if !object.members.find_by(user: @instance_options[:user]).try(:dms_module_access?)
+      if !object.dms_access?(@instance_options[:user])
         keys.except!(:project_code)
       end
     end

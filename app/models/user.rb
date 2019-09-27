@@ -55,8 +55,4 @@ class User < ApplicationRecord
   def confirmation_token
     ::JsonWebToken.encode(user_id: id, email: email)
   end
-
-  def dms_master?(project)
-    !project.members.find_by(user_id: id).try(:dms_module_master?).nil?
-  end
 end

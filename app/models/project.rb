@@ -72,6 +72,14 @@ class Project < ApplicationRecord
     end
   end
 
+  def dms_master?(user)
+    !members.find_by(user: user).try(:dms_module_master?).nil?
+  end
+
+  def dms_access?(user)
+    !members.find_by(user: user).try(:dms_module_access?).nil?
+  end
+
   private
 
   def add_creator_as_admin_and_member
