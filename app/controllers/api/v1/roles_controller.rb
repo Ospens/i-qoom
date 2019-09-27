@@ -3,13 +3,11 @@ class Api::V1::RolesController < ApplicationController
   load_and_authorize_resource :role,
                               through: :project
   def index
-    render json: @project.roles,
-           status: :ok
+    render json: @project.roles
   end
 
   def edit
-    render json: @role,
-           status: :ok
+    render json: @role
   end
 
   def create
@@ -24,8 +22,7 @@ class Api::V1::RolesController < ApplicationController
 
   def update
     if @role.update(role_params)
-      render json: @role,
-             status: :ok
+      render json: @role
     else
       render json: @role.errors,
              status: :unprocessable_entity

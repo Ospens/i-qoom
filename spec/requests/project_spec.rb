@@ -209,7 +209,7 @@ describe "Project", type: :request do
         project_member.update(email: user.email)
         get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
           headers: headers
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(:success)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(user)
       end
       it "shouldn't confirm a member with wrong user" do
