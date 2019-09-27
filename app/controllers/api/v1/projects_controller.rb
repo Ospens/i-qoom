@@ -2,13 +2,11 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    render json: signed_in_user.projects,
-           status: :ok
+    render json: signed_in_user.projects
   end
 
   def show
-    render json: @project,
-           status: :ok
+    render json: @project
   end
 
   # the first step of creating the project
@@ -34,8 +32,8 @@ class Api::V1::ProjectsController < ApplicationController
 
   def create
     if @project.save
-      render json: @project,
-             status: :created
+      render json: @project
+
     else
       render json: @project.errors,
              status: :unprocessable_entity
@@ -44,8 +42,7 @@ class Api::V1::ProjectsController < ApplicationController
 
   def update
     if @project.update(project_params.merge(admins_inviter_id: signed_in_user.id))
-      render json: @project,
-             status: :ok
+      render json: @project
     else
       render json: @project.errors,
              status: :unprocessable_entity
@@ -85,7 +82,7 @@ class Api::V1::ProjectsController < ApplicationController
       ProjectMemberConfirmation.new(token: params[:token],
                                     signed_in_user: signed_in_user)
     if project_member_confirmation.save
-      head :created
+      head :ok
     else
       render json: project_member_confirmation.errors,
              status: :unprocessable_entity

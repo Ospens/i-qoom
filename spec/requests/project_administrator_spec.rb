@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe "ProjectAdministrator", type: :request do
-  let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_with_admins, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_with_admins) }
+  let(:user) { project.user }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -33,6 +33,9 @@ describe "ProjectAdministrator", type: :request do
     end
     context "resend_confirmation" do
       it "should work" do
+        project.admins << FactoryBot.build(:project_administrator,
+                                           status: "unconfirmed")
+        project.save
         get "/api/v1/projects/#{project.id}/admins/#{project.admins.last.id}/resend_confirmation",
                headers: headers
         expect(response).to have_http_status(:success)

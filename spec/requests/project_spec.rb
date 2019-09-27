@@ -184,7 +184,7 @@ describe "Project", type: :request do
     context "confirm_admin" do
       it "should confirm an admin" do
         project_admin =
-          FactoryBot.create(:project_with_admins).admins.last
+          FactoryBot.create(:admin_with_project, status: "unconfirmed")
         project_admin.update(email: user.email)
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
@@ -193,8 +193,8 @@ describe "Project", type: :request do
       end
       it "shouldn't confirm an admin with wrong user" do
         project_admin =
-          FactoryBot.create(:project_with_admins,
-                            user_id: user.id).admins.last
+          FactoryBot.create(:admin_with_project, status: "unconfirmed")
+
         get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
           headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
@@ -209,7 +209,7 @@ describe "Project", type: :request do
         project_member.update(email: user.email)
         get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
           headers: headers
-        expect(response).to have_http_status(:created)
+        expect(response).to have_http_status(:success)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(user)
       end
       it "shouldn't confirm a member with wrong user" do
