@@ -128,21 +128,6 @@ class Convention < ApplicationRecord
     json
   end
 
-  def attributes_for_update_field_titles
-    json = as_json(include: {
-      document_fields: {
-        include: {
-          document_field_values: { only: [:id, :title, :value] } },
-          only: [:id, :codification_kind]
-        }
-      },
-      except: :id)
-    fields = json['document_fields']
-    version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
-    fields.delete(version)
-    json
-  end
-
   def last_convention
     project.conventions.where(number: number).last_version
   end
