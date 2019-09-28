@@ -6,13 +6,11 @@ class Api::V1::ProjectAdministratorsController < ApplicationController
 
   # inspect
   def show
-    render json: @project_administrator,
-           status: :ok
+    render json: @project_administrator
   end
 
   def index
-    render json: @project.admins.order(id: :asc),
-           status: :ok
+    render json: @project.admins.order(id: :asc)
   end
 
   def resend_confirmation
@@ -22,7 +20,7 @@ class Api::V1::ProjectAdministratorsController < ApplicationController
 
   def destroy
     if @project_administrator.remove
-      head :ok
+      head :no_content
     else
       render json: @project_administrator.errors,
              status: :unprocessable_entity

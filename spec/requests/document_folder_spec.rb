@@ -5,8 +5,8 @@ describe DocumentFolder, type: :request do
 
   context '#create' do
     let(:title) { Faker::Lorem.sentence }
-    let(:convention) { FactoryBot.create(:convention) }
-    let(:project) { convention.project }
+    let(:project) { FactoryBot.create(:project) }
+    let(:convention) { project.conventions.active }
     let(:folder_params) do
       { document_folder: {
         title: title,

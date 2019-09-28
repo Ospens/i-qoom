@@ -10,8 +10,7 @@ class Api::V1::ProjectMembersController < ApplicationController
                    roles: ActiveModel::Serializer::CollectionSerializer.new(@project.roles,
                               serializer: RoleSerializer),
                    members: ActiveModel::Serializer::CollectionSerializer.new(@project.members.creation_step_active,
-                              serializer: ProjectMemberSerializer) },
-           status: :ok
+                              serializer: ProjectMemberSerializer) }
   end
 
   def pending
@@ -20,22 +19,19 @@ class Api::V1::ProjectMembersController < ApplicationController
                    roles: ActiveModel::Serializer::CollectionSerializer.new(@project.roles,
                               serializer: RoleSerializer),
                    members: ActiveModel::Serializer::CollectionSerializer.new(@project.members.creation_step_pending,
-                              serializer: ProjectMemberSerializer) },
-           status: :ok
+                              serializer: ProjectMemberSerializer) }
   end
 
   def new
     render json: { company_types:
                      enum_keys_with_titles(ProjectMember.company_types),
                    employment_types:
-                     enum_keys_with_titles(ProjectMember.employment_types) },
-           status: :ok
+                     enum_keys_with_titles(ProjectMember.employment_types) }
   end
 
   def create
     if @project_member.save
-      render json: @project_member,
-             status: :created
+      render json: @project_member
     else
       render json: @project_member.errors,
              status: :unprocessable_entity
@@ -44,8 +40,7 @@ class Api::V1::ProjectMembersController < ApplicationController
 
   def update
     if @project_member.update(project_member_params)
-      render json: @project_member,
-             status: :ok
+      render json: @project_member
     else
       render json: @project_member.errors,
              status: :unprocessable_entity
