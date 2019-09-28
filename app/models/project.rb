@@ -15,7 +15,8 @@ class Project < ApplicationRecord
 
   belongs_to :user
 
-  has_many :conventions
+  has_many :conventions,
+           dependent: :destroy
 
   has_many :document_mains
 
@@ -58,6 +59,8 @@ class Project < ApplicationRecord
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
+  after_create :create_conventions
+
   def invite_members(ids, inviter_id)
     members = self.members.where(id: ids).where.not(creation_step: "active")
     if members.present?
@@ -69,6 +72,14 @@ class Project < ApplicationRecord
     else
       false
     end
+  end
+
+  def dms_master?(user)
+    !members.find_by(user: user).try(:dms_module_master?).nil?
+  end
+
+  def dms_access?(user)
+    !members.find_by(user: user).try(:dms_module_access?).nil?
   end
 
   private
@@ -100,4 +111,8 @@ class Project < ApplicationRecord
     self.reload if creation_step_done?
   end
 
+  def create_conventions
+    conventions.create(number: 1)
+    # there will be other conventions
+  end
 end

@@ -7,20 +7,18 @@ module DocumentHelpers
     project = FactoryBot.create(:project)
     main = project.document_mains.create
     rev = main.revisions.create
-    convention = project.conventions.new
-    convention.build_default_fields
+    convention = project.conventions.active
     convention.document_fields.each do |field|
       if field.select_field?
-        value = field.document_field_values.new(value: Faker::Name.initials, position: 1, title: '')
+        value = field.document_field_values.first
         if field.can_limit_by_value?
-          field.document_rights.new(user: user,
-                                    limit_for: :value,
-                                    document_field_value: value,
-                                    enabled: true)
+          field.document_rights.create!(user: user,
+                                        limit_for: :value,
+                                        document_field_value: value,
+                                        enabled: true)
         end
       end
     end
-    convention.save
     doc_attrs = Document.build_from_convention(convention, user)
     doc_attrs['review_status'] = 'issued_for_information'
     doc_attrs['user_id'] = user.id

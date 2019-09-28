@@ -4,9 +4,6 @@ class Api::V1::ConventionsController < ApplicationController
   before_action :authorize_convention
 
   def edit
-    if !@convention.document_fields.any?
-      @convention.build_default_fields
-    end
     render json: @convention.attributes_for_edit
   end
 
@@ -19,20 +16,10 @@ class Api::V1::ConventionsController < ApplicationController
     end
   end
 
-  def update_field_titles
-    raise ActiveRecord::RecordNotFound if @convention.new_record?
-    if @convention.update(convention_field_params(true))
-      render json: @convention.attributes_for_edit
-    else
-      render json: @convention.errors, status: :unprocessable_entity
-    end
-  end
-
   private
 
   def set_convention
-    conventions = @project.conventions
-    @convention = conventions.active.presence || conventions.new
+    @convention = @project.conventions.active
   end
 
   def assign_suffix(params)
@@ -63,17 +50,6 @@ class Api::V1::ConventionsController < ApplicationController
                                             :value,
                                             :title,
                                             :position
-                                          ]
-                                        ])
-  end
-
-  def convention_field_params(assign_attrs = false)
-    assign_suffix(params) if assign_attrs
-    params.require(:convention).permit(document_fields_attributes:
-                                        [ :id,
-                                          document_field_values_attributes: [
-                                            :id,
-                                            :title
                                           ]
                                         ])
   end

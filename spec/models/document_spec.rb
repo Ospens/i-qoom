@@ -10,7 +10,7 @@ RSpec.describe Document, type: :model do
     document = document_attributes(user)
     expect(Document.new(document)).to be_valid
     expect(document['document_fields_attributes'].length).to eql(8)
-    expect(document['document_fields_attributes'].first['document_field_values_attributes'].length).to eql(1)
+    expect(document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes'].length).to eql(1)
   end
 
   it 'project creator should have access to all fields and values even without rights' do
@@ -69,12 +69,14 @@ RSpec.describe Document, type: :model do
     doc2 = FactoryBot.create(:document)
     FactoryBot.create(:document)
     field1 = doc1.document_fields.find_by(codification_kind: :originating_company)
-    value1 = field1.document_field_values.find_by(selected: true).value
-    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, value1).pluck(:id)
+    field_value1 = field1.document_field_values.find_by(selected: true)
+    field_value1.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, field_value1.value).pluck(:id)
     expect(ids).to eql([doc1.id])
     field2 = doc2.document_fields.find_by(codification_kind: :originating_company)
-    value2 = field2.document_field_values.find_by(selected: true).value
-    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, [value1, value2]).pluck(:id)
+    field_value2 = field2.document_field_values.find_by(selected: true)
+    field_value2.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, [field_value1.value, field_value2.value]).pluck(:id)
     expect(ids).to match_array([doc1.id, doc2.id])
   end
 
@@ -100,12 +102,23 @@ RSpec.describe Document, type: :model do
     field_true.update_columns(selected: false)
     field_false.update_columns(selected: true)
     expect(doc.reload.can_view?(user)).to eql(false)
+    doc.project.members.create!(user: user,
+                                dms_module_master: true,
+                                employment_type: :employee)
+    expect(doc.can_view?(user)).to eql(true)
+
   end
 
   it 'can_create?' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)
     doc = Document.new(document)
+    expect(doc.can_create?(user)).to eql(true)
+    DocumentRight.destroy_all
+    expect(doc.can_create?(user)).to eql(false)
+    doc.project.members.create!(user: user,
+                                dms_module_master: true,
+                                employment_type: :employee)
     expect(doc.can_create?(user)).to eql(true)
   end
 
@@ -261,6 +274,14 @@ RSpec.describe Document, type: :model do
     expect(doc.convention).to be_blank
     doc.valid?
     expect(doc.convention).to be_present
+    con1 = doc.project.conventions.active
+    expect(doc.convention).to eql(con1)
+    doc.save!
+    con_attrs = assign_attributes_suffix_to_document(con1.attributes_for_edit)
+    con2 = doc.project.conventions.create!(con_attrs)
+    doc2_attrs = assign_attributes_suffix_to_document(doc.attributes_for_edit)
+    doc2 = doc.revision.versions.create!(doc2_attrs)
+    expect(doc2.convention).to eql(con1)
   end
 
   it 'send emails' do
