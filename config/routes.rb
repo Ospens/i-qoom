@@ -41,10 +41,7 @@ Rails.application.routes.draw do
           post :invite
           post :update_project_code
         end
-        resource :conventions, only: [:edit, :update] do
-          get :get_field_titles
-          patch :update_field_titles
-        end
+        resource :conventions, only: [:edit, :update]
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files

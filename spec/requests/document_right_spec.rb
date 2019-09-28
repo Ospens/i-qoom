@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe DocumentRight, type: :request do
   let(:json) { JSON(response.body) }
-  let(:convention) { FactoryBot.create(:convention) }
-  let(:project) { convention.project }
+  let(:project) { FactoryBot.create(:project) }
+  let(:convention) { project.conventions.active }
   let(:user) { FactoryBot.create(:user) }
 
   before do

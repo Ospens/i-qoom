@@ -48,8 +48,8 @@ RSpec.describe DocumentRight, type: :model do
   end
 
   it '#attributes_for_edit' do
-    convention = FactoryBot.create(:convention)
-    project = convention.project
+    project = FactoryBot.create(:project)
+    convention = project.conventions.active
     user = FactoryBot.create(:user)
     expect(Document.new(project: project).can_create?(user)).to eql(false)
     originating_company =

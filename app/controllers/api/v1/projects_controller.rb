@@ -6,7 +6,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def show
-    render json: @project
+    render json: @project, user: signed_in_user
   end
 
   # the first step of creating the project
