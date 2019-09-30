@@ -76,11 +76,11 @@ export const renderFoldersBlock = (folders, projectId) => {
 class DmsSideBar extends Component {
 
   renderMainItems = () => {
-    const { folders, match: { path, params: {  project_id } } } = this.props
+    const { project_code, folders, match: { path, params: {  project_id } } } = this.props
     const masterPath = `/dashboard/projects/${project_id}/documents/master`
 
     // TODO: Need check for master's permit
-
+    
     const menuItems = [
       {
         title: 'Overview',
@@ -100,7 +100,7 @@ class DmsSideBar extends Component {
       {
         title: 'Master settings',
         icon: 'icon-task-list-settings',
-        path: `${masterPath}/edit_convention`,
+        path: project_code ? `${masterPath}/edit_convention` : `${masterPath}/codifications/1/`,
         root: `${masterPath}/`
       }
     ]
@@ -225,7 +225,8 @@ class DmsSideBar extends Component {
 }
 
 const mapStateToProps = ({ projects, folders }) => ({
-  folders: folders.allFolders
+  folders: folders.allFolders,
+  project_code: projects.current.project_code
 })
 
 export default connect(mapStateToProps)(withRouter(DmsSideBar))

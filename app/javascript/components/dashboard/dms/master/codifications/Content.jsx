@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import SecondCodeStructure from './SecondCodeStructure'
 import CodeStructure from './CodeStructure'
 import CodificationTable from './CodificationTable'
 import ModalInfo from './ModalInfo'
+import { startEditConvention } from '../../../../../actions/conventionActions'
 
 export const fields = [
     {
@@ -65,7 +68,10 @@ export const freeTextPlaceholders = el => (
   </React.Fragment>
 )
 
-function Content({ current }) {
+function Content({ match: { params: { project_id } } }) {
+  const dispatch = useDispatch()
+  useEffect(() => { dispatch(startEditConvention(project_id)) }, [])
+
   return (
     <div className='dms-content'>
       <ModalInfo />
@@ -83,4 +89,4 @@ function Content({ current }) {
   )
 }
 
-export default Content
+export default withRouter(Content)

@@ -526,8 +526,8 @@
 
   .red-rounded-info {
     background-color: #f5696d;
-    min-width: 20px !important;
-    min-height: 20px;
+    min-width: 22px !important;
+    min-height: 22px;
     color: white;
     border-radius: 100%;
     display: flex;
@@ -1789,6 +1789,29 @@ input.search-input {
   }
 }
 
+.codification-codes-title-row-not-prisitne {
+  background-color: #f0f7f7;
+  border-radius: 5px;
+  padding-left: 20px;
+  margin-left: -20px;
+  padding-right: 20px;
+  margin-right: -20px;
+
+
+  .confirmation-block {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    justify-content: center;
+    padding-bottom: 20px;
+    margin-bottom: 23px;
+    
+    span {
+      max-width: 50%;
+    }
+  }
+}
+
 .codification-codes-title-row {
   display: grid;
   grid-template-columns: 142px 0.7fr repeat(3, 140px 0.5fr) 192px 0.5fr 90px 0.5fr 115px;
@@ -1907,7 +1930,7 @@ input.search-input {
 .codification-codes-values-table {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 65px;
+  grid-gap: 50px;
 
   .codification-input-group {
     display: flex;
@@ -1915,7 +1938,6 @@ input.search-input {
 
     .codification-input {
       &:first-of-type {
-        width: 30%;
         max-width: 63px;
         min-width: 58px;
         margin-right: 23px;
@@ -1923,6 +1945,10 @@ input.search-input {
         input {
           text-align: center;
         }
+      }
+
+      &:last-child {
+        margin-right: 31px;
       }
 
       input {
@@ -1939,6 +1965,9 @@ input.search-input {
 
     button {
       margin-left: 10px;
+      &.first-line {
+        padding-top: 35px;
+      }
     }
   }
 

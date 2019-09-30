@@ -16,8 +16,8 @@ class IndexDMS extends Component {
   }
 
   componentWillMount() {
-    const { fetchDocuments, history, match: { params: { project_id } } } = this.props
-    fetchDocuments(project_id, history)
+    const { fetchDocuments, match: { params: { project_id } } } = this.props
+    fetchDocuments(project_id)
   }
 
   checkItem = (stateName, stateItems, value) => {
@@ -87,7 +87,7 @@ class IndexDMS extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
+  fetchDocuments: projectId => dispatch(startFetchDocuments(projectId))
 })
 
 const mapStateToProps = ({ documents, folders }) => ({

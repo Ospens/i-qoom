@@ -85,7 +85,7 @@ class ModalCreateField extends Component {
   }
 
   handleSubmit = field => {
-    const { column = '2', row, spliceToConvention, id } = this.props
+    const { column = '2', row, spliceToConvention, created_at } = this.props
 
     let newSections = []
     if (field.kind === 'select_field') {
@@ -100,9 +100,8 @@ class ModalCreateField extends Component {
     field['document_field_values'] = newSections
     field['column'] = column
     field['row'] = row || 0
-    field['id'] = id || null
-
-    const removeNum = id === undefined ? 0 : 1
+    
+    const removeNum = created_at === undefined ? 0 : 1
     spliceToConvention(`column_${column}`, row || 0, removeNum, field)
     this.handleClose()
   }
@@ -245,7 +244,7 @@ const mapStateToProps = state => ({
   field_type: selector(state, 'kind'),
   column: selector(state, 'column'),
   row: selector(state, 'row'),
-  id: selector(state, 'id'),
+  created_at: selector(state, 'created_at'),
   title: selector(state, 'title'),
   codification_kind: selector(state, 'codification_kind'),
 })

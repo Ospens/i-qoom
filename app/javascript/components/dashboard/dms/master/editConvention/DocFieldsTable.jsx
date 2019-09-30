@@ -31,7 +31,6 @@ class DocFieldsTable extends Component {
 
   handleSubmit = values => {
     const { startUpdateConvention, match: { params: { project_id } }  } = this.props
-    console.log(values)
     return startUpdateConvention(project_id, values)
   }
 
@@ -132,7 +131,7 @@ class DocFieldsTable extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, id } = this.props
+    const { handleSubmit, pristine } = this.props
 
     return (
       <React.Fragment>
@@ -179,30 +178,22 @@ class DocFieldsTable extends Component {
                   <DocFieldsColumn
                     column='1'
                     openInputForm={this.handleOpen}
-                    disabled={!!id}
+                    // TODO: change it
+                    disabled={true}
                   />
                 </div>
                 <div className='col-6'>
                   <DocFieldsColumn
                     column='2'
                     openInputForm={this.handleOpen}
-                    disabled={!!id}
+                    // TODO: change it
+                    disabled={true}
                   />
                 </div>
               </div>
-              {!id && this.renderModalButton()}
+              {this.renderModalButton()}
             </div>
-            {(() => {
-              if (!id) {
-                return (
-                  this.renerFooterForNewConv()
-                )
-              } else if (!pristine) {
-                return (
-                  this.renerFooter()
-                )
-              }
-            })()}
+            {!pristine && this.renerFooter()}
           </form>
         </ DragDropContext>
       </React.Fragment>
@@ -211,7 +202,6 @@ class DocFieldsTable extends Component {
 }
 
 const mapStateToProps = state => ({
-  id: state.conventions.current.id,
   fields: getFormValues('convention_form')(state),
 })
 

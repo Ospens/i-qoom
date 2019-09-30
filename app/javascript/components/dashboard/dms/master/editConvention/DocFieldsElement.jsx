@@ -183,7 +183,7 @@ class DocFieldsElement extends Component {
                 <div className='invalid-feedback convention-feedback'>
                   {error}
                 </div>}
-                {this.editButton(index)}
+                {!['originating_company', 'discipline', 'document_type'].includes(value.codification_kind) && this.editButton(index)}
               </div>
             </div>
           </div>

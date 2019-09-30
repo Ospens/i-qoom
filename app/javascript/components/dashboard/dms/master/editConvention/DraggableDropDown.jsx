@@ -156,7 +156,6 @@ class DraggableDropDown extends Component {
 
     const position = index > -1 ? index : fields.length
     const newValue = {
-      id: null,
       value: newSection,
       title: ''
     }

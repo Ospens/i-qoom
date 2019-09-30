@@ -1,48 +1,23 @@
 import React from 'react'
 import FieldForm from './FieldForm'
-
-const originating_company = [
-  {
-    id: 1,
-    value: 'QWE',
-    title: 'Originating company'
-  },
-  {
-    id: 2,
-    value: 'ABC',
-    title: 'Some text'
-  },
-]
-
-const discipline = [
-  {
-    id: 1,
-    value: 'RTY',
-    title: 'Discipline'
-  },
-  {
-    id: 2,
-    value: 'FGH',
-    title: 'Some discipline'
-  },
-]
-
-const document_type = [
-  {
-    id: 1,
-    value: 'VBN',
-    title: 'Document type'
-  },
-]
+import { useSelector } from 'react-redux'
 
 function CodificationTable({}) {
+  const document_fields = useSelector(state => state.conventions.current.document_fields)
+
+  const document_type = document_fields.find(el => el.codification_kind === 'document_type')
+  const discipline = document_fields.find(el => el.codification_kind === 'discipline')
+  const originating_company = document_fields.find(el => el.codification_kind === 'originating_company')
+
+  if (!document_type || !discipline || !originating_company) return <div />
+
   return (
     <div className='codification-codes-values-table'>
       <div className='codification-codes-values-column'>
         <FieldForm 
           form='originating_company'
           title='Originating company'
-          initialValues={{originating_company}}
+          initialValues={{ originating_company: originating_company ? originating_company.document_field_values : [] }}
         />
       </div>
 
@@ -50,7 +25,7 @@ function CodificationTable({}) {
         <FieldForm
           form='discipline' 
           title='Discipline'
-          initialValues={{ discipline }}
+          initialValues={{ discipline: discipline ? discipline.document_field_values : [] }}
         />
       </div>
 
@@ -58,7 +33,7 @@ function CodificationTable({}) {
         <FieldForm 
           form='document_type' 
           title='Document type'
-          initialValues={{ document_type }}
+          initialValues={{ document_type: document_type ? document_type.document_field_values : [] }}
         />
       </div>
     </div>
