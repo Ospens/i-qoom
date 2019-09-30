@@ -57,7 +57,7 @@ RSpec.describe ProjectAdministrator, type: :model do
   end
 
   it "send_confirmation_email" do
-    project_admin = FactoryBot.create(:project_with_admins).admins.last
+    project_admin = FactoryBot.create(:admin_with_project, status: "unconfirmed")
 
     expect(project_admin.inviter_id).to be_present
     expect(project_admin.first_confirmation_sent_at).to be_present

@@ -3,13 +3,11 @@ class Api::V1::DisciplinesController < ApplicationController
   load_and_authorize_resource :discipline,
                               through: :project
   def index
-    render json: @project.disciplines,
-           status: :ok
+    render json: @project.disciplines
   end
 
   def edit
-    render json: @discipline,
-           status: :ok
+    render json: @discipline
   end
 
   def create
@@ -24,8 +22,7 @@ class Api::V1::DisciplinesController < ApplicationController
 
   def update
     if @discipline.update(discipline_params)
-      render json: @discipline,
-             status: :ok
+      render json: @discipline
     else
       render json: @discipline.errors,
              status: :unprocessable_entity

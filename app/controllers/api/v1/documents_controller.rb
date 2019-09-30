@@ -11,7 +11,6 @@ class Api::V1::DocumentsController < ApplicationController
                                    :download_details,
                                    :revisions_and_versions ]
   load_resource :document, through: :project, only: [ :new, :create ]
-  before_action :check_convention
   authorize_resource :document, except: [ :index,
                                           :download_native_files,
                                           :download_list,
@@ -180,30 +179,6 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   private
-
-  def check_convention
-    if @project.present?
-      if @project.conventions.active.blank?
-        if @project.user == signed_in_user
-          render json: { location: edit_api_v1_project_conventions_path }, status: 307
-        else
-          dms_is_unavailable
-        end
-      end
-    elsif @document.present? && @document.project.present?
-      if @document.project.conventions.active.blank?
-        if @document.project.user == signed_in_user
-          render json: { location: edit_api_v1_project_conventions_path(project_id: @document.project.id) }, status: 307
-        else
-          dms_is_unavailable
-        end
-      end
-    end
-  end
-
-  def dms_is_unavailable
-    render json: { message: 'DMS is not available yet' }, status: :unprocessable_entity
-  end
 
   def authorize_collection_actions
     authorize! :collection_actions, Document.new, @project

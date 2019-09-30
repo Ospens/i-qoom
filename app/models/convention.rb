@@ -1,4 +1,6 @@
 class Convention < ApplicationRecord
+  attr_accessor :project_code # for tests
+
   has_many :document_fields,
            as: :parent,
            index_errors: true,
@@ -27,6 +29,11 @@ class Convention < ApplicationRecord
 
   before_validation :set_version
 
+  before_validation :build_default_fields,
+                    on: :create,
+                    if: -> { !document_fields.any? &&
+                             !project.conventions.where(number: number).any? }
+
   after_save :assign_revision_version_field,
              if: -> { document_fields.find_by(codification_kind: :revision_version).blank? }
   # there should be way to detect active convention
@@ -35,26 +42,37 @@ class Convention < ApplicationRecord
   scope :last_version, -> { order(version: :asc).last }
 
   def build_default_fields
-    document_fields.new(kind: :select_field,
-                        codification_kind: :originating_company,
-                        title: 'Originating company',
-                        command: 'Select originating company',
-                        column: 1,
-                        row: 3)
-    if number == 2
+    field =
       document_fields.new(kind: :select_field,
-                          codification_kind: :receiving_company,
-                          title: 'Receiving company',
-                          command: 'Select receiving company',
+                          codification_kind: :originating_company,
+                          title: 'Originating company',
+                          command: 'Select originating company',
                           column: 1,
-                          row: 4)
+                          row: 3)
+    # I talked to Yasser. By default the first three positions are
+    # code "XXX" name "Default". As soon as the user adds a codification to the
+    # first positions "XXX Default" is overwritten. If the user wants to delete
+    # it again, then the last position become mandatory and not deletable.
+    # (c) Norman
+    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
+    if number == 2
+      field =
+        document_fields.new(kind: :select_field,
+                            codification_kind: :receiving_company,
+                            title: 'Receiving company',
+                            command: 'Select receiving company',
+                            column: 1,
+                            row: 4)
+      field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     end
-    document_fields.new(kind: :select_field,
-                        codification_kind: :discipline,
-                        title: 'Discipline',
-                        command: 'Select a discipline',
-                        column: 1,
-                        row: number == 2 ? 5 : 4)
+    field =
+      document_fields.new(kind: :select_field,
+                          codification_kind: :discipline,
+                          title: 'Discipline',
+                          command: 'Select a discipline',
+                          column: 1,
+                          row: number == 2 ? 5 : 4)
+    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     document_fields.new(kind: :textarea_field,
                         codification_kind: :additional_information,
                         title: 'Additional information',
@@ -67,12 +85,14 @@ class Convention < ApplicationRecord
                         command: 'Click here to browse your files',
                         column: 1,
                         row: number == 2 ? 7 : 6)
-    document_fields.new(kind: :select_field,
-                        codification_kind: :document_type,
-                        title: 'Document type',
-                        command: 'Select a document type',
-                        column: 2,
-                        row: 1)
+    field =
+      document_fields.new(kind: :select_field,
+                          codification_kind: :document_type,
+                          title: 'Document type',
+                          command: 'Select a document type',
+                          column: 2,
+                          row: 1)
+    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     document_fields.new(kind: :text_field,
                         codification_kind: :document_number,
                         title: 'Document number',
@@ -94,11 +114,17 @@ class Convention < ApplicationRecord
   end
 
   def attributes_for_edit
-    json = as_json(include: { document_fields: { include: :document_field_values } })
+    json = as_json(include: {
+      document_fields: {
+        include: {
+          document_field_values: { except: :id } },
+          except: :id
+        }
+      },
+      except: :id)
     fields = json['document_fields']
     version = fields.detect{ |i| i['codification_kind'] == 'revision_version' }
     fields.delete(version)
-    json['project_code'] = project.project_code
     json
   end
 
@@ -109,7 +135,10 @@ class Convention < ApplicationRecord
   private
 
   def assign_revision_version_field
-    document_fields.create(kind: :hidden_field, codification_kind: :revision_version, column: 1)
+    # this is for validation with document
+    document_fields.create(kind: :hidden_field,
+                           codification_kind: :revision_version,
+                           column: 1)
   end
 
   def set_version
