@@ -152,10 +152,8 @@ class Convention < ApplicationRecord
     # But deleting any field entirety is not possible.
     # This means that the structure of the convention is not changeable.
     last_convention_fields =
-      last_convention.document_fields.where.not(kind: :hidden_field)
-    if last_convention_fields.length != document_fields.length
-      errors.add(:document_fields, :wrong_number_of_fields)
-    end
+      last_convention.document_fields.where.not(kind: :hidden_field,
+                                                codification_kind: nil)
     last_convention_fields.each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -170,7 +168,7 @@ class Convention < ApplicationRecord
           (attrs.to_a - i.attributes.to_a).empty?
         end.present?
       if !contains_field
-        errors.add(:document_fields, :wrong_field_added_to_convention)
+        errors.add(:document_fields, "#{field.codification_kind}_field_changed")
       end
     end
   end
