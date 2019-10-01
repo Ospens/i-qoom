@@ -28,7 +28,7 @@ const DocumentSideBar = ({ step, toggleStep }) => {
       <div className='dms-sidebar-menu__document-title'>
         <div className='editable-title'>
           <h5>{title || '(Document name)'}</h5>
-          {!title && <span className='icon-common-file-edit ml-2' />}
+          {!title && <span className='icon-pencil-write ml-2' />}
         </div>
         <FolderInfo />
         {false && <React.Fragment>

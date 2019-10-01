@@ -8,7 +8,7 @@ import Page from '../../elements/Page'
 
 class Projects extends Component {
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { startFetchProject } = this.props
     const { project_id } = this.props.match.params
     startFetchProject(project_id)

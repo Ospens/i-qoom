@@ -9,6 +9,7 @@ import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import InputField from '../../../../../elements/InputField'
 import { startUpdateCodification } from '../../../../../actions/conventionActions'
+import { required } from '../../../../../elements/validations'
 
 const validate = value => (!value || !value.length ? 'Required' : undefined)
 
@@ -25,6 +26,7 @@ const BlockByType = ({ fields, title }) => {
               id='value'
               placeholder='XXX'
               label={i > 0 ? '' : 'Code'}
+              validate={[required]}
             />
             <Field
               className='codification-input'
@@ -33,6 +35,7 @@ const BlockByType = ({ fields, title }) => {
               id='title'
               placeholder={`${title} title`}
               label={i > 0 ? '' : `Enter ${title}`}
+              validate={[required]}
             />
             {fields.length > 1 &&
             <button type='button' onClick={() => fields.remove(i)} className={classnames({ 'first-line': i < 1 })}>

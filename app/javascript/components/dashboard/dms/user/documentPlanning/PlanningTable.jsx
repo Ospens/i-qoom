@@ -1,8 +1,17 @@
-import React, { useEffect } from 'react'
-import classnames from 'classnames'
-import moment from 'moment'
+import React from 'react'
 import { Table } from 'semantic-ui-react'
 import DropDown from '../../../../../elements/DropDown'
+
+const options = [
+  {
+    icon: 'icon-playlist-upload',
+    title: 'Use as upload template',
+  },
+  {
+    icon: 'icon-common-file-text-download',
+    title: 'Download',
+  },
+]
 
 function PlanningTable({ documents, checkedDocs, toggleDocs, type }) {
   // useEffect(() => { toggleDocs([]) }, [type])
@@ -55,6 +64,7 @@ function PlanningTable({ documents, checkedDocs, toggleDocs, type }) {
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon'
+                  defaultValues={options}
                 >
                 </DropDown>
               </Table.Cell>

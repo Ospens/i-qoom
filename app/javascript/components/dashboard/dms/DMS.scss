@@ -76,7 +76,7 @@
 
 .buttons-with-icons-list {
   display: flex;
-  margin-bottom: 100px;
+  height: 125px !important;
 
   li {
     padding-left: 20px;
@@ -234,6 +234,18 @@
     }
 
     .dms-sidebar-menu__list {
+      margin-bottom: 0;
+
+      &:after {
+        margin-top: 10px;
+        margin-bottom: 7px;
+        display: block;
+        content: '';
+        border-bottom: 1px solid #F5F5F5;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
       .dms-sidebar-menu__item {
         width: 100%;
 
@@ -358,6 +370,7 @@
 
         h5 {
           margin: 0;
+          font-size: 20px;
         }
       }
 
@@ -1390,25 +1403,34 @@ input.search-input {
   }
 }
 
-.tabs.big-tabs {
-  .nav-bar {
-    margin-top: 0;
+.tabs {
+
+  &.top-block {
+    .nav-bar {
+      margin-top: 0;
+    }
   }
 
-  .nav-bar-element {
-    font-size: 1.2em;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 2em !important;
-    padding-right: 2em !important;
-  }
-  .nav-bar-item {
-    &:not(:first-of-type) {
-      margin-left: 60px;
+  &.big-tabs {
+    .nav-bar {
+      margin-top: 0;
     }
 
-    &:not(:last-of-type) {
-      margin-right: 60px;
+    .nav-bar-element {
+      font-size: 1.2em;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 2em !important;
+      padding-right: 2em !important;
+    }
+    .nav-bar-item {
+      &:not(:first-of-type) {
+        margin-left: 60px;
+      }
+
+      &:not(:last-of-type) {
+        margin-right: 60px;
+      }
     }
   }
 }
@@ -2263,7 +2285,7 @@ input.search-input {
 
 .new-document-table {
   .form-group {
-    min-height: 80px;
+    min-height: 90px;
 
     textarea {
       min-height: 120px !important;
@@ -2452,6 +2474,7 @@ span.column-title {
   .dot-column, .number-column, .dd-column, .table-checkbox {
     max-width: 60px;
     width: 60px;
+    height: 50px;
     text-overflow: unset;
   }
 

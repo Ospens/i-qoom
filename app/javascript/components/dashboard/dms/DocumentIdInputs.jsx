@@ -8,7 +8,7 @@ function DocumentIdInputs({
   docNumberValue
 }) {
   return (
-    <div className='form-group'>
+    <div className='form-group__title'>
       <label>Pleace select or generate Document ID</label>
       <div className='input-container'>
         <div className='document-id-code'>
