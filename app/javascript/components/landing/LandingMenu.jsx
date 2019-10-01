@@ -33,7 +33,7 @@ class LandingMenu extends Component {
     projectsOpen: false
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { startFetchProjects } = this.props
     startFetchProjects()
   }

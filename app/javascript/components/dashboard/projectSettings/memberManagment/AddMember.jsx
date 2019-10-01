@@ -19,7 +19,7 @@ class AddMember extends Component {
     step: 1
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { startCreatingProjectMember, projectId } = this.props
     startCreatingProjectMember(projectId)
   }

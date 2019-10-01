@@ -6,7 +6,6 @@ import moment from 'moment'
 
 const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => {
   const [date, toggleDate] = useState('')
-  const mainClass = classnames({ 'is-invalid': touched && error })
 
   useEffect(() => {
     if (typeof input.value !== 'object') return
@@ -17,13 +16,14 @@ const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: {
   const value = date ? moment(new Date(date)).format('MM/DD/YYYY') : null
 
   return (
-    <div className={mainClass}>
+    <div className={classnames({ 'is-invalid': touched && error })}>
       {label && <label>{label}</label>} 
       <DatePicker
         {...input}
         autoComplete='off'
         dateForm='MM/DD/YYYY'
-        className='form-control date-input'
+        className=''
+        className={classnames('form-control date-input', { 'is-invalid': touched && error })}
         selected={date}
         value={value || input.value}
         onChange={value => {

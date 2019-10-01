@@ -27,7 +27,7 @@ class DropDown extends Component {
     isOpen: false
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  UNSAFE_componentWillUpdate(nextProps, nextState) {
     const { openState } = this.props
     if (openState) {
       openState(nextState.isOpen)

@@ -15,7 +15,7 @@ class IndexDMS extends Component {
     checkedDocTypes: []
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { fetchDocuments, match: { params: { project_id } } } = this.props
     fetchDocuments(project_id)
   }
@@ -40,17 +40,15 @@ class IndexDMS extends Component {
 
     return (
       <ul className='buttons-with-icons-list'>
-        <Route path='/dashboard/projects/:project_id/documents/new/' exact>
-          <li>
-            <Link
-              className='d-flex align-items-center'
-              to={`/dashboard/projects/${params.project_id}/documents/new/`}
-            >
-              <span className='icon-add_1 mr-2' />
-              <span data-title='Create new Document'>Create new Document</span>
-            </Link>
-          </li>
-        </Route>
+        <li>
+          <Link
+            className='d-flex align-items-center'
+            to={`/dashboard/projects/${params.project_id}/documents/new/`}
+          >
+            <span className='icon-add_1 mr-2' />
+            <span data-title='Create new Document'>Create new Document</span>
+          </Link>
+        </li>
         <li>
           <button type='button' className={btnClass}>
             <span className='icon-Revise_1 mr-2' />
