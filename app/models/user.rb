@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :validatable
 
+  acts_as_reader
+
   attr_accessor :accept_terms_and_conditions
 
   has_many :projects
