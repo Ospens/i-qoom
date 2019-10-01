@@ -48,7 +48,7 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
       const newRow = {
         ...row,
         column: index + 1,
-        row: i + 1
+        row: i + (index === 0 ? 3 : 1)
       }
 
       docFields.push(newRow)
@@ -69,6 +69,31 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
         successNotify('The convention was updated!')
         dispatch(conventionUpdated(sortedData))
         dispatch(initialize('convention_form', sortedData.grouped_fields))
+      })
+      .catch(err => {
+        errorNotify('Something went wrong')
+        throw new SubmissionError(err)
+      })
+  )
+}
+
+export const startUpdateCodification = (projectId, values) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  const request = {
+    convention: {
+      document_fields: values
+    }
+  }
+
+  return (
+    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, headers)
+      .then(response => {
+        const { data } = response
+        const sortedData = fieldByColumn(data)
+        successNotify('The values was updated!')
+        dispatch(conventionUpdated(sortedData))
       })
       .catch(err => {
         errorNotify('Something went wrong')
