@@ -46,22 +46,22 @@ RSpec.describe Convention, type: :model do
       it do
         field = find_field(:originating_company)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(3)
+        expect(field.row).to eql(1)
       end
 
       it do
         field = convention2.document_fields.find_by(codification_kind: :receiving_company)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(4)
+        expect(field.row).to eql(2)
       end
 
       it do
         field = find_field(:discipline)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(4)
+        expect(field.row).to eql(2)
         field = convention2.document_fields.find_by(codification_kind: :discipline)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(5)
+        expect(field.row).to eql(3)
       end
 
       it do
@@ -79,10 +79,10 @@ RSpec.describe Convention, type: :model do
       it do
         field = find_field(:additional_information)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(5)
+        expect(field.row).to eql(3)
         field = convention2.document_fields.find_by(codification_kind: :additional_information)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(6)
+        expect(field.row).to eql(4)
       end
 
       it do

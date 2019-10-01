@@ -48,7 +48,7 @@ class Convention < ApplicationRecord
                           title: 'Originating company',
                           command: 'Select originating company',
                           column: 1,
-                          row: 3)
+                          row: 1)
     # I talked to Yasser. By default the first three positions are
     # code "XXX" name "Default". As soon as the user adds a codification to the
     # first positions "XXX Default" is overwritten. If the user wants to delete
@@ -62,7 +62,7 @@ class Convention < ApplicationRecord
                             title: 'Receiving company',
                             command: 'Select receiving company',
                             column: 1,
-                            row: 4)
+                            row: 2)
       field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     end
     field =
@@ -71,14 +71,14 @@ class Convention < ApplicationRecord
                           title: 'Discipline',
                           command: 'Select a discipline',
                           column: 1,
-                          row: number == 2 ? 5 : 4)
+                          row: number == 2 ? 3 : 2)
     field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     document_fields.new(kind: :textarea_field,
                         codification_kind: :additional_information,
                         title: 'Additional information',
                         command: 'Information',
                         column: 1,
-                        row: number == 2 ? 6 : 5)
+                        row: number == 2 ? 4 : 3)
     document_fields.new(kind: :upload_field,
                         codification_kind: :document_native_file,
                         title: 'Add native file here',
