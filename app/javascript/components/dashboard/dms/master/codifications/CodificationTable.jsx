@@ -1,79 +1,40 @@
 import React from 'react'
+import FieldForm from './FieldForm'
+import { useSelector } from 'react-redux'
 
-const BlockByType = viewOnly => {
-  return viewOnly ? 
-    <div className='codification-codes-values-block__value'>
-      XXX - Originating company example
-    </div>
-    : <div className='codification-codes-values-block__value'>
-      <div className='input-group'>
-        <input
-          type='text'
-          className='form-control'
-          id='validationDefaultUsername'
-          defaultValue='XXX - Discipline example'
-        />
-        <div className='input-group-append'>
-          <span
-            className='input-group-text remove-item'
-            id='inputGroupPrepend2'
-          >
-            x
-          </span>
-        </div>
-      </div>
-    </div>
-}
+function CodificationTable({}) {
+  const document_fields = useSelector(state => state.conventions.current.document_fields)
 
-function CodificationTable({ viewOnly }) {
+  const document_type = document_fields.find(el => el.codification_kind === 'document_type')
+  const discipline = document_fields.find(el => el.codification_kind === 'discipline')
+  const originating_company = document_fields.find(el => el.codification_kind === 'originating_company')
+
+  if (!document_type || !discipline || !originating_company) return <div />
+
   return (
     <div className='codification-codes-values-table'>
       <div className='codification-codes-values-column'>
-        <div className='codification-codes-values-block originating_company'>
-          <div className='codification-codes-values-block__title'>
-            <h6>Originating company</h6>
-            <label>This is an example of a description text</label>
-          </div>
-          <div className='codification-codes-values-block__values-list'>
-            {[...Array(16)].map((el, i) => (
-              <BlockByType viewOnly={viewOnly} key={i}/>
-            ))}
-          </div>
-        </div>
-
-        <div className='codification-codes-values-block discipline'>
-          <div className='codification-codes-values-block__title'>
-            <h6>Discipline</h6>
-            <label>This is an example of a description text</label>
-          </div>
-        </div>
+        <FieldForm 
+          form='originating_company'
+          title='Originating company'
+          initialValues={{ originating_company: originating_company ? originating_company.document_field_values : [] }}
+        />
       </div>
 
       <div className='codification-codes-values-column'>
-        <div className='codification-codes-values-block discipline'>
-          <div className='codification-codes-values-block__title'>
-            <h6>Discipline</h6>
-            <label>This is an example of a description text</label>
-          </div>
-          <div className='codification-codes-values-block__values-list'>
-            {[...Array(3)].map((el, i) => (
-              <BlockByType viewOnly={viewOnly} key={i} />
-            ))}
-          </div>
-        </div>
+        <FieldForm
+          form='discipline' 
+          title='Discipline'
+          initialValues={{ discipline: discipline ? discipline.document_field_values : [] }}
+        />
       </div>
+
       <div className='codification-codes-values-column'>
-        <div className='codification-codes-values-block originating_company'>
-          <div className='codification-codes-values-block__title'>
-            <h6>Originating company</h6>
-            <label>This is an example of a description text</label>
-          </div>
-          <div className='codification-codes-values-block__values-list'>
-            {[...Array(5)].map((el, i) => (
-              <BlockByType viewOnly={viewOnly} key={i} />
-            ))}
-          </div>
-        </div>
+        <FieldForm 
+          form='document_type' 
+          title='Document type'
+          initialValues={{ document_type: document_type ? document_type.document_field_values : [] }}
+        />
       </div>
     </div>
   )

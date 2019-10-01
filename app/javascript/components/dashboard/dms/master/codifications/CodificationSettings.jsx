@@ -11,7 +11,11 @@ function Card({ number }) {
     <div className='conventions-settings-block'>
       <div className={classnames('conventions-settings-card', { active })} >
         <div className='check-icon'>
-          {active && <i className='svg-icon mr-2 rounded-blue-check-icon-2' />}
+          {active &&
+            <span className='icon-choose_2 mr-2'>
+              <span className='path1' />
+              <span className='path2' />
+            </span>}
         </div>
         <div className='conventions-settings-title-card'>
           <span className='conventions-settings-card__title'>Convention {number}</span>

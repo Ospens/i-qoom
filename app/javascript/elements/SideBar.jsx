@@ -41,7 +41,7 @@ class SideBar extends Component {
         >
           <Dropdown.Menu>
             <Input
-              icon={ <i className='svg-icon search-icon' /> }
+              icon={<span className='icon-search-alternate' /> }
               placeholder='Choose language'
             />
             <Dropdown.Menu scrolling>
@@ -127,8 +127,8 @@ class SideBar extends Component {
               <i className='svg-icon logo-header sidebar' />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
-            <button type='button' className='icon-button' onClick={toggle}>
-              <i className='svg-icon burger-menu-icon' />
+            <button type='button' onClick={toggle}>
+              <span className='icon-Burgermenu_1 white' />
             </button>
           </div>
           {(() => {
@@ -151,7 +151,7 @@ class SideBar extends Component {
               <span className='active-project-title'>{currentProject.name}</span>
             </div>
           </div>
-          <i className='svg-icon cogs-icon white ml-auto' />
+          <span className='icon-cog-double-2 white' />
         </div>}
       </aside>
     )

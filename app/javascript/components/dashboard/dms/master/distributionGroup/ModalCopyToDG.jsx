@@ -77,7 +77,7 @@ export class ModalCopyToDG extends Component {
         className='dropdown-item btn'
         onClick={this.handleOpen}
       >
-        <i className='svg-icon share-file-icon' />
+        <span className='icon-common-file-share' />
         <span className='item-text'>
           Copy team members to DG
         </span>

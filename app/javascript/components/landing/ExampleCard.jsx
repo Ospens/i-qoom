@@ -30,8 +30,8 @@ class ExampleCard extends Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
 
     return (
@@ -47,7 +47,7 @@ class ExampleCard extends Component {
           })}
         </Slider>
         <button type='button' className='btn btn-back' onClick={toggleExamples}>
-          <i className='svg-icon arrow-left-icon' />
+          <span className='icon-arrow-button-left' />
           Back
         </button>
       </section>

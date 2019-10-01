@@ -1463,7 +1463,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
   text-align: center;
   vertical-align: middle;
   padding: 1em;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(59, 66, 67, 0.65);
   opacity: 0;
   line-height: 1;
   -webkit-animation-fill-mode: both;

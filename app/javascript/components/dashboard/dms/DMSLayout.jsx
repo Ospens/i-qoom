@@ -1,8 +1,9 @@
 import React from 'react'
+import classnames from 'classnames'
 
-export default function DMSLayout({ header, sidebar, content }) {
+export default function DMSLayout({ header, sidebar, content, classNames }) {
   return (
-    <div className='dms-container'>
+    <div className={classnames('dms-container', classNames )}>
       {header}
       <div className='row'>
         <div className='col-2'>

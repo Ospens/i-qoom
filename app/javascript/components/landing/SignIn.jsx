@@ -56,7 +56,7 @@ function SignIn({ handleSubmit, history, ...props }) {
               <div className='btn-toolbar pt-4'>
                 <div className='btn-group justify-content-center'>
                   <Link className='col-6 btn btn-back mx-auto' to='/'>
-                    <i className='svg-icon arrow-left-icon' />
+                    <span className='icon-arrow-button-left' />
                     Back
                   </Link>
                 </div>

@@ -12,9 +12,9 @@ const renderTab = () => (
 
 const Content = () => (
   <Tabs className='big-tabs'>
-    <div label='Convention - 1' >{renderTab()}</div>
-    <div label='Convention - 2' >{renderTab()}</div>
-    <div label='Convention - 3' >{renderTab()}</div>
+    <div label={<div>Convention 1 - <span className='green'>active</span></div>}>{renderTab()}</div>
+    <div label='Convention 2' >{renderTab()}</div>
+    <div label='Convention 3' >{renderTab()}</div>
   </Tabs>
 )
 

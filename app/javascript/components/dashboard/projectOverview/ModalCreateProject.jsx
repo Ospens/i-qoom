@@ -159,7 +159,7 @@ class ModalCreateProject extends Component {
   renderTrigger = () => (
     <div onClick={this.handleOpen}>
       <div className='project-card blank'>
-        <i className='svg-icon blue-plus-icon' />
+        <span className='icon-add_1' />
         <label>Create a new project</label>
       </div>
     </div>

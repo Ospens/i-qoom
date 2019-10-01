@@ -72,7 +72,7 @@ export class QuickSearch extends Component {
           <span className='slider round' />
         </label>
         <label htmlFor='grid-row-opener' className='filter-grid-row-opener'>
-          <i className='svg-icon dark-arrow-icon black' />
+          <span className='icon-arrow-button-down black' />
         </label>
       </div>
 
