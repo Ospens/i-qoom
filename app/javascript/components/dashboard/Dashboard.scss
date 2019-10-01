@@ -1679,9 +1679,13 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(auto, 1fr) 90px;
+  grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.select-codification {
+    grid-template-columns: 700px;
+  }
+
   &.modal-create-field {
     .form-group {
       margin-bottom: 45px;
@@ -1699,7 +1703,7 @@ i.arrow {
     padding-top: 50px;
     border-bottom: 1px solid #14191A14;
 
-    h6 {
+    h6, h4 {
       font-size: 20px;
       font-weight: 400;
       margin: 0;

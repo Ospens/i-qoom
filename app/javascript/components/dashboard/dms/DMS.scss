@@ -1928,6 +1928,25 @@ input.search-input {
   }
 }
 
+.selected-convention-warning {
+  .new-modal__body {
+    display: flex;
+
+    .icon-d-print-warning2 {
+      font-size: 45px;
+      margin-right: 20px;
+    }
+  }
+
+  .new-modal__footer {
+    justify-content: center;
+    
+    .btn-purple {
+      width: 400px;
+    }
+  }
+}
+
 .codification-codes-title-column__code {
   display: grid;
   grid-template-rows: 1fr;

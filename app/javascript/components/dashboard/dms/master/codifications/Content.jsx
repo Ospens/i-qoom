@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import SecondCodeStructure from './SecondCodeStructure'
 import CodeStructure from './CodeStructure'
 import CodificationTable from './CodificationTable'
-import ModalInfo from './ModalInfo'
+import SelectConvention from './SelectConvention'
+import WellDone from './WellDone'
 import { startEditConvention } from '../../../../../actions/conventionActions'
 
 export const fields = [
@@ -70,11 +71,14 @@ export const freeTextPlaceholders = el => (
 
 function Content({ match: { params: { project_id } } }) {
   const dispatch = useDispatch()
+  const project_code = useSelector(state => state.projects.current.project_code)
   useEffect(() => { dispatch(startEditConvention(project_id)) }, [])
 
   return (
     <div className='dms-content'>
-      <ModalInfo />
+      {/* <ModalInfo /> */}
+      <WellDone projectCode={project_code}/>
+      {/* <SelectConvention /> */}
       <div className='dms-content__header'>
         <h4>Convention 1 - <span className='green'>active</span></h4>
       </div>
