@@ -28,7 +28,7 @@ const ProjectOverview = () => {
         {allProjects.map(project => (
           <div className='project-card in-preparation' key={project.id}>
             <Link to={`/dashboard/projects/${project.id}`}>
-              <i className='svg-icon cogs-icon' />
+              <span className='icon-cog-double-2' />
             </Link>
             <label>{project.name}</label>
             <div className='row project-card__bottom'>

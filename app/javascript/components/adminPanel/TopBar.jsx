@@ -31,12 +31,12 @@ function TopBar({ signOut }) {
         </li>
         <li className='nav-item'>
           <button type='button' className='btn'>
-            <i className='svg-icon email-unread-icon gray' />
+            <span className='icon-email-action-unread' />
           </button>
         </li>
         <li className='nav-item'>
           <button type='button' className='btn'>
-            <i className='svg-icon alarm-bell-icon gray' />
+            <span className='icon-alarm-bell' />
           </button>
         </li>
         <li className='nav-item'>

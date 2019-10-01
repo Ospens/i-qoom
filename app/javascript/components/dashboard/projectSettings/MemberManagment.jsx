@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import classnames from 'classnames'
 import { withRouter } from 'react-router-dom'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
@@ -18,7 +17,7 @@ const initialState = {
 
 export const renderDropDownItems = (icon, name) => (
   <button className='dropdown-item' type='button'>
-    <i className={classnames("svg-icon", icon)} />
+    <span className={icon} />
     <span className='item-text'>
       {name}
     </span>
@@ -91,7 +90,7 @@ class MemberManagment extends Component {
                 className='with-icon'
                 onClick={this.openModal('role')}
               >
-                <i className='svg-icon task-list-edit-icon' />
+                <span className='icon-task-list-edit' />
                 <span data-title='Role list'>Role list</span>
               </button>
             </li>
@@ -101,7 +100,7 @@ class MemberManagment extends Component {
                 className='with-icon'
                 onClick={this.openModal('discipline')}
               >
-                <i className='svg-icon common-file-icon' />
+                <span className='icon-common-file-text1' />
                 <span data-title='Discipline list'>Discipline list</span>
               </button>
             </li>
@@ -111,7 +110,7 @@ class MemberManagment extends Component {
                 className='with-icon'
                 onClick={this.openModal('addMemberModal')}
               >
-                <i className='svg-icon blue-plus-icon' />
+                <span className='icon-add_1' />
                 <span data-title='Add a member'>Add a member</span>
               </button>
             </li>

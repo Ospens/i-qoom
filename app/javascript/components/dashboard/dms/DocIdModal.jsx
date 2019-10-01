@@ -59,7 +59,7 @@ class DocIdModal extends Component {
           className='d-none'
         />
         <div className='form-group file-name-row'>
-          <i className='svg-icon file-pdf-icon' />
+          <span className='icon-office-file-pdf' />
           <div className='ml-2'>
             {/*value.value.map((el, i) => {
               if (false) {

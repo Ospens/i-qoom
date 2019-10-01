@@ -72,9 +72,9 @@ function FolderInfo({ match: { params: { document_id, project_id } } }) {
                 />
                 <label htmlFor='my_concerns' />
                 <i
-                  className={classnames('svg-icon black',
-                    { 'folder-icon': !disabled },
-                    { 'folder-icon-2': disabled })}
+                  className={classnames('black',
+                    { 'icon-folder-empty': !disabled },
+                    { 'icon-folder-check': disabled })}
                 />
                 <span>{title}</span>
               </button>

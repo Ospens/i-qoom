@@ -53,7 +53,7 @@ function MemberRow({
           </div>
         </div>
         <div className='member-id table__row-cell'>
-          <span>{`${member.first_name} Member id`}</span>
+          <span>{`${member.id} Member id`}</span>
         </div>
         <div className='table__row-cell'>
           <RightsDropDown

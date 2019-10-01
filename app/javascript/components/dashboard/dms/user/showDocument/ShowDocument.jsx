@@ -30,7 +30,7 @@ export const SideBar = ({ documentId, projectId }) => {
         <FolderInfo />
         {false && <React.Fragment>
           <div className='copied-to-folder'>
-            <i className='svg-icon green-check-icon' />
+            <span className='icon-check_3' />
             <span>Copied to folders</span>
             <button className='btn copy-to-folder'>change</button>
           </div>
@@ -45,7 +45,7 @@ export const SideBar = ({ documentId, projectId }) => {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <i className='svg-icon revision-icon black mx-2' />
+            <span className='icon-Revise_1 black mx-2' />
             <span>Revisions</span>
           </div>
           <ul className='dms-sidebar-menu__ul-list'>
@@ -64,7 +64,7 @@ export const SideBar = ({ documentId, projectId }) => {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <i className='svg-icon task-list-settings-icon black mx-2' />
+            <span className='icon-task-list-settings black mx-2' />
             <span>Versions</span>
           </div>
           <ul className='dms-sidebar-menu__ul-list'>

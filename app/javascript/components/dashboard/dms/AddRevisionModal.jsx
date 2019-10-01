@@ -4,7 +4,6 @@ import ReactSVG from 'react-svg'
 import ModalComponent from '../../../elements/ModalComponent'
 import InputField from '../../../elements/InputField'
 import DatePickerField from '../../../elements/DatePickerField'
-import pdfIcon from '../../../images/office-file-pdf'
 import {
   getFormSubmitErrors,
   reduxForm,
@@ -75,7 +74,7 @@ class AddRevisionModal extends Component {
               <div className='file-name-row'>
                 <ReactSVG
                   svgStyle={{ height: 20, width: 20, marginRight: 20 }}
-                  src={pdfIcon}
+                  src={'pdfIcon'}
                   className='td-files-icon'
                 />
                 <span>XYY-AAA-LET-YYY-1234_01-weird_data.pdf</span>
@@ -90,7 +89,7 @@ class AddRevisionModal extends Component {
               <div className='file-name-row'>
                 <ReactSVG
                   svgStyle={{ height: 20, width: 20, marginRight: 20 }}
-                  src={pdfIcon}
+                  src={'pdfIcon'}
                   className='td-files-icon'
                 />
                 <span>XYY-AAA-LET-YYY-1234_01-weird_data.pdf</span>

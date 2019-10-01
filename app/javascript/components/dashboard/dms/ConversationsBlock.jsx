@@ -1,9 +1,5 @@
 import React, { Component } from 'react'
 import ReactSVG from 'react-svg'
-import searchIcon from '../../../images/search-alternate-gray'
-import attachIcon from '../../../images/attachment-1'
-import sendIcon from '../../../images/send-email-2'
-import checkIcon from '../../../images/check_1'
 import DropDown from '../../../elements/DropDown'
 import { actionDDitems } from './constants'
 
@@ -37,7 +33,7 @@ export default class ConversationsBlock extends Component {
                 <span>John Doe(you)</span>
                 <ReactSVG
                   svgStyle={{ height: 15, width: 15, marginLeft: 10 }}
-                  src={checkIcon}
+                  src={'checkIcon'}
                 />
               </div>
             </div>
@@ -79,12 +75,12 @@ export default class ConversationsBlock extends Component {
           </label>
           <ReactSVG
             svgStyle={{ height: 15, width: 15, marginRight: 15 }}
-            src={searchIcon}
+            src={'searchIcon'}
             className='ml-auto'
           />
           <ReactSVG
             svgStyle={{ height: 15, width: 15, marginRight: 15 }}
-            src={attachIcon}
+            src={'attachIcon'}
           />
           <DropDown
             dots={true}
@@ -118,7 +114,7 @@ export default class ConversationsBlock extends Component {
             />
             <ReactSVG
               svgStyle={{ height: 15, width: 15, marginRight: 5 }}
-              src={sendIcon}
+              src={'sendIcon'}
               className='check-icon'
             />
           </div>

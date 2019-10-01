@@ -22,7 +22,7 @@ export class ModalBulkAccessRights extends Component {
       onClick={this.handleOpen}
     >
       <div>
-        <i className='svg-icon gray share-file-icon mr-2' />
+        <span className='icon-common-file-share mr-2' />
       </div>
       <span className='item-text'>Edit team / add members</span>
     </button>
@@ -43,17 +43,17 @@ export class ModalBulkAccessRights extends Component {
             </div>
 
             <div className='my-4'>
-              <div className="form-group">
+              <div className='form-group'>
                 <label>Select originating company</label>
                 {rightsDropDown('FOU', 'Originating company')}
               </div>
 
-              <div className="form-group">
+              <div className='form-group'>
                 <label>Select discipline</label>
                 {rightsDropDown('ASD', 'Discipline')}
               </div>
 
-              <div className="form-group">
+              <div className='form-group'>
                 <label>Select document type</label>
                 {rightsDropDown('RTY, BNG', 'document type')}
               </div>

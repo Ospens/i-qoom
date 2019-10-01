@@ -23,6 +23,7 @@ function DocumentPlanning({ history, match: { params: { project_id } } }) {
       header={<Header checkedDocs={checkedDocs} />}
       sidebar={<DmsSideBar />}
       content={<Content checkedDocs={checkedDocs} toggleDocs={toggleDocs} documents={documents}/>}
+      classNames='with-header'
     />
   )
 }

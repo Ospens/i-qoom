@@ -95,34 +95,47 @@ export class AdminBlock extends Component {
     return (
       <DropDown dots={true} className='dropdown-with-icon ml-auto' ulClass='left'>
         {admin.status !== 'active' &&
-        <DropDown
-          btnClass='dropdown-item btn'
-          btnComponent={
-            <React.Fragment>
-              <i className='svg-icon gray email-action-icon-2 mr-2' />
-              <span className='item-text'>Resend email</span>
-            </React.Fragment>}
-          ulClass='confirm-msg'
-          className='dropdown-with-icon'
-        >
-          {confirmMsg}
-        </DropDown>}
+          <li className='dropdown-item'>
+            <DropDown
+              className='dropdown-submenu'
+              btnClass='dropdown-submenu'
+              ulClass='confirm-msg'
+              btnComponent={
+                <React.Fragment>
+                  <div className='icon-container'>
+                    <span className='icon-email-action-send-2' />
+                  </div>
+                  <span className='item-text'>Resend email</span>
+                </React.Fragment>}
+            >
+              {confirmMsg}
+          </DropDown>
+        </li>}
         <button type='button' className='dropdown-item btn' onClick={this.openInspectModal}>
-          <i className='svg-icon gray mr-2 search-icon' />
+          <div className='icon-container'>
+            <span className='icon-search-alternate' />
+          </div>
           <span className='item-text'>Check status</span>
         </button>
-        <DropDown
-          btnClass='dropdown-item btn'
-          btnComponent={
-            <React.Fragment>
-              <i className='svg-icon gray email-action-icon-2 mr-2' />
-              <span className='item-text'>Delete</span>
-            </React.Fragment>}
-          ulClass='confirm-msg'
-          className='dropdown-with-icon'
-        >
-          {confirmMsgDel}
-        </DropDown>
+        <li className='dropdown-item'>
+          <DropDown
+            className='dropdown-submenu'
+            btnClass='dropdown-submenu'
+            ulClass='confirm-msg'
+            btnComponent={
+              <React.Fragment>
+                <div className='icon-container'>
+                  <span className='icon-bin-1' />
+                </div>
+                <span className='item-text'>
+                  Delete
+                </span>
+              </React.Fragment>
+            }
+          >
+            {confirmMsgDel}
+          </DropDown>
+        </li>
       </DropDown>
     )
   }

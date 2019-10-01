@@ -45,7 +45,7 @@ function PlanningTable({ documents, checkedDocs, toggleDocs, type }) {
             <Table.Row key={i}>
               <Table.Cell className='dot-column'>
                 {type === 'uploaded'
-                  ? <i className='svg-icon green-check-icon mr-3' />
+                  ? <span className='icon-check_3 mr-3' />
                   : <span className='yellow-dot' />}
               </Table.Cell>
 

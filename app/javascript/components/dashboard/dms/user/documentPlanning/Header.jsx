@@ -13,7 +13,7 @@ function Header({ checkedDocs }) {
       </div>
       <li className='ml-4'>
         <button type='button' className={btnClass}>
-          <i className='svg-icon blue-plus-icon mr-2' />
+          <span className='icon-add_1 mr-2' />
           <span data-title={`Add revision ${checkedLength > 0 ? checkedLength : ''}`}>
             Use {checkedLength > 0 ? checkedLength : ''} selected planned document(s) as upload template
           </span>

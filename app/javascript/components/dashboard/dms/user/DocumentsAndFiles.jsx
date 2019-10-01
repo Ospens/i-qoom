@@ -175,22 +175,22 @@ function DocumentsAndFiles() {
           <span>Project phases</span>
           <ul className='row mx-0'>
             <li className='col-3 active'>
-              <button>
+              <button type='button'>
                 Planning
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Development
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Execution
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Operation
               </button>
             </li>

@@ -4,7 +4,6 @@ import ReactSVG from 'react-svg'
 import Slider from 'react-slick'
 import classnames from 'classnames'
 import Arrows from '../../elements/Arrows'
-import Right from '../../images/arrow-button-right'
 // import TextEditor from '../../elements/TextEditor'
 // import FileField from '../../elements/FileField'
 
@@ -58,7 +57,7 @@ class SamplesContents extends Component {
             {options.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('gray mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}
@@ -83,7 +82,7 @@ class SamplesContents extends Component {
             <button className='show-example' onClick={toggleExamples}>
               Show Examples
               <ReactSVG
-                src={Right}
+                src={'Right'}
                 svgStyle={{ height: 10, width: 10, marginLeft: 10 }}
               />
             </button>
@@ -102,7 +101,7 @@ class SamplesContents extends Component {
             {options.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('gray mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}
@@ -153,8 +152,8 @@ class SamplesContents extends Component {
       speed: 1000,
       slidesToShow: cardCount,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
     return (
       <section id='samples-card'>

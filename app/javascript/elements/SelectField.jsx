@@ -98,8 +98,9 @@ export const colourStyles = errorInfo => {
     }),
     placeholder: styles => ({
       ...styles,
-      color: '#c8d8da',
-      fontSize: '17px'
+      color: '#B2CED1',
+      fontSize: '17px',
+      fontWeight: '400'
     }),
     option: (styles, state) => ({
       ...styles,

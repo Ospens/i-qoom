@@ -31,7 +31,6 @@ class DocFieldsTable extends Component {
 
   handleSubmit = values => {
     const { startUpdateConvention, match: { params: { project_id } }  } = this.props
-    console.log(values)
     return startUpdateConvention(project_id, values)
   }
 
@@ -132,7 +131,7 @@ class DocFieldsTable extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine, id } = this.props
+    const { handleSubmit, pristine } = this.props
 
     return (
       <React.Fragment>
@@ -141,25 +140,25 @@ class DocFieldsTable extends Component {
             <h4>Add documents data & files</h4>
             <label className='rounded-label red ml-4'>
               Form version 0.1
-              <i className='svg-icon pink lock-icon ml-2' />
+              <i className='icon-Locked ml-2' />
             </label>
           </div>
           <div className='dms-content__project-phases'>
             <span>Project phases</span>
             <ul className='row mx-0 phases-row'>
               <li className='col-3 active'>
-                <button>Planning</button>
+                <button type='button'>Planning</button>
               </li>
               <li className='col-3'>
-                <button>Development</button>
+                <button type='button'>Development</button>
               </li>
               <li className='col-3'>
-                <button>Execution</button>
+                <button type='button'>Execution</button>
               </li>
               <li className='col-3'>
-                <button>Operation</button>
+                <button type='button'>Operation</button>
               </li>
-              <button className='edit-button'>
+              <button className='edit-button' type='button'>
                 Edit
               </button>
             </ul>
@@ -179,30 +178,22 @@ class DocFieldsTable extends Component {
                   <DocFieldsColumn
                     column='1'
                     openInputForm={this.handleOpen}
-                    disabled={!!id}
+                    // TODO: change it
+                    disabled={true}
                   />
                 </div>
                 <div className='col-6'>
                   <DocFieldsColumn
                     column='2'
                     openInputForm={this.handleOpen}
-                    disabled={!!id}
+                    // TODO: change it
+                    disabled={true}
                   />
                 </div>
               </div>
-              {!id && this.renderModalButton()}
+              {this.renderModalButton()}
             </div>
-            {(() => {
-              if (!id) {
-                return (
-                  this.renerFooterForNewConv()
-                )
-              } else if (!pristine) {
-                return (
-                  this.renerFooter()
-                )
-              }
-            })()}
+            {!pristine && this.renerFooter()}
           </form>
         </ DragDropContext>
       </React.Fragment>
@@ -211,7 +202,6 @@ class DocFieldsTable extends Component {
 }
 
 const mapStateToProps = state => ({
-  id: state.conventions.current.id,
   fields: getFormValues('convention_form')(state),
 })
 

@@ -28,12 +28,24 @@ body {
   margin: 0;
 }
 
+.black {
+  color: #293233 !important;
+}
+
+.grey {
+  color: #475859 !important;
+}
+
+.green {
+  color: #28bc58 !important;
+}
+
 ul {
   list-style: none;
 }
 
 p {
-  color: black;
+  color: #293233;
   line-height: 1.5;
 }
 
@@ -72,6 +84,10 @@ a {
   padding-right: 2.5vw !important;
 }
 
+.form-control {
+  color: #475759;
+}
+
 .form-control:not(.checkbox-input) {
   background-color: #FCFFFF;
   max-height: 45px;
@@ -93,31 +109,31 @@ a {
   &::-webkit-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &::-moz-placeholder  {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &:-moz-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &:-ms-input-placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
   &::placeholder {
     color: #B2CED1;
     font-size: 17px;
-    font-weight: 400;
+    font-weight: 400 !important;
     box-shadow: none;
   }
 
@@ -310,10 +326,17 @@ button {
   border-radius: 5px;
   padding-left: 45px;
   padding-right: 45px;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  *,
+  *:after,
+  *:before {
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+  }
+
 }
 
-.prevBtn,
-.nextBtn {
+.icon-arrow-button-right,
+.icon-arrow-button-left {
   cursor: pointer;
 }
 
@@ -346,12 +369,12 @@ footer:after,
   &.dashboard {
     display: grid;
     grid-template-rows: 90px 1fr;
-    grid-gap: 90px;
-    grid-gap: 8vh;
+    grid-gap: 100px;
+    grid-gap: 10vh;
     padding-left: 50px;
-    padding-left: 2.5vw;
+    padding-left: 2.5%;
     padding-right: 50px;
-    padding-right: 2.5vw;
+    padding-right: 2.5%;
   }
 }
 
@@ -387,22 +410,28 @@ footer:after,
   align-items: center !important;
   color: #a5adad;
   
-  .svg-icon {
-    margin-right: 5px;
-    background-color: #8FB0B3;
-    width: 7px;
-    min-width: 7px;
-    height: 11px;
-    min-height: 11px;
+  .icon-arrow-button-left {
+    font-size: 11px;
+
+    &:before {
+      margin-right: 10px;
+      color: #a5adad;
+    }
   }
 
   &.back-member-details {
     padding-right: 100px !important;
   }
-}
 
-.btn {
-  border-radius: 5px;
+  &:hover {
+    color: #293233;
+
+    .icon-arrow-button-left {
+      &:before {
+        color: #293233;
+      }
+    }
+  }
 }
 
 button:focus,
@@ -429,12 +458,18 @@ header {
     font-weight: 500;
     margin-right: 0px !important;
 
-    &:hover {
-      font-weight: 700;
+    .icon-arrow-button-left {
+      font-size: 12px;
     }
 
-    .svg-icon {
-      background-color: #8FB0B3;
+    &:hover {
+      font-weight: 700;
+
+      .icon-arrow-button-left {
+        &:before {
+          color: #fff;
+        }
+      }
     }
   }
 
@@ -495,8 +530,14 @@ header {
   }
 
   .btn-back {
-    .svg-icon {
-      background-color: white;
+
+    .icon-arrow-button-left {
+      font-size: 11px;
+
+      &:before {
+        margin-right: 10px;
+        color: #fff;
+      }
     }
   }
 
@@ -830,13 +871,13 @@ header {
         margin-right: 30px;
       }
     }
-    .nextBtn {
+    .icon-arrow-button-right {
       position: absolute;
       right: 150px;
       bottom: -50px;
     }
 
-    .prevBtn {
+    .icon-arrow-button-left {
       position: absolute;
       right: 185px;
       bottom: -50px;
@@ -1011,13 +1052,13 @@ header {
       border-radius: 5px;
     }
 
-    .nextBtn {
+    .icon-arrow-button-right {
       position: absolute;
       right: 150px;
       bottom: -50px;
     }
 
-    .prevBtn {
+    .icon-arrow-button-left {
       position: absolute;
       right: 185px;
       bottom: -50px;
@@ -1055,7 +1096,7 @@ header {
     display: inline-block;
     padding-top: 10px;
 
-    span {
+    span:not(.icon-choose_2) {
       font-size: 16px;
       font-weight: 500;
     }
@@ -1274,6 +1315,15 @@ header {
   color: #fff;
   background-color: #0096FA;
   border-color: #0096FA;
+
+  .icon-arrow-button-right {
+    font-size: 11px;
+    margin-left: auto;
+
+    &:before {
+      color: #fff;
+    }
+  }
 }
 
 #sign-up-form {
@@ -1363,15 +1413,6 @@ header {
     .btn-primary {
       margin-right: auto !important;
       margin-left: 5px !important;
-      
-      .svg-icon {
-        margin-left: 5px;
-        background-color: #fff;
-        width: 6px;
-        min-width: 6.5px;
-        height: 10px;
-        min-height: 10px;
-      }
     }
     
     button,
@@ -1442,13 +1483,13 @@ input[type=checkbox] {
     }
   }
 
-  .nextBtn {
+  .icon-arrow-button-right {
     position: absolute;
     right: 460px;
     bottom: -40px;
   }
 
-  .prevBtn {
+  .icon-arrow-button-left {
     position: absolute;
     right: 500px;
     bottom: -40px;
@@ -1484,7 +1525,7 @@ input[type=checkbox] {
 
   .navbar-burger-block {
     path {
-      fill: black;
+      fill: #293233;
     }
   }
 
@@ -1548,7 +1589,7 @@ input[type=checkbox] {
     position: absolute;
     bottom: -13px;
     left: calc(50% - 7px);
-    background: black;
+    background: #293233;
     padding: 3px;
     width: 25px;
     height: 25px;
@@ -1682,23 +1723,9 @@ input[type=checkbox] {
     .logo-container {
       height: 100%;
       width: 100%;
-
       cursor: pointer;
-      .trash-icon {
-        display: none;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-        justify-content: center;
-        background-color: #475859;
-        path {
-          fill: white;
-        }
-      }
+
       &:hover {
-        .trash-icon {
-          display: flex;
-        }
         img {
           display: none;
         }
@@ -1802,7 +1829,6 @@ input[type=checkbox] {
       text-align: center;
       vertical-align: middle;
       color: #8FB0B3;
-      margin-bottom: 1em;
       font-size: 16px;
     }
 
@@ -1821,11 +1847,25 @@ input[type=checkbox] {
       width: 100%;
       height: 100%;
 
+      [class^="icon-"], [class*=" icon-"] {
+        &:not(.icon-add_1) {
+          margin-top: 20px;
+          font-size: 50px;
+        }
+
+        &:before {
+          color: #0096FA;
+        }
+      }
+
       .landing-menu__card-content__icon {
         max-height: 40px;
       }
 
-      p.new-project {
+      .new-project {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         color: #0096FA;
       }
     }
@@ -1860,8 +1900,8 @@ input[type=checkbox] {
     .nav-item, button, a {
       color: #fff;
 
-      .svg-icon {
-        background-color: #fff !important;
+      [class^="icon-"], [class*=" icon-"] {
+        color: #fff !important;
       }
     }
   }

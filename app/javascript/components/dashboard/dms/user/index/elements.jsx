@@ -1,38 +1,12 @@
 
 import React from 'react'
-import classnames from 'classnames'
-import { Link } from 'react-router-dom'
-import DropDown from '../../../../../elements/DropDown'
+import DropDown, { defaultItems } from '../../../../../elements/DropDown'
 import { actionDDitems } from '../../constants'
 
-export function items(icon, name, link) {
-  const content = (
-    <React.Fragment>
-      <div className='icon-container'>
-        <i className={classnames('svg-icon gray', icon)} />
-      </div>
-      <span className='item-text'>{name}</span>
-    </React.Fragment>
-  )
-
-  return (
-    <li className='dropdown-item'>
-      {link
-        ? <Link className='d-flex' to={link}>{content}</Link>
-        : content}
-    </li>
-  )
-}
-
 export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFormats }) {
-
   return (
     <React.Fragment>
-      {actionDDitems(projectId, id).map(({ icon, title, link }, i) => (
-        <React.Fragment key={i}>
-          {items(icon, title, link)}
-        </React.Fragment>
-      ))}
+      {defaultItems(actionDDitems(projectId, id))}
       {formats && 
       <li className='dropdown-item'>
         <DropDown
@@ -41,7 +15,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
           btnComponent={
             <React.Fragment>
               <div className='icon-container'>
-                <i className='svg-icon download-icon gray' />
+                <span className='icon-download-button' />
               </div>
               <span className='item-text'>
                 Download as list
@@ -62,7 +36,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
                   onChange={() => toggleFormats('csv')}
                 />
                 <label htmlFor='csv' />
-                <i className='svg-icon file-csv-icon' />
+                <span className='icon-csv-1' />
                 <span>CSV</span>
               </div>
               <div className='col-6'>
@@ -73,7 +47,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
                   onChange={() => toggleFormats('xlsx')}
                 />
                 <label htmlFor='xlsx' />
-                <i className='svg-icon file-xls-icon' />
+                <span className='icon-office-file-xls black' />
                 <span>XLS</span>
               </div>
             </div>
@@ -86,7 +60,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
                   onChange={() => toggleFormats('xml')}
                 />
                 <label htmlFor='xml' />
-                <i className='svg-icon file-xml-icon' />
+                <span className='icon-xml-1' />
                 <span>XML</span>
               </div>
               <div className='col-6'>
@@ -97,7 +71,7 @@ export function DropDownItems({ projectId, id, downloadFiles, formats, toggleFor
                   onChange={() => toggleFormats('pdf')}
                 />
                 <label htmlFor='pdf' />
-                <i className='svg-icon file-pdf-icon' />
+                <span className='icon-Work-Office-Companies---Office-Files---office-file-pdf' />
                 <span>PDF</span>
               </div>
             </div>

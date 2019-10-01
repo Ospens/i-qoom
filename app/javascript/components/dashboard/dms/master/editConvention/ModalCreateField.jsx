@@ -65,6 +65,14 @@ const validate = values => {
   return errors
 }
 
+const BlockedField = ({ input, className, label }) => {
+  return (
+    <div className={className}>
+      <label>{label}</label>
+      <div>{input.value}</div>
+    </div>
+  )
+}
 class ModalCreateField extends Component {
 
   state = initState
@@ -77,7 +85,7 @@ class ModalCreateField extends Component {
   }
 
   handleSubmit = field => {
-    const { column = '2', row, spliceToConvention, id } = this.props
+    const { column = '2', row, spliceToConvention, created_at } = this.props
 
     let newSections = []
     if (field.kind === 'select_field') {
@@ -92,9 +100,8 @@ class ModalCreateField extends Component {
     field['document_field_values'] = newSections
     field['column'] = column
     field['row'] = row || 0
-    field['id'] = id || null
-
-    const removeNum = id === undefined ? 0 : 1
+    
+    const removeNum = created_at === undefined ? 0 : 1
     spliceToConvention(`column_${column}`, row || 0, removeNum, field)
     this.handleClose()
   }
@@ -119,7 +126,7 @@ class ModalCreateField extends Component {
           <div className='modal-container__content-block'>
             <div className='form-group'>
               <Field
-                component={InputField}
+                component={codification_kind ? BlockedField : InputField}
                 name='title'
                 id='title'
                 placeholder='Title (e.g. Discipline)'
@@ -129,9 +136,10 @@ class ModalCreateField extends Component {
                 validate={[required]}
               />
             </div>
+            {!codification_kind &&
             <div className='form-group'>
               <Field
-                component={InputField}
+                component={codification_kind ? BlockedField : InputField}
                 name='command'
                 id='command'
                 placeholder='Command (e.g. Select discipline)'
@@ -140,7 +148,8 @@ class ModalCreateField extends Component {
                 disabled={codification_kind}
                 validate={[required]}
               />
-            </div>
+            </div>}
+            {!codification_kind &&
             <div className='form-group'>
               <Field
                 name='kind'
@@ -154,28 +163,27 @@ class ModalCreateField extends Component {
                 disabled={codification_kind}
                 validate={[required]}
               />
-            </div>
-            <div className='form-group d-flex'>
-              <CheckboxField
-                name='required'
-                checkBoxId='required'
-                labelClass='form-check-label mr-2'
-                text='Required field'
-                disabled={codification_kind}
-              />
-              {field_type === 'select_field' && !codification_kind &&
-              <CheckboxField
-                name='enable_multi_selections'
-                name='enable_multi_selections'
-                checkBoxId='enable_multi_selections'
-                labelClass='form-check-label mx-2'
-                text='Enable multi selections'
-              />
-              }
-            </div>
+              <div className='d-flex checkboxes-row'>
+                <CheckboxField
+                  name='required'
+                  checkBoxId='required'
+                  labelClass='form-check-label mr-2'
+                  text='Required field'
+                  disabled={codification_kind}
+                />
+                {field_type === 'select_field' && !codification_kind &&
+                  <CheckboxField
+                    name='enable_multi_selections'
+                    name='enable_multi_selections'
+                    checkBoxId='enable_multi_selections'
+                    labelClass='form-check-label mx-2'
+                    text='Enable multi selections'
+                  />
+                }
+              </div>
+            </div>}
             {field_type === 'select_field' &&
             <div>
-              <div><label>Selections</label></div>
               <FieldArray
                 name='document_field_values'
                 component={DraggableDropDown}
@@ -223,6 +231,7 @@ class ModalCreateField extends Component {
         content={this.renderModalContent()}
         open={modalOpen}
         onClose={this.handleClose}
+        className='modal-create-field'
       />
     )
   }
@@ -235,7 +244,7 @@ const mapStateToProps = state => ({
   field_type: selector(state, 'kind'),
   column: selector(state, 'column'),
   row: selector(state, 'row'),
-  id: selector(state, 'id'),
+  created_at: selector(state, 'created_at'),
   title: selector(state, 'title'),
   codification_kind: selector(state, 'codification_kind'),
 })

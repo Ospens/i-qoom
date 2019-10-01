@@ -14,11 +14,11 @@ function Content() {
           <h4>Add new revision:</h4>
           <label className='rounded-label red ml-4'>
             Revision 41
-            <i className='svg-icon pink lock-icon ml-2' />
+            <i className='icon-Locked ml-2' />
           </label>
           <label className='rounded-label red ml-4'>
             Version 0.0
-            <i className='svg-icon pink lock-icon ml-2' />
+            <i className='icon-Locked ml-2' />
           </label>
         </div>
       </div>

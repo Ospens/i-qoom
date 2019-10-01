@@ -14,7 +14,7 @@ class DocumentPopup extends Component {
       <div className='documents-in-review-block col-4'>
         <div className='documents-in-review-block__title'>
           <label>Documents in review</label>
-          <div className='dots-container'><i className='svg-icon dots-icon' /></div>
+          <div className='dots-container'><span className='icon-navigation-menu-horizontal' /></div>
         </div>
         <input type='text' className='search-input' placeholder='Search' />
         <div className='documents-in-review__doc-list'>
