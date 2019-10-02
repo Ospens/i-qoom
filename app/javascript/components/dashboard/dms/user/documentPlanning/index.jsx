@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import SideBar from './SideBar'
 import Content from './Content'
 import Header from './Header'
 import { startFetchDocuments } from '../../../../../actions/documentsActions'
@@ -21,7 +21,7 @@ function DocumentPlanning({ history, match: { params: { project_id } } }) {
   return (
     <DMSLayout
       header={<Header checkedDocs={checkedDocs} />}
-      sidebar={<DmsSideBar />}
+      sidebar={<SideBar checkedDocs={checkedDocs} />}
       content={<Content checkedDocs={checkedDocs} toggleDocs={toggleDocs} documents={documents}/>}
       classNames='with-header'
     />

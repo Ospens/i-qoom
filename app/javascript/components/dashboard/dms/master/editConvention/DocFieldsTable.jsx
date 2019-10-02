@@ -20,7 +20,7 @@ class DocFieldsTable extends Component {
 
   state = initState
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { editConvention, match: { params: { project_id } } } = this.props
     editConvention(project_id)
   }

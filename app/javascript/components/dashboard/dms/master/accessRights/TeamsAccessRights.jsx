@@ -51,7 +51,7 @@ class TeamsAccessRights extends Component {
     showMore: false
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { getGrantAccessMembers, getGrandedAccessMembers, match: { params: { project_id } } } = this.props
     getGrandedAccessMembers(project_id)
     getGrantAccessMembers(project_id)

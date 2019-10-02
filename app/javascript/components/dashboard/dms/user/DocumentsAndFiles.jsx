@@ -103,6 +103,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     return (
       <Field
         {...commonProps}
+        type={['document_number', 'revision_number'].includes(field.codification_kind) ? 'number' : 'text' }
         component={InputField}
       />
     )
@@ -231,6 +232,15 @@ function DocumentsAndFiles() {
           </div>
 
           <div className='col-6'>
+            <Field
+              component={InputField}
+              name='title'
+              id='title'
+              label='Define a document title'
+              placeholder='Title'
+              className='form-group'
+              validate={[required]}
+            />
             {groupedFields[columns[1]].map((field, index) => (
               <div className='form-group' key={index}>
                 <InputByType

@@ -215,9 +215,9 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
             ))}
           </Table.Body>
         </Table>
-      </div>
-      <div className='d-flex'>
-        <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 } )}>{documents.length} total documents</span>
+        <div className='d-flex'>
+          <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>{documents.length} total documents</span>
+        </div>
       </div>
     </div>
   )
