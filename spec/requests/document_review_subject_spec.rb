@@ -68,7 +68,9 @@ describe DocumentReviewSubject, type: :request do
     end
 
     it 'user' do
-      FactoryBot.create(:document_review_subject, document_revision: revision)
+      review_subject =
+        FactoryBot.create(:document_review_subject, document_revision: revision)
+      review_subject.comments.create!(text: '111', user: user)
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       get "/api/v1/document_revisions/#{revision.id}/document_review_subjects",\
         headers: credentials(user)
@@ -83,6 +85,7 @@ describe DocumentReviewSubject, type: :request do
       expect(subject).to have_key('reviewer_ids')
       expect(subject).to_not have_key('created_at')
       expect(subject).to_not have_key('updated_at')
+      expect(subject['unread_comments_count']).to eql(1)
     end
   end
 

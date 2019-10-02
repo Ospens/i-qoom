@@ -27,7 +27,7 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
 
   def index
     authorize! :show, @document_revision
-    render json: @document_revision.document_review_subjects
+    render json: @document_revision.document_review_subjects, user: signed_in_user
   end
 
   def show

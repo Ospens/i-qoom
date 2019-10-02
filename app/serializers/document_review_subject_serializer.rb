@@ -5,5 +5,12 @@ class DocumentReviewSubjectSerializer < ActiveModel::Serializer
              :document_reference,
              :review_issuer_id,
              :reviewer_ids,
-             :comment
+             :comment,
+             :unread_comments_count
+
+  def unread_comments_count
+    if @instance_options[:user].present?
+      object.comments.unread_by(@instance_options[:user]).count
+    end
+  end
 end
