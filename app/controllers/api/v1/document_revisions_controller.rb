@@ -18,7 +18,7 @@ class Api::V1::DocumentRevisionsController < ApplicationController
     @all_review = revisions.all_review(@project, signed_in_user)
     render formats: :json
   end
-
+  # based on review_menu links
   def review_index
     authorize! :review_index, DocumentRevision.new, @project
     revisions = DocumentRevision.by_project(@project)
@@ -32,6 +32,6 @@ class Api::V1::DocumentRevisionsController < ApplicationController
     if params[:review_status].present?
       revisions = revisions.by_document_review_status(params[:review_status])
     end
-    render json: revisions
+    render json: revisions, user: signed_in_user
   end
 end

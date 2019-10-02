@@ -138,15 +138,18 @@ describe DocumentRevision, type: :request do
       end
 
       it 'all review' do
-        revision.document_review_subjects.create!(user: user,
-                                                  reviewers: [user],
-                                                  review_issuer: user)
+        review_subject =
+          revision.document_review_subjects.create!(user: user,
+                                                    reviewers: [user],
+                                                    review_issuer: user)
+        review_subject.comments.create!(text: '111', user: user)
         get "/api/v1/projects/#{project.id}/document_revisions/review_index",
           headers: credentials(user),
           params: { scope: 'all_review' }
         expect(response).to have_http_status(:success)
         expect(json.length).to eql(1)
         expect(json.first['id']).to eql(revision.id)
+        expect(json.first['unread_comments_count']).to eql(1)
       end
 
       it 'review status wrong' do

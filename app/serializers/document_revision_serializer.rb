@@ -2,7 +2,8 @@ class DocumentRevisionSerializer < ActiveModel::Serializer
   attributes :id,
              :codification_string,
              :title,
-             :review_status
+             :review_status,
+             :unread_comments_count
 
   def document
     object.last_version
@@ -18,5 +19,13 @@ class DocumentRevisionSerializer < ActiveModel::Serializer
 
   def review_status
     object.document_main.document_review_status
+  end
+
+  def unread_comments_count
+    if @instance_options[:user].present?
+      subjects = object.document_review_subjects
+      DocumentReviewComment.where(document_review_subject: subjects)
+                           .unread_by(@instance_options[:user]).count
+    end
   end
 end
