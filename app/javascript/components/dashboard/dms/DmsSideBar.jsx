@@ -194,7 +194,7 @@ class DmsSideBar extends Component {
                   {masterMenu.map(({ path, title, icon, root, nested }, i) => (
                     <React.Fragment key={i}>
                       <DmsSideBarItem
-                        path={project_code ? path : '#'}
+                        path={path}
                         label={title}
                         icon={icon}
                         root={root}
