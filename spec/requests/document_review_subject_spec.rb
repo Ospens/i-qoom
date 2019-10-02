@@ -101,6 +101,7 @@ describe DocumentReviewSubject, type: :request do
     end
 
     it 'user' do
+      review_subject.review_completes << user
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       get "/api/v1/document_review_subjects/#{review_subject.id}", headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -108,6 +109,9 @@ describe DocumentReviewSubject, type: :request do
       expect(json).to have_key('review_issuer')
       expect(json).to have_key('reviewers')
       expect(json['comments'].first).to have_key('user')
+      expect(json['review_completes'].length).to eql(1)
+      expect(json['review_counter']['total']).to eql(2)
+      expect(json['review_counter']['completed']).to eql(1)
     end
   end
 

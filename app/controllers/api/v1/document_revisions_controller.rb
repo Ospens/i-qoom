@@ -1,6 +1,6 @@
 class Api::V1::DocumentRevisionsController < ApplicationController
   load_resource :project
-  load_and_authorize_resource except: [ :review_menu ]
+  load_and_authorize_resource
 
   def update_review_status
     main = @document_revision.document_main
