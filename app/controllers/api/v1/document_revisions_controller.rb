@@ -16,6 +16,7 @@ class Api::V1::DocumentRevisionsController < ApplicationController
     revisions = DocumentRevision.by_project(@project)
     @my_review = revisions.where_review_owner(@project, signed_in_user)
     @all_review = revisions.all_review(@project, signed_in_user)
+    @user = signed_in_user
     render formats: :json
   end
   # based on review_menu links

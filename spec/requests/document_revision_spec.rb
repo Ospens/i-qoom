@@ -57,18 +57,25 @@ describe DocumentRevision, type: :request do
       get "/api/v1/projects/#{project.id}/document_revisions/review_menu",
         headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['all_review']['issued_for_information']['count']).to eql(1)
-      expect(json['my_review']['issued_for_information']['count']).to eql(0)
+      expect(json['all_review']['statuses']['issued_for_information']['count']).to eql(1)
+      expect(json['my_review']['statuses']['issued_for_information']['count']).to eql(0)
     end
 
     it 'issuer' do
-      document.revision.document_review_subjects.create!(user: user, reviewers: [user2], review_issuer: user)
-      project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
+      review_subject =
+        document.revision
+                .document_review_subjects
+                .create!(user: user, reviewers: [user2], review_issuer: user)
+      review_subject.comments.create!(text: '111', user: user)
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
       get "/api/v1/projects/#{project.id}/document_revisions/review_menu",
         headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['all_review']['issued_for_information']['count']).to eql(1)
-      expect(json['my_review']['issued_for_information']['count']).to eql(0)
+      expect(json['all_review']['statuses']['issued_for_information']['count']).to eql(1)
+      expect(json['my_review']['statuses']['issued_for_information']['count']).to eql(0)
+      expect(json['all_review']['unread_comments']).to eql(1)
     end
 
     it 'owner' do
@@ -76,13 +83,22 @@ describe DocumentRevision, type: :request do
         document.document_fields
            .find_by(codification_kind: :originating_company)
            .document_field_values.find_by(selected: true).value
+      review_subject =
+        document.revision
+                .document_review_subjects
+                .create!(user: user, reviewers: [user2], review_issuer: user)
+      review_subject.comments.create!(text: '111', user: user)
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
       project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
       DocumentReviewOwner.create!(user: user, project: project, originating_company: originating_company)
       get "/api/v1/projects/#{project.id}/document_revisions/review_menu",
         headers: credentials(user)
       expect(response).to have_http_status(:success)
-      expect(json['all_review']['issued_for_information']['count']).to eql(1)
-      expect(json['my_review']['issued_for_information']['count']).to eql(1)
+      expect(json['all_review']['statuses']['issued_for_information']['count']).to eql(1)
+      expect(json['my_review']['statuses']['issued_for_information']['count']).to eql(1)
+      expect(json['my_review']['unread_comments']).to eql(1)
     end
   end
 
