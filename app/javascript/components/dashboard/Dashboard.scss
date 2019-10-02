@@ -919,7 +919,6 @@ span.divider {
 }
 
 .dropdown-menu {
-  min-width: fit-content;
   width: 100%;
   margin-top: -1px; 
   z-index: 9;
@@ -933,7 +932,6 @@ span.divider {
   margin-bottom: 30px;
 
   .dropdown-item {
-    min-width: fit-content;
     color: #8FB0B3;
     display: flex;
     align-items: center;
@@ -944,7 +942,6 @@ span.divider {
     .icon-container {
       height: 22px;
       width: 22px;
-      // margin-right: 8px;
     }
 
     span.item-text {
@@ -952,6 +949,8 @@ span.divider {
       display: flex;
       align-items: center;
       font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     a, span {
@@ -1007,6 +1006,7 @@ span.divider {
     box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
     border-radius: 5px;
     margin-top: 5px;
+    min-width: 215px;
   }
 
   .dots-container {
@@ -1679,9 +1679,13 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(auto, 1fr) 90px;
+  grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.select-codification {
+    grid-template-columns: 700px;
+  }
+
   &.modal-create-field {
     .form-group {
       margin-bottom: 45px;
@@ -1699,7 +1703,7 @@ i.arrow {
     padding-top: 50px;
     border-bottom: 1px solid #14191A14;
 
-    h6 {
+    h6, h4 {
       font-size: 20px;
       font-weight: 400;
       margin: 0;

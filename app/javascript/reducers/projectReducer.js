@@ -14,7 +14,8 @@ import {
 const initialState = {
   allProjects: [],
   current: {
-    admins: []
+    admins: [],
+    project_code: undefined
   },
   title: <h2>I-Qoom</h2>
 }

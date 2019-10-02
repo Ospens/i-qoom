@@ -12,7 +12,7 @@ class FileField extends Component {
 
   state = initState
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (typeof nextProps.input.value === 'string') {
       this.props.input.onChange(null)
       this.setState({
