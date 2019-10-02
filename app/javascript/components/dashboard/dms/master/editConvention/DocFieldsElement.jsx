@@ -10,7 +10,7 @@ import { SelectComponent } from '../../../../../elements/SelectField'
 class DocFieldsElement extends Component {
 
   actionConventions = (index, kind, column) => {
-    const { input: { value } } = this.props
+    const { input: { value }, removeField } = this.props
 
     const values = [
       {
@@ -143,7 +143,6 @@ class DocFieldsElement extends Component {
     const {
       index,
       column,
-      removeField,
       disabled,
       input: { value },
       meta: { touched, error }

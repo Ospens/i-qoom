@@ -48,7 +48,7 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
       const newRow = {
         ...row,
         column: index + 1,
-        row: i + (index === 0 ? 3 : 1)
+        row: i + 1
       }
 
       docFields.push(newRow)

@@ -25,7 +25,7 @@ body {
 
 .sidebar_section-title {
   color: #7674A5;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .form-group {
@@ -923,10 +923,7 @@ span.divider {
   margin-top: -1px; 
   z-index: 9;
   padding: 0;
-  padding-left: 7px !important;
-  padding-right: 7px !important;
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
+  padding: 10px !important;
   border-radius: 5px;
   border-color: #E9F3F5;
   margin-bottom: 30px;
@@ -935,9 +932,13 @@ span.divider {
     color: #8FB0B3;
     display: flex;
     align-items: center;
-    padding: 9px;
+    padding: 7px;
     cursor: pointer;
     border-radius: 5px;
+
+    &:not(:last-of-type) {
+      margin-bottom: 9px;
+    }
 
     .icon-container {
       height: 22px;
@@ -1591,19 +1592,23 @@ i.arrow {
 }
 
 .acceess-rights__drop-down {
-  display: flex;
-  flex-direction: column;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  .dropdown-menu {
+    min-width: 350px;
+  }
 
-  .acceess-rights__drop-down-row {
-    padding-top: 10px;
-    padding-bottom: 10px;
+  .acceess-rights__drop-down-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding: 7px;
 
-    label {
-      white-space: initial;
+    .acceess-rights__drop-down-row {
+      padding-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr ;
+
+      label {
+        white-space: initial;
+      }
     }
   }
 }
