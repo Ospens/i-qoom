@@ -35,7 +35,7 @@ function ProjectSettings() {
       </Tabs>
 
       <Link to='/dashboard' className='btn-back-to-project'>
-        <i className='svg-icon arrow-left-icon-2' />
+        <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
         BACK TO THE PROJECT OVERVIEW
       </Link>
     </div>

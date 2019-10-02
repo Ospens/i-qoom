@@ -31,11 +31,11 @@ const documentHeader = (title, isCurrent) => {
       <h2>{title}</h2>
       <label className='rounded-label red ml-4'>
         Revision {rev ? rev.value : '0'}
-        <i className='svg-icon pink lock-icon ml-2' />
+        <span className='icon-Locked ml-2' />
       </label>
       <label className='rounded-label red ml-4'>
         Version {ver ? ver.value : '1'}
-        <i className='svg-icon pink lock-icon ml-2' />
+        <span className='icon-Locked ml-2' />
       </label>
     </div>
   )

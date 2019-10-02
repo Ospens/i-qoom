@@ -62,7 +62,7 @@ function DropZoneField({ input, filename, label, disabled = false, meta: { touch
           if (currentFile || filename) {
             return (
               <div className='accepted-file'>
-                <i className='svg-icon common-file-icon black big mr-3' />
+                <span className='icon-common-file-text1 black mr-3' />
                 <div className='accepted-file__text'>
                   <span className='file-name'>{currentFile ? currentFile.name : filename}</span>
                   <span>Replace the document file</span>

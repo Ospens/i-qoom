@@ -60,7 +60,7 @@ const getRevAndVer = payload => ({
   payload
 })
 
-export const startFetchDocuments = (projectId, history) => (dispatch, getState) => {
+export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
@@ -69,13 +69,8 @@ export const startFetchDocuments = (projectId, history) => (dispatch, getState) 
       .then(response => {
         dispatch(documentsFetched(response.data.documents))
       })
-      .catch(({ response }) => {
-        if (response.status === 307) {
-          history.push({ pathname: `/dashboard/projects/${projectId}/documents/master/edit_convention` })
-          errorNotify('Please, create a convention')
-        } else {
-          errorNotify('Something went wrong')
-        }
+      .catch(() => {
+        errorNotify('Something went wrong')
       })
   )
 }

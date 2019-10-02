@@ -5,26 +5,22 @@ import ReactSVG from 'react-svg'
 import UserAvatar from 'react-user-avatar'
 import DropDown from '../../../../../elements/DropDown'
 import plusIcon from '../../../../../images/add_1'
-import showProfileIcon from '../../../../../images/single-neutral-actions-text'
-import trashIcon from '../../../../../images/trash_bucket'
-import sendIcon from '../../../../../images/email-action-send-2'
-import removeFromTeamIcon from '../../../../../images/rating-star-subtract'
 
 const ddOPtions = [
   {
-    icon: showProfileIcon,
+    icon: 'showProfileIcon',
     title: 'Show profile',
   },
   {
-    icon: sendIcon,
+    icon: 'sendIcon',
     title: 'Send message',
   },
   {
-    icon: removeFromTeamIcon,
+    icon: 'removeFromTeamIcon',
     title: 'Remove from team',
   },
   {
-    icon: trashIcon,
+    icon: 'trashIcon',
     title: 'Delete',
   },
 ]
@@ -58,6 +54,7 @@ export const RenderTeamlist = ({ users = [] }) => {
                 key={index}
                 btnClass='avatar-with-dropdown'
                 openState={open => toggleCheck(open, user.id)}
+                defaultValues={ddOPtions}
                 btnComponent={
                   <div className='d-flex'>
                     <UserAvatar size='42' name={user.name} />
@@ -65,19 +62,7 @@ export const RenderTeamlist = ({ users = [] }) => {
                   </div>
                 }
                 className='dropdown-with-icon'
-              >
-                {ddOPtions.map(({ title, icon }, i) => (
-                  <button type='button' className='dropdown-item btn' key={i}>
-                    <ReactSVG
-                      svgStyle={{ height: 13, width: 13 }}
-                      src={icon}
-                    />
-                    <span className='item-text'>
-                      {title}
-                    </span>
-                  </button>
-                ))}
-              </DropDown>
+              />
             ))}
           </div>
           {users.length > 3 &&

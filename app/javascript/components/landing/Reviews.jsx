@@ -44,8 +44,8 @@ class Reviews extends Component {
     let stars = []
     for (let i = 0; i < count; ++i) {
       stars.push(
-        <div key={i} className='vote-stars'>
-          <i className='svg-icon star-icon' />
+        <div key={i} className='vote-stars mr-1'>
+          <span className='icon-Rating' />
         </div>
       )
     }
@@ -62,7 +62,7 @@ class Reviews extends Component {
         {options.map(({ title, icon }, i) => (
           <button type='button' className='dropdown-item btn' key={i}>
             <div>
-              <i className={classnames('svg-icon gray mr-2', icon)} />
+              <span className={classnames('mr-2', icon)} />
             </div>
             <span className='item-text'>
               {title}
@@ -76,7 +76,7 @@ class Reviews extends Component {
         <div className='user-name-block col-9'>
           <div className='row'>
             <TextEditor text={el.name} />
-            <i className='svg-icon rounded-blue-check-icon ml-2' />
+            <span className='rounded-blue-check-icon ml-2' />
           </div>
             <TextEditor text={el.country} />
             <div className='user-stars'>{this.starsRender(el.stars)}
@@ -96,7 +96,10 @@ class Reviews extends Component {
         <div className='user-name-block'>
           <div className='d-flex'>
             <div dangerouslySetInnerHTML={{ __html: el.name }} />
-              <i className='svg-icon rounded-blue-check-icon ml-2' />
+            <span className='icon-choose_2 ml-2'>
+              <span className='path1'/>
+              <span className='path2'/>
+            </span>
             </div>
           <div className='user-name-block__country' dangerouslySetInnerHTML={{ __html: el.country}} />
           <div className='user-stars'>{this.starsRender(el.stars)}
@@ -120,8 +123,8 @@ class Reviews extends Component {
       speed: 1000,
       slidesToShow: cardCount,
       slidesToScroll: 1,
-      nextArrow: <Arrows type='nextBtn' />,
-      prevArrow: <Arrows type='prevBtn' />
+      nextArrow: <Arrows type='right' />,
+      prevArrow: <Arrows type='left' />
     }
     // const { authed, editable } = this.props
     /*if (authed && editable) {
@@ -139,7 +142,7 @@ class Reviews extends Component {
             {options.map(({ title, icon }, i) => (
               <button type='button' className='dropdown-item btn' key={i}>
                 <div>
-                  <i className={classnames('svg-icon gray mr-2', icon)} />
+                  <span className={classnames('gray mr-2', icon)} />
                 </div>
                 <span className='item-text'>
                   {title}
@@ -152,7 +155,7 @@ class Reviews extends Component {
             <div className='clearfix' />
             <div className='user-name-block col-9'>
               <h6 className='user-name'>Name</h6>
-              <i className='svg-icon rounded-blue-check-icon ml-2' />
+              <span className='rounded-blue-check-icon ml-2' />
               <div className='user-country text-muted'>Place</div>
               <div className='user-stars'>{this.starsRender(5)}
               </div>

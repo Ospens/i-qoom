@@ -11,7 +11,7 @@ export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
       return (
         <li className='dms-sidebar-menu__item'>
           <Link className={classnames('btn', { 'active': matched })} to={path}>
-            <i className={classnames('svg-icon black mr-2', icon)} />
+            <span className={classnames('dark-gray mr-2', icon)} />
             <span className='head-button__gray-text'>{label}</span>
           </Link>
           {matched && nested &&
@@ -43,26 +43,26 @@ export const renderFoldersBlock = (folders, projectId) => {
         <DmsSideBarItem
           path={`/dashboard/projects/${projectId}/documents/folders/my_documents`}
           label='My documents'
-          icon='folder-icon-3'
+          icon='icon-folder-image'
         />
         <DmsSideBarItem
           path={`/dashboard/projects/${projectId}/documents/folders/all`}
           label='All documents'
-          icon='folder-icon-3'
+          icon='icon-folder-image-1'
         />
         {folders.map(({ id, title }, i) => (
           <DmsSideBarItem
             key={i}
             path={`/dashboard/projects/${projectId}/documents/folders/${id}`}
             label={title}
-            icon='folder-icon'
+            icon='icon-folder-empty'
           />
         ))}
 
         <CreateFolder trigger={
           <li className='dms-sidebar-menu__item add-button'>
             <button className='btn d-flex align-items-center openFolderForm' type='button'>
-              <i className='svg-icon blue-plus-icon mr-2' />
+              <span className='icon-add_1 mr-2' />
               <span>New folder</span>
             </button>
           </li>
@@ -76,31 +76,31 @@ export const renderFoldersBlock = (folders, projectId) => {
 class DmsSideBar extends Component {
 
   renderMainItems = () => {
-    const { folders, match: { path, params: {  project_id } } } = this.props
+    const { project_code, folders, match: { path, params: {  project_id } } } = this.props
     const masterPath = `/dashboard/projects/${project_id}/documents/master`
 
     // TODO: Need check for master's permit
-
+    
     const menuItems = [
       {
         title: 'Overview',
-        icon: 'task-checklist-icon',
+        icon: 'icon-task-checklist-check',
         path: `/dashboard/projects/${project_id}/documents/`
       },
       {
         title: 'DMS Settings',
-        icon: 'task-list-settings-icon',
+        icon: 'icon-task-list-settings',
         path: `/dashboard/projects/${project_id}/documents/settings/`
       },
       {
         title: 'Document planning',
-        icon: 'calendar-icon-3',
+        icon: 'icon-calendar-3',
         path: `/dashboard/projects/${project_id}/documents/planning/`
       },
       {
         title: 'Master settings',
-        icon: 'calendar-icon-3',
-        path: `${masterPath}/edit_convention`,
+        icon: 'icon-task-list-settings',
+        path: project_code ? `${masterPath}/edit_convention` : `${masterPath}/codifications/1/`,
         root: `${masterPath}/`
       }
     ]
@@ -108,12 +108,12 @@ class DmsSideBar extends Component {
     const masterMenu = [
       {
         title: 'Upload form',
-        icon: 'task-checklist-icon',
+        icon: 'icon-task-checklist-check',
         path: `${masterPath}/edit_convention/`
       },
       {
         title: 'Access rights',
-        icon: 'task-list-settings-icon',
+        icon: 'icon-task-list-settings',
         path: `${masterPath}/access_rights/members/`,
         root: `${masterPath}/access_rights/`,
         nested: [
@@ -129,17 +129,17 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Quick search',
-        icon: 'search-icon',
+        icon: 'icon-search-alternate',
         path: `${masterPath}/quick_search/`
       },
       {
         title: 'Codification',
-        icon: 'file-code-home',
+        icon: 'icon-file-code-home',
         path: `${masterPath}/codifications/1/`,
         root: `${masterPath}/codifications/`,
         nested: [
           {
-            title: 'Codification 1',
+            title: <div>Codification 1 < span className='icon-check_1 ml-2' /></div>,
             path: `${masterPath}/codifications/1/`
           },
           {
@@ -158,16 +158,16 @@ class DmsSideBar extends Component {
       },
       {
         title: 'Distribution groups',
-        icon: 'business-team-icon',
+        icon: 'icon-business-team-goal',
         path: `${masterPath}/distribution_group/`
       },
       {
         title: 'Review managment',
-        icon: 'task-list-settings-icon',
+        icon: 'icon-task-list-settings',
         path: '#' // `${masterPath}/planning/`
       }
     ]
-
+    
     return (
       <div className='dms-sidebar-menu__block'>
         <h4>DMS menu</h4>
@@ -183,24 +183,28 @@ class DmsSideBar extends Component {
             </React.Fragment>
           ))}
         </ul>
-        {path.includes('dashboard/projects/:project_id/documents/folders')
-          ? renderFoldersBlock(folders, project_id)
-          : <React.Fragment>
-              <h4>Master settings</h4>
-              <ul className='dms-sidebar-menu__list'>
-                {masterMenu.map(({ path, title, icon, root, nested }, i) => (
-                  <React.Fragment key={i}>
-                    <DmsSideBarItem
-                      path={path}
-                      label={title}
-                      icon={icon}
-                      root={root}
-                      nested={nested}
-                    />
-                  </React.Fragment>
-                ))}
-              </ul>
-            </React.Fragment>}
+        {(() => {
+          if (path.includes('dashboard/projects/:project_id/documents/folders')) {
+            return renderFoldersBlock(folders, project_id)
+          } else if (path.includes('/master/')) {
+            return (
+              <React.Fragment>
+                <h4>Master settings</h4>
+                <ul className='dms-sidebar-menu__list'>
+                  {masterMenu.map(({ path, title, icon, root, nested }, i) => (
+                    <React.Fragment key={i}>
+                      <DmsSideBarItem
+                        path={path}
+                        label={title}
+                        icon={icon}
+                        root={root}
+                        nested={nested}
+                      />
+                    </React.Fragment>
+                  ))}
+                </ul>
+              </React.Fragment>)}
+        })()}
       </div>
     )
 
@@ -221,7 +225,8 @@ class DmsSideBar extends Component {
 }
 
 const mapStateToProps = ({ projects, folders }) => ({
-  folders: folders.allFolders
+  folders: folders.allFolders,
+  project_code: projects.current.project_code
 })
 
 export default connect(mapStateToProps)(withRouter(DmsSideBar))

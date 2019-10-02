@@ -10,7 +10,7 @@ const renderBlock = field => {
         <label>{field.title}</label>
         <label className='rounded-label red'>
           {`Revision ${field.value}`}
-          <i className='svg-icon pink lock-icon ml-2' />
+          <span className='icon-Locked ml-2' />
         </label>
       </React.Fragment>
     )
@@ -20,7 +20,7 @@ const renderBlock = field => {
         <label>{field.title}</label>
         <label className='rounded-label red'>
           {`Version ${field.value}`}
-          <i className='svg-icon pink lock-icon ml-2' />
+          <span className='icon-Locked ml-2' />
         </label>
       </React.Fragment>
     )
@@ -80,22 +80,22 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
           <span>Project phases</span>
           <ul className='row mx-0'>
             <li className='col-3 active'>
-              <button>
+              <button type='button'>
                 Planning
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Development
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Execution
               </button>
             </li>
             <li className='col-3'>
-              <button>
+              <button type='button'>
                 Operation
               </button>
             </li>
@@ -156,7 +156,7 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
           <label className='mb-4'>Files</label>
           {fileFields.map((field, i) => (
             <div className='d-flex align-items-center mb-4' key={i}>
-              <i className='svg-icon file-pdf-icon mr-2' />
+              <i className='icon-Work-Office-Companies---Office-Files---office-file-pdf mr-2' />
               <span>{field.filename}</span>
             </div>
           ))}

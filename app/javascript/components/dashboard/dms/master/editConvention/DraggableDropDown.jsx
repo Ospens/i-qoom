@@ -28,23 +28,23 @@ class DropDownElement extends Component {
     const newDDElementOtions = [
       {
         title: 'New section above',
-        icon: 'section-above-icon',
-        onClick: ((index) => addNewSection(index))
+        icon: 'icon-upload-menu2',
+        onClick: (e => addNewSection(e, index))
       },
       {
         title: 'New section below',
-        icon: 'section-below-icon',
-        onClick: ((index) => addNewSection(index + 1))
+        icon: 'icon-upload-menu1',
+        onClick: (e => addNewSection(e, index + 1))
       },
       {
         title: 'Copy',
-        icon: 'copy-icon',
-        onClick: ((index) => copySection(index))
+        icon: 'icon-common-file-double-1',
+        onClick: (() => copySection(index))
       },
       {
         title: 'Delete',
-        icon: 'trash-icon',
-        onClick: ((index) => removeSection(index))
+        icon: 'icon-bin-1',
+        onClick: (() => removeSection(index))
       }
     ]
     document.body.appendChild(portal)
@@ -70,19 +70,8 @@ class DropDownElement extends Component {
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon dropleft ml-2'
-                >
-                  {newDDElementOtions.map(({icon, title, onClick }, i) => (
-                    <React.Fragment key={i}>
-                      <li
-                        className='dropdown-item'
-                        onClick={() => onClick(index)}
-                      >
-                        <i className={classnames('svg-icon gray mr-2', icon)} />
-                        <span className='item-text'>{title}</span>
-                      </li>
-                    </React.Fragment>
-                  ))}
-                </DropDown>
+                  defaultValues={newDDElementOtions}
+                />
               </div>
             </div>
           )
@@ -121,7 +110,7 @@ class DropDownColumn extends Component {
       <Droppable droppableId='column_1'>
         {provided => (
           <div
-            className='dropdown-section-block form-group'
+            className='dropdown-section-block'
             ref={provided.innerRef}
             style={{}}
             {...provided.droppableProps}
@@ -167,7 +156,6 @@ class DraggableDropDown extends Component {
 
     const position = index > -1 ? index : fields.length
     const newValue = {
-      id: null,
       value: newSection,
       title: ''
     }
@@ -190,25 +178,29 @@ class DraggableDropDown extends Component {
     const { fields } = this.props
 
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <DropDownColumn
-          {...this.props}
-          addNewSection={this.addNewSection}
-          removeSection={this.removeSection}
-          copySection={this.copySection}
-        />
-        <div className='new-dropdown-section-block form-froup'>
-          <div className='new-dropdown-section'>
-            <Field
-              component={InputField}
-              id='new_section'
-              name='new_section'
-              placeholder={`Section ${fields.length + 1}`}
-              onBlur={e => this.addNewSection(e)}
-            />
+      <React.Fragment>
+        <div><label className={classnames({ 'form-group': fields.length < 1 })}>Define selections</label></div>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <DropDownColumn
+            {...this.props}
+            addNewSection={this.addNewSection}
+            removeSection={this.removeSection}
+            copySection={this.copySection}
+          />
+          <div className='new-dropdown-section-block'>
+            <div><label>Selections</label></div>
+            <div className='new-dropdown-section'>
+              <Field
+                component={InputField}
+                id='new_section'
+                name='new_section'
+                placeholder={`Section ${fields.length + 1}`}
+                onBlur={e => this.addNewSection(e)}
+              />
+            </div>
           </div>
-        </div>
-      </DragDropContext>
+        </DragDropContext>
+      </React.Fragment>
     )
   }
 }
