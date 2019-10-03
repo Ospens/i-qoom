@@ -78,7 +78,7 @@ function Content({ match: { params: { project_id } } }) {
     <div className='dms-content'>
       {/* <ModalInfo /> */}
       <WellDone projectCode={project_code}/>
-      {/* <SelectConvention /> */}
+      <SelectConvention projectCode={project_code}/>
       <div className='dms-content__header'>
         <h4>Convention 1 - <span className='green'>active</span></h4>
       </div>
