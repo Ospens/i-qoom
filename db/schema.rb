@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_16_125802) do
+ActiveRecord::Schema.define(version: 2019_09_30_104834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,19 @@ ActiveRecord::Schema.define(version: 2019_09_16_125802) do
     t.index ["document_revision_id"], name: "index_documents_on_document_revision_id"
     t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "subject"
+    t.text "body"
+    t.integer "recipient_id"
+    t.integer "sender_id"
+    t.datetime "read_at"
+    t.integer "recipient_status"
+    t.integer "sender_status"
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "project_administrators", force: :cascade do |t|

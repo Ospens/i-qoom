@@ -14,6 +14,14 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
 
+  has_many :sent_messages,
+           class_name: "Message",
+           foreign_key: 'sender_id'
+
+  has_many :received_messages,
+           class_name: "Message",
+           foreign_key: 'recipient_id'
+
   validates_presence_of :password_confirmation,
     on: [:create, :password_changed?]
 
