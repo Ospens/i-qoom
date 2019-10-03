@@ -7,7 +7,8 @@ import {
   Field,
   FieldArray,
   destroy,
-  arraySplice
+  arraySplice,
+  arrayPush
 } from 'redux-form'
 import DraggableDropDown from './DraggableDropDown'
 import InputField from '../../../../../elements/InputField'
@@ -77,7 +78,7 @@ class ModalCreateField extends Component {
   }
 
   handleSubmit = field => {
-    const { column = '2', row, spliceToConvention, created_at } = this.props
+    const { column = '2', row, spliceToConvention, pushToConvention, created_at } = this.props
 
     let newSections = []
     if (field.kind === 'select_field') {
@@ -92,9 +93,12 @@ class ModalCreateField extends Component {
     field['document_field_values'] = newSections
     field['column'] = column
     field['row'] = row || 0
+    field['created_at'] = new Date()
     
     const removeNum = created_at === undefined ? 0 : 1
-    spliceToConvention(`column_${column}`, row || 0, removeNum, field)
+    created_at === undefined
+      ? pushToConvention(`column_${column}`, field)
+      : spliceToConvention(`column_${column}`, row || 0, removeNum, field)
     this.handleClose()
   }
 
@@ -243,6 +247,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   destroyForm: () => dispatch(destroy('convention_input_form')),
   spliceToConvention: (field, index, removeNum, val) => dispatch(arraySplice('convention_form', field, index, removeNum, val)),
+  pushToConvention: (field, val) => dispatch(arrayPush('convention_form', field, val)),
 })
 
 export default connect(
