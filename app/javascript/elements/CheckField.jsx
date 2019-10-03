@@ -15,7 +15,7 @@ function CheckField({
       <input
         {...input}
         {...props}
-        defaultChecked={input.value}
+        checked={input.value}
         type='checkbox'
         component='input'
         className={`form-control checkbox-input ${touched && error ? ' is-invalid' : ''}`}

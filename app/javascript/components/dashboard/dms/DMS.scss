@@ -77,6 +77,7 @@
 .buttons-with-icons-list {
   display: flex;
   height: 125px !important;
+  margin-bottom: 0;
 
   li {
     padding-left: 20px;
@@ -143,7 +144,7 @@
   height: 100%;
 
   &:not(.with-header) {
-    margin-top: 100px;
+    margin-top: 125px;
   }
 
   > .col-10 {
@@ -1448,6 +1449,32 @@ input.search-input {
     background-color: #475759 !important;
     border-color: #475759 !important;
     box-shadow: 1px 1px 0px 0px #475759 !important;
+  }
+
+  &.small-font {
+    padding: 5px !important;
+
+    .tooltip-block {
+      font-size: 10px;
+      color: #fff;
+    }
+  }
+}
+
+.error-tooltip-container {
+  background-color: #FF0042 !important;
+  border-color: #FF0042 !important;
+  box-shadow: 1px 1px 0px 0px #FF0042 !important;
+  margin-right: 30px !important;
+  
+  .tooltip-text-block {
+    color: #fff;
+  }
+  
+  &:before {
+    background-color: #FF0042 !important;
+    border-color: #FF0042 !important;
+    box-shadow: 1px 1px 0px 0px #FF0042 !important;
   }
 
   &.small-font {
