@@ -71,7 +71,8 @@ class SideBar extends Component {
   )
 
   renderProjectContent = () => {
-    const { currentProject } = this.props
+    const { currentProject, projectCode } = this.props
+    
     return (
       <div className='mb-4'>
         <ul className='nav flex-column nav-items'>
@@ -84,7 +85,7 @@ class SideBar extends Component {
             label='Project'
           />
           <SideBarItem
-            path={`/dashboard/projects/${currentProject.id}/documents/`}
+            path={projectCode === null ? `/dashboard/projects/${currentProject.id}/documents/master/codifications/1` : `/dashboard/projects/${currentProject.id}/documents/`}
             root={`/dashboard/projects/${currentProject.id}/documents/`}
             label='Documents'
           />
@@ -161,7 +162,8 @@ class SideBar extends Component {
 const mapStateToProps = ({ user, projects }) => ({
   authed: user.authStatus,
   isAdmin: user.isAdmin,
-  currentProject: projects.current
+  currentProject: projects.current,
+  projectCode: projects.current.project_code
 })
 
 export default connect(mapStateToProps)(withRouter(SideBar))

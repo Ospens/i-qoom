@@ -51,10 +51,17 @@ class DocFieldsTable extends Component {
 
   renderModalCreateField = () => {
     const { modalOpen } = this.state
+    const { fields } = this.props
+    const values = {
+      column: 2,
+      row: fields ? fields.column_2.length : {}
+    }
+    
     return (
       <ModalCreateField
         modalOpen={modalOpen}
         handleClose={this.handleClose}
+        initialValues={values}
       />
     )
   }
@@ -87,12 +94,13 @@ class DocFieldsTable extends Component {
   )
 
   renerFooter = () => {
-    const { reset } = this.props
+    const { reset, version } = this.props
+    
     return (
       <div className='dms-footer edit-convetion-footer'>
         <div className='changes-description'>
-          You made changes to the upload <b>form 1.0 of convention 2 (not applied)</b>.
-          Do you want to save all changes to update this form to <b>version 1.1</b>?
+          You made changes to the upload <b>form {version} of Convention 1</b>.
+          Do you want to save all changes to update this form to <b>version {version + 1}</b>?
         </div>
         <div className='d-flex'>
           <button
@@ -131,7 +139,7 @@ class DocFieldsTable extends Component {
   }
 
   render() {
-    const { handleSubmit, pristine } = this.props
+    const { handleSubmit, pristine, fields } = this.props
 
     return (
       <React.Fragment>
@@ -164,7 +172,7 @@ class DocFieldsTable extends Component {
             </ul>
           </div>
         </div>
-        {this.renderModalCreateField()}
+        {fields && this.renderModalCreateField()}
         <DragDropContext onDragEnd={this.onDragEnd}>
           <form
             noValidate={true} 
@@ -203,6 +211,7 @@ class DocFieldsTable extends Component {
 
 const mapStateToProps = state => ({
   fields: getFormValues('convention_form')(state),
+  version: state.conventions.current.version,
 })
 
 const mapDispatchToProps = dispatch => ({
