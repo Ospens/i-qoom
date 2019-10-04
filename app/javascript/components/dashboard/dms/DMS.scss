@@ -55,7 +55,8 @@
 .overview-table-contaniner {
   margin-top: 50px;
   overflow: auto;
-  padding-bottom: 500px;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 360px;
 }
 
 .link, .add-button {
@@ -143,12 +144,19 @@
 .dms-container {
   height: 100%;
 
-  &:not(.with-header) {
-    margin-top: 125px;
+  .sidemenu-column {
+    width: 215px;
   }
 
-  > .col-10 {
+  .content-column {
+    margin-left: auto;
+    width: 75%;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  &:not(.with-header) {
+    padding-top: 125px;
   }
   
   @media only screen and (max-width: 1400px) {
@@ -164,6 +172,17 @@
     .dms-content__header {
       padding-top: 45px;
       padding-top: 2.3vw;
+      padding-left: 45px;
+      padding-left: 2.3vw;
+      padding-right: 45px;
+      padding-right: 2.3vw;
+    }
+
+    .form-body, .content-body {
+      padding-left: 45px;
+      padding-left: 2.3vw;
+      padding-right: 45px;
+      padding-right: 2.3vw;
     }
   }
 
@@ -182,10 +201,6 @@
     .form-body, .content-body {
       padding-top: 45px;
       padding-top: 2.3vw;
-      padding-left: 45px;
-      padding-left: 2.3vw;
-      padding-right: 45px;
-      padding-right: 2.3vw;
 
       &.bottom-padding {
         padding-bottom: 45px;
@@ -194,10 +209,6 @@
     }
 
     .dms-content__header {
-      padding-left: 45px;
-      padding-left: 2.3vw;
-      padding-right: 45px;
-      padding-right: 2.3vw;
       
       h4 {
         font-weight: 500;
@@ -225,6 +236,7 @@
 
   .dms-sidebar-menu {
     color: var(--color-text);
+    
     h4 {
       color: var(--color-labels);
       font-size: 14px;
@@ -500,7 +512,7 @@
       .dms-sidebar-menu__ul-list {
         max-height: 250px;
         overflow: auto;
-        -webkit-overflow-scrolling:touch;
+        -webkit-overflow-scrolling: touch;
 
         li {
           width: max-content;
@@ -566,10 +578,13 @@
   border-radius: 20px !important;
   border-color: var(--color-text) !important;
   background-color: #fff !important;
-  padding: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 19px;
+  padding-right: 16px !important;
 
   span {
-    font-size: 14px;
+    font-size: 15px;
     white-space: nowrap;
     overflow: hidden;
     margin-right: 10px;
@@ -601,14 +616,14 @@
 .dms-container__table-header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   
   h5 {
     margin-right: 15px;
   }
 
   .btn-group {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px;
   }
 }
 
@@ -1411,6 +1426,11 @@ input.search-input {
 
 .tabs {
 
+  .tab-content {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   &.top-block {
     .nav-bar {
       margin-top: 0;
@@ -1636,8 +1656,8 @@ input.search-input {
 .access-rights-table-block {
   width: 100%;
   overflow: auto;
-	-webkit-overflow-scrolling:touch;
-  min-height: 800px;
+	-webkit-overflow-scrolling: touch;
+  padding-bottom: 260px;
   margin-bottom: 100px;
 
   .main-table-block {
@@ -2226,6 +2246,10 @@ input.search-input {
     color: var(--color-labels);
     font-size: 15px;
   }
+
+  input {
+    text-transform: uppercase;
+  }
 }
 
 .codification-codes-values-table {
@@ -2245,6 +2269,7 @@ input.search-input {
 
         input {
           text-align: center;
+          text-transform: uppercase;
         }
       }
 

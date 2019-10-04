@@ -114,10 +114,8 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
   }, [formats])
 
   return (
-    <div>
-      <div>
-        {renderTableHeader()}
-      </div>
+    <div className='dms-content'>
+      {renderTableHeader()}
       <div className='overview-table-contaniner'>
         <Table sortable striped className='main-table-block'>
           <Table.Header>

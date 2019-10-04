@@ -38,7 +38,7 @@ function SideBar({ projectId, checkedDocs, popup }) {
           <div className='dms-sidebar-menu__reviews-button'>
             <i className='arrow down' />
             <button
-              className='btn'
+              className='btn p-0'
               onClick={() => toggleMyReview(!myReview)}
             >
               My review (owned)
@@ -60,7 +60,7 @@ function SideBar({ projectId, checkedDocs, popup }) {
           <div className='dms-sidebar-menu__reviews-button'>
             <i className='arrow down' />
             <button
-              className='btn'
+              className='btn p-0'
               onClick={() => toggleAllReview(!allReview)}
             >
               All review

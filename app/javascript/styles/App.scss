@@ -6,6 +6,7 @@ html {
   height: 100%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-text-size-adjust: none;
 
 
   --color-blue: #0096FA;      // CTA, Links, Buttons, Hover
@@ -22,6 +23,10 @@ html {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+input[type=text], input[type=submit], textarea{
+	-webkit-appearance: none;
 }
 
 body {
@@ -377,6 +382,7 @@ footer:after,
   &.dashboard {
     display: grid;
     grid-template-rows: 90px 1fr;
+    grid-template-columns: 100%;
     grid-gap: 100px;
     grid-gap: 10vh;
     padding-left: 50px;

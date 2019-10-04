@@ -5,11 +5,11 @@ export default function DMSLayout({ header, sidebar, content, classNames }) {
   return (
     <div className={classnames('dms-container', classNames )}>
       {header}
-      <div className='row'>
-        <div className='col-2'>
+      <div className='d-flex'>
+        <div className='sidemenu-column'>
           {sidebar}
         </div>
-        <div className='col-10 pl-5'>
+        <div className='content-column'>
           {content}
         </div>
       </div>
