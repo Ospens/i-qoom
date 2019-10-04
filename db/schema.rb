@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_28_212414) do
+ActiveRecord::Schema.define(version: 2019_10_03_022153) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,15 @@ ActiveRecord::Schema.define(version: 2019_09_28_212414) do
     t.index ["reviewer_id"], name: "index_document_review_subjects_reviewers_on_reviewer_id"
   end
 
+  create_table "document_review_tags", force: :cascade do |t|
+    t.string "name"
+    t.integer "position", default: 1
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_document_review_tags_on_project_id"
+  end
+
   create_table "document_revisions", force: :cascade do |t|
     t.bigint "document_main_id"
     t.string "revision_number"
@@ -339,6 +348,7 @@ ActiveRecord::Schema.define(version: 2019_09_28_212414) do
   add_foreign_key "document_review_subjects", "users", column: "review_issuer_id"
   add_foreign_key "document_review_subjects_review_completes", "document_review_subjects"
   add_foreign_key "document_review_subjects_review_completes", "users"
+  add_foreign_key "document_review_tags", "projects"
   add_foreign_key "document_revisions", "document_mains"
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"

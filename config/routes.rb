@@ -103,6 +103,7 @@ Rails.application.routes.draw do
             get :review_index
           end
         end
+        resources :document_review_tags, except: [:new, :edit, :show]
       end
     end
   end

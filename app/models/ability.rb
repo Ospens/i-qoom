@@ -125,6 +125,9 @@ class Ability
            :review_index], DocumentRevision do |revision, project|
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
+      can :manage, DocumentReviewTag do |tag, project|
+        project.members.find_by(user: user).try(:dms_module_master?)
+      end
     end
   end
 end
