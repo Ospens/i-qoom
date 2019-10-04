@@ -7,22 +7,45 @@ import { initialize } from 'redux-form'
 import DropDown from '../../../../../elements/DropDown'
 import { SelectComponent } from '../../../../../elements/SelectField'
 
-const actionConventions = index => (
-  [
-    {
-      title: 'New field above',
-      icon: 'section-above-icon',
-      offset: index
-    },
-    {
-      title: 'New field below',
-      icon: 'section-below-icon',
-      offset: index + 1
-    }
-  ]
-)
-
 class DocFieldsElement extends Component {
+
+  actionConventions = (index, kind, column) => {
+    const { input: { value }, removeField } = this.props
+
+    const values = [
+      {
+        title: 'New field above',
+        icon: 'icon-upload-menu2',
+        offset: index,
+        onClick: () => this.initNewField(value.row - 1)
+      },
+      {
+        title: 'New field below',
+        icon: 'icon-upload-menu1',
+        offset: index + 1,
+        onClick: () => this.initNewField(value.row)
+      }
+    ]
+
+    if (!kind) {
+      const val = { ...value, id: undefined }
+      values.push(
+        {
+          title: 'Copy',
+          icon: 'icon-common-file-double-1',
+          onClick: () => this.initNewField(value.row + 1, val)
+        },
+        {
+          title: 'Delete',
+          icon: 'icon-bin-1',
+          offset: index + 1,
+          onClick: () => removeField(column, index)
+        }
+      )
+    }
+
+    return values
+  }
 
   editButton = row => {
     const { input: { value }, openInputForm, initModal } = this.props
@@ -103,35 +126,23 @@ class DocFieldsElement extends Component {
     }
   }
 
-  renderMenuItem = (icon, title, row, val = {}) => {
+    initNewField = (row, val = {}) => {
     const { openInputForm, initModal, input: { value } } = this.props
-
-    return (
-      <li
-        className='dropdown-item'
-        onClick={() => {
-          openInputForm()
-          initModal({ ...val, row, column: value.column })
-        }}
-      >
-        <i className={classnames('svg-icon gray', icon)} />
-        <span className='item-text'>{title}</span>
-      </li>
-    )
+    openInputForm()
+    initModal({ ...val, row, column: value.column })
   }
 
   renderCopyElement = () => {
     const { input: { value } } = this.props
     const row = value.row + 1
     const val = { ...value, id: undefined }
-    return this.renderMenuItem('copy-icon', 'Copy', row, val)
+    return this.renderMenuItem('icon-common-file-double-1', 'Copy', row, val)
   }
 
   render() {
     const {
       index,
       column,
-      removeField,
       disabled,
       input: { value },
       meta: { touched, error }
@@ -159,27 +170,8 @@ class DocFieldsElement extends Component {
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon mr-2'
-                >
-                  {actionConventions(index).map(({ icon, title, offset }, i) => {
-                    return (
-                      <React.Fragment key={i}>
-                        {this.renderMenuItem(icon, title, offset)}
-                      </React.Fragment>
-                    )
-                  })}
-                  {!value.codification_kind &&
-                  <React.Fragment>
-                    {this.renderCopyElement()}
-                    <li
-                      className='dropdown-item'
-                      onClick={() => removeField(column, index)}
-                    >
-                      <i className='svg-icon trash-icon gray' />
-                      <span className='item-text'>Delete</span>
-                    </li>
-                  </React.Fragment>
-                  }
-                </DropDown>
+                  defaultValues={this.actionConventions(index, value.codification_kind, column)}
+                />
                 <label>{value.title}</label>
                 {/* TODO: disable on the backed now */}
                 {/* this.accessList() */}
@@ -190,7 +182,7 @@ class DocFieldsElement extends Component {
                 <div className='invalid-feedback convention-feedback'>
                   {error}
                 </div>}
-                {this.editButton(index)}
+                {!value.codification_kind && this.editButton(index)}
               </div>
             </div>
           </div>

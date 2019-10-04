@@ -46,22 +46,22 @@ RSpec.describe Convention, type: :model do
       it do
         field = find_field(:originating_company)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(3)
+        expect(field.row).to eql(1)
       end
 
       it do
         field = convention2.document_fields.find_by(codification_kind: :receiving_company)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(4)
+        expect(field.row).to eql(2)
       end
 
       it do
         field = find_field(:discipline)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(4)
+        expect(field.row).to eql(2)
         field = convention2.document_fields.find_by(codification_kind: :discipline)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(5)
+        expect(field.row).to eql(3)
       end
 
       it do
@@ -79,10 +79,10 @@ RSpec.describe Convention, type: :model do
       it do
         field = find_field(:additional_information)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(5)
+        expect(field.row).to eql(3)
         field = convention2.document_fields.find_by(codification_kind: :additional_information)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(6)
+        expect(field.row).to eql(4)
       end
 
       it do
@@ -149,19 +149,26 @@ RSpec.describe Convention, type: :model do
 
     it { expect(convention2).to be_valid }
 
-    it 'add one field' do
-      convention2.document_fields.new(FactoryBot.attributes_for(:document_field))
+    it 'remove codification field' do
+      field = convention2.document_fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+      convention2.document_fields.delete(field)
       expect(convention2).to_not be_valid
     end
 
-    it 'remove one field' do
-      convention2.document_fields.delete(convention2.document_fields.last)
-      expect(convention2).to_not be_valid
+    it 'add custom field' do
+      convention2.document_fields.new(kind: :text_field, column: 1)
+      expect(convention2).to be_valid
+    end
+
+    it 'remove custom field' do
+      convention1.document_fields.create!(kind: :text_field, column: 1)
+      expect(convention2).to be_valid
     end
 
     it 'remove one field and add another' do
-      convention2.document_fields.delete(convention2.document_fields.last)
-      convention2.document_fields.new(FactoryBot.attributes_for(:document_field))
+      field = convention2.document_fields.detect{ |i| i['codification_kind'] == 'originating_company' }
+      convention2.document_fields.delete(field)
+      convention2.document_fields.new(kind: :text_field, column: 1)
       expect(convention2).to_not be_valid
     end
   end

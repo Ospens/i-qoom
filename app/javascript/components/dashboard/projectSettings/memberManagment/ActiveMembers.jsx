@@ -2,8 +2,22 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import MemberTable from './MemberTable'
 import DropDown from '../../../../elements/DropDown'
-import { renderDropDownItems } from '../MemberManagment'
 import { startFetchActiveProjectMembers } from '../../../../actions/projectMembersActions'
+
+export const actionDDitems = [
+  {
+    title: 'Send invite',
+    icon: 'icon-email-action-send-2'
+  },
+  {
+    title: 'Edit member',
+    icon: 'icon-pencil-write'
+  },
+  {
+    title: 'Delete',
+    icon: 'icon-bin-1'
+  },
+]
 
 function ActiveMembers({ projectId }) {
   const dispatch = useDispatch()
@@ -17,11 +31,8 @@ function ActiveMembers({ projectId }) {
         <DropDown
           btnName='Action'
           className='manage-members-actions-button mt-4'
-        >
-          {renderDropDownItems('email-action-icon-2 gray', 'Send invite')}
-          {renderDropDownItems('pencil-icon gray', 'Edit member')}
-          {renderDropDownItems('trash-icon gray', 'Delete')}
-        </DropDown>
+          defaultValues={actionDDitems}
+        />
       </div>
       <div>
         <MemberTable members={members} projectId={projectId} type='activeMemebers' />

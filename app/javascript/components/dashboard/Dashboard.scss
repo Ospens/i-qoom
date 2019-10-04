@@ -25,12 +25,12 @@ body {
 
 .sidebar_section-title {
   color: #7674A5;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .form-group {
   &:hover, &:active {
-    z-index: 5;                                                                                                                                                                                                                                                                                                                                               
+    z-index: 5;
   }
 }
 
@@ -52,17 +52,16 @@ button:disabled {
   max-height: 24vh;
   min-height: 230px;
 
-  .cogs-icon {
-    width: 30px;
-    height: 30px;
+  .icon-cog-double-2 {
     align-self: end;
     margin-top: 5px;
     margin-left: 5px;
-    background-color: rgba(0, 0, 0, .87);
+    font-size: 30px;
+    color: rgb(41, 50, 51);
 
     &:hover {
       cursor: pointer;
-      background-color: #0096FA;
+      color: #0096FA;
     }
   }
 
@@ -154,7 +153,7 @@ button:disabled {
 
       li {
         font-size: 15px;
-        margin-left: 20px; 
+        margin-left: 20px;
       }
     }
   }
@@ -381,6 +380,15 @@ form {
     display: inline-flex;
     margin-bottom: -2px;
 
+    &:not(:first-of-type) {
+      margin-left: 25px;
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 25px;
+    }
+
+
     .nav-bar-element {
       font-size: 15px;
       text-decoration: none;
@@ -508,6 +516,10 @@ form {
       align-items: center;
       justify-content: center;
       background-color: #475859;
+
+      span {
+        font-size: 25px;
+      }
     }
 
     &:hover {
@@ -811,13 +823,6 @@ input[type=checkbox]:checked+label {
         display: flex;
         justify-content: center;
       }
-
-      .common-file-icon {
-        width: 22.5px;
-        min-width: 22.5px;
-        min-height: 24px;
-        height: 24px;
-      }
     }
 
     &.td-date {
@@ -902,40 +907,42 @@ span.divider {
 
   &.show {
     & > button {
-      border-bottom-left-radius: 0 !important; 
+      border-bottom-left-radius: 0 !important;
       border-bottom-right-radius: 0 !important;
     }
 
     .dropdown-menu {
-      border-top-left-radius: 0 !important; 
+      border-top-left-radius: 0 !important;
       border-top-right-radius: 0 !important;
     }
   }
 }
 
 .dropdown-menu {
-  min-width: fit-content;
   width: 100%;
-  margin-top: -1px; 
+  margin-top: -1px;
   z-index: 9;
   padding: 0;
-  padding: 5px !important;
+  padding: 10px !important;
   border-radius: 5px;
   border-color: #E9F3F5;
   margin-bottom: 30px;
 
   .dropdown-item {
-    min-width: fit-content;
     color: #8FB0B3;
     display: flex;
     align-items: center;
     padding: 7px;
     cursor: pointer;
+    border-radius: 5px;
+
+    &:not(:last-of-type) {
+      margin-bottom: 9px;
+    }
 
     .icon-container {
       height: 22px;
       width: 22px;
-      margin-right: 8px;
     }
 
     span.item-text {
@@ -943,10 +950,12 @@ span.divider {
       display: flex;
       align-items: center;
       font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     a, span {
-      color: #8FB0B3;
+      color:#4B595A;
     }
 
     .dropdown-submenu {
@@ -972,8 +981,8 @@ span.divider {
       }
 
       .icon-container {
-        .svg-icon {
-          background-color: #0095f9 !important;
+        [class^="icon-"], [class*=" icon-"] {
+          color: #0095f9 !important;
         }
       }
     }
@@ -993,20 +1002,22 @@ span.divider {
   align-items: center;
 
   .dropdown-menu {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
+    -moz-box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
+    box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
     border-radius: 5px;
     margin-top: 5px;
+    min-width: 215px;
   }
 
   .dots-container {
-    width: 25px;
-    height: 10px;
     display: flex;
     align-items: center;
     justify-items: center;
 
-    .dots-icon {
-      background-color: rgb(163, 201, 204) !important;
+    .icon-navigation-menu-horizontal {
+      font-size: 6px;
+      color: #a3c9cc;
     }
   }
 
@@ -1016,8 +1027,8 @@ span.divider {
     background: transparent !important;
 
     &:hover, &:active {
-      .dots-icon {
-        background-color: #0096FA !important;
+      .icon-navigation-menu-horizontal{
+        color: #0096FA !important;
       }
     }
   }
@@ -1035,14 +1046,15 @@ span.divider {
   display: flex !important;
   
   span {
-    font-weight: 500;
+    font-weight: 400;
     color: #0095f9;
     align-items: center;
     align-self: center;
     text-align: left;
   }
 
-  .svg-icon {
+  [class^="icon-"], [class*=" icon-"] {
+    font-size: 20px;
     margin-right: 10px;
   }
 
@@ -1059,10 +1071,6 @@ div.tab-description {
   
   span {
     color:#ced4da;
-  }
-
-  .green-check-icon {
-    margin-left: 10px;
   }
 }
 
@@ -1084,8 +1092,8 @@ div.tab-description {
 
 .confirm-msg {
   position: absolute;
-  left: calc(-100% - 55px);
-  top: 0;
+  left: calc(-100% - 125px) !important;
+  top: -5px !important;
   background-color: #475759 !important;
   padding: 12px !important;
 
@@ -1232,17 +1240,19 @@ div.tab-description {
   display: flex !important;
   border: 1px solid #ccc !important;
   
-  .common-file-lock {
+  .icon-common-file-lock:before {
     margin-right: 10px;
+    color: #212529;
   }
 
   &:hover, &:active {
     background-color: #daf0ff;
-    color: #2fa7f9 !important;
-    
-    .common-file-lock {
-      background-color: #2fa7f9 !important;
+    color: #2fa7f9;
+  
+    .icon-common-file-lock:before {
+      color: #2fa7f9;
     }
+    
   }
 }
 
@@ -1343,11 +1353,13 @@ input:checked+.slider:before {
     &.mainitem {
       font-size: 15px;
       font-weight: 700;
+      border-radius: 0px !important;
     }
 
     &.subitem {
       font-weight: 500;
       padding-left: 40px;
+      border-radius: 0px !important;
     }
 
     &:first-of-type {
@@ -1438,6 +1450,7 @@ i.arrow {
   button {
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 0 !important;
   }
 
@@ -1473,12 +1486,8 @@ i.arrow {
     justify-content: center;
     padding: 10px;
 
-    label {
-      margin-right: 10px; 
-    }
-
     span {
-      margin-left: 10px; 
+      margin-left: 10px;
     }
   }
 
@@ -1565,6 +1574,10 @@ i.arrow {
       white-space: nowrap;
       overflow: hidden;
     }
+
+    .icon-common-file-text1 {
+      font-size: 45px;
+    }
   }
 
   &.disabled {
@@ -1579,16 +1592,24 @@ i.arrow {
 }
 
 .acceess-rights__drop-down {
-  display: flex;
-  flex-direction: column;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  .dropdown-menu {
+    min-width: 350px;
+  }
 
-  .acceess-rights__drop-down-row {
-    padding-top: 10px;
-    padding-bottom: 10px;
+  .acceess-rights__drop-down-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding: 7px;
+
+    .acceess-rights__drop-down-row {
+      padding-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr ;
+
+      label {
+        white-space: initial;
+      }
+    }
   }
 }
 
@@ -1663,19 +1684,50 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(250px, 1fr) 90px;
+  grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.select-codification {
+    grid-template-columns: 775px;
+
+    .new-modal__footer {
+      justify-content: center;
+
+      button {
+        width: 41%;
+      }
+    }
+  }
+
+  &.modal-create-field {
+    .form-group {
+      margin-bottom: 45px;
+    }
+  }
+
   &.without-header {
     grid-template-rows: minmax(250px, 1fr) 70px;
   }
 
   .new-modal__header {
-    padding: 30px;
+    padding-bottom: 30px;
+    margin-right: 45px;
+    margin-left: 45px;
+    padding-top: 50px;
+    border-bottom: 1px solid #14191A14;
+
+    h6, h4 {
+      font-size: 20px;
+      font-weight: 400;
+      margin: 0;
+    }
   }
 
   .new-modal__body {
-    padding: 30px;
+    padding-right: 45px;
+    padding-left: 45px;
+    padding-top: 45px;
+    padding-bottom: 60px;
 
     h6.new-modal__body-title {
       font-weight: 500;
@@ -1688,8 +1740,8 @@ i.arrow {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 45px;
+    padding-right: 45px;
     background-color: #efefef;
     border: none;
     border-radius: 0 0 5px 5px;
@@ -1735,7 +1787,7 @@ i.arrow {
   }
 
   .table-row {
-    padding-top: 10px; 
+    padding-top: 10px;
     padding-bottom: 10px;
 
     .table__row-cell {

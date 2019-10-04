@@ -108,7 +108,6 @@ export const startUpdateFolder = values => (dispatch, getState) => {
       .then(response => {
         dispatch(folderUpdated(response.data))
         dispatch(initialize('folder_form', response.data))
-        console.log(response)
       })
       .catch(() => {
         errorNotify('Something went wrong')

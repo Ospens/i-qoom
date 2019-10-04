@@ -39,7 +39,7 @@ export class CreateFolder extends Component {
       className='btn'
       onClick={this.handleOpen}
     >
-      <i className='svg-icon blue-plus-icon' />
+      <span className='icon-add_1 mr-2' />
       <span>New folder</span>
     </button>
   )
@@ -51,21 +51,19 @@ export class CreateFolder extends Component {
 
   renderContent = () => {
     return (
-      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-        <div className='modal-container'>
-          <div className='modal-container__title-block'>
-            <h4>Create new folder</h4>
-          </div>
-          <div className='modal-container__content-block'>
-            <Field
-              name='title'
-              label='Define a folder title'
-              placeholder='Title'
-              component={InputField}
-            />
-          </div>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)} className='new-modal'>
+        <div className='new-modal__header'>
+          <h6>Create new folder</h6>
         </div>
-        <div className='modal-footer'>
+        <div className='new-modal__body'>
+          <Field
+            name='title'
+            label='Define a folder title'
+            placeholder='Title'
+            component={InputField}
+          />
+        </div>
+        <div className='new-modal__footer'>
           <button
             type='button'
             className='btn btn-white'

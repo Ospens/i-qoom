@@ -6,7 +6,7 @@ import {
 const initialState = {
   conventions: [],
   current: {
-    document_field_values: [],
+    document_fields: [],
     grouped_fields: {
       column_1: [{}],
       column_2: [{}]

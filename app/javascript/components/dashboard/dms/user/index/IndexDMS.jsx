@@ -15,9 +15,9 @@ class IndexDMS extends Component {
     checkedDocTypes: []
   }
 
-  componentWillMount() {
-    const { fetchDocuments, history, match: { params: { project_id } } } = this.props
-    fetchDocuments(project_id, history)
+  UNSAFE_componentWillMount() {
+    const { fetchDocuments, match: { params: { project_id } } } = this.props
+    fetchDocuments(project_id)
   }
 
   checkItem = (stateName, stateItems, value) => {
@@ -40,20 +40,18 @@ class IndexDMS extends Component {
 
     return (
       <ul className='buttons-with-icons-list'>
-        <Route path='/dashboard/projects/:project_id/documents/new/' exact>
-          <li>
-            <Link
-              className='d-flex align-items-center'
-              to={`/dashboard/projects/${params.project_id}/documents/new/`}
-            >
-              <i className='svg-icon blue-plus-icon mr-2' />
-              <span data-title='Create new Document'>Create new Document</span>
-            </Link>
-          </li>
-        </Route>
+        <li>
+          <Link
+            className='d-flex align-items-center'
+            to={`/dashboard/projects/${params.project_id}/documents/new/`}
+          >
+            <span className='icon-add_1 mr-2' />
+            <span data-title='Create new Document'>Create new Document</span>
+          </Link>
+        </li>
         <li>
           <button type='button' className={btnClass}>
-            <i className='svg-icon revision-icon mr-2' />
+            <span className='icon-Revise_1 mr-2' />
             <span data-title={`Add revision ${checkedLength > 0 ? checkedLength : ''}`}>
               Add revision {checkedLength > 0 ? checkedLength : ''}
             </span>
@@ -61,7 +59,7 @@ class IndexDMS extends Component {
         </li>
         <li>
           <button type='button' className={btnClass}>
-            <i className='svg-icon file-edit-icon mr-2' />
+            <span className='icon-common-file-edit mr-2' />
             <span className='head-button__gray-text' data-title={`Edit document {checkedLength > 0 ? checkedLength : ''}`}>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>
@@ -80,13 +78,14 @@ class IndexDMS extends Component {
         header={this.renderHeader()}
         sidebar={<Sidebar projectId={project_id} checkedDocs={checkedDocs} />}
         content={<Content projectId={project_id} checkItem={this.checkItem} checkedDocs={checkedDocs} />}
+        classNames='with-header'
       />
     )
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchDocuments: (projectId, history) => dispatch(startFetchDocuments(projectId, history))
+  fetchDocuments: projectId => dispatch(startFetchDocuments(projectId))
 })
 
 const mapStateToProps = ({ documents, folders }) => ({

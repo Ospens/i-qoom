@@ -12,7 +12,7 @@ class FileField extends Component {
 
   state = initState
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (typeof nextProps.input.value === 'string') {
       this.props.input.onChange(null)
       this.setState({
@@ -46,8 +46,8 @@ class FileField extends Component {
     return (
       <div className='logo-container'>
         <div className='trash-icon-container'>
-          <i
-            className='svg-icon trash-icon white'
+          <span
+            className='icon-bin-1 white'
             onClick={this.discardLogo}
           />
         </div>
@@ -76,7 +76,7 @@ class FileField extends Component {
           />
           <label htmlFor='file_logo'>
             <div>
-              <i className='svg-icon blue-plus-icon' />
+              <span className='icon-add_1' />
             </div>
             <strong>Add a logo</strong>
           </label>

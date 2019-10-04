@@ -13,7 +13,7 @@ function renderTableHeader() {
   const checkedDocTypes = []
   return (
     <div className='dms-container__table-header'>
-      <span className='mr-4'>Show</span>
+      <span className='mr-4 grey'>Show</span>
       <DropDown
         btnName='Documents Types'
         btnClass='dms-topbar-menu__dropdown'
@@ -115,105 +115,109 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
 
   return (
     <div>
-      {renderTableHeader()}
-      <Table sortable striped className='main-table-block'>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell />
-            <Table.HeaderCell className='table-checkbox'>
-              <div>
-                <input
-                  type='checkbox'
-                  id='check_all'
-                />
-                <label htmlFor='check_all' />
-              </div>
-            </Table.HeaderCell>
-            {columns.map(({ title, divider }, i) => (
-              <Table.HeaderCell key={i}>
-                {divider && <span className='divider' />}
-                <span>{title}</span>
+      <div>
+        {renderTableHeader()}
+      </div>
+      <div className='overview-table-contaniner'>
+        <Table sortable striped className='main-table-block'>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell />
+              <Table.HeaderCell className='table-checkbox'>
+                <div>
+                  <input
+                    type='checkbox'
+                    id='check_all'
+                  />
+                  <label htmlFor='check_all' />
+                </div>
               </Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {documents.map((doc, i) => (
-            <Table.Row key={i}>
-
-              <Table.Cell>
-                <DropDown
-                  dots={true}
-                  className='dropdown-with-icon'
-                >
-                  <DropDownItems
-                    key='DropDownItems__Content'
-                    id={doc.id}
-                    projectId={projectId}
-                    downloadFiles={() => downloadFiles(doc.id)}
-                    formats={formats}
-                    toggleFormats={v => toggleFormats(formats, v)}
-                  />
-                </DropDown>
-              </Table.Cell>
-
-              <Table.Cell className='table-checkbox'>
-                <div>
-                  <input type='checkbox' id={doc.id} />
-                  <label
-                    htmlFor={doc.id}
-                    onClick={() => checkItem('checkedDocs', checkedDocs, doc.id)}
-                  />
-                </div>
-              </Table.Cell>
-
-              <Table.Cell>
-                {doc.codification_kind}
-              </Table.Cell>
-
-              <Table.Cell className='title-cell'>
-                {doc.title || 'Undefined'}
-              </Table.Cell>
-
-              <Table.Cell className='td-files'>
-                <div>
-                  <i className='svg-icon common-file-icon black' />
-                </div>
-              </Table.Cell>
-
-              <Table.Cell className='td-files'>
-                <div>
-                  <i className='svg-icon common-file-color-icon' />
-                </div>
-              </Table.Cell>
-
-              <Table.Cell className='td-files'>
-                <div>
-                  <i className='svg-icon file-pdf-icon' />
-                </div>
-              </Table.Cell>
-
-              <Table.Cell className='td-date'>
-                {moment(doc.created_at).format('MMMM Do YYYY')}
-              </Table.Cell>
-
-              <Table.Cell>
-                {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
-              </Table.Cell>
-
-              <Table.Cell>
-                {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
-              </Table.Cell>
-
-              <Table.Cell>
-                {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
-              </Table.Cell>
+              {columns.map(({ title, divider }, i) => (
+                <Table.HeaderCell key={i}>
+                  {divider && <span className='divider' />}
+                  <span>{title}</span>
+                </Table.HeaderCell>
+              ))}
             </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-      <div className='d-flex'>
-        <span className='ml-auto'>{documents.length} total documents</span>
+          </Table.Header>
+          <Table.Body>
+            {documents.map((doc, i) => (
+              <Table.Row key={i}>
+
+                <Table.Cell>
+                  <DropDown
+                    dots={true}
+                    className='dropdown-with-icon'
+                  >
+                    <DropDownItems
+                      key='DropDownItems__Content'
+                      id={doc.id}
+                      projectId={projectId}
+                      downloadFiles={() => downloadFiles(doc.id)}
+                      formats={formats}
+                      toggleFormats={v => toggleFormats(formats, v)}
+                    />
+                  </DropDown>
+                </Table.Cell>
+
+                <Table.Cell className='table-checkbox'>
+                  <div>
+                    <input type='checkbox' id={doc.id} />
+                    <label
+                      htmlFor={doc.id}
+                      onClick={() => checkItem('checkedDocs', checkedDocs, doc.id)}
+                    />
+                  </div>
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.codification_kind}
+                </Table.Cell>
+
+                <Table.Cell className='title-cell'>
+                  {doc.title || 'Undefined'}
+                </Table.Cell>
+
+                <Table.Cell className='td-files'>
+                  <div>
+                    <span className='icon-common-file-text1 black' />
+                  </div>
+                </Table.Cell>
+
+                <Table.Cell className='td-files'>
+                  <div>
+                    <span className='icon-common-file-text_big'><span className='path1'></span><span className='path2'></span><span className='path3'></span><span className='path4'></span></span>
+                  </div>
+                </Table.Cell>
+
+                <Table.Cell className='td-files'>
+                  <div>
+                    <span className='icon-Work-Office-Companies---Office-Files---office-file-pdf' />
+                  </div>
+                </Table.Cell>
+
+                <Table.Cell className='td-date'>
+                  {moment(doc.created_at).format('MMMM Do YYYY')}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
+                </Table.Cell>
+
+                <Table.Cell>
+                  {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+        <div className='d-flex'>
+          <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>{documents.length} total documents</span>
+        </div>
       </div>
     </div>
   )

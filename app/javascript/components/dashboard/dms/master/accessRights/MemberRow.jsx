@@ -15,6 +15,7 @@ function MemberRow({
   toggleMemeber,
   fields,
   pristine,
+  reset,
   match: { params: { project_id } }
 }) {
   if (!member) return <React.Fragment />
@@ -53,7 +54,7 @@ function MemberRow({
           </div>
         </div>
         <div className='member-id table__row-cell'>
-          <span>{`${member.first_name} Member id`}</span>
+          <span>{`${member.id} Member id`}</span>
         </div>
         <div className='table__row-cell'>
           <RightsDropDown
@@ -87,7 +88,7 @@ function MemberRow({
       <div className='change-info'>
         <span>You made changes to the access rights of this member. Do you want to apply?</span>
         <div className='ml-5'>
-          <button type='button' className='btn btn-white'>Discard</button>
+          <button type='button' className='btn btn-white' onClick={reset}>Discard</button>
           <button type='submit' className='btn btn-purple ml-2'>Apply changes</button>
         </div>
       </div>}

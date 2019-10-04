@@ -66,9 +66,7 @@ export const signUpUser = userFields => dispatch => {
   }
   return axios.post('/api/v1/users', request)
     .then(response => {
-      customSuccessNotify('Thank you for your registration with i-Qoom. An email with a registration link has \
-                          been send to you. In order to complete the registration process please confirm your email \
-                          by pressing the button in the email')
+      customSuccessNotify('Thank you for your registration with i-Qoom. An email with a registration link has been send to you. In order to complete the registration process please confirm your email by pressing the button in the email')
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {

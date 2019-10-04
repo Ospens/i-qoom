@@ -8,6 +8,7 @@ import {
   PROJECT_EXIT,
   PROJECT_ADMIN_DELETED,
   PROJECT_ADMIN_UPDATED,
+  PROJECT_CODE_UPDATED,
   PROJECT_FETCH_SUCCESS
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
@@ -47,6 +48,18 @@ export const exitProject = payload => ({
   type: PROJECT_EXIT,
   payload
 })
+
+export const projectCodeUpdated = payload => ({
+  type: PROJECT_CODE_UPDATED,
+  payload
+})
+
+export const setPageTitle = title => dispatch => {
+  dispatch({
+    type: SET_PAGE_TITLE,
+    payload: title
+  })
+}
 
 export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) => {
   const { user: { token } } = getState()
@@ -205,9 +218,18 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
   )
 }
 
-export const setPageTitle = title => dispatch => {
-  dispatch({
-    type: SET_PAGE_TITLE,
-    payload: title
-  })
+export const updateProjectCode = (projectId, projectCode) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/update_project_code`, { project_code: projectCode }, headers)
+      .then(() => {
+        dispatch(projectCodeUpdated(projectCode))
+        successNotify('Project code updated!')
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
 }

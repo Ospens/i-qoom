@@ -41,7 +41,7 @@ class SideBar extends Component {
         >
           <Dropdown.Menu>
             <Input
-              icon={ <i className='svg-icon search-icon' /> }
+              icon={<span className='icon-search-alternate' /> }
               placeholder='Choose language'
             />
             <Dropdown.Menu scrolling>
@@ -71,7 +71,8 @@ class SideBar extends Component {
   )
 
   renderProjectContent = () => {
-    const { currentProject } = this.props
+    const { currentProject, projectCode } = this.props
+    
     return (
       <div className='mb-4'>
         <ul className='nav flex-column nav-items'>
@@ -84,7 +85,7 @@ class SideBar extends Component {
             label='Project'
           />
           <SideBarItem
-            path={`/dashboard/projects/${currentProject.id}/documents/`}
+            path={projectCode === null ? `/dashboard/projects/${currentProject.id}/documents/master/codifications/1` : `/dashboard/projects/${currentProject.id}/documents/`}
             root={`/dashboard/projects/${currentProject.id}/documents/`}
             label='Documents'
           />
@@ -127,8 +128,8 @@ class SideBar extends Component {
               <i className='svg-icon logo-header sidebar' />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
-            <button type='button' className='icon-button' onClick={toggle}>
-              <i className='svg-icon burger-menu-icon' />
+            <button type='button' onClick={toggle}>
+              <span className='icon-Burgermenu_1 white' />
             </button>
           </div>
           {(() => {
@@ -151,7 +152,7 @@ class SideBar extends Component {
               <span className='active-project-title'>{currentProject.name}</span>
             </div>
           </div>
-          <i className='svg-icon cogs-icon white ml-auto' />
+          <span className='icon-cog-double-2 white' />
         </div>}
       </aside>
     )
@@ -161,7 +162,8 @@ class SideBar extends Component {
 const mapStateToProps = ({ user, projects }) => ({
   authed: user.authStatus,
   isAdmin: user.isAdmin,
-  currentProject: projects.current
+  currentProject: projects.current,
+  projectCode: projects.current.project_code
 })
 
 export default connect(mapStateToProps)(withRouter(SideBar))

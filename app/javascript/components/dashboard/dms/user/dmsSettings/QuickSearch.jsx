@@ -57,7 +57,7 @@ function Row({ row }) {
         </label>
         {nested &&
         <label htmlFor={row.title + '1'} className='filter-grid-row-opener'>
-          <i className='svg-icon dark-arrow-icon black' />
+          <span className='icon-arrow-button-down black' />
         </label>}
       </div>
 

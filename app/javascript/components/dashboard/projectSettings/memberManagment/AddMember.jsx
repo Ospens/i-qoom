@@ -19,7 +19,7 @@ class AddMember extends Component {
     step: 1
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { startCreatingProjectMember, projectId } = this.props
     startCreatingProjectMember(projectId)
   }
@@ -59,7 +59,7 @@ class AddMember extends Component {
           className='btn btn-back back-member-details'
           onClick={() => this.changeStep(step - 1)}
         >
-          <i className="svg-icon arrow-left-icon" />
+          <span className='icon-arrow-button-left' />
           Back
         </button>}
         <button

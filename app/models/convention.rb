@@ -48,7 +48,7 @@ class Convention < ApplicationRecord
                           title: 'Originating company',
                           command: 'Select originating company',
                           column: 1,
-                          row: 3)
+                          row: 1)
     # I talked to Yasser. By default the first three positions are
     # code "XXX" name "Default". As soon as the user adds a codification to the
     # first positions "XXX Default" is overwritten. If the user wants to delete
@@ -62,7 +62,7 @@ class Convention < ApplicationRecord
                             title: 'Receiving company',
                             command: 'Select receiving company',
                             column: 1,
-                            row: 4)
+                            row: 2)
       field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     end
     field =
@@ -71,20 +71,20 @@ class Convention < ApplicationRecord
                           title: 'Discipline',
                           command: 'Select a discipline',
                           column: 1,
-                          row: number == 2 ? 5 : 4)
+                          row: number == 2 ? 3 : 2)
     field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
     document_fields.new(kind: :textarea_field,
                         codification_kind: :additional_information,
                         title: 'Additional information',
                         command: 'Information',
                         column: 1,
-                        row: number == 2 ? 6 : 5)
+                        row: number == 2 ? 4 : 3)
     document_fields.new(kind: :upload_field,
                         codification_kind: :document_native_file,
                         title: 'Add native file here',
                         command: 'Click here to browse your files',
                         column: 1,
-                        row: number == 2 ? 7 : 6)
+                        row: number == 2 ? 5 : 4)
     field =
       document_fields.new(kind: :select_field,
                           codification_kind: :document_type,
@@ -152,10 +152,8 @@ class Convention < ApplicationRecord
     # But deleting any field entirety is not possible.
     # This means that the structure of the convention is not changeable.
     last_convention_fields =
-      last_convention.document_fields.where.not(kind: :hidden_field)
-    if last_convention_fields.length != document_fields.length
-      errors.add(:document_fields, :wrong_number_of_fields)
-    end
+      last_convention.document_fields.where.not(kind: :hidden_field,
+                                                codification_kind: nil)
     last_convention_fields.each do |field|
       attrs = field.attributes.slice('kind',
                                      'codification_kind',
@@ -170,7 +168,7 @@ class Convention < ApplicationRecord
           (attrs.to_a - i.attributes.to_a).empty?
         end.present?
       if !contains_field
-        errors.add(:document_fields, :wrong_field_added_to_convention)
+        errors.add(:document_fields, "#{field.codification_kind}_field_changed")
       end
     end
   end

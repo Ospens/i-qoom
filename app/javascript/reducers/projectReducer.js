@@ -6,6 +6,7 @@ import {
   PROJECTS_FETCH_SUCCESS,
   PROJECT_ADMIN_DELETED,
   PROJECT_ADMIN_UPDATED,
+  PROJECT_CODE_UPDATED,
   PROJECT_EXIT,
   PROJECT_FETCH_SUCCESS
 } from '../actions/types'
@@ -13,7 +14,8 @@ import {
 const initialState = {
   allProjects: [],
   current: {
-    admins: []
+    admins: [],
+    project_code: undefined
   },
   title: <h2>I-Qoom</h2>
 }
@@ -62,6 +64,14 @@ const projectReducer = (state = initialState, action) => {
     return {
       ...state,
       current: action.payload
+    }
+  case PROJECT_CODE_UPDATED:
+    return {
+      ...state,
+      current: {
+        ...state.current,
+        project_code: action.payload
+      }
     }
   case PROJECT_EXIT:
     return {

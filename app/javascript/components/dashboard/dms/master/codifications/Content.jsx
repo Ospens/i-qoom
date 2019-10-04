@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import SecondCodeStructure from './SecondCodeStructure'
 import CodeStructure from './CodeStructure'
 import CodificationTable from './CodificationTable'
+import SelectConvention from './SelectConvention'
+import WellDone from './WellDone'
+import { startEditConvention } from '../../../../../actions/conventionActions'
 
 export const fields = [
     {
@@ -32,7 +37,7 @@ export const fields = [
     {
       title: 'Revision',
       className: 'revision',
-      symbols: 3
+      symbols: 2
     },
     {
       title: 'Free text',
@@ -59,26 +64,33 @@ export const placeholders = el => (
 
 export const freeTextPlaceholders = el => (
   <React.Fragment>
-    <span />
     <span>...</span>
     <span />
   </React.Fragment>
 )
 
-function Content({ current }) {
+function Content({ match: { params: { project_id } } }) {
+  const dispatch = useDispatch()
+  const project_code = useSelector(state => state.projects.current.project_code)
+  useEffect(() => { dispatch(startEditConvention(project_id)) }, [])
+
   return (
-    <div className='dms-content bordered'>
+    <div className='dms-content'>
+      {/* <ModalInfo /> */}
+      <WellDone projectCode={project_code}/>
+      <SelectConvention projectCode={project_code}/>
       <div className='dms-content__header'>
-        <h4>Convention 1 - active</h4>
-        <label>Administration codes for document codification</label>
+        <h4>Convention 1 - <span className='green'>active</span></h4>
       </div>
       {/* TODO: make switch for number of convention */}
       <div className='content-body'>
-        {current ? <CodeStructure /> : <SecondCodeStructure />}
+        <label>Administration codes for document codification</label>
+        {/*current ? <CodeStructure /> : <SecondCodeStructure />*/}
+        <CodeStructure />
         <CodificationTable />
       </div>
     </div>
   )
 }
 
-export default Content
+export default withRouter(Content)

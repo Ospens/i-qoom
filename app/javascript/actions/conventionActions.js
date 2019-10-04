@@ -77,6 +77,31 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
   )
 }
 
+export const startUpdateCodification = (projectId, values) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  const request = {
+    convention: {
+      document_fields: values
+    }
+  }
+
+  return (
+    axios.put(`/api/v1/projects/${projectId}/conventions/`, request, headers)
+      .then(response => {
+        const { data } = response
+        const sortedData = fieldByColumn(data)
+        successNotify('The values was updated!')
+        dispatch(conventionUpdated(sortedData))
+      })
+      .catch(err => {
+        errorNotify('Something went wrong')
+        throw new SubmissionError(err)
+      })
+  )
+}
+
 export const startEditConvention = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
