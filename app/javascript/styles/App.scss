@@ -6,6 +6,14 @@ html {
   height: 100%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+
+
+  --color-blue: #0096FA;      // CTA, Links, Buttons, Hover
+  --color-black: #293233;     // Page headline
+  --color-text: #475859;      // Headlines, Text, Icons
+  --color-labels: #8FB0B3;    // Info Text, Labels
+  --color-disabled: #B8D6D9;  // Non-Clickable Forms
+  --color-grey: #B2CED1;      // Input Forms Text
 }
 
 *,
@@ -29,11 +37,11 @@ body {
 }
 
 .black {
-  color: #293233 !important;
+  color: var(--color-black) !important;
 }
 
 .grey {
-  color: #475859 !important;
+  color: var(--color-text) !important;
 }
 
 .green {
@@ -45,7 +53,7 @@ ul {
 }
 
 p {
-  color: #293233;
+  color: var(--color-black);
   line-height: 1.5;
 }
 
@@ -85,7 +93,7 @@ a {
 }
 
 .form-control {
-  color: #475759;
+  color: var(--color-text);
 }
 
 .form-control:not(.checkbox-input) {
@@ -98,40 +106,40 @@ a {
   font-size: 17px;
 
   a.blue-link {
-    color: #0096FA;
+    color: var(--color-blue);
 
     &:hover {
-      color: #0096FA;
+      color: var(--color-blue);
       text-decoration: none;
     }
   }
   
   &::-webkit-input-placeholder {
-    color: #B2CED1;
+    color: var(--color-grey);
     font-size: 17px;
     font-weight: 400 !important;
     box-shadow: none;
   }
   &::-moz-placeholder  {
-    color: #B2CED1;
+    color: var(--color-grey);
     font-size: 17px;
     font-weight: 400 !important;
     box-shadow: none;
   }
   &:-moz-placeholder {
-    color: #B2CED1;
+    color: var(--color-grey);
     font-size: 17px;
     font-weight: 400 !important;
     box-shadow: none;
   }
   &:-ms-input-placeholder {
-    color: #B2CED1;
+    color: var(--color-grey);
     font-size: 17px;
     font-weight: 400 !important;
     box-shadow: none;
   }
   &::placeholder {
-    color: #B2CED1;
+    color: var(--color-grey);
     font-size: 17px;
     font-weight: 400 !important;
     box-shadow: none;
@@ -146,7 +154,7 @@ a {
   }
 
   &:focus {
-    box-shadow: 0px 0px 15px #0096FA80;
+    box-shadow: 0px 0px 15px var(--color-blue)80;
     border-color: transparent;
   }
 
@@ -281,9 +289,9 @@ img {
     &.ck-content {
       background: #f0f7f7 !important;
       border-radius: 10px 10px 0 0 !important;
-      border-top-color: #0096FA !important;
-      border-left-color: #0096FA !important;
-      border-right-color: #0096FA !important;
+      border-top-color: var(--color-blue) !important;
+      border-left-color: var(--color-blue) !important;
+      border-right-color: var(--color-blue) !important;
       border-bottom: none !important;
     }
 
@@ -297,9 +305,9 @@ img {
 
     .ck-sticky-panel__content {
       border-radius: 0 0 10px 10px !important;
-      border-bottom: 1px solid #0096FA !important;
-      border-left: 1px solid #0096FA !important;
-      border-right: 1px solid #0096FA !important;
+      border-bottom: 1px solid var(--color-blue) !important;
+      border-left: 1px solid var(--color-blue) !important;
+      border-right: 1px solid var(--color-blue) !important;
       background-color: #f0f7f7 !important;
       border-top: none !important;
       justify-content: center;
@@ -424,11 +432,11 @@ footer:after,
   }
 
   &:hover {
-    color: #293233;
+    color: var(--color-black);
 
     .icon-arrow-button-left {
       &:before {
-        color: #293233;
+        color: var(--color-black);
       }
     }
   }
@@ -811,7 +819,7 @@ header {
   }
 
   p {
-    color: #475859;
+    color: var(--color-text);
     line-height: 2;
   }
 }
@@ -837,9 +845,9 @@ header {
 
   .managment-buttons {
     button {
-      border-left: 3px solid #8FB0B3;
+      border-left: 3px solid var(--color-labels);
       border-radius: unset;
-      color: #8FB0B3;
+      color: var(--color-labels);
       font-size: 20px;
       font-weight: 400;
 
@@ -902,7 +910,7 @@ header {
   }
 
   .card-text {
-    color: #475859;
+    color: var(--color-text);
     font-size: 14px;
     line-height: 1.6;
     min-height: 70px;
@@ -916,10 +924,10 @@ header {
     user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
-    color: #0096FA;
+    color: var(--color-blue);
     
     path {
-      fill: #0096FA;
+      fill: var(--color-blue);
     }
   }
 
@@ -937,7 +945,7 @@ header {
   padding-top: 170px;
   padding-bottom: 170px;
   border-bottom: 1px solid #eaebeb;
-  color: #475859;
+  color: var(--color-text);
 
   .pricing-card__title {
     margin-bottom: 120px;
@@ -946,7 +954,7 @@ header {
   h3 {
     font-weight: 400;
     font-size: 30px;
-    color: #475759;
+    color: var(--color-text);
   }
 
   .btn {
@@ -978,7 +986,7 @@ header {
 
       .col-6 {
         font-weight: 500;
-        color: #475759;
+        color: var(--color-text);
       }
     }
 
@@ -987,7 +995,7 @@ header {
 
       .col-6 {
         font-weight: 400;
-        color: #475759;
+        color: var(--color-text);
       }
     }
 
@@ -1129,7 +1137,7 @@ header {
   }
 
   .user-name-block__country {
-    color:#8FB0B3;
+    color:var(--color-labels);
   }
 }
 
@@ -1218,7 +1226,7 @@ header {
       margin-left: auto;
       margin-right: auto;
       position: relative;
-      color: #475859;
+      color: var(--color-text);
     }
 
     .pictures-container {
@@ -1313,8 +1321,8 @@ header {
 
 .btn-primary {
   color: #fff;
-  background-color: #0096FA;
-  border-color: #0096FA;
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
 
   .icon-arrow-button-right {
     font-size: 11px;
@@ -1354,7 +1362,7 @@ header {
   }
 
   label {
-    color: #8FB0B3;
+    color: var(--color-labels);
     
     &::placeholder { 
       color: #E9F3F5;
@@ -1440,7 +1448,7 @@ input[type=checkbox] {
 }
 
 #example-card {
-  background-color: #475759;
+  background-color: var(--color-text);
   padding-top: 5em;
   padding-bottom: 5em;
   border-bottom: 1px solid #eaebeb;
@@ -1519,13 +1527,13 @@ input[type=checkbox] {
 
   .nav-link {
     path {
-      fill: #8FB0B3;
+      fill: var(--color-labels);
     }
   }
 
   .navbar-burger-block {
     path {
-      fill: #293233;
+      fill: var(--color-black);
     }
   }
 
@@ -1533,7 +1541,7 @@ input[type=checkbox] {
     font-size: 28px;
     font-weight: 400;
     margin-bottom: 0;
-    color: #293233;
+    color: var(--color-black);
   }
 }
 
@@ -1589,7 +1597,7 @@ input[type=checkbox] {
     position: absolute;
     bottom: -13px;
     left: calc(50% - 7px);
-    background: #293233;
+    background: var(--color-black);
     padding: 3px;
     width: 25px;
     height: 25px;
@@ -1611,8 +1619,8 @@ input[type=checkbox] {
   .bio-row {
     padding-top: 30px;
     padding-bottom: 30px;
-    border-top: 1px solid #8FB0B3;
-    border-bottom: 1px solid #8FB0B3;
+    border-top: 1px solid var(--color-labels);
+    border-bottom: 1px solid var(--color-labels);
 
     h5 {
       margin-bottom: 20px;
@@ -1642,7 +1650,7 @@ input[type=checkbox] {
     flex-direction: column;
     justify-content: center;
     padding-bottom: 20px;
-    border-bottom: 1px solid #8FB0B3;
+    border-bottom: 1px solid var(--color-labels);
 
     .user-name {
       display: flex;
@@ -1661,7 +1669,7 @@ input[type=checkbox] {
 
       .user-position-place {
         margin-top: 5px;
-        color: #8FB0B3;
+        color: var(--color-labels);
       }
     }
   }
@@ -1677,7 +1685,7 @@ input[type=checkbox] {
     flex-direction: column;
 
     .block-name {
-      color: #8FB0B3;
+      color: var(--color-labels);
       margin-bottom: 10px;
     }
 
@@ -1733,7 +1741,7 @@ input[type=checkbox] {
     }
 
     strong {
-      color: #0096FA;
+      color: var(--color-blue);
     }
 
     .image-preview {
@@ -1767,7 +1775,7 @@ input[type=checkbox] {
     &:hover,
     &:focus {
       label {
-        color: #0096FA !important;
+        color: var(--color-blue) !important;
       }
     }
   }
@@ -1828,12 +1836,12 @@ input[type=checkbox] {
       display: table-cell;
       text-align: center;
       vertical-align: middle;
-      color: #8FB0B3;
+      color: var(--color-labels);
       font-size: 16px;
     }
 
     p {
-      color: #475759;
+      color: var(--color-text);
     }
 
     a:hover {
@@ -1854,7 +1862,7 @@ input[type=checkbox] {
         }
 
         &:before {
-          color: #0096FA;
+          color: var(--color-blue);
         }
       }
 
@@ -1866,7 +1874,7 @@ input[type=checkbox] {
         display: flex;
         justify-content: center;
         align-items: center;
-        color: #0096FA;
+        color: var(--color-blue);
       }
     }
   }

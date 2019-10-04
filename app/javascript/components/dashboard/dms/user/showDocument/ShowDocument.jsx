@@ -45,7 +45,7 @@ export const SideBar = ({ documentId, projectId }) => {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <span className='icon-Revise_1 black mx-2' />
+            <span className='icon-Revise_1 dark-gray mr-2' />
             <span>Revisions</span>
           </div>
           <ul className='dms-sidebar-menu__ul-list'>
@@ -64,7 +64,7 @@ export const SideBar = ({ documentId, projectId }) => {
         <h4>Document history</h4>
         <div className='scroll-block'>
           <div className='scroll-block-title'>
-            <span className='icon-task-list-settings black mx-2' />
+            <span className='icon-task-list-settings dark-gray mr-2' />
             <span>Versions</span>
           </div>
           <ul className='dms-sidebar-menu__ul-list'>
