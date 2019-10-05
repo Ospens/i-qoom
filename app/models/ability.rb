@@ -87,6 +87,8 @@ class Ability
       can [:edit, :update], DmsSetting
       # DocumentFolder
       can :manage, DocumentFolder, user_id: user.id
+
+      can :create, Message
     end
   end
 end

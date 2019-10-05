@@ -76,6 +76,7 @@ Rails.application.routes.draw do
           get :user_index, on: :collection
         end
       end
+      resources :messages, only: :create
     end
   end
 
