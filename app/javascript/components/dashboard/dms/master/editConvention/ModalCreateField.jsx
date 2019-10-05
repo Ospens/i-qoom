@@ -7,7 +7,8 @@ import {
   Field,
   FieldArray,
   destroy,
-  arraySplice
+  arraySplice,
+  arrayPush
 } from 'redux-form'
 import DraggableDropDown from './DraggableDropDown'
 import InputField from '../../../../../elements/InputField'
@@ -65,14 +66,6 @@ const validate = values => {
   return errors
 }
 
-const BlockedField = ({ input, className, label }) => {
-  return (
-    <div className={className}>
-      <label>{label}</label>
-      <div>{input.value}</div>
-    </div>
-  )
-}
 class ModalCreateField extends Component {
 
   state = initState
@@ -85,7 +78,7 @@ class ModalCreateField extends Component {
   }
 
   handleSubmit = field => {
-    const { column = '2', row, spliceToConvention, created_at } = this.props
+    const { column = '2', row, spliceToConvention, pushToConvention, created_at } = this.props
 
     let newSections = []
     if (field.kind === 'select_field') {
@@ -100,9 +93,12 @@ class ModalCreateField extends Component {
     field['document_field_values'] = newSections
     field['column'] = column
     field['row'] = row || 0
+    field['created_at'] = new Date()
     
     const removeNum = created_at === undefined ? 0 : 1
-    spliceToConvention(`column_${column}`, row || 0, removeNum, field)
+    created_at === undefined
+      ? pushToConvention(`column_${column}`, field)
+      : spliceToConvention(`column_${column}`, row || 0, removeNum, field)
     this.handleClose()
   }
 
@@ -126,7 +122,7 @@ class ModalCreateField extends Component {
           <div className='modal-container__content-block'>
             <div className='form-group'>
               <Field
-                component={codification_kind ? BlockedField : InputField}
+                component={InputField}
                 name='title'
                 id='title'
                 placeholder='Title (e.g. Discipline)'
@@ -136,10 +132,9 @@ class ModalCreateField extends Component {
                 validate={[required]}
               />
             </div>
-            {!codification_kind &&
             <div className='form-group'>
               <Field
-                component={codification_kind ? BlockedField : InputField}
+                component={InputField}
                 name='command'
                 id='command'
                 placeholder='Command (e.g. Select discipline)'
@@ -148,8 +143,8 @@ class ModalCreateField extends Component {
                 disabled={codification_kind}
                 validate={[required]}
               />
-            </div>}
-            {!codification_kind &&
+            </div>
+            
             <div className='form-group'>
               <Field
                 name='kind'
@@ -170,8 +165,8 @@ class ModalCreateField extends Component {
                   labelClass='form-check-label mr-2'
                   text='Required field'
                   disabled={codification_kind}
-                />
-                {field_type === 'select_field' && !codification_kind &&
+                />  
+                {field_type === 'select_field' &&
                   <CheckboxField
                     name='enable_multi_selections'
                     name='enable_multi_selections'
@@ -181,7 +176,7 @@ class ModalCreateField extends Component {
                   />
                 }
               </div>
-            </div>}
+            </div>
             {field_type === 'select_field' &&
             <div>
               <FieldArray
@@ -252,6 +247,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   destroyForm: () => dispatch(destroy('convention_input_form')),
   spliceToConvention: (field, index, removeNum, val) => dispatch(arraySplice('convention_form', field, index, removeNum, val)),
+  pushToConvention: (field, val) => dispatch(arrayPush('convention_form', field, val)),
 })
 
 export default connect(

@@ -10,7 +10,7 @@ import { SelectComponent } from '../../../../../elements/SelectField'
 class DocFieldsElement extends Component {
 
   actionConventions = (index, kind, column) => {
-    const { input: { value } } = this.props
+    const { input: { value }, removeField } = this.props
 
     const values = [
       {
@@ -143,7 +143,6 @@ class DocFieldsElement extends Component {
     const {
       index,
       column,
-      removeField,
       disabled,
       input: { value },
       meta: { touched, error }
@@ -183,7 +182,7 @@ class DocFieldsElement extends Component {
                 <div className='invalid-feedback convention-feedback'>
                   {error}
                 </div>}
-                {!['originating_company', 'discipline', 'document_type'].includes(value.codification_kind) && this.editButton(index)}
+                {!value.codification_kind && this.editButton(index)}
               </div>
             </div>
           </div>

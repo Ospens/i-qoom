@@ -5,7 +5,7 @@ import PlanningTable from './PlanningTable'
 function Content({ checkedDocs, toggleDocs, documents }) {
   return (
     <div className='dms-content'>
-      <Tabs>
+      <Tabs className='top-block'>
         <div label={<div><span className='yellow-dot mr-3' />To be uploaded</div>} key='notUploaded'>
           <PlanningTable checkedDocs={checkedDocs} toggleDocs={toggleDocs} documents={documents} type='notUploaded' />
         </div>

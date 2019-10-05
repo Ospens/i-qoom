@@ -76,7 +76,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     )
   } else if (field.kind === 'select_field') {
     const fieldValues = field.document_field_values
-    
+
     return (
       <Field
         {...commonProps}
@@ -103,6 +103,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     return (
       <Field
         {...commonProps}
+        type={['document_number', 'revision_number'].includes(field.codification_kind) ? 'number' : 'text' }
         component={InputField}
       />
     )
@@ -114,7 +115,7 @@ export const formvalue = (fields = [], codKind) => {
 
   const field = fields.filter(values => values.codification_kind === codKind)[0]
   if (!field) return ''
-  
+
   if (codKind === 'document_native_file') return field.file
 
   return field.value
@@ -166,7 +167,7 @@ function DocumentsAndFiles() {
     initDocIdForm(values)
     toggleModal(true)
   }, [docFile])
-  
+
   return (
     <React.Fragment>
       <div className='dms-content__header'>
@@ -231,6 +232,15 @@ function DocumentsAndFiles() {
           </div>
 
           <div className='col-6'>
+            <Field
+              component={InputField}
+              name='title'
+              id='title'
+              label='Define a document title'
+              placeholder='Title'
+              className='form-group'
+              validate={[required]}
+            />
             {groupedFields[columns[1]].map((field, index) => (
               <div className='form-group' key={index}>
                 <InputByType

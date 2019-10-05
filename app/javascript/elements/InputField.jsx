@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 
 const InputField = ({
   input,
@@ -17,7 +18,7 @@ const InputField = ({
         {...input}
         {...props}
         type={type ? type : 'text'}
-        className={`form-control ${errorInfo || (touched && error) ? ' is-invalid' : ''}`}
+        className={classnames('form-control', { 'is-invalid': errorInfo || (touched && error) })}
         required
         pattern=".*\S.*"
       />

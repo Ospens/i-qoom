@@ -7,10 +7,53 @@ import {
 } from 'redux-form'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import InputField from '../../../../../elements/InputField'
+import { Popup } from 'semantic-ui-react'
 import { startUpdateCodification } from '../../../../../actions/conventionActions'
+import { required } from '../../../../../elements/validations'
 
 const validate = value => (!value || !value.length ? 'Required' : undefined)
+
+const InputField = ({
+  input,
+  errorField = {},
+  className,
+  label,
+  type,
+  meta: { touched, error },
+  ...props
+}) => {
+  const inputElement = (
+    <input
+      {...input}
+      {...props}
+      type={type ? type : 'text'}
+      className={classnames('form-control', { 'is-invalid': touched && error })}
+      required
+      pattern=".*\S.*"
+    />
+  )
+  return (
+    <div className={className}>
+      {label && <label htmlFor={input.id}>{label}</label>}
+      {props.id === 'value' 
+        ? inputElement
+        : <Popup
+            trigger={inputElement}
+            className='error-tooltip-container'
+            position='right center'
+            open={!!(touched && error)}
+          >
+            <div className='tooltip-block dark'>
+              <div className='tooltip-text-block'>
+                <span>
+                  Add at least one
+              </span>
+              </div>
+            </div>
+          </Popup>}
+    </div>
+  )
+}
 
 const BlockByType = ({ fields, title }) => {
   return (
@@ -25,6 +68,8 @@ const BlockByType = ({ fields, title }) => {
               id='value'
               placeholder='XXX'
               label={i > 0 ? '' : 'Code'}
+              validate={[required]}
+              maxLength='3'
             />
             <Field
               className='codification-input'
@@ -33,6 +78,7 @@ const BlockByType = ({ fields, title }) => {
               id='title'
               placeholder={`${title} title`}
               label={i > 0 ? '' : `Enter ${title}`}
+              validate={[required]}
             />
             {fields.length > 1 &&
             <button type='button' onClick={() => fields.remove(i)} className={classnames({ 'first-line': i < 1 })}>

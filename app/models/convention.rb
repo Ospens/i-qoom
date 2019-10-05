@@ -84,7 +84,7 @@ class Convention < ApplicationRecord
                         title: 'Add native file here',
                         command: 'Click here to browse your files',
                         column: 1,
-                        row: number == 2 ? 7 : 6)
+                        row: number == 2 ? 5 : 4)
     field =
       document_fields.new(kind: :select_field,
                           codification_kind: :document_type,

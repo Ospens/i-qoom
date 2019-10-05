@@ -25,12 +25,12 @@ body {
 
 .sidebar_section-title {
   color: #7674A5;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .form-group {
   &:hover, &:active {
-    z-index: 5;                                                                                                                                                                                                                                                                                                                                               
+    z-index: 5;
   }
 }
 
@@ -153,7 +153,7 @@ button:disabled {
 
       li {
         font-size: 15px;
-        margin-left: 20px; 
+        margin-left: 20px;
       }
     }
   }
@@ -907,44 +907,42 @@ span.divider {
 
   &.show {
     & > button {
-      border-bottom-left-radius: 0 !important; 
+      border-bottom-left-radius: 0 !important;
       border-bottom-right-radius: 0 !important;
     }
 
     .dropdown-menu {
-      border-top-left-radius: 0 !important; 
+      border-top-left-radius: 0 !important;
       border-top-right-radius: 0 !important;
     }
   }
 }
 
 .dropdown-menu {
-  min-width: fit-content;
   width: 100%;
-  margin-top: -1px; 
+  margin-top: -1px;
   z-index: 9;
   padding: 0;
-  padding-left: 7px !important;
-  padding-right: 7px !important;
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
+  padding: 10px !important;
   border-radius: 5px;
   border-color: #E9F3F5;
   margin-bottom: 30px;
 
   .dropdown-item {
-    min-width: fit-content;
     color: #8FB0B3;
     display: flex;
     align-items: center;
-    padding: 9px;
+    padding: 7px;
     cursor: pointer;
     border-radius: 5px;
+
+    &:not(:last-of-type) {
+      margin-bottom: 9px;
+    }
 
     .icon-container {
       height: 22px;
       width: 22px;
-      // margin-right: 8px;
     }
 
     span.item-text {
@@ -952,6 +950,8 @@ span.divider {
       display: flex;
       align-items: center;
       font-size: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     a, span {
@@ -1007,6 +1007,7 @@ span.divider {
     box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.05);
     border-radius: 5px;
     margin-top: 5px;
+    min-width: 215px;
   }
 
   .dots-container {
@@ -1486,7 +1487,7 @@ i.arrow {
     padding: 10px;
 
     span {
-      margin-left: 10px; 
+      margin-left: 10px;
     }
   }
 
@@ -1591,19 +1592,23 @@ i.arrow {
 }
 
 .acceess-rights__drop-down {
-  display: flex;
-  flex-direction: column;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  .dropdown-menu {
+    min-width: 350px;
+  }
 
-  .acceess-rights__drop-down-row {
-    padding-top: 10px;
-    padding-bottom: 10px;
+  .acceess-rights__drop-down-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding: 7px;
 
-    label {
-      white-space: initial;
+    .acceess-rights__drop-down-row {
+      padding-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr ;
+
+      label {
+        white-space: initial;
+      }
     }
   }
 }
@@ -1679,9 +1684,21 @@ i.arrow {
 
 .new-modal {
   display: grid;
-  grid-template-rows: 100px minmax(auto, 1fr) 90px;
+  grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.select-codification {
+    grid-template-columns: 775px;
+
+    .new-modal__footer {
+      justify-content: center;
+
+      button {
+        width: 41%;
+      }
+    }
+  }
+
   &.modal-create-field {
     .form-group {
       margin-bottom: 45px;
@@ -1699,7 +1716,7 @@ i.arrow {
     padding-top: 50px;
     border-bottom: 1px solid #14191A14;
 
-    h6 {
+    h6, h4 {
       font-size: 20px;
       font-weight: 400;
       margin: 0;
@@ -1770,7 +1787,7 @@ i.arrow {
   }
 
   .table-row {
-    padding-top: 10px; 
+    padding-top: 10px;
     padding-bottom: 10px;
 
     .table__row-cell {

@@ -21,7 +21,7 @@ class DocIdModal extends Component {
     popup: false,
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { info } = this.props
     if (!info) return
 
