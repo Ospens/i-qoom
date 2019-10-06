@@ -16,7 +16,7 @@ export const paramsToFormData = (data, params, preceding = '') => {
   for (const [k, v] of Object.entries(params)) {
     if (v instanceof Object && v.constructor === Array) {
       if (k === 'file') {
-        newData.append(`${preceding}${k}`, v[0])
+        newData.append(`${preceding}${k}`, (v[0] ? v[0] : new File([], '')))
       } else if (k === 'emails') {
         v.forEach(el => newData.append(`${preceding}${k}[]`, el))
       } else {
@@ -102,6 +102,7 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
   }
 
   formData = paramsToFormData(formData, formValues, '')
+
   return (
     axios({
       method: 'post',

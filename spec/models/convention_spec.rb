@@ -88,10 +88,10 @@ RSpec.describe Convention, type: :model do
       it do
         field = find_field(:document_native_file)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(6)
+        expect(field.row).to eql(4)
         field = convention2.document_fields.find_by(codification_kind: :document_native_file)
         expect(field.column).to eql(1)
-        expect(field.row).to eql(7)
+        expect(field.row).to eql(5)
       end
     end
   end

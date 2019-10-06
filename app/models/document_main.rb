@@ -32,7 +32,9 @@ class DocumentMain < ApplicationRecord
       all.each do |main|
         documents = main.revisions.latest_version_of_each_revision
         documents.each do |document|
-          final_documents << document if document.can_view?(user)
+          if document.present? && document.can_view?(user)
+            final_documents << document
+          end
         end
       end
       final_documents
@@ -44,7 +46,7 @@ class DocumentMain < ApplicationRecord
   def self.last_versions(user)
     all.map do |main|
       document = main.revisions.last_revision.last_version
-      document if document.can_view?(user)
+      document if document.present? && document.can_view?(user)
     end.compact
   end
 
