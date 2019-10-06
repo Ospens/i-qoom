@@ -11,7 +11,7 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
   authorize_resource :document_review_subject, except: [:index]
 
   def new
-    render json: DocumentReviewSubject.new
+    render json: @document.revision.document_review_subjects.new
   end
 
   def create
@@ -62,7 +62,8 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
                   :document_reference,
                   :review_issuer_id,
                   :comment,
-                  reviewer_ids: [])
+                  reviewer_ids: [],
+                  tag_ids: [])
           .merge(document_revision_id: @document_revision.id)
   end
 

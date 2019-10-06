@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_03_022153) do
+ActiveRecord::Schema.define(version: 2019_10_05_054626) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,13 @@ ActiveRecord::Schema.define(version: 2019_10_03_022153) do
     t.bigint "reviewer_id", null: false
     t.index ["document_review_subject_id"], name: "index_document_review_subjects_reviewers_on_subject_id"
     t.index ["reviewer_id"], name: "index_document_review_subjects_reviewers_on_reviewer_id"
+  end
+
+  create_table "document_review_subjects_tags", id: false, force: :cascade do |t|
+    t.bigint "document_review_subject_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["document_review_subject_id"], name: "index_on_document_review_subject_id"
+    t.index ["tag_id"], name: "index_document_review_subjects_tags_on_tag_id"
   end
 
   create_table "document_review_tags", force: :cascade do |t|

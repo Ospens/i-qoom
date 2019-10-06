@@ -14,11 +14,20 @@ class DocumentReviewSubject < ApplicationRecord
   belongs_to :review_issuer,
              class_name: 'User'
 
+  has_one :project,
+          through: :document_revision
+
   has_and_belongs_to_many :reviewers,
                           class_name: 'User',
                           join_table: 'document_review_subjects_reviewers',
                           association_foreign_key: 'reviewer_id',
                           validate: false # for tests
+
+  has_many :document_review_subjects_tags
+
+  has_many :tags,
+           through: :document_review_subjects_tags,
+           source: :document_review_tag
 
   has_many :comments,
            class_name: 'DocumentReviewComment'

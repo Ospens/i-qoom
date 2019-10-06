@@ -17,6 +17,7 @@ describe DocumentReviewSubject, type: :request do
     end
 
     it 'user' do
+      document.revision.project.document_review_tags.create!(name: '111')
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       get "/api/v1/documents/#{document.id}/document_review_subjects/new", headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -29,6 +30,7 @@ describe DocumentReviewSubject, type: :request do
       expect(json).to have_key('reviewer_ids')
       expect(json).to_not have_key('created_at')
       expect(json).to_not have_key('updated_at')
+      expect(json['all_tags'].length).to eql(1)
     end
   end
 
@@ -44,13 +46,15 @@ describe DocumentReviewSubject, type: :request do
       review_issuer = FactoryBot.create(:user)
       reviewer = FactoryBot.create(:user)
       comment = Faker::Lorem.sentence
+      tag = document.revision.project.document_review_tags.create!(name: '111')
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       post "/api/v1/documents/#{document.id}/document_review_subjects",\
         headers: credentials(user),\
         params: { document_review_subject: { title: title,
                                              review_issuer_id: review_issuer.id,
                                              reviewer_ids: [reviewer.id],
-                                             comment: comment } }
+                                             comment: comment,
+                                             tag_ids: [tag.id] } }
       expect(response).to have_http_status(:success)
       expect(json['title']).to eql(title)
       subject = DocumentReviewSubject.last
@@ -58,6 +62,7 @@ describe DocumentReviewSubject, type: :request do
       expect(subject.reviewers).to include(reviewer)
       expect(subject).to be_in_progress
       expect(subject.comments.first.text).to eql(comment)
+      expect(subject.tags.length).to eql(1)
     end
   end
 

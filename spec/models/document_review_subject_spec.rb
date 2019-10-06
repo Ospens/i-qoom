@@ -39,4 +39,14 @@ RSpec.describe DocumentReviewSubject, type: :model do
     subject.update!(review_issuer: user2)
     expect(subject.can_complete_review?(user2)).to eql(true)
   end
+
+  it 'should validate that tag belongs to project' do
+    subject = FactoryBot.create(:document_review_subject)
+    project = FactoryBot.create(:project)
+    tag1 = project.document_review_tags.create!(name: '111')
+    tag2 = subject.project.document_review_tags.create!(name: '111')
+    expect { subject.tag_ids = [tag1.id] }.to\
+      raise_error(ActiveRecord::RecordInvalid, /Validation failed/)
+    expect { subject.tag_ids = [tag2.id] }.to_not raise_error
+  end
 end
