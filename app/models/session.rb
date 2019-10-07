@@ -12,7 +12,7 @@ class Session
       send("#{name}=", value)
     end
     self.user =
-      User.find_by(email: login.downcase) || User.find_by(username: login)
+      User.find_by(email: login.try(:downcase)) || User.find_by(username: login)
     if signed_up_successfully?
       self.auth_token = ::JsonWebToken.encode(user_id: user.id)
     end
