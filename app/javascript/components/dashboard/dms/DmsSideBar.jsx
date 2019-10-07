@@ -85,17 +85,17 @@ class DmsSideBar extends Component {
       {
         title: 'Overview',
         icon: 'icon-task-checklist-check',
-        path: `/dashboard/projects/${project_id}/documents/`
+        path: project_code ? `/dashboard/projects/${project_id}/documents/` : '#'
       },
       {
         title: 'DMS Settings',
         icon: 'icon-task-list-settings',
-        path: `/dashboard/projects/${project_id}/documents/settings/`
+        path: project_code ? `/dashboard/projects/${project_id}/documents/settings/` : '#'
       },
       {
         title: 'Document planning',
         icon: 'icon-calendar-3',
-        path: `/dashboard/projects/${project_id}/documents/planning/`
+        path: project_code ? `/dashboard/projects/${project_id}/documents/planning/` : '#'
       },
       {
         title: 'Master settings',
@@ -194,7 +194,7 @@ class DmsSideBar extends Component {
                   {masterMenu.map(({ path, title, icon, root, nested }, i) => (
                     <React.Fragment key={i}>
                       <DmsSideBarItem
-                        path={path}
+                        path={project_code ? path : `#`}
                         label={title}
                         icon={icon}
                         root={root}
@@ -218,6 +218,11 @@ class DmsSideBar extends Component {
         <div className='dms-sidebar-menu'>
           {this.renderMainItems()}
           {children}
+
+          <a to='/dashboard' className='btn-back-to-prev-page'>
+            <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+            BACK
+          </a>
         </div>
       </React.Fragment>
     )

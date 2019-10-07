@@ -60,6 +60,10 @@ const DocumentSideBar = ({ step, toggleStep }) => {
           ))}
         </ul>
       </div>
+      <a to='/dashboard' className='btn-back-to-prev-page'>
+        <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+        BACK
+      </a>
     </div>
   )
 }

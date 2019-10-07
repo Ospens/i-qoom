@@ -7,10 +7,11 @@ import {
   Field
 } from 'redux-form'
 import InputField from '../../../../../elements/InputField'
+import { InputField as InputFieldPopUp} from './FieldForm'
 import { updateProjectCode } from '../../../../../actions/projectActions'
 import { fields, projectInputs, placeholders, freeTextPlaceholders } from './Content'
 
-function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, match: { params: { project_id } }  }) {
+function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, match: { params: { project_id } } }) {
   const dispatch = useDispatch()
   const project_code = useSelector(state => state.projects.current.project_code)
   
@@ -63,10 +64,14 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             maxLength='1'
                           />
                           <Field
-                            component={InputField}
+                            component={InputFieldPopUp}
                             name='project_code[2]'
+                            id='project_code[2]'
                             placeholder='P'
                             maxLength='1'
+                            isForm={true}
+                            msg='Please define the Project code'
+                            popupClassName='without-margin'
                           />
                         </React.Fragment>)
                     } else if (disabled) {
@@ -80,7 +85,7 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                 </div>
               </div>
               {i !== 6 &&
-                <div className={classnames('codification-codes-title-column', { disabled })}>
+                <div className={classnames('codification-codes-title-column dash', { disabled })}>
                   {!disabled && <div />}
                   <div className='codification-codes-title-column__title' />
                   <span className='dash-symbol'>&mdash;</span>

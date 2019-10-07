@@ -9,6 +9,14 @@ import { DropDownItems } from './elements'
 import { downloadList } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
 
+function DropDownValue({ fields, type }) {
+  const field = fields.find(field => field.codification_kind === type)
+  if (!field) return ''
+
+  const value = field.document_field_values.find(v => v.selected) || {}
+  return value.title
+}
+
 function renderTableHeader() {
   const checkedDocTypes = []
   return (
@@ -169,7 +177,7 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.codification_kind}
+                  IT-IS-NOT-REA-DY_{doc.id}
                 </Table.Cell>
 
                 <Table.Cell className='title-cell'>
@@ -199,15 +207,15 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.document_fields.filter(field => field.codification_kind === 'originating_company')[0].value}
+                  <DropDownValue fields={doc.document_fields} type='originating_company'/>
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.document_fields.filter(field => field.codification_kind === 'document_type')[0].value}
+                  <DropDownValue fields={doc.document_fields} type='document_type' />
                 </Table.Cell>
 
                 <Table.Cell>
-                  {doc.document_fields.filter(field => field.codification_kind === 'discipline')[0].value}
+                  <DropDownValue fields={doc.document_fields} type='discipline' />
                 </Table.Cell>
               </Table.Row>
             ))}

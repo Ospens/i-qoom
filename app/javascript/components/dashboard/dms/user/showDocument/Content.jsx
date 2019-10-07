@@ -246,12 +246,11 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
           </div>
         </div>
       </div>
-      
 
       <div className='dms-footer'>
-        <button type='button' className='btn btn-white'>Back</button>
-        <button type='button' className='btn btn-purple'>Edit</button>
-        <button type='button' className='btn btn-purple'>Add revision</button>
+        <Link className='btn btn-white' to={`/dashboard/projects/${project_id}/documents/`}>Back</Link>
+        <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`}>Edit</Link>
+        <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${document_id}/add_revision`}>Add revision</Link>
       </div>
     </div>
   )

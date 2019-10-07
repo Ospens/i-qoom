@@ -4,9 +4,69 @@ import DatePicker from 'react-datepicker'
 import classnames from 'classnames'
 import moment from 'moment'
 
+function range(start, end) {
+  return Array(end - start + 1).fill().map((_, idx) => start + idx)
+}
+
+function Header({
+  date,
+  changeYear,
+  changeMonth,
+  decreaseMonth,
+  increaseMonth,
+  prevMonthButtonDisabled,
+  nextMonthButtonDisabled
+}) {
+  const years = range(1990, (new Date()).getFullYear() + 1);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+  return (
+    <div
+      className='react-datepicker__header--custom_container'>
+      <button
+        type='button'
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className='react-datepicker__header--custom_btn-prev'
+      >
+        <span className='icon-arrow-button-left' />
+      </button>
+
+      <div>
+        <div className='react-datepicker__header--custom_month'>
+          {months[date.getMonth()]}
+        </div>
+
+        <div className='react-datepicker__header--custom_year'>
+          {date.getFullYear()}
+        </div>
+      </div>
+
+      <button
+        type='button'
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className='react-datepicker__header--custom_btn-next'
+      >
+        <span className='icon-arrow-button-right' />
+      </button>
+    </div>
+  )
+}
 const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: { touched, error } }) => {
   const [date, toggleDate] = useState('')
-
   useEffect(() => {
     if (typeof input.value !== 'object') return
     
@@ -34,6 +94,7 @@ const DatePickerField = ({ label, input, placeholder, readOnly = false,  meta: {
         readOnly={readOnly}
         required
         pattern=".*\S.*"
+        renderCustomHeader={props => <Header {...props} />}
       />
       {touched && error &&
       <div className='invalid-feedback'>

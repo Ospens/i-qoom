@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { withRouter } from 'react-router-dom'
 import {
   reduxForm,
@@ -10,18 +10,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Popup } from 'semantic-ui-react'
 import { startUpdateCodification } from '../../../../../actions/conventionActions'
 import { required } from '../../../../../elements/validations'
+import { errorNotify } from '../../../../../elements/Notices'
 
-const validate = value => (!value || !value.length ? 'Required' : undefined)
+const validate = value => !value || !value.length ? 'Required' : undefined
+const uniq = values => {
+  if (!values) return undefined
+  const codes = values.map(el => el.value)
+  
+  return (new Set(codes)).size !== codes.length ? 'Please use unique values' : undefined
+}
 
-const InputField = ({
+export const InputField = ({
   input,
-  errorField = {},
   className,
   label,
   type,
+  isForm,
+  popupClassName,
+  msg,
   meta: { touched, error },
   ...props
 }) => {
+  if (!isForm) {
+    return (
+      <div className={classnames(className, { 'full-wide': props.id !== 'value' })}>
+        {label && <label htmlFor={input.id}>{label}</label>}
+        <div className='codification-input_value-block'>{input.value}</div>
+      </div>
+    )
+  }
   const inputElement = (
     <input
       {...input}
@@ -32,21 +49,22 @@ const InputField = ({
       pattern=".*\S.*"
     />
   )
+  
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
-      {props.id === 'value' 
+      {props.id === 'value' // || props.id.includes('project_code')
         ? inputElement
         : <Popup
+            className={classnames('error-tooltip-container', popupClassName)}
             trigger={inputElement}
-            className='error-tooltip-container'
             position='right center'
-            open={!!(touched && error)}
+          open={!!(touched && error) || (touched && props.id.includes('project_code') && !input.value) }
           >
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>
                 <span>
-                  Add at least one
+                  {msg || 'Add at least one'}
               </span>
               </div>
             </div>
@@ -55,7 +73,9 @@ const InputField = ({
   )
 }
 
-const BlockByType = ({ fields, title }) => {
+const CodeList = ({ fields, title, meta, isForm }) => {
+  meta.error ? errorNotify(meta.error) : {}
+
   return (
     <React.Fragment>
       <div>
@@ -70,6 +90,7 @@ const BlockByType = ({ fields, title }) => {
               label={i > 0 ? '' : 'Code'}
               validate={[required]}
               maxLength='3'
+              isForm={isForm}
             />
             <Field
               className='codification-input'
@@ -79,26 +100,29 @@ const BlockByType = ({ fields, title }) => {
               placeholder={`${title} title`}
               label={i > 0 ? '' : `Enter ${title}`}
               validate={[required]}
+              isForm={isForm}
             />
-            {fields.length > 1 &&
+            {fields.length > 1 && isForm &&
             <button type='button' onClick={() => fields.remove(i)} className={classnames({ 'first-line': i < 1 })}>
               <span className='icon-bin-1' />
             </button>}
           </div>
         ))}
       </div>
+      {isForm &&
       <button
         type='button'
         className='with-icon add-button justify-content-center'
         onClick={() => fields.push({position: 1})}>
         <span className='icon-add_1 mr-2' />
-        <span data-title='Add Originating company'>Add Originating company</span>
-      </button>
+        <span data-title='Add Originating company'>Add {title}</span>
+      </button>}
     </React.Fragment>
   )
 }
 
 function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params: { project_id } } }) {
+  const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
   const document_fields = useSelector(state => state.conventions.current.document_fields)
 
@@ -112,7 +136,7 @@ function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params
       return item
     })
 
-    dispatch(startUpdateCodification(project_id, v))
+    dispatch(startUpdateCodification(project_id, v)).then(() => toggleIsForm(false))
   }, [dispatch, document_fields])
 
   return (
@@ -126,13 +150,18 @@ function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params
         <FieldArray
           title={title}
           name={form}
-          component={BlockByType}
-          validate={validate}
+          component={CodeList}
+          validate={[validate, uniq]}
+          isForm={isForm}
         />
       </div>
       <div className='codification-codes-values-column__footer'>
-        <button type='button' className='btn btn-white' onClick={reset} disabled={pristine}>Discard</button>
-        <button type='submit' className='btn btn-purple'>Save</button>
+        {isForm
+        ? <React.Fragment>
+            <button type='button' className='btn btn-white' onClick={reset} disabled={pristine}>Discard</button>
+            <button type='submit' className='btn btn-purple'>Save</button>
+          </React.Fragment>
+          : <button onClick={() => toggleIsForm(true)} type='button' className='btn btn-purple full-wide'>Edit</button>}
       </div>
     </form>
   )

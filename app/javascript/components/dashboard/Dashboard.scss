@@ -644,7 +644,7 @@ form {
   color: #ff2826;
 }
 
-.wide-button {
+.full-wide{
   width: 100%;
 }
 
@@ -767,7 +767,7 @@ input[type=checkbox]:checked+label {
     border: none !important;
     border-bottom: 1px solid #F0F0F0 !important;
     padding: 5px !important;
-    color: lightgrey !important;
+    color: var(--color-labels) !important;
     font-weight: 500 !important;
 
     &.table-checkbox {
@@ -890,8 +890,8 @@ span.divider {
   display: inline-block;
   width: 0;
   height: 15px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid var(--color-labels);
+  border-right: 1px solid var(--color-labels);
   margin-right: 10px;
   top: 3px;
 }
