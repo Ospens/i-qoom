@@ -58,13 +58,13 @@ export class CompanyBlock extends Component {
         {!pristine &&
         <button
           type='submit'
-          className='btn btn-purple full-widemb-2'
+          className='btn btn-purple full-wide mb-2'
         >
           Save changes
         </button>}
         <button
           type='button'
-          className='btn btn-white-blue full-widemt-2'
+          className='btn btn-white-blue full-wide mt-2'
           onClick={() => this.toggleModals('billingForm', true)}
         >
           Billing address

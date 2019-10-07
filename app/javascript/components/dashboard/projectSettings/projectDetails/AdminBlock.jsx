@@ -213,7 +213,7 @@ export class AdminBlock extends Component {
         {!pristine &&
           <button
             type='submit'
-            className='btn btn-purple full-widemb-2'
+            className='btn btn-purple full-wide mb-2'
           >
             Save changes
         </button>}

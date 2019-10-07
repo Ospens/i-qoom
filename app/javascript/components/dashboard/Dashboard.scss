@@ -209,7 +209,7 @@ button:disabled {
   margin: 1rem auto !important;
   width: auto !important;
   height: auto !important;
-  overflow: inherit !important;
+  overflow: visible;
 }
 
 .admin-status {
