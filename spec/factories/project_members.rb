@@ -20,6 +20,7 @@ FactoryBot.define do
             creation_step { "pending" }
             factory :project_member do
               creation_step { "active" }
+              user
             end
           end
         end

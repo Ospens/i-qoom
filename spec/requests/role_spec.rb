@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe "Role", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_with_roles,
+  let(:project) { FactoryBot.create(:project,
                                     user_id: user.id) }
   let(:project_member) { FactoryBot.create(:project_member,
                                            project_id: project.id) }
-  let(:role) { project.roles.first }
+  let(:role) { project.roles.last }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -34,14 +34,14 @@ describe "Role", type: :request do
              params: { role: { title: "some field" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(project.roles.count).to eq(11)
+        expect(project.roles.count).to eq(27)
       end
       it "should get a status 'error' and don't create a role" do
         post "/api/v1/projects/#{project.id}/roles",
              params: { role: { title: " " } }.to_json,
              headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(project.roles.count).to eq(10)
+        expect(project.roles.count).to eq(26)
       end
     end
     context "update" do

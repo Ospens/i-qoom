@@ -77,7 +77,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     )
   } else if (field.kind === 'select_field') {
     const fieldValues = field.document_field_values
-    
+
     return (
       <Field
         {...commonProps}
@@ -116,7 +116,7 @@ export const formvalue = (fields = [], codKind) => {
 
   const field = fields.filter(values => values.codification_kind === codKind)[0]
   if (!field) return ''
-  
+
   if (codKind === 'document_native_file') return field.file
 
   return field.value
@@ -168,7 +168,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
     initDocIdForm(values)
     toggleModal(true)
   }, [docFile])
-  
+
   return (
     <React.Fragment>
       <div className='dms-content__header'>

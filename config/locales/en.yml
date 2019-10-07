@@ -39,6 +39,14 @@ en:
           attributes:
             project:
               last_admin: The last user can't be removed
+        discipline:
+          attributes:
+            title:
+              cant_be_changed: i-Qoom Admin can't be renamed
+        role:
+          attributes:
+            title:
+              cant_be_changed: Project Administrator can't be renamed
   activemodel:
     errors:
       models:
