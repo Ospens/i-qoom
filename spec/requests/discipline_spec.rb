@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe "Discipline", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_with_disciplines,
+  let(:project) { FactoryBot.create(:project,
                                     user_id: user.id) }
   let(:project_member) { FactoryBot.create(:project_member,
                                            project_id: project.id) }
-  let(:discipline) { project.disciplines.first }
+  let(:discipline) { project.disciplines.last }
   let(:json) { JSON(response.body) }
 
   context "logged in" do
@@ -34,14 +34,14 @@ describe "Discipline", type: :request do
              params: { discipline: { title: "some field" } }.to_json,
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(project.disciplines.count).to eq(11)
+        expect(project.disciplines.count).to eq(14)
       end
       it "should get a status 'error' and don't create a discipline" do
         post "/api/v1/projects/#{project.id}/disciplines",
              params: { discipline: { title: " " } }.to_json,
              headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(project.disciplines.count).to eq(10)
+        expect(project.disciplines.count).to eq(13)
       end
     end
     context "update" do

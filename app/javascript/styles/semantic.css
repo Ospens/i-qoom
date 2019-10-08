@@ -173,7 +173,7 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
   box-shadow: none;
   border-radius: 0.28571429rem;
   text-align: left;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--color-text);
   border-collapse: separate;
   border-spacing: 0px;
 }
@@ -461,7 +461,6 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
   -webkit-box-shadow: '';
   box-shadow: '';
   text-align: '';
-  font-size: 1em;
   padding-left: '';
   padding-right: '';
 }
@@ -1426,7 +1425,6 @@ body .ui.inverted::-webkit-scrollbar-thumb:hover {
 /* Standard */
 
 .ui.table {
-  font-size: 1em;
 }
 
 /* Large */
@@ -1794,7 +1792,6 @@ body.dimmable > .dimmer {
 .ui.modal > .content {
   display: block;
   width: 100%;
-  font-size: 1em;
   line-height: 1.4;
   padding: 1.5rem;
   background: #FFFFFF;
@@ -2167,6 +2164,7 @@ body.dimmable > .dimmer {
 .ui.modal .scrolling.content {
   max-height: calc(70vh);
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /*--------------

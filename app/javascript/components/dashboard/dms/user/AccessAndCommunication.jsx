@@ -118,7 +118,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 component={CheckField}
                 id='email_title_like_document'
                 name='email_title_like_document'
-                className='form-group'
+                className='form-group m-0'
                 labelClass='mr-2'
                 text='Subject like document title'
               />
@@ -161,7 +161,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'
               />
-            </div>
+            </div>  
           </div>
         </div>
 

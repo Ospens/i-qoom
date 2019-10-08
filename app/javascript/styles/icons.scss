@@ -7,7 +7,7 @@ i.svg-icon {
   min-width: 20px;
   -webkit-mask-size: cover !important;
   mask-size: cover !important;
-  background-color: #0096FA;
+  background-color: var(--color-blue);
 
   mask-mode: match-source;
   mask-repeat: no-repeat;

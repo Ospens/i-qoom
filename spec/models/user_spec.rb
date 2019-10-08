@@ -22,8 +22,11 @@ describe User, type: :model do
   it { is_expected.to validate_presence_of(:password_confirmation).on(:password_changed?) }
   it { is_expected.not_to validate_presence_of(:password_confirmation).on(:update) }
 
-  it { is_expected.to validate_acceptance_of(:accept_terms_and_conditions) }
-  it { is_expected.not_to allow_value(nil).for(:accept_terms_and_conditions) }
+  it { is_expected.to validate_acceptance_of(:accept_terms_and_conditions).on(:create) }
+  it { is_expected.not_to allow_value(nil).for(:accept_terms_and_conditions).on(:create) }
+  it { is_expected.not_to validate_acceptance_of(:accept_terms_and_conditions).on(:update) }
+  it { is_expected.to allow_value(nil).for(:accept_terms_and_conditions).on(:update) }
+
 
   it { is_expected.to validate_inclusion_of(:country)
                         .in_array(ISO3166::Country.codes) }

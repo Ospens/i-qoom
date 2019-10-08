@@ -19,18 +19,6 @@ FactoryBot.define do
               instance.admins << FactoryBot.build(:project_administrator)
             end
           end
-          factory :project_with_disciplines do
-            after(:create) do |instance|
-              FactoryBot.create_list(:discipline, 10, project: instance)
-              Faker::UniqueGenerator.clear
-            end
-          end
-          factory :project_with_roles do
-            after(:create) do |instance|
-              FactoryBot.create_list(:role, 10, project: instance)
-              Faker::UniqueGenerator.clear
-            end
-          end
         end
       end
     end

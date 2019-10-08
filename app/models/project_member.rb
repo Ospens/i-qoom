@@ -88,6 +88,16 @@ class ProjectMember < ApplicationRecord
                         maximum: 255 }
   end
 
+  with_options if: -> {
+    creation_step_active? &&
+      project.admins.map(&:user_id).include?(user.id)
+  } do
+    validates_acceptance_of :cms_module_access
+    validates_acceptance_of :dms_module_access
+    validates_acceptance_of :cms_module_master
+    validates_acceptance_of :dms_module_master
+  end
+
   def send_confirmation_email
     self.confirmation_sent_at = Time.now
     ApplicationMailer.send_project_member_confirmation(self).deliver_now
