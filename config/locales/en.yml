@@ -43,6 +43,14 @@ en:
           attributes:
             reviewers:
               too_short: At least one reviewer is required
+        discipline:
+          attributes:
+            title:
+              cant_be_changed: i-Qoom Admin can't be renamed
+        role:
+          attributes:
+            title:
+              cant_be_changed: Project Administrator can't be renamed
   activemodel:
     errors:
       models:

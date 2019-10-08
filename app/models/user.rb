@@ -30,7 +30,8 @@ class User < ApplicationRecord
 
   validates :accept_terms_and_conditions,
     acceptance: true,
-    allow_nil: false
+    allow_nil: false,
+    on: :create
 
   validates_inclusion_of :country,
     in: ISO3166::Country.codes

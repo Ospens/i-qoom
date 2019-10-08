@@ -3,7 +3,7 @@ class Api::V1::RolesController < ApplicationController
   load_and_authorize_resource :role,
                               through: :project
   def index
-    render json: @project.roles
+    render json: @project.roles.order(title: :asc)
   end
 
   def edit

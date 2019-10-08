@@ -125,4 +125,22 @@ RSpec.describe ProjectMember, type: :model do
     expect(project_member.confirmation_sent_at).to be_present
   end
 
+  context "validates_acceptance of dms and cms modules" do
+    it 'if project admin' do
+      member = FactoryBot.create(:project).members.first
+      member.cms_module_access = false
+      member.save
+      member.reload
+      expect(member.cms_module_access).to be_truthy
+    end
+    it 'if regular member' do
+      member = FactoryBot.create(:project_member,
+                                 cms_module_access: true)
+      member.cms_module_access = false
+      member.save
+      member.reload
+      expect(member.cms_module_access).to be_falsy
+    end
+  end
+
 end
