@@ -221,11 +221,6 @@ a {
 .form-control-select.is-invalid~.invalid-feedback,
 .invalid-feedback.convention-feedback  {
   display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .invalid-feedback.convention-feedback  {
