@@ -64,6 +64,10 @@ class DocumentField < ApplicationRecord
                     should_have_document_field_values? &&
                     !multiselect? }
 
+  validate :document_number_format,
+           if: -> { parent.class.name == 'Document' &&
+                    document_number? }
+
   with_options unless: -> { parent.class.name == 'DocumentFolder' } do
     validates :kind,
               presence: true
@@ -317,5 +321,11 @@ class DocumentField < ApplicationRecord
 
   def must_be_textarea_field
     errors.add(:kind, :must_be_textarea_field) unless textarea_field?
+  end
+
+  def document_number_format
+    if value.present? && !value.match?(/\A[0-9]{4}\z/)
+      errors.add(:value, :must_be_more_than_0000_and_less_than_9999)
+    end
   end
 end
