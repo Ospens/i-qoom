@@ -61,7 +61,7 @@ button:disabled {
 
     &:hover {
       cursor: pointer;
-      color: #0096FA;
+      color: var(--color-blue);
     }
   }
 
@@ -104,7 +104,7 @@ button:disabled {
 
     label {
       margin-top: 10px;
-      color: #8FB0B3;
+      color: var(--color-labels);
       font-weight: 700;
       cursor: pointer;
     }
@@ -112,7 +112,7 @@ button:disabled {
     &:hover {
       label {
         margin-top: 10px;
-        color: #0096FA;
+        color: var(--color-blue);
         cursor: pointer;
       }
     }
@@ -141,7 +141,7 @@ button:disabled {
   .statuses {
     label {
       font-size: 16px;
-      color: #8FB0B3;
+      color: var(--color-labels);
     }
 
     ul {
@@ -198,7 +198,7 @@ button:disabled {
   width: 7px;
   margin-right: 15px;
   margin-bottom: 1px;
-  background-color: #b2ced1;
+  background-color: var(--color-grey);
   border-radius: 50%;
   display: inline-block;
 }
@@ -209,7 +209,7 @@ button:disabled {
   margin: 1rem auto !important;
   width: auto !important;
   height: auto !important;
-  overflow: inherit !important;
+  overflow: visible;
 }
 
 .admin-status {
@@ -225,7 +225,7 @@ button:disabled {
     display: flex;
     flex-direction: column;
     text-align: center;
-    color: #0096FA;
+    color: var(--color-blue);
   }
 }
 
@@ -394,7 +394,7 @@ form {
       text-decoration: none;
       border: none;
       background-color: transparent;
-      color: #8FB0B3;
+      color: var(--color-labels);
       display: flex;
       padding: 10px;
       padding-bottom: 15px;
@@ -404,13 +404,13 @@ form {
       align-content: center;
 
       &:hover {
-        color:  #0096FA;
-        border-bottom: 2px solid  #0096FA;
+        color:  var(--color-blue);
+        border-bottom: 2px solid  var(--color-blue);
       }
 
       &.active {
-        color: #475859;
-        border-bottom: 2px solid #475859;
+        color: var(--color-text);
+        border-bottom: 2px solid var(--color-text);
       }
     }
   }
@@ -515,7 +515,7 @@ form {
       width: 100%;
       align-items: center;
       justify-content: center;
-      background-color: #475859;
+      background-color: var(--color-text);
 
       span {
         font-size: 25px;
@@ -569,7 +569,7 @@ form {
   &:hover,
   &:focus {
     label {
-      color: #0096FA !important;
+      color: var(--color-blue) !important;
     }
   }
 }
@@ -580,7 +580,7 @@ form {
 }
 
 .btn-white {
-  color: #8FB0B3 !important;
+  color: var(--color-labels) !important;
   background-color: #fff !important;
   border-color: #E9F3F5 !important;
 
@@ -596,7 +596,7 @@ form {
   display: flex !important;
   background-color: #fff;
   border: 1px solid #E9F3F5 !important;
-  color: #0096FA !important;
+  color: var(--color-blue) !important;
   font-weight: 700 !important;
   border-radius: 5px !important;
   display: flex;
@@ -617,8 +617,8 @@ form {
 
 .btn-purple {
   color: #fff !important;
-  background-color: #0096FA !important;
-  border-color: #0096FA !important;
+  background-color: var(--color-blue) !important;
+  border-color: var(--color-blue) !important;
 
   &:hover {
     color: #fff !important;
@@ -644,7 +644,7 @@ form {
   color: #ff2826;
 }
 
-.wide-button {
+.full-wide{
   width: 100%;
 }
 
@@ -660,7 +660,7 @@ form {
   padding-right: 30px;
 
   .tab-description {
-    color: #8FB0B3;
+    color: var(--color-labels);
   }
   .nav-bar {
     max-width: fit-content;
@@ -739,7 +739,7 @@ input[type=checkbox]:checked+label {
 }
 
 .member-id {
-  color:#0096FA;
+  color:var(--color-blue);
   text-transform: lowercase;
 }
 
@@ -767,7 +767,7 @@ input[type=checkbox]:checked+label {
     border: none !important;
     border-bottom: 1px solid #F0F0F0 !important;
     padding: 5px !important;
-    color: lightgrey !important;
+    color: var(--color-labels) !important;
     font-weight: 500 !important;
 
     &.table-checkbox {
@@ -851,7 +851,7 @@ input[type=checkbox]:checked+label {
       margin-left: 10px;
 
       .company-title {
-        color: #8FB0B3;
+        color: var(--color-labels);
       }
 
       .user_names, .company-title {
@@ -890,8 +890,8 @@ span.divider {
   display: inline-block;
   width: 0;
   height: 15px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid var(--color-labels);
+  border-right: 1px solid var(--color-labels);
   margin-right: 10px;
   top: 3px;
 }
@@ -929,7 +929,7 @@ span.divider {
   margin-bottom: 30px;
 
   .dropdown-item {
-    color: #8FB0B3;
+    color: var(--color-labels);
     display: flex;
     align-items: center;
     padding: 7px;
@@ -1008,6 +1008,7 @@ span.divider {
     border-radius: 5px;
     margin-top: 5px;
     min-width: 215px;
+    width: auto;
   }
 
   .dots-container {
@@ -1028,7 +1029,7 @@ span.divider {
 
     &:hover, &:active {
       .icon-navigation-menu-horizontal{
-        color: #0096FA !important;
+        color: var(--color-blue) !important;
       }
     }
   }
@@ -1080,7 +1081,7 @@ div.tab-description {
   margin-bottom: 20px;
   align-items: center;
   font-size: 10px;
-  color: #8FB0B3 !important;
+  color: var(--color-labels) !important;
 
   &:hover,
   &:active {
@@ -1094,7 +1095,7 @@ div.tab-description {
   position: absolute;
   left: calc(-100% - 125px) !important;
   top: -5px !important;
-  background-color: #475759 !important;
+  background-color: var(--color-text) !important;
   padding: 12px !important;
 
 
@@ -1118,7 +1119,7 @@ div.tab-description {
       content: '';
       width: .71428571em;
       height: .71428571em;
-      background: #475759;
+      background: var(--color-text);
       -webkit-transform: rotate(45deg);
       transform: rotate(45deg);
       z-index: 2;
@@ -1138,7 +1139,7 @@ div.tab-description {
   }
 
   &::after {
-    background-color: #475759 !important;
+    background-color: var(--color-text) !important;
   }
 
   button {
@@ -1206,7 +1207,7 @@ div.tab-description {
     &:hover {
       label {
         margin-top: 10px;
-        color: #0096FA;
+        color: var(--color-blue);
         cursor: pointer;
       }
     }
@@ -1219,7 +1220,7 @@ div.tab-description {
 
     label {
       margin-top: 10px;
-      color: #0096FA;
+      color: var(--color-blue);
       font-weight: 700;
       cursor: pointer;
     }
@@ -1299,25 +1300,25 @@ label.switch {
     left: 5px;
     bottom: 2px;
     background-color: #fff;
-    box-shadow: 0px 1px 2px #B2CED1;
+    box-shadow: 0px 1px 2px var(--color-grey);
     -webkit-transition: .4s;
     transition: .4s;
     border-radius: 50%;
   }
 
   &:hover {
-    border-color: #0096FA;
+    border-color: var(--color-blue);
   }
 }
 
 input:checked+.slider {
-  background-color: #0096FA;
+  background-color: var(--color-blue);
 
   &:hover {
-    background-color: #0096FA80;
+    background-color: var(--color-blue)80;
 
     &:before {
-      box-shadow: 0px 1px 2px #0096FA;
+      box-shadow: 0px 1px 2px var(--color-blue);
     }
   }
 }
@@ -1337,7 +1338,7 @@ input:checked+.slider:before {
 
   .dropdown-item {
     padding: 5px;
-    color: #475859;
+    color: var(--color-text);
     border-bottom: 1px solid #ced4da;
     justify-content: flex-end;
     width: 100%;
@@ -1399,7 +1400,7 @@ input:checked+.slider:before {
     .btn-for-switch::after {
       transform: rotate(45deg) !important;
       -webkit-transform: rotate(45deg) !important;
-      border: solid #475859 !important;
+      border: solid var(--color-text) !important;
       border-width: 0 3px 3px 0 !important;
     }
   }
@@ -1423,7 +1424,7 @@ i.arrow {
   display: inline-block;
   padding: 3px;
   &.down {
-    border-color: #475859;
+    border-color: var(--color-text);
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
   }
@@ -1473,10 +1474,10 @@ i.arrow {
 
   .download-files-dropdown__title {
     padding-bottom: 10px;
-    border-bottom: 1px solid #8FB0B3;
+    border-bottom: 1px solid var(--color-labels);
 
     span {
-      color: #8FB0B3;
+      color: var(--color-labels);
     }
   }
 
@@ -1532,7 +1533,7 @@ i.arrow {
   }
 
   p {
-    color: #B2CED1;
+    color: var(--color-grey);
   }
 
   p:first-of-type {
@@ -1569,7 +1570,7 @@ i.arrow {
       overflow: hidden;
       text-overflow: ellipsis;
       font-size: 14px;
-      color: #8FB0B3;
+      color: var(--color-labels);
       margin-bottom: 5px;
       white-space: nowrap;
       overflow: hidden;
@@ -1588,7 +1589,7 @@ i.arrow {
 }
 
 .color-blue {
-  color: #0096FA !important;
+  color: var(--color-blue) !important;
 }
 
 .acceess-rights__drop-down {
@@ -1667,7 +1668,7 @@ i.arrow {
     .item-block__title {
       display: block;
       width: 100%;
-      color: #475859;
+      color: var(--color-text);
     }
   }
 }
@@ -1781,7 +1782,7 @@ i.arrow {
       padding-left: 1.2rem !important;
 
       span {
-        color: #475859;
+        color: var(--color-text);
       }
     }
   }
@@ -1819,7 +1820,7 @@ i.arrow {
       align-items: baseline;
 
       span {
-        color: #8FB0B3;
+        color: var(--color-labels);
       }
     }
 
@@ -1844,7 +1845,7 @@ i.arrow {
       margin-left: 10px;
 
       .company-title {
-        color: #8FB0B3;
+        color: var(--color-labels);
       }
 
       .user_names, .company-title {

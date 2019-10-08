@@ -6,6 +6,7 @@ import {
   change,
   initialize
 } from 'redux-form'
+import { Link, withRouter } from 'react-router-dom'
 import DocIdModal from '../DocIdModal'
 import SelectField from '../../../../elements/SelectField'
 import CheckboxField from '../../../../elements/CheckboxField'
@@ -13,7 +14,7 @@ import DatePickerField from '../../../../elements/DatePickerField'
 import DropZoneField from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
-import { required, lessThan100 } from '../../../../elements/validations'
+import { required, lessThan9999 } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
 import DocumentIdInputs from '../DocumentIdInputs'
 
@@ -33,7 +34,7 @@ const validationList = field => {
     list.push(required)
   }
   if (['document_number', 'revision_number'].includes(field.codification_kind)) {
-    list.push(lessThan100)
+    list.push(lessThan9999)
   }
   return list
 }
@@ -121,7 +122,7 @@ export const formvalue = (fields = [], codKind) => {
   return field.value
 }
 
-function DocumentsAndFiles() {
+function DocumentsAndFiles({ match: { params: { project_id } } }) {
   const [modal, toggleModal] = useState(false)
   const groupedFields = useSelector(state => state.documents.documentFields.grouped_fields)
   const documentFields = useSelector(state => selector(state, 'document_fields'))
@@ -257,11 +258,11 @@ function DocumentsAndFiles() {
 
       </div>
       <div className='dms-footer'>
-        <button type='button' className='btn btn-white'>Cancel</button>
+        <Link className='btn btn-white' to={`/dashboard/projects/${project_id}/documents/`}>Cancel</Link>
         <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     </React.Fragment>
   )
 }
 
-export default DocumentsAndFiles
+export default withRouter(DocumentsAndFiles)

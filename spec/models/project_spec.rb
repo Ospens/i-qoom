@@ -26,6 +26,49 @@ RSpec.describe Project, type: :model do
       expect(subject.members.find_by(email: subject.user.email)).to be_present
       expect(subject.members.find_by(email: subject.user.email).creation_step).to eq("active")
     end
+    it "should have default roles and disciplines" do
+      expect(subject.roles.map(&:title)).to\
+        include(*[ "Project Administrator",
+                   "Project Lead",
+                   "Project Manager",
+                   "Package Manager",
+                   "Engineering Manager",
+                   "Electrical Engineer",
+                   "Mechanical Engineer",
+                   "Civil Engineer",
+                   "Process Manager",
+                   "Interface Manager",
+                   "Commercial Manager",
+                   "Contract Manager",
+                   "Logistics Manager",
+                   "Legal Advisor",
+                   "Scheduler",
+                   "IT Expert",
+                   "Admin Support",
+                   "HR Manager",
+                   "Secretary",
+                   "Development Manager",
+                   "Finance Manager",
+                   "Controller",
+                   "Document Manager",
+                   "Procurement Manager",
+                   "Procurement Lead",
+                   "Accountant" ])
+      expect(subject.disciplines.map(&:title)).to\
+        include(*[ "i-Qoom Admin",
+                   "Management",
+                   "Document Management",
+                   "Human Ressources",
+                   "Electrical",
+                   "Mechanical",
+                   "Civil",
+                   "Logistics",
+                   "Construction",
+                   "Cross Discipline",
+                   "Infrastructure",
+                   "Finance",
+                   "Commercial" ])
+    end
   end
 
   context "creation step is not admins" do

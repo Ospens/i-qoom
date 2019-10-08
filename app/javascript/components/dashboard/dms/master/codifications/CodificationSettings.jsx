@@ -1,10 +1,11 @@
 import React from 'react'
 import classnames from 'classnames'
+import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../DmsSideBar'
 
-function Card({ number }) {
+function Card({ number, projectId }) {
   const active = number === 1
 
   return (
@@ -21,9 +22,12 @@ function Card({ number }) {
           <span className='conventions-settings-card__title'>Convention {number}</span>
           {active && <span className='card-active'>Active</span>}
         </div>
-        <button type='button' className='btn conventions-settings-btn-edit'>
+        <Link
+          to={`/dashboard/projects/${projectId}/documents/master/codifications/1/`}
+          className='btn conventions-settings-btn-edit'
+        >
           Edit
-        </button>
+        </Link>
       </div>
 
       <div className='conventions-settings-conv-info'>
@@ -50,7 +54,7 @@ function Card({ number }) {
   )
 }
 
-function Content() {
+function Content({ projectId }) {
   return (
     <div className='dms-content bordered'>
       <div className='dms-content__header'>
@@ -59,20 +63,20 @@ function Content() {
       <div className='content-body bottom-padding'>
         <label>Choose your preferences</label>
         <div className='conventions-settings-table'>
-          {[...Array(3)].map((_, i) => { return <Card number={i + 1} key={i} /> }) }
+          {[...Array(3)].map((_, i) => { return <Card number={i + 1} key={i} projectId={projectId}/> }) }
         </div>
       </div>
     </div>
   )
 }
 
-function CodificationSettings() {
+function CodificationSettings({ match: { params: { project_id } } }) {
   return (
     <DMSLayout
       sidebar={<DmsSideBar />}
-      content={<Content />}
+      content={<Content projectId={project_id} />}
     />
   )
 } 
 
-export default CodificationSettings
+export default withRouter(CodificationSettings)

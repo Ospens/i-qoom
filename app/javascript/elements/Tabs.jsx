@@ -15,7 +15,7 @@ function Tab({ toggleTab, activeTab, label }) {
   )
 }
 
-export default function Tabs({ children, className }) {
+export default function Tabs({ children, className, scrollable }) {
   const [activeTab, toggleTab] = useState('')
   const mainClass = classnames('tabs', className)
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Tabs({ children, className }) {
           )
         })}
       </ol>
-      <div className='tab-content'>
+      <div className={classnames('tab-content', { scrollable })}>
         {children.map((child) => {
           if (child.props.label !== activeTab) return undefined
           return child
