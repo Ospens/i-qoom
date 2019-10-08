@@ -1,4 +1,6 @@
 class Api::V1::DocumentReviewSubjectsController < ApplicationController
+  include ActiveStorage::SendZip
+
   load_resource :document
   load_resource :document_revision
   before_action :set_revision,
@@ -52,6 +54,11 @@ class Api::V1::DocumentReviewSubjectsController < ApplicationController
       @document_review_subject.review_completes.delete(signed_in_user)
       render json: { message: 'Review uncompleted' }
     end
+  end
+
+  def download_files
+    files = @document_review_subject.comments.map(&:file)
+    send_zip(files, filename: "#{@document_review_subject.title.underscore}_files.zip")
   end
 
   private

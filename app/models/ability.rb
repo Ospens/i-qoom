@@ -91,7 +91,8 @@ class Ability
       # DocumentReviewSubject
       can [:new,
            :create,
-           :show], DocumentReviewSubject do |subject|
+           :show,
+           :download_files], DocumentReviewSubject do |subject|
         subject.document_revision.last_version.can_view?(user)
       end
       can :update_status, DocumentReviewSubject do |subject|

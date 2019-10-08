@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         member do
           post :update_status
           post :complete_review
+          get :download_files
         end
       end
 

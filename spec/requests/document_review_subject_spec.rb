@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'zip'
 
 describe DocumentReviewSubject, type: :request do
   let(:json) { JSON(response.body) }
@@ -188,6 +189,36 @@ describe DocumentReviewSubject, type: :request do
         params: { complete: '0' }
       expect(response).to have_http_status(:success)
       expect(review_subject.reload.review_completes).to_not include(user)
+    end
+  end
+
+  context '#download_files' do
+    let(:review_subject) { FactoryBot.create(:document_review_subject, document_revision: revision) }
+    let!(:comment) { FactoryBot.create(:document_review_comment, document_review_subject: review_subject) }
+
+    it 'anon' do
+      get "/api/v1/document_review_subjects/#{review_subject.id}/download_files"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user without rights' do
+      get "/api/v1/document_review_subjects/#{review_subject.id}/download_files",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      comment.update!(file: fixture_file_upload('test.txt'))
+      expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
+      get "/api/v1/document_review_subjects/#{review_subject.id}/download_files",
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      files = Zip::InputStream.open(StringIO.new(response.body))
+      file = files.get_next_entry
+      expect(file.name).to include('test.txt')
+      expect(file.get_input_stream.read).to eql("111\n")
+      expect(response.header['Content-Disposition']).to include(review_subject.title.underscore)
+      expect(files.get_next_entry).to be_nil
     end
   end
 end
