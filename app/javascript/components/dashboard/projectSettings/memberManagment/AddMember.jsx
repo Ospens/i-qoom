@@ -52,7 +52,7 @@ class AddMember extends Component {
     let { step } = this.state
 
     return (
-      <div className='modal-footer'>
+      <div className='new-modal__footer'>
         {step > 1 &&
         <button
           type='button'
@@ -192,28 +192,27 @@ class AddMember extends Component {
   render() { 
     const { step } = this.state
     return (
-      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-
-        <div className='new-project-modal'>
+      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)} className='new-modal'>
+        <div className='new-modal__header'>
           <h4>New member</h4>
-          <div className='modal-body project-name'>
-            {(() => {
-              switch (step) {
-                case 1:
-                  return this.renderTypeEmployment()
-                case 2:
-                  return this.renderCompanyEmplyee()
-                case 3:
-                  return this.renderCompanyData()
-                case 4:
-                  return this.renderMemberDetails()
-                default:
-                  return this.renderTypeEmployment()
-              }
-            })()}
-          </div>
-          {this.renderButtons()}
         </div>
+        <div className='new-modal__body'>
+          {(() => {
+            switch (step) {
+              case 1:
+                return this.renderTypeEmployment()
+              case 2:
+                return this.renderCompanyEmplyee()
+              case 3:
+                return this.renderCompanyData()
+              case 4:
+                return this.renderMemberDetails()
+              default:
+                return this.renderTypeEmployment()
+            }
+          })()}
+        </div>
+        {this.renderButtons()}
       </form>
     )
   }

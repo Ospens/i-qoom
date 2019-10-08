@@ -69,7 +69,8 @@ class MemberTable extends Component {
     )
   }
 
-  renderModuleAccess = (id, cms_module_access, cms_module_master, dms_module_access, dms_module_master) => {
+  renderModuleAccess = (id, cms_module_access, cms_module_master, dms_module_access, dms_module_master, user_id) => {
+    const { userId } = this.props
     const titleItems = []
     if (cms_module_access) {
       titleItems.push('CMS')
@@ -91,6 +92,7 @@ class MemberTable extends Component {
               id={`cms_module_access_${id}`}
               type='checkbox'
               checked={cms_module_access}
+              disabled={user_id === userId}
               onChange={() => this.handleChange(!cms_module_access, id, 'cms_module_access')}
             />
             <span className='slider round' />
@@ -169,7 +171,7 @@ class MemberTable extends Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {members.map(({ id, first_name, last_name, member_id, cms_module_access, cms_module_master, dms_module_access, dms_module_master, ...member }) => (
+            {members.map(({ id, first_name, last_name, member_id, cms_module_access, cms_module_master, dms_module_access, dms_module_master, user_id, ...member }) => (
               <Table.Row key={id}>
                 <Table.Cell className='table-checkbox'>
                   <div>
@@ -221,7 +223,7 @@ class MemberTable extends Component {
                   />
                 </Table.Cell>
                 <Table.Cell className='access-column'>
-                  {this.renderModuleAccess(id, cms_module_access, cms_module_master, dms_module_access, dms_module_master)}
+                  {this.renderModuleAccess(id, cms_module_access, cms_module_master, dms_module_access, dms_module_master, user_id)}
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -234,6 +236,7 @@ class MemberTable extends Component {
 
 const mapStateToProps = state => ({
   roleOptions: state.projectMembers.roles,
+  userId: state.user.user_id,
   discOptions: state.projectMembers.disciplines
 })
 
