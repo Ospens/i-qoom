@@ -191,4 +191,53 @@ RSpec.describe Convention, type: :model do
     project = FactoryBot.create(:project)
     expect(project.conventions.active).to be_present
   end
+
+  context 'validates codification fields' do
+    let(:convention) do
+      project = FactoryBot.create(:project)
+      project.conventions.active.destroy
+      con = project.conventions.new(number: 1)
+      con.build_default_fields
+      con
+    end
+
+    [:originating_company, :discipline, :document_type].each do |kind|
+      let(:field) do
+        convention.document_fields.detect do
+          |i| i['codification_kind'] == kind.to_s
+        end.document_field_values.first
+      end
+
+      context kind do
+        it do
+          field.value = '1000'
+          expect(convention).to_not be_valid
+        end
+        it do
+          field.value = 'AAA'
+          expect(convention).to be_valid
+        end
+        it do
+          field.value = '999'
+          expect(convention).to_not be_valid
+        end
+        it do
+          field.value = 'aAA'
+          expect(convention).to_not be_valid
+        end
+        it do
+          field.value = 'ABC'
+          expect(convention).to be_valid
+        end
+        it do
+          field.value = 'AB0'
+          expect(convention).to_not be_valid
+        end
+        it do
+          field.value = 'AAAA'
+          expect(convention).to_not be_valid
+        end
+      end
+    end
+  end
 end
