@@ -185,6 +185,7 @@ RSpec.describe Document, type: :model do
             if attribute == 'kind'
               'textarea_field'
             elsif attribute == 'codification_kind'
+              field['value'] = '1000'
               'document_number'
             elsif attribute == 'column' || attribute == 'row'
               if field[attribute] == 1
@@ -422,5 +423,20 @@ RSpec.describe Document, type: :model do
     doc = Document.create(attrs)
     expect(doc).to receive(:attributes_for_edit).and_call_original
     doc.attributes_for_show
+  end
+
+  it 'validates document number' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    field =
+      attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_number' }
+    field['value'] = '10000'
+    expect(Document.new(attrs)).to_not be_valid
+    field['value'] = 'AAA'
+    expect(Document.new(attrs)).to_not be_valid
+    field['value'] = '9999'
+    expect(Document.new(attrs)).to be_valid
+    field['value'] = '0000'
+    expect(Document.new(attrs)).to be_valid
   end
 end

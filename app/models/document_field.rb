@@ -64,6 +64,10 @@ class DocumentField < ApplicationRecord
                     should_have_document_field_values? &&
                     !multiselect? }
 
+  validates :value,
+            format: { with: /\A[0-9]{4}\z/ },
+            if: -> { parent.class.name == 'Document' && document_number? }
+
   with_options unless: -> { parent.class.name == 'DocumentFolder' } do
     validates :kind,
               presence: true
@@ -188,6 +192,11 @@ class DocumentField < ApplicationRecord
                             document_field_value: value,
                             enabled: true,
                             view_only: false).present?
+  end
+
+  def validate_codification_values?
+    parent.class.name == 'Convention' &&
+      (originating_company? || discipline? || document_type?)
   end
 
   private

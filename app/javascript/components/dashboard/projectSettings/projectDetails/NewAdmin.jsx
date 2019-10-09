@@ -12,7 +12,7 @@ function NewAdmin({ projectId, index, form, updateAdmin }) {
       </div>
       <button
         type='button'
-        className='btn btn-purple wide-button second-admin'
+        className='btn btn-purple full-wide second-admin'
         onClick={() => toggleModal(true)}
       >
         Add project administrator

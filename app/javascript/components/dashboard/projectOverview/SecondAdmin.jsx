@@ -41,7 +41,7 @@ function SecondAdmin({ adminCreated, ...props }) {
               </h6>
               <button
                 type='button'
-                className='btn btn-purple wide-button'
+                className='btn btn-purple full-wide'
                 onClick={() => togglesecondAdmin(true)}
               >
                 Add a second administrator
