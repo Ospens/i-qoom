@@ -177,7 +177,7 @@ export default function Content({ projectId, checkedDocs, checkItem }) {
                 </Table.Cell>
 
                 <Table.Cell>
-                  IT-IS-NOT-REA-DY_{doc.id}
+                  {doc.codification_string}
                 </Table.Cell>
 
                 <Table.Cell className='title-cell'>
