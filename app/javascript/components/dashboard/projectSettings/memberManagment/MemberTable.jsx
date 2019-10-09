@@ -16,9 +16,9 @@ const columns = [
 ]
 
 const emplOptions = [
-  { value: 0, title: 'Employee' },
-  { value: 1, title: 'Internal contractor' },
-  { value: 2, title: 'External contractor' }
+  { value: 'employee', title: 'Employee' },
+  { value: 'internal_contractor', title: 'Internal contractor' },
+  { value: 'external_contractor', title: 'External contractor' }
 ]
 
 class MemberTable extends Component {
@@ -198,7 +198,7 @@ class MemberTable extends Component {
                     name='employment_type'
                     onChange={val => this.handleChange(val, id, 'employment_type')}
                     options={emplOptions}
-                    defaultValue={emplOptions.filter(el => member.employment_type === el.id)}
+                    defaultValue={emplOptions.filter(el => member.employment_type === el.value)}
                     className='form-control-select'
                   />
                 </Table.Cell>

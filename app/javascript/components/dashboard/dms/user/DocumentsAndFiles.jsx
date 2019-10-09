@@ -39,7 +39,7 @@ const validationList = field => {
   return list
 }
 
-function InputByType({ field, modal, toggleModal, conventionId, changeValues }) {
+function InputByType({ field, modal, toggleModal, conventionId, changeValues, changeDocNumber }) {
   const uniqName = `document_fields[${field.index}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
 
@@ -48,8 +48,11 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues }) 
     name: uniqName,
     id: uniqName,
     validate: validationList(field),
-    placeholder:field.command,
+    placeholder: field.command,
     disabled
+  }
+  if (field.codification_kind === 'document_number') {
+    commonProps.onBlur = v => changeDocNumber(field.index, v)
   }
 
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
@@ -135,7 +138,6 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
   const docFile = formvalue(documentFields, 'document_native_file')
   const generateId = useSelector(state => selector(state, 'generate_id'))
   const columns = Object.keys(groupedFields)
-
   const dispatch = useDispatch()
 
   // Select options haven't ids
@@ -149,6 +151,12 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
       }
     })
     dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
+  }, [dispatch])
+
+  const changeDocNumber = useCallback((index, event) => {
+    event.preventDefault()
+    const newValue = String(event.target.value).padStart(4, 0)
+    dispatch(change('document_form', `document_fields[${index}].value`, newValue))
   }, [dispatch])
 
   const initDocIdForm = useCallback(values => {
@@ -226,6 +234,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
                   field={field}
                   conventionId={conventionId}
                   changeValues={changeValues}
+                  changeDocNumber={changeDocNumber}
                 />
               </div>
             ))}
@@ -250,6 +259,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
                   field={field}
                   conventionId={conventionId}
                   changeValues={changeValues}
+                  changeDocNumber={changeDocNumber}
                 />
               </div>
             ))}

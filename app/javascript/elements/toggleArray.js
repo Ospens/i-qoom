@@ -1,5 +1,5 @@
 const toggleArray = (checked, value) => {
-  let newVal = new Array()
+  let newVal = []
   newVal = newVal.concat(checked)
   const index = newVal.indexOf(value)
 

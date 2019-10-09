@@ -56,7 +56,7 @@ class AddMember extends Component {
         {step > 1 &&
         <button
           type='button'
-          className='btn btn-back back-member-details'
+          className='btn btn-back'
           onClick={() => this.changeStep(step - 1)}
         >
           <span className='icon-arrow-button-left' />
@@ -77,7 +77,7 @@ class AddMember extends Component {
               Next
             </button>
           : <React.Fragment>
-              <button type='submit' className='btn btn-purple'>Save</button>
+              <button type='submit' className='btn btn-purple ml-2'>Save</button>
               <button type='submit' className='btn btn-purple'>Invite</button>
             </React.Fragment>
         }
