@@ -202,11 +202,12 @@ RSpec.describe Convention, type: :model do
     end
 
     [:originating_company, :discipline, :document_type].each do |kind|
-      let(:field) do
+      let(:values) do
         convention.document_fields.detect do
           |i| i['codification_kind'] == kind.to_s
-        end.document_field_values.first
+        end.document_field_values
       end
+      let(:field) { values.first }
 
       context kind do
         it do
@@ -235,6 +236,11 @@ RSpec.describe Convention, type: :model do
         end
         it do
           field.value = 'AAAA'
+          expect(convention).to_not be_valid
+        end
+        it 'validates uniqueness' do
+          values.new(position: 1, value: 'AAA')
+          values.new(position: 1, value: 'AAA')
           expect(convention).to_not be_valid
         end
       end

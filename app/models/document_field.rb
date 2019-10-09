@@ -68,6 +68,9 @@ class DocumentField < ApplicationRecord
             format: { with: /\A[0-9]{4}\z/ },
             if: -> { parent.class.name == 'Document' && document_number? }
 
+  validate :uniqueness_of_codification_values,
+           if: :validate_codification_values?
+
   with_options unless: -> { parent.class.name == 'DocumentFolder' } do
     validates :kind,
               presence: true
@@ -326,5 +329,12 @@ class DocumentField < ApplicationRecord
 
   def must_be_textarea_field
     errors.add(:kind, :must_be_textarea_field) unless textarea_field?
+  end
+
+  def uniqueness_of_codification_values
+    values = document_field_values.map(&:value)
+    if values.uniq.length != values.length
+      errors.add(:document_field_values, :contains_not_unique_values)
+    end
   end
 end
