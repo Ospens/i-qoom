@@ -56,12 +56,17 @@ class DocumentRevision < ApplicationRecord
   end
 
   def can_update_review_status?(user)
-    owner = project.document_review_owners.find_by(user_id: user.id)
-    return false if owner.blank?
+    review_owners.include?(user)
+  end
+
+  def review_owners
     originating_company_value =
       last_version.document_fields
                   .find_by(codification_kind: :originating_company)
                   .document_field_values.find_by(selected: true).value
-    owner.originating_company == originating_company_value
+    owners =
+      project.document_review_owners
+             .where(originating_company: originating_company_value)
+    User.where(id: owners.pluck(:user_id))
   end
 end

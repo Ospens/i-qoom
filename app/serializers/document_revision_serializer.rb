@@ -1,12 +1,21 @@
 class DocumentRevisionSerializer < ActiveModel::Serializer
   attributes :id,
+             :document_id,
              :codification_string,
              :title,
              :review_status,
-             :unread_comments_count
+             :unread_comments_count,
+             :review_owners
+
+  has_many :document_review_subjects,
+           if: -> { @instance_options[:document_review_subjects] }
 
   def document
     object.last_version
+  end
+
+  def document_id
+    document.id
   end
 
   def codification_string

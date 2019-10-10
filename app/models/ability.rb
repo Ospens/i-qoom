@@ -116,7 +116,8 @@ class Ability
         owner.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # DocumentRevision
-      can :show, DocumentRevision do |revision|
+      can [:show,
+           :review_show], DocumentRevision do |revision|
         revision.last_version.can_view?(user)
       end
       can :update_review_status, DocumentRevision do |revision|
@@ -126,6 +127,7 @@ class Ability
            :review_index], DocumentRevision do |revision, project|
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
+      # DocumentReviewTag
       can :manage, DocumentReviewTag do |tag, project|
         project.members.find_by(user: user).try(:dms_module_master?)
       end

@@ -35,4 +35,9 @@ class Api::V1::DocumentRevisionsController < ApplicationController
     end
     render json: revisions, user: signed_in_user
   end
+
+  def review_show
+    render json: @document_revision, user: signed_in_user,
+      document_review_subjects: true
+  end
 end

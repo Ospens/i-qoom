@@ -192,4 +192,38 @@ describe DocumentRevision, type: :request do
       end
     end
   end
+
+  context '#review_index' do
+    let(:json) { JSON(response.body) }
+    let(:document) { FactoryBot.create(:document) }
+    let(:user) { FactoryBot.create(:user) }
+    let(:project) { document.project }
+    let(:revision) { document.revision }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/document_revisions/#{revision.id}/review_show"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/document_revisions/#{revision.id}/review_show",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user with rights' do
+      expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
+      get "/api/v1/projects/#{project.id}/document_revisions/#{revision.id}/review_show",
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json).to have_key('id')
+      expect(json).to have_key('document_id')
+      expect(json).to have_key('codification_string')
+      expect(json).to have_key('document_review_subjects')
+      expect(json).to have_key('review_owners')
+      expect(json).to have_key('review_status')
+      expect(json).to have_key('title')
+      expect(json).to have_key('unread_comments_count')
+    end
+  end
 end
