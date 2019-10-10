@@ -39,7 +39,7 @@ class Api::V1::ProjectMembersController < ApplicationController
   end
 
   def update
-    if @project_member.update(project_member_params)
+    if @project_member.update(project_member_params.merge(new_inviter_id: signed_in_user.id))
       render json: @project_member
     else
       render json: @project_member.errors,
@@ -69,6 +69,7 @@ class Api::V1::ProjectMembersController < ApplicationController
                              :dms_module_access,
                              :cms_module_master,
                              :dms_module_master,
+                             :invite,
                              company_address_attributes: Address.column_names)
   end
 end

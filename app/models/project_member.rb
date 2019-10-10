@@ -18,13 +18,15 @@ class ProjectMember < ApplicationRecord
                        :joint_venture_company ],
                       _prefix: true
 
-  attr_accessor :creator
+  attr_accessor :creator, :invite, :new_inviter_id
 
+  before_save :send_confirmation_email,
+              if: :invite
+  before_save :add_user, if: :creation_step_details?
+  
   after_save :update_creation_step_to_pending,
              unless: -> { creation_step_active? ||
                           creation_step_pending? }
-
-  before_save :add_user, if: :creation_step_details?
 
   belongs_to :project,
     inverse_of: :members
@@ -99,9 +101,9 @@ class ProjectMember < ApplicationRecord
   end
 
   def send_confirmation_email
+    self.inviter_id = new_inviter_id if invite && new_inviter_id.present?
     self.confirmation_sent_at = Time.now
     ApplicationMailer.send_project_member_confirmation(self).deliver_now
-    self.save
   end
 
   def confirmation_token
