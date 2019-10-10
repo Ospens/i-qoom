@@ -2,7 +2,6 @@ import React from 'react'
 import DropDown from '../../../../elements/DropDown'
 
 function ModalList({ closeModal, items, openForm, removeItem, type }) {
-
   const ddOptions = item => [
     {
       title: `Rename ${type}`,
@@ -32,11 +31,12 @@ function ModalList({ closeModal, items, openForm, removeItem, type }) {
             <li key={index} className='item-block'>
               <div>
                 <div className='item-block__title'>{item.title}</div>
+                {item.title !== 'Project Administrator' && item.title !== 'i-Qoom Admin' &&
                 <DropDown
                   dots={true}
                   className='dropdown-with-icon dropright ml-2'
                   defaultValues={ddOptions(item)}
-                />
+                />}
               </div>
             </li>
           ))}

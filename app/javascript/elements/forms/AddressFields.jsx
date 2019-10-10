@@ -53,7 +53,7 @@ const AddressFields = ({ submitErrors }) => (
         errorField={submitErrors}
         className='form-group col-md-4'
         placeholder='Postcode'
-      />
+      />  
     </div>
     <Field
       name='country'
@@ -63,6 +63,7 @@ const AddressFields = ({ submitErrors }) => (
       className='form-group'
       component={SelectField}
       validate={[required]}
+      placeholder='Select country'
     />
     <div className='form-row'>
       <Field

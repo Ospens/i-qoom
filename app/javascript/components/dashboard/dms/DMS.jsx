@@ -87,7 +87,7 @@ function DMS({ match, match: { params: { project_id } } }) {
         component={QuickSearch}
       />
       <Page
-        title='DMS Settings'
+        title='DMS User Settings'
         path={`${match.path}/settings/`}
         component={DmsSettings}
       />
