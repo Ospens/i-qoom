@@ -29,6 +29,8 @@ module DocumentHelpers
         value['selected'] = true
       elsif field['codification_kind'] == 'revision_number'
         field['value'] = '1'
+      elsif field['codification_kind'] == 'document_number'
+        field['value'] = '1000'
       elsif field['kind'] == 'text_field' || field['kind'] == 'textarea_field'
         field['value'] = Faker::Name.initials
       elsif field['kind'] == 'date_field'

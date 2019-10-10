@@ -251,10 +251,8 @@ function Content({ projectId, checkedDocs, checkItem }) {
                 </Table.Cell>
 
                 <Table.Cell className='doc-id-cell'>
-                  <Link
-                    to={`/dashboard/projects/${projectId}/documents/${doc.id}`}
-                  >
-                    IT-IS-NOT-REA-DY_{doc.id}
+                  <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
+                    {doc.codification_string}
                   </Link>
                 </Table.Cell>
 

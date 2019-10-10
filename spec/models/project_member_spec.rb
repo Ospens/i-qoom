@@ -122,7 +122,20 @@ RSpec.describe ProjectMember, type: :model do
                                         :active].sample,
                         inviter_id: FactoryBot.create(:user).id)
     project_member.send_confirmation_email
+    project_member.save
+    project_member.reload
     expect(project_member.confirmation_sent_at).to be_present
+  end
+
+  it "invite true" do
+    user = FactoryBot.create(:user)
+    project_member =
+      FactoryBot.create(:project_member_details)
+    project_member.update(invite: true,
+                          new_inviter_id: user.id)
+    project_member.reload
+    expect(project_member.confirmation_sent_at).to be_present
+    expect(project_member.inviter_id).to eq(user.id)
   end
 
   context "validates_acceptance of dms and cms modules" do
