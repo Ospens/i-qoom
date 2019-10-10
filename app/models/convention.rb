@@ -54,7 +54,22 @@ class Convention < ApplicationRecord
     # first positions "XXX Default" is overwritten. If the user wants to delete
     # it again, then the last position become mandatory and not deletable.
     # (c) Norman
-    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
+    # if i look at the screenshot, i think we can make it exactly as it is
+    # design. All fields would be pre-filled in order to comply with backend
+    # restriction:
+    # Originating Company
+    # Code = ---
+    # Text = Originating conmpany
+    # If the user goes to upload form and press the drop-down for the Company,
+    # then he has only "Originating Company" as the selection and the Code
+    # would be "---".
+    # In my view this could be the solution.
+    # What do you think?
+    # i am aware that this means that apart from capital letters and
+    # numbers (12A, KJ7, OOK, AA1, RRR, etc.) the Code "---" must be valid as an
+    # exception....
+    # (с) Yasser
+    field.document_field_values.new(value: '---', title: 'Originating company', position: 1)
     if number == 2
       field =
         document_fields.new(kind: :select_field,
@@ -63,7 +78,7 @@ class Convention < ApplicationRecord
                             command: 'Select receiving company',
                             column: 1,
                             row: 2)
-      field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
+      field.document_field_values.new(value: '---', title: 'Receiving company', position: 1)
     end
     field =
       document_fields.new(kind: :select_field,
@@ -72,7 +87,7 @@ class Convention < ApplicationRecord
                           command: 'Select a discipline',
                           column: 1,
                           row: number == 2 ? 3 : 2)
-    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
+    field.document_field_values.new(value: '---', title: 'Discipline', position: 1)
     document_fields.new(kind: :textarea_field,
                         codification_kind: :additional_information,
                         title: 'Additional information',
@@ -92,7 +107,7 @@ class Convention < ApplicationRecord
                           command: 'Select a document type',
                           column: 2,
                           row: 1)
-    field.document_field_values.new(value: 'XXX', title: 'Default', position: 1)
+    field.document_field_values.new(value: '---', title: 'Document type', position: 1)
     document_fields.new(kind: :text_field,
                         codification_kind: :document_number,
                         title: 'Document number',
