@@ -73,6 +73,7 @@ class Project < ApplicationRecord
       members.each do |member|
         member.inviter_id = inviter_id
         member.send_confirmation_email
+        member.save
       end
       true
     else

@@ -83,7 +83,9 @@ class Api::V1::DocumentsController < ApplicationController
       documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
     end
 
-    documents = documents.as_json(include: { document_fields: { include: :document_field_values } })
+    documents =
+      documents.as_json(include: { document_fields: { include: :document_field_values } },
+                        methods: [:codification_string])
 
     document_fields = @project.conventions.active.document_fields
     originating_companies =
