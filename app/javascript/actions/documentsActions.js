@@ -5,6 +5,8 @@ import {
   DOCUMENT_FETCH_SUCCESS,
   EDIT_DOCUMENT,
   REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
+  DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
+  TOGGLE_FILTERS,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
@@ -53,6 +55,11 @@ const documentsFetched = payload => ({
   payload
 })
 
+const documentsFetchedWithoutFilters = payload => ({
+  type: DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
+  payload
+})
+
 const creatingDocument = payload => ({
   type: CREATING_DOCUMENT,
   payload
@@ -80,7 +87,29 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${projectId}/documents`, headers)
       .then(response => {
-        dispatch(documentsFetched(response.data.documents))
+        dispatch(documentsFetched(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
+  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
+
+  const { user: { token }, documents: { discipline, originating_companies, document_types } } = getState()
+  const headers = { Authorization: token }
+  const params = {
+    discipline: discipline.filter(el => el.checked).map(v => v.title),
+    originating_companies: originating_companies.filter(el => el.checked).map(v => v.title),
+    document_types: document_types.filter(el => el.checked).map(v => v.title)
+  }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
+      .then(response => {
+        dispatch(documentsFetchedWithoutFilters(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')
