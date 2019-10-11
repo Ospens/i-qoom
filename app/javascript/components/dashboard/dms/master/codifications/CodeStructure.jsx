@@ -4,17 +4,31 @@ import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {
   reduxForm,
-  Field
+  Field,
+  getFormSyncErrors
 } from 'redux-form'
+import { required } from '../../../../../elements/validations'
 import InputField from '../../../../../elements/InputField'
 import { InputField as InputFieldPopUp} from './FieldForm'
 import { updateProjectCode } from '../../../../../actions/projectActions'
 import { fields, projectInputs, placeholders, freeTextPlaceholders } from './Content'
 
+export const requiredAll = values => value => {
+  /* console.log(values)
+  if (!values) return 'error'
+  console.log(values.project_code.filter(el => el === undefined))
+  return values.project_code.filter(el => el === undefined) ? 'error' : undefined */
+}
+
+const submitCodification = () => {
+  console.log()
+}
+
 function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, match: { params: { project_id } } }) {
   const dispatch = useDispatch()
   const project_code = useSelector(state => state.projects.current.project_code)
-  
+  const errors = useSelector(state => getFormSyncErrors('convention_code_form')(state))
+
   useEffect(() => {
     if (!project_code) return 
 
@@ -56,12 +70,16 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             name='project_code[0]'
                             placeholder='M'
                             maxLength='1'
+                            validate={[required]}
+                            justHightlight={true}
                           />
                           <Field
                             component={InputField}
                             name='project_code[1]'
                             placeholder='V'
                             maxLength='1'
+                            validate={[required]}
+                            justHightlight={true}
                           />
                           <Field
                             component={InputFieldPopUp}
@@ -72,6 +90,8 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             isForm={true}
                             msg='Please define the Project code'
                             popupClassName='without-margin'
+                            validate={[required]}
+                            errors={project_code || project_code === undefined ? undefined : errors}
                           />
                         </React.Fragment>)
                     } else if (disabled) {
@@ -109,4 +129,7 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
   )
 }
 
-export default withRouter(reduxForm({ form: 'convention_code_form' })(CodeStructure))
+export default withRouter(reduxForm({
+  form: 'convention_code_form',
+  onSubmit: submitCodification // submit function must be passed to onSubmit
+})(CodeStructure))
