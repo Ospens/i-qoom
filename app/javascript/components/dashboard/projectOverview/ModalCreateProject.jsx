@@ -119,7 +119,7 @@ class ModalCreateProject extends Component {
     
     return (
       <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)} className={mainClass}>
-        {!infoModals && <div className='new-modal__header'><h4>New project</h4></div>}
+        {!infoModals && <div className='new-modal__header'><h4>Create New Project</h4></div>}
         {step === 1 &&
         <Terms
           closeModal={this.handleClose}
@@ -174,6 +174,7 @@ class ModalCreateProject extends Component {
         trigger={this.renderTrigger()}
         open={modalOpen}
         onClose={this.handleClose}
+        closeOnDimmerClick={false}
       />
     )
   }

@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
-import moment from 'moment'
 import {
   DOCUMENTS_FETCH_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
@@ -33,6 +32,20 @@ export const paramsToFormData = (data, params, preceding = '') => {
     } */
   }
   return newData
+}
+
+const regexp = /(filename=")(.*)"/i
+
+const downloadFile = response => {
+  const disposition = response.headers['content-disposition'].match(regexp)
+  const title = disposition ? disposition[2] : 'file.pdf'
+  const url = window.URL.createObjectURL(new Blob([response.data]))
+  const link = document.createElement('a')
+  link.href = url
+
+  link.setAttribute('download', title)
+  document.body.appendChild(link)
+  link.click()
 }
 
 const documentsFetched = payload => ({
@@ -206,16 +219,48 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
       responseType: 'blob' // important
     })
       .then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        // TODO: change filename
-        link.setAttribute('download', `documents_${moment().format('MMMM Do YYYY, h:mm:ss')}.${type}`)
-        document.body.appendChild(link)
-        link.click()
+        downloadFile(response)
       })
       .catch(() => {
         errorNotify('Something went wrong')
       })
   ))
+}
+
+export const downloadDetailFile = docId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { Authorization: token }
+
+  return (
+    axios({
+      url: `/api/v1/documents/${docId}/download_details`,
+      method: 'GET',
+      headers,
+      responseType: 'blob' // important
+    }).then(response => {
+      downloadFile(response)
+    })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const downloadNativeFile = docId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { Authorization: token }
+
+  return (
+    axios({
+      url: `/api/v1/documents/${docId}/download_native_file`,
+      method: 'GET',
+      headers,
+      responseType: 'blob' // important
+    }).then(response => {
+      downloadFile(response)
+    })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
 }

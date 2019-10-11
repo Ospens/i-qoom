@@ -356,7 +356,14 @@
 
 .ck.ck-editor__main>.ck-editor__editable {
   background: var(--ck-color-base-background);
-  border-radius: 0
+  align-items: center;
+  border: 1px solid #ced4da !important;
+  background-color: #FCFFFF;
+  border-color: #E9F3F5 !important;
+  border-radius: 5px !important;
+  border-style: solid;
+  border-width: 1px;
+  box-shadow: none;
 }
 
 .ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable,
