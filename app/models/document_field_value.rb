@@ -6,7 +6,7 @@ class DocumentFieldValue < ApplicationRecord
             presence: true
 
   validates :value,
-            format: { with: /\A[A-Z]{3}\z/ },
+            format: { with: /\A([A-Z0-9]{3}|---)\z/ },
             if: -> { document_field.validate_codification_values? }
 
   def build_for_new_document
