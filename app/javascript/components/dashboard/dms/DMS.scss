@@ -604,6 +604,7 @@
   line-height: 1.5;
   border-radius: 0.25rem;
 }
+
 .dms-topbar-menu__li-item {
   display: flex;
   align-items: center;
@@ -627,6 +628,7 @@
     margin-bottom: 0;
     margin-left: 10px;
     cursor: pointer;
+    color: #475859;
   }
 }
 
@@ -2914,6 +2916,27 @@ span.column-title {
       span {
         color: #fff !important;
       }
+    }
+  }
+
+  .dropdown-menu {
+    padding: 0 !important;
+  }
+
+  .dms-topbar-menu__li-item {
+    padding-left: 10px;
+    padding-right: 10px;
+
+    &.checked {
+      background-color: #F0F7F7;
+    }
+
+    &:first-of-type {
+      padding-top: 10px;
+    }
+
+    &:last-of-type {
+      padding-bottom: 10px;
     }
   }
 }

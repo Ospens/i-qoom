@@ -33,9 +33,6 @@ function Filter({ mainTitle, values, change }) {
             </li>
           )
         })}
-        <li className='dms-topbar-menu__li-item'>
-          <span>Vorem</span>
-        </li>
       </ul>
     </DropDown>
   )
