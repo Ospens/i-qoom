@@ -24,4 +24,20 @@ RSpec.describe DocumentRevision, type: :model do
     expect(main.revisions.order_by_revision_number.first).to eql(rev1)
     expect(main.revisions.last_revision).to eql(rev3)
   end
+
+  it '#can_update_review_status?' do
+    user = FactoryBot.create(:user)
+    doc = FactoryBot.create(:document)
+    rev = doc.revision
+    expect(rev.can_update_review_status?(user)).to eql(false)
+    owner = doc.project
+               .document_review_owners
+               .create!(user: user, originating_company: '111')
+    expect(rev.can_update_review_status?(user)).to eql(false)
+    value =
+      doc.document_fields.find_by(codification_kind: :originating_company)
+                         .document_field_values.find_by(selected: true).value
+    owner.update!(originating_company: value)
+    expect(rev.can_update_review_status?(user)).to eql(true)
+  end
 end

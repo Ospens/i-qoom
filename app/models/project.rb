@@ -24,6 +24,10 @@ class Project < ApplicationRecord
 
   has_many :dms_settings
 
+  has_many :document_review_owners
+
+  has_many :document_review_tags
+
   has_many :admins, class_name: "ProjectAdministrator", index_errors: true
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"

@@ -2392,7 +2392,7 @@ body.dimmable > .dimmer {
   min-width: -webkit-min-content;
   min-width: -moz-min-content;
   min-width: min-content;
-  z-index: 1900;
+  z-index: 999;
   border: 1px solid #D4D4D5;
   line-height: 1.4285em;
   max-width: 250px;

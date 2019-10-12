@@ -1,9 +1,27 @@
 class DocumentMain < ApplicationRecord
+  enum document_review_status: [ :in_progress,
+                                 :accepted,
+                                 :rejected,
+                                 :issued_for_approval,
+                                 :issued_for_review,
+                                 :issued_for_information ]
   belongs_to :project
 
   has_many :revisions,
            class_name: 'DocumentRevision',
            foreign_key: 'document_main_id'
+
+  has_and_belongs_to_many :reviewers,
+                          class_name: 'User',
+                          join_table: 'document_mains_reviewers',
+                          association_foreign_key: 'reviewer_id',
+                          validate: false # for tests
+
+  has_and_belongs_to_many :review_issuers,
+                          class_name: 'User',
+                          join_table: 'document_mains_review_issuers',
+                          association_foreign_key: 'review_issuer_id',
+                          validate: false # for tests
 
   before_create :assign_project_code
 

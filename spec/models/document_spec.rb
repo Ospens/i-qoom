@@ -71,7 +71,11 @@ RSpec.describe Document, type: :model do
     field1 = doc1.document_fields.find_by(codification_kind: :originating_company)
     field_value1 = field1.document_field_values.find_by(selected: true)
     field_value1.update(value: Faker::Name.initials)
-    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, field_value1.value).pluck(:id)
+    field2 = doc1.document_fields.find_by(codification_kind: :discipline)
+    field_value2 = field2.document_field_values.find_by(selected: true)
+    field_value2.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, field_value1.value)
+    ids = ids.filter_by_codification_kind_and_value(:discipline, field_value2.value).pluck(:id)
     expect(ids).to eql([doc1.id])
     field2 = doc2.document_fields.find_by(codification_kind: :originating_company)
     field_value2 = field2.document_field_values.find_by(selected: true)
@@ -322,6 +326,69 @@ RSpec.describe Document, type: :model do
     field['value'] = field['value'].to_i + 1
     doc3 = doc1.revision.versions.new(edit_attrs)
     expect(doc3).to_not be_valid
+  end
+
+  it '#set_review_status_in_document_main' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['review_status'] = 'issued_for_approval'
+    attrs['reviewers'] = [FactoryBot.create(:user).id]
+    attrs['review_issuers'] = [FactoryBot.create(:user).id]
+    doc = Document.create!(attrs)
+    expect(doc.revision.document_main).to be_issued_for_approval
+  end
+
+  it '#review_status_value' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['reviewers'] = [FactoryBot.create(:user).id]
+    attrs['review_issuers'] = [FactoryBot.create(:user).id]
+    doc = Document.new(attrs)
+    expect(doc).to be_valid
+    doc.review_status = 'in_progress'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'accepted'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'rejected'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_information'
+    expect(doc).to be_valid
+  end
+
+  it 'set_reviewers_and_review_issuers_in_document_main' do
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    user3 = FactoryBot.create(:user)
+    attrs = document_attributes(user1)
+    attrs['review_status'] = 'issued_for_approval'
+    attrs['reviewers'] = [user2.id]
+    attrs['review_issuers'] = [user3.id]
+    doc = Document.create!(attrs)
+    main = doc.document_main
+    expect(main.reviewers.pluck(:id)).to eql([user2.id])
+    expect(main.review_issuers.pluck(:id)).to eql([user3.id])
+  end
+
+  it 'validates reviewers and review issuers length' do
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    user3 = FactoryBot.create(:user)
+    attrs = document_attributes(user1)
+    attrs['review_status'] = 'issued_for_information'
+    expect(Document.new(attrs)).to be_valid
+    ['issued_for_approval', 'issued_for_review'].each do |status|
+      attrs = document_attributes(user1)
+      attrs['review_status'] = status
+      expect(Document.new(attrs)).to_not be_valid
+      attrs['reviewers'] = [user2.id]
+      expect(Document.new(attrs)).to_not be_valid
+      attrs['review_issuers'] = [user3.id]
+      expect(Document.new(attrs)).to be_valid
+    end
   end
 
   it 'codification_string' do

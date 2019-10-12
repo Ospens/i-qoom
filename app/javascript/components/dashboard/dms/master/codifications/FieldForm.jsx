@@ -28,6 +28,7 @@ export const InputField = ({
   isForm,
   popupClassName,
   msg,
+  errors,
   meta: { touched, error },
   ...props
 }) => {
@@ -49,17 +50,17 @@ export const InputField = ({
       pattern=".*\S.*"
     />
   )
-  
+
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
       {props.id === 'value' // || props.id.includes('project_code')
         ? inputElement
         : <Popup
-            className={classnames('error-tooltip-container', popupClassName)}
+            className={classnames(popupClassName, { 'error-tooltip-container' : (touched && errors) }, { 'dark-tooltip-container': (!touched && errors) })}
             trigger={inputElement}
             position='right center'
-          open={!!(touched && error) || (touched && props.id.includes('project_code') && !input.value) }
+            open={!!(touched && error) || (touched && props.id.includes('project_code') && !!errors) || (!touched && !!errors) }
           >
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>
