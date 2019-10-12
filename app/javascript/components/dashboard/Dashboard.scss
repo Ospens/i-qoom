@@ -918,7 +918,7 @@ span.divider {
   top: 3px;
 }
 
-.drop-down:not(.dropdown-with-icon):not(.dropdown-submenu) {
+.drop-down:not(.dropdown-with-icon):not(.dropdown-submenu):not(.dms-topbar-menu__dropdown) {
   button {
     padding-right: 24px;
     

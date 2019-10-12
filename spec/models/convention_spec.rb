@@ -220,7 +220,7 @@ RSpec.describe Convention, type: :model do
         end
         it do
           field.value = '999'
-          expect(convention).to_not be_valid
+          expect(convention).to be_valid
         end
         it do
           field.value = 'aAA'
@@ -232,10 +232,18 @@ RSpec.describe Convention, type: :model do
         end
         it do
           field.value = 'AB0'
-          expect(convention).to_not be_valid
+          expect(convention).to be_valid
         end
         it do
           field.value = 'AAAA'
+          expect(convention).to_not be_valid
+        end
+        it do
+          field.value = '---'
+          expect(convention).to be_valid
+        end
+        it do
+          field.value = 'AA-'
           expect(convention).to_not be_valid
         end
         it 'validates uniqueness' do

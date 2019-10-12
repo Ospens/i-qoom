@@ -1,39 +1,49 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { submit } from 'redux-form'
+import { connect, useDispatch } from 'react-redux'
 import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 import CreateFolder from './user/CreateFolder'
 
-export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
-  <Route path={path} exact>
-    {({ match, location }) => {
-      const matched = match || location.pathname.indexOf(root) > -1
-      return (
-        <li className='dms-sidebar-menu__item'>
-          <Link className={classnames('btn', { 'active': matched })} to={path}>
-            <span className={classnames('dark-gray mr-2', icon)} />
-            <span className='head-button__gray-text'>{label}</span>
-          </Link>
-          {matched && nested &&
-          <ul className='dms-sidebar-menu__sublitem'>
-            {nested.map((subItem, i) => (
-              <li
-                key={i}
-                className='dms-sidebar-menu__sublink'
-              >
-                <Link
-                  className={classnames({ 'active': location.pathname.indexOf(subItem.path) > -1})}
-                  to={subItem.path}
-                >
-                  {subItem.title}
+export const DmsSideBarItem = ({ path, label, icon, root, nested, projectCode }) => {
+  const dispatch = useDispatch()
+
+  return (
+    <Route path={path} exact>
+      {({ match, location }) => {
+        const matched = match || location.pathname.indexOf(root) > -1
+        return (
+          <li className='dms-sidebar-menu__item'>
+            {projectCode 
+              ? <Link className={classnames('btn', { 'active': matched })} to={path}>
+                  <span className={classnames('dark-gray mr-2', icon)} />
+                  <span className='head-button__gray-text'>{label}</span>
                 </Link>
-              </li>
-            ))}
-          </ul>}
-        </li>
-      )}}
-  </Route>
-)
+              : <button className={classnames('btn', { 'active': matched })} onClick={() => dispatch(submit('convention_code_form'))} type='submit'>
+                  <span className={classnames('dark-gray mr-2', icon)} />
+                  <span className='head-button__gray-text'>{label}</span>
+                </button>}
+            {matched && nested &&
+            <ul className='dms-sidebar-menu__sublitem'>
+              {nested.map((subItem, i) => (
+                <li
+                  key={i}
+                  className='dms-sidebar-menu__sublink'
+                >
+                  <Link
+                    className={classnames({ 'active': location.pathname.indexOf(subItem.path) > -1})}
+                    to={subItem.path}
+                  >
+                    {subItem.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>}
+          </li>
+        )}}
+    </Route>
+  )
+}
 
 export const renderFoldersBlock = (folders, projectId) => {
   return (
@@ -176,6 +186,7 @@ class DmsSideBar extends Component {
             <React.Fragment key={i}>
               <DmsSideBarItem
                 path={path}
+                projectCode={project_code}
                 label={title}
                 icon={icon}
                 root={root}
@@ -195,6 +206,7 @@ class DmsSideBar extends Component {
                     <React.Fragment key={i}>
                       <DmsSideBarItem
                         path={project_code ? path : `#`}
+                        projectCode={project_code}
                         label={title}
                         icon={icon}
                         root={root}

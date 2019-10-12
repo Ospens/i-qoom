@@ -7,6 +7,7 @@ import { Table } from 'semantic-ui-react'
 import DropDown from '../../../../../elements/DropDown'
 import { columns, DtOptions } from '../../constants'
 import { DropDownItems } from './elements'
+import Filters from './Filters'
 import { downloadList, downloadDetailFile, downloadNativeFile } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
 
@@ -82,100 +83,6 @@ function DownloadDocuments({ docId, downloadByOption }) {
   )
 }
 
-function renderTableHeader() {
-  const checkedDocTypes = []
-  return (
-    <div className='dms-container__table-header'>
-      <span className='mr-4 grey'>Show</span>
-      <DropDown
-        btnName='Documents Types'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          {DtOptions.map(({ key, title }, i) => {
-            const checked = checkedDocTypes.includes(key)
-            const liClass = classnames('dms-topbar-menu__li-item', { checked })
-
-            return (
-              <li key={i} className={liClass}>
-                <input
-                  type='checkbox'
-                  id={`dt_${key}`}
-                  // checked={checked}
-                  // onChange={() => checkItem('checkedDocTypes', checkedDocTypes, key)}
-                />
-                <label htmlFor={`dt_${key}`} />
-                <span htmlFor={`dt_${key}`}>{title}</span>
-              </li>
-            )
-          })}
-          <li className='dms-topbar-menu__li-item'>
-            <span>Variation Orders</span>
-          </li>
-          <li className='dms-topbar-menu__li-item'>
-            <span>Vorem</span>
-          </li>
-        </ul>
-      </DropDown>
-
-      <DropDown
-        btnName='Documents Types'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          <li>
-            <span>Contractor</span>
-          </li>
-        </ul>
-      </DropDown>
-
-      <DropDown
-        btnName='Discipline'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          <li>
-            <span>Contractor</span>
-          </li>
-        </ul>
-      </DropDown>
-
-      <DropDown
-        btnName='Quality Reports'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          <li>
-            <span>Contractor</span>
-          </li>
-        </ul>
-      </DropDown>
-
-      <DropDown
-        btnName='Relevance'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          <li>
-            <span>Contractor</span>
-          </li>
-        </ul>
-      </DropDown>
-
-      <DropDown
-        btnName='Reports'
-        btnClass='dms-topbar-menu__dropdown'
-      >
-        <ul>
-          <li>
-            <span>Contractor</span>
-          </li>
-        </ul>
-      </DropDown>
-    </div>
-  )
-}
-
 function Content({ projectId, checkedDocs, checkItem }) {
   const dispatch = useDispatch()
   const [formats, changeFormats] = useState([])
@@ -197,7 +104,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
   
   return (
     <div className='dms-content'>
-      {renderTableHeader()}
+      <Filters />
       <div className='overview-table-contaniner'>
         <Table sortable striped className='main-table-block'>
           <Table.Header>
