@@ -7,6 +7,7 @@ const InputField = ({
   className,
   label,
   type,
+  justHightlight = false,
   meta: { touched, error },
   ...props
 }) => {
@@ -22,7 +23,7 @@ const InputField = ({
         required
         pattern=".*\S.*"
       />
-      {touched &&
+      {touched && !justHightlight &&
       <div className='invalid-feedback'>
       {error
         ? error
