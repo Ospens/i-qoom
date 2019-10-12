@@ -6,7 +6,7 @@ const FirstAdmin = ({ submitErrors, closeModal, nextStep }) => {
   return (
     <React.Fragment>
       <div className='new-modal__body'>
-        <h3>You will be the first project administrator. Please enter your details.</h3>
+        <h3>You you will be the first Project Administrator with full access to all modules and features. Your details are shown below.</h3>
         <h6 className='new-modal__body-title mt-4'>After creating the first project, you can change the administrator whenever you like.</h6>
         <label className='project-admin'>Project administrator</label>
         <AdministratorFields admin='admins[0]' submitErrors={submitErrors} disabled />

@@ -143,7 +143,7 @@ class SignUp extends Component {
           className='form-check-label'
           name='accept_terms_and_conditions'
           id='accept_terms_and_conditions'
-          text='I accept terms and Conditions'
+          text={<Link to='/terms' target='_blank'>I accept Terms & Conditions</Link>}
           validate={[required]}
         />
       </div>
@@ -168,7 +168,7 @@ class SignUp extends Component {
             <div className={classnames('step', 'col-6', { active: step === 2 })}>Step 2</div>
           </div>
           <h2 className='sign-up-form__header text-center'>
-            You are two steps away from getting things done. Register for free.
+            You are {step > 1 ? 'one step' : 'two steps'} away from getting things done. Register for free.
           </h2>
           <div className='form-fields'>
             {step === 1

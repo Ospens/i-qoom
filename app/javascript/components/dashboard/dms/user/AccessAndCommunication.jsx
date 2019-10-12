@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { formValueSelector, Field, FieldArray, change } from 'redux-form'
 import SelectField from '../../../../elements/SelectField'
@@ -66,9 +66,15 @@ const EmailSubjects = ({ fields, discardValue }) => (
 )
 
 const AccessAndCommunication = ({ backStep }) => {
-  const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
-
   const dispatch = useDispatch()
+  const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
+  const title = useSelector(state => selector(state, 'title'))
+
+  useEffect(() => {
+    if (!emailTitleLikeDocument) return
+    
+    dispatch(change('document_form', 'mail_subject', title))
+  }, [dispatch, title, emailTitleLikeDocument])
 
   const discardValue = useCallback(() => {
     dispatch(change('document_form', 'email_addresses', null))
@@ -111,6 +117,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 label='Mail subject'
                 placeholder='Define a mail subject'
                 disabled={emailTitleLikeDocument}
+                value={'title'}
               />
             </div>
             <div className='col-6 subject-like-document'>

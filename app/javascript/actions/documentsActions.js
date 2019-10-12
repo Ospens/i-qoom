@@ -1,11 +1,12 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
-import moment from 'moment'
 import {
   DOCUMENTS_FETCH_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
   EDIT_DOCUMENT,
   REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
+  DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
+  TOGGLE_FILTERS,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
@@ -35,8 +36,27 @@ export const paramsToFormData = (data, params, preceding = '') => {
   return newData
 }
 
+const regexp = /(filename=")(.*)"/i
+
+const downloadFile = response => {
+  const disposition = response.headers['content-disposition'].match(regexp)
+  const title = disposition ? disposition[2] : 'file.pdf'
+  const url = window.URL.createObjectURL(new Blob([response.data]))
+  const link = document.createElement('a')
+  link.href = url
+
+  link.setAttribute('download', title)
+  document.body.appendChild(link)
+  link.click()
+}
+
 const documentsFetched = payload => ({
   type: DOCUMENTS_FETCH_SUCCESS,
+  payload
+})
+
+const documentsFetchedWithoutFilters = payload => ({
+  type: DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   payload
 })
 
@@ -67,7 +87,29 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
   return (
     axios.get(`/api/v1/projects/${projectId}/documents`, headers)
       .then(response => {
-        dispatch(documentsFetched(response.data.documents))
+        dispatch(documentsFetched(response.data))
+      })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
+  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
+
+  const { user: { token }, documents: { discipline, originating_companies, document_types } } = getState()
+  const headers = { Authorization: token }
+  const params = {
+    discipline: discipline.filter(el => el.checked).map(v => v.title),
+    originating_companies: originating_companies.filter(el => el.checked).map(v => v.title),
+    document_types: document_types.filter(el => el.checked).map(v => v.title)
+  }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
+      .then(response => {
+        dispatch(documentsFetchedWithoutFilters(response.data))
       })
       .catch(() => {
         errorNotify('Something went wrong')
@@ -206,16 +248,48 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
       responseType: 'blob' // important
     })
       .then(response => {
-        const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        // TODO: change filename
-        link.setAttribute('download', `documents_${moment().format('MMMM Do YYYY, h:mm:ss')}.${type}`)
-        document.body.appendChild(link)
-        link.click()
+        downloadFile(response)
       })
       .catch(() => {
         errorNotify('Something went wrong')
       })
   ))
+}
+
+export const downloadDetailFile = docId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { Authorization: token }
+
+  return (
+    axios({
+      url: `/api/v1/documents/${docId}/download_details`,
+      method: 'GET',
+      headers,
+      responseType: 'blob' // important
+    }).then(response => {
+      downloadFile(response)
+    })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
+}
+
+export const downloadNativeFile = docId => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { Authorization: token }
+
+  return (
+    axios({
+      url: `/api/v1/documents/${docId}/download_native_file`,
+      method: 'GET',
+      headers,
+      responseType: 'blob' // important
+    }).then(response => {
+      downloadFile(response)
+    })
+      .catch(() => {
+        errorNotify('Something went wrong')
+      })
+  )
 }

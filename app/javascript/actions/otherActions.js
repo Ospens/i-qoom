@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { errorNotify } from '../elements/Notices'
 
-export const sendEmail = (values, afterUpdate) => () => {
+const sendEmail = (values, afterUpdate) => () => {
   const request = { contact: { ...values } }
 
   return (
@@ -12,3 +12,5 @@ export const sendEmail = (values, afterUpdate) => () => {
       })
   )
 }
+
+export default sendEmail
