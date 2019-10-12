@@ -227,6 +227,7 @@ class ModalCreateField extends Component {
         open={modalOpen}
         onClose={this.handleClose}
         className='modal-create-field'
+        closeOnDimmerClick={false}
       />
     )
   }

@@ -257,6 +257,7 @@ class DocIdModal extends Component {
         content={this.renderContent()}
         open={open}
         onClose={() => toggleModal()}
+        closeOnDimmerClick={false}
       />
     )
   }
