@@ -9,7 +9,7 @@ import lines from '../../images/send-lines'
 import plan from '../../images/send-email-big'
 // import TextEditor from '../../elements/TextEditor'
 import { required, email, minLength } from '../../elements/validations'
-import { sendEmail } from '../../actions/otherActions'
+import sendEmail from '../../actions/otherActions'
 
 class GetStarted extends Component {
   state = {

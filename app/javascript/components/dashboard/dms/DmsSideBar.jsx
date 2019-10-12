@@ -88,7 +88,7 @@ class DmsSideBar extends Component {
         path: project_code ? `/dashboard/projects/${project_id}/documents/` : '#'
       },
       {
-        title: 'DMS Settings',
+        title: 'DMS User Settings',
         icon: 'icon-task-list-settings',
         path: project_code ? `/dashboard/projects/${project_id}/documents/settings/` : '#'
       },
@@ -211,7 +211,7 @@ class DmsSideBar extends Component {
   }
 
   render() {
-    const { children } = this.props
+    const { children, match: { params: { project_id } } } = this.props
 
     return (
       <React.Fragment>
@@ -219,10 +219,10 @@ class DmsSideBar extends Component {
           {this.renderMainItems()}
           {children}
 
-          <a to='/dashboard' className='btn-back-to-prev-page'>
+          <Link to={`/dashboard/projects/${project_id}`} className='btn-back-to-prev-page'>
             <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
             BACK
-          </a>
+          </Link>
         </div>
       </React.Fragment>
     )

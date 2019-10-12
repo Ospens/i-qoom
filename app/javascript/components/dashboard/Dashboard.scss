@@ -790,8 +790,26 @@ input[type=checkbox]:checked+label {
     max-width: 300px;
     text-overflow: ellipsis;
 
+    &.doc-id-cell {
+      a {
+        color: var(--color-black);
+
+        &:hover {
+          color: var(--color-blue);
+        }
+      }
+    }
+
     &.title-cell {
       overflow: hidden;
+
+      a {
+        color: var(--color-black);
+
+        &:hover {
+          color: var(--color-blue);
+        }
+      }
     }
 
     &.td-select-dropdown {
@@ -822,6 +840,10 @@ input[type=checkbox]:checked+label {
       & > div {
         display: flex;
         justify-content: center;
+      }
+
+      .dropdown-menu {
+        width: auto;
       }
     }
 
@@ -1478,6 +1500,31 @@ i.arrow {
 
     span {
       color: var(--color-labels);
+    }
+  }
+
+  .download-files-dropdown__list {
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    .download-files-dropdown__list_item {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      padding-top: 5px;
+      padding-bottom: 5px;
+
+      .label-with-icon {
+        display: flex;
+        align-items: center;
+        color: var(--color-black);
+        margin-bottom: 0;
+        cursor: pointer;
+
+        &:hover {
+          color: var(--color-blue);
+        }
+      }
     }
   }
 

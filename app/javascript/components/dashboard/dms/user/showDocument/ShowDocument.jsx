@@ -76,11 +76,11 @@ export const SideBar = ({ documentId, projectId }) => {
           </ul>
         </div>
       </div>
-      
-      <a to='/dashboard' className='btn-back-to-prev-page'>
+
+      <Link to={`/dashboard/projects/${projectId}/documents`} className='btn-back-to-prev-page'>
         <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
         BACK
-      </a>
+      </Link>
     </div>
   )
 }
