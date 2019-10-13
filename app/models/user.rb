@@ -61,4 +61,14 @@ class User < ApplicationRecord
   def confirmation_token
     ::JsonWebToken.encode(user_id: id, email: email)
   end
+
+  def generate_reset_password_token
+    update(reset_password_token:   SecureRandom.hex(10),
+           reset_password_sent_at: Time.now)
+  end
+
+  def reset_password
+    generate_reset_password_token
+    ApplicationMailer.send_reset_password_instructions(self).deliver_now
+  end
 end
