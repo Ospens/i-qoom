@@ -203,6 +203,7 @@ function SelectConvention({ projectCode }) {
       content={<Content close={() => toggleModal(false)} />}
       open={open}
       onClose={() => toggleModal()}
+      closeOnDimmerClick={false}
     />
   )
 }

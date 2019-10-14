@@ -18,7 +18,7 @@ export const paramsToFormData = (data, params, preceding = '') => {
     if (v instanceof Object && v.constructor === Array) {
       if (k === 'file') {
         newData.append(`${preceding}${k}`, (v[0] ? v[0] : new File([], '')))
-      } else if (k === 'emails') {
+      } else if (['emails', 'review_issuers', 'reviewers'].includes(k)) {
         v.forEach(el => newData.append(`${preceding}${k}[]`, el))
       } else {
         newData = paramsToFormData(newData, v, `${preceding}[${k}][]`)
@@ -98,12 +98,19 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
 export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
   dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
 
-  const { user: { token }, documents: { discipline, originating_companies, document_types } } = getState()
+  const {
+    user: { token },
+    documents: {
+      discipline,
+      originating_companies: originatingCompanies,
+      document_types: documentTypes
+    }
+  } = getState()
   const headers = { Authorization: token }
   const params = {
-    discipline: discipline.filter(el => el.checked).map(v => v.title),
-    originating_companies: originating_companies.filter(el => el.checked).map(v => v.title),
-    document_types: document_types.filter(el => el.checked).map(v => v.title)
+    discipline: discipline.filter(el => el.checked).map(v => v.value),
+    originating_companies: originatingCompanies.filter(el => el.checked).map(v => v.value),
+    document_types: documentTypes.filter(el => el.checked).map(v => v.value)
   }
 
   return (

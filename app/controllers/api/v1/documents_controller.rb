@@ -9,7 +9,9 @@ class Api::V1::DocumentsController < ApplicationController
                                    :create_revision,
                                    :download_native_file,
                                    :download_details,
+                                   :revisions,
                                    :revisions_and_versions ]
+
   load_resource :document, through: :project, only: [ :new, :create ]
   authorize_resource :document, except: [ :index,
                                           :download_native_files,
@@ -88,13 +90,13 @@ class Api::V1::DocumentsController < ApplicationController
     document_fields = @project.conventions.active.document_fields
     originating_companies =
       document_fields.find_by(codification_kind: :originating_company)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     discipline =
       document_fields.find_by(codification_kind: :discipline)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     document_type =
       document_fields.find_by(codification_kind: :document_type)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
 
     render json: { documents: documents,
                    originating_companies: originating_companies,
@@ -164,6 +166,10 @@ class Api::V1::DocumentsController < ApplicationController
     end
   end
 
+  def revisions
+    render json: @document.revision.document_main.revisions
+  end
+
   def my_documents
     revision_ids = @project.documents.pluck(:document_revision_id).uniq
     revisions = DocumentRevision.find(revision_ids)
@@ -198,10 +204,13 @@ class Api::V1::DocumentsController < ApplicationController
     end
     params.require(:document).permit(:issued_for,
                                      :title,
+                                     :review_status,
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,
                                      emails: [],
+                                     reviewers: [],
+                                     review_issuers: [],
                                      document_fields_attributes:
                                       [ :kind,
                                         :codification_kind,

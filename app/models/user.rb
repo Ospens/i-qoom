@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :validatable
 
+  acts_as_reader
+
   attr_accessor :accept_terms_and_conditions
 
   has_many :projects
@@ -13,6 +15,9 @@ class User < ApplicationRecord
   has_many :document_rights
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
+  has_many :document_review_subjects
+  has_many :document_review_comments
+  has_many :document_review_owners
 
   validates_presence_of :password_confirmation,
     on: [:create, :password_changed?]

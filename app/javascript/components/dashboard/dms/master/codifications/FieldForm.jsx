@@ -122,7 +122,7 @@ const CodeList = ({ fields, title, meta, isForm }) => {
   )
 }
 
-function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params: { project_id } } }) {
+function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match: { params: { project_id } } }) {
   const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
   const document_fields = useSelector(state => state.conventions.current.document_fields)
@@ -156,6 +156,7 @@ function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params
           isForm={isForm}
         />
       </div>
+      {!viewOnly &&
       <div className='codification-codes-values-column__footer'>
         {isForm
         ? <React.Fragment>
@@ -163,7 +164,7 @@ function FieldForm({ title, form, handleSubmit, reset, pristine, match: { params
             <button type='submit' className='btn btn-purple'>Save</button>
           </React.Fragment>
           : <button onClick={() => toggleIsForm(true)} type='button' className='btn btn-purple full-wide'>Edit</button>}
-      </div>
+      </div>}
     </form>
   )
 }

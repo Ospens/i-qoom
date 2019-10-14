@@ -22,8 +22,30 @@ Rails.application.routes.draw do
           post :create_revision
           get :download_native_file
           get :download_details
+          get :revisions
           get :revisions_and_versions
         end
+        resources :document_review_subjects, only: [:new, :create]
+      end
+
+      resources :document_review_subjects, only: :show do
+        resources :document_review_comments, only: [:new, :create]
+        member do
+          post :update_status
+          post :complete_review
+          get :download_files
+        end
+      end
+
+      resources :document_review_comments, only: :update do
+        get :download_file, on: :member
+      end
+
+      resource :document_review_owner, only: :update
+
+      resources :document_revisions, only: [] do
+        resources :document_review_subjects, only: :index
+        post :update_review_status, on: :member
       end
 
       resources :document_folders, only: [:create, :edit, :update, :show] do
@@ -75,6 +97,15 @@ Rails.application.routes.draw do
         resources :document_folders, only: :index do
           get :user_index, on: :collection
         end
+        resources :document_review_owners, only: :index
+        resources :document_revisions, only: [] do
+          get :review_show, on: :member
+          collection do
+            get :review_menu
+            get :review_index
+          end
+        end
+        resources :document_review_tags, except: [:new, :edit, :show]
       end
     end
   end

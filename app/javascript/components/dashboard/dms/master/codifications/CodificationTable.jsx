@@ -2,7 +2,7 @@ import React from 'react'
 import FieldForm from './FieldForm'
 import { useSelector } from 'react-redux'
 
-function CodificationTable({}) {
+function CodificationTable({ viewOnly = false }) {
   const document_fields = useSelector(state => state.conventions.current.document_fields)
 
   const document_type = document_fields.find(el => el.codification_kind === 'document_type')
@@ -17,6 +17,7 @@ function CodificationTable({}) {
         <FieldForm 
           form='originating_company'
           title='Originating company'
+          viewOnly={viewOnly}
           initialValues={{ originating_company: originating_company ? originating_company.document_field_values : [] }}
         />
       </div>
@@ -26,6 +27,7 @@ function CodificationTable({}) {
           form='discipline' 
           title='Discipline'
           initialValues={{ discipline: discipline ? discipline.document_field_values : [] }}
+          viewOnly={viewOnly}
         />
       </div>
 
@@ -34,6 +36,7 @@ function CodificationTable({}) {
           form='document_type' 
           title='Document type'
           initialValues={{ document_type: document_type ? document_type.document_field_values : [] }}
+          viewOnly={viewOnly}
         />
       </div>
     </div>
