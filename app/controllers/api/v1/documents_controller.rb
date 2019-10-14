@@ -90,13 +90,13 @@ class Api::V1::DocumentsController < ApplicationController
     document_fields = @project.conventions.active.document_fields
     originating_companies =
       document_fields.find_by(codification_kind: :originating_company)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     discipline =
       document_fields.find_by(codification_kind: :discipline)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     document_type =
       document_fields.find_by(codification_kind: :document_type)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
 
     render json: { documents: documents,
                    originating_companies: originating_companies,

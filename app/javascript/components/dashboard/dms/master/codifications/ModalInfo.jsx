@@ -49,6 +49,7 @@ function ModalInfo({  }) {
       content={<Content />}
       open={false}
       onClose={() => toggleModal(false)}
+      closeOnDimmerClick={false}
     />
   )
 }

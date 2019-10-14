@@ -42,6 +42,7 @@ function WellDone({ projectCode }) {
       content={<Content close={() => toggleModal(!open)} />}
       open={open}
       onClose={() => toggleModal()}
+      closeOnDimmerClick={false}
     />
   )
 }

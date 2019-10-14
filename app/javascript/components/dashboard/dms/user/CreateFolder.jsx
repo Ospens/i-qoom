@@ -90,6 +90,7 @@ export class CreateFolder extends Component {
           trigger={trigger || this.renderModalTrigger()}
           open={modalOpen}
           onClose={this.handleClose}
+          closeOnDimmerClick={false}
         />
       </div>
     )
