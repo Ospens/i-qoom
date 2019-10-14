@@ -101,9 +101,9 @@ export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
   const { user: { token }, documents: { discipline, originating_companies, document_types } } = getState()
   const headers = { Authorization: token }
   const params = {
-    discipline: discipline.filter(el => el.checked).map(v => v.title),
-    originating_companies: originating_companies.filter(el => el.checked).map(v => v.title),
-    document_types: document_types.filter(el => el.checked).map(v => v.title)
+    discipline: discipline.filter(el => el.checked).map(v => v.value),
+    originating_companies: originating_companies.filter(el => el.checked).map(v => v.value),
+    document_types: document_types.filter(el => el.checked).map(v => v.value)
   }
 
   return (
