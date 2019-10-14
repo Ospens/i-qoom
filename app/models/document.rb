@@ -102,10 +102,10 @@ class Document < ApplicationRecord
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
-    doc['review_status'] = [
-      'issued_for_approval',
-      'issued_for_review',
-      'issued_for_information'
+    doc['review_status_options'] = [
+      {title: 'For approval', value:'issued_for_approval'},
+      {title: 'For review', value:'issued_for_review'},
+      {title: 'For information', value:'issued_for_information'},
     ]
     doc['document_fields'] = []
     convention.document_fields.each do |field|

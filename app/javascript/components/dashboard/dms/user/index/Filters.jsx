@@ -38,7 +38,7 @@ function Filter({ mainTitle, values, change }) {
   )
 }
 
-function Filters({ match: { params: { project_id } } }) {
+function Filters({ docLength, match: { params: { project_id } } }) {
   const dispatch = useDispatch()
   const discipline = useSelector(state => state.documents.discipline)
   const document_types = useSelector(state => state.documents.document_types)
@@ -48,6 +48,12 @@ function Filters({ match: { params: { project_id } } }) {
     dispatch(toggleFilters(project_id, { type, value }))
   }, [dispatch])
 
+  const allFilters = discipline.map(el => el.checked)
+    .concat(document_types.map(el => el.checked))
+    .concat(originating_companies.map(el => el.checked))
+
+  if (!allFilters.includes(false) && docLength < 1) return <React.Fragment />
+  
   return (
     <div className='dms-container__table-header'>
       <span className='mr-4 grey'>Show</span>
