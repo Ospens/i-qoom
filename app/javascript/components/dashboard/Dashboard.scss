@@ -1381,8 +1381,11 @@ input:checked+.slider:before {
 
     &.subitem {
       font-weight: 500;
-      padding-left: 40px;
       border-radius: 0px !important;
+
+      span:first-of-type {
+        margin-left: 25px;
+      }
     }
 
     &:first-of-type {
