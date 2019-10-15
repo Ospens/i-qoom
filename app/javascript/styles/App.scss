@@ -507,7 +507,7 @@ header {
   height: 1000px;
 }
 
-.sign-in-form {
+.sign-in-form, .signedup-message {
   position: relative;
   display: flex;
   align-items: center;
@@ -549,6 +549,41 @@ header {
   @media only screen and (max-width: 768px) {
     form {
       width: 70%;
+    }
+  }
+}
+.signedup-message {
+  justify-content: center;
+
+  .signedup-message_block {
+    width: 50%;
+
+    & > div:first-child {
+      text-align: center;
+      margin-bottom: 100px;
+    }
+
+    & > div.text-msg {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  }
+
+  .svg-plan {
+    position: relative;
+    left: 260px;
+
+    path {
+      fill: #fff;
+    }
+  }
+
+  .svg-line {
+    position: relative;
+    top: 10px;
+    
+    path {
+      stroke: #fff;
     }
   }
 }
@@ -1226,18 +1261,6 @@ header {
       color: var(--color-text);
     }
 
-    .pictures-container {
-      position: relative;
-      top: -30px;
-
-      .svg-container {
-        & > div {
-          display: flex;
-          justify-content: center;
-        }
-      }
-    }
-
     .svg-plan {
       position: relative;
       left: 260px;
@@ -1276,6 +1299,18 @@ header {
     &::placeholder {
       color: #c8d8d9;
       font-size: 17px;
+    }
+  }
+}
+
+.pictures-container {
+  position: relative;
+  top: -30px;
+
+  .svg-container {
+    & > div {
+      display: flex;
+      justify-content: center;
     }
   }
 }

@@ -79,6 +79,7 @@ group :development do
   gem 'capistrano3-puma', require: false
 
   gem 'guard-rspec', require: false
+  gem 'letter_opener'
 end
 
 group :test do
