@@ -72,6 +72,7 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             maxLength='1'
                             validate={[required]}
                             justHightlight={true}
+                            disabled={disabled}
                           />
                           <Field
                             component={InputField}
@@ -80,6 +81,7 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             maxLength='1'
                             validate={[required]}
                             justHightlight={true}
+                            disabled={disabled}
                           />
                           <Field
                             component={InputFieldPopUp}
@@ -92,10 +94,11 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                             popupClassName='without-margin'
                             validate={[required]}
                             errors={project_code || project_code === undefined ? undefined : errors}
+                            disabled={disabled}
                           />
                         </React.Fragment>)
                     } else if (disabled) {
-                      return projectInputs(el.symbols, disabled)
+                      return placeholders(el)
                     } else if (i === 6) {
                       return freeTextPlaceholders()
                     } else {

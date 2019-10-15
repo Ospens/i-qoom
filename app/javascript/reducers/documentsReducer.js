@@ -38,9 +38,12 @@ const documentsReducer = (state = initialState, action) => {
     return {
       ...state,
       allDocuments: action.payload.documents,
-      originating_companies: action.payload.originating_companies.map(oc => ({ title: oc, checked: true })),
-      document_types: action.payload.document_types.map(dt => ({ title: dt, checked: true })),
-      discipline: action.payload.discipline.map(d => ({ title: d, checked: true })),
+      originating_companies: action.payload.originating_companies
+        .map(oc => ({ value: oc[0], title: oc[1], checked: true })),
+      document_types: action.payload.document_types
+        .map(dt => ({ value: dt[0], title: dt[1], checked: true })),
+      discipline: action.payload.discipline
+        .map(d => ({ value: d[0], title: d[1], checked: true }))
     }
   case DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS:
     return {
@@ -50,7 +53,8 @@ const documentsReducer = (state = initialState, action) => {
   case TOGGLE_FILTERS:
     return {
       ...state,
-      [action.payload.type]: state[action.payload.type].map(el => el.title === action.payload.value ? { ...el, checked: !el.checked } : el)
+      [action.payload.type]: state[action.payload.type]
+        .map(el => (el.value === action.payload.value ? { ...el, checked: !el.checked } : el))
     }
   case DOCUMENT_FETCH_SUCCESS:
     return {

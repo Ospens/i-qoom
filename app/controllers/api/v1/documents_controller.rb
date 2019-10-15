@@ -25,6 +25,10 @@ class Api::V1::DocumentsController < ApplicationController
   def new
     convention = @project.conventions.active
     document = Document.build_from_convention(convention, signed_in_user)
+    document['review_status_options'] =
+      enum_keys_with_titles({ 'issued_for_approval' => '',
+                              'issued_for_review' => '',
+                              'issued_for_information' => ''})
     render json: document
   end
   # creates new fresh document
@@ -90,13 +94,13 @@ class Api::V1::DocumentsController < ApplicationController
     document_fields = @project.conventions.active.document_fields
     originating_companies =
       document_fields.find_by(codification_kind: :originating_company)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     discipline =
       document_fields.find_by(codification_kind: :discipline)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
     document_type =
       document_fields.find_by(codification_kind: :document_type)
-                     .document_field_values.pluck(:value)
+                     .document_field_values.pluck(:value, :title)
 
     render json: { documents: documents,
                    originating_companies: originating_companies,

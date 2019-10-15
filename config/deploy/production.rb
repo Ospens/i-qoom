@@ -50,6 +50,8 @@ set :puma_bind, %w(tcp://0.0.0.0:9292)
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
+set :branch, 'production'
+
 server "i-qoom.com",
   user: "admin",
   roles: %w{web app db},
