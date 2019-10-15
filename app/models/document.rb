@@ -93,11 +93,13 @@ class Document < ApplicationRecord
   }
 
   scope :filter_by_codification_kind_and_value, -> (codification_kind, value, selected = true) {
-    joins(document_fields: :document_field_values)
+    documents =
+      joins(document_fields: :document_field_values)
       .where(document_fields: {
               codification_kind: codification_kind,
               document_field_values: {
                 value: value, selected: selected } })
+    Document.where(id: documents)
   }
 
   def self.build_from_convention(convention, user)

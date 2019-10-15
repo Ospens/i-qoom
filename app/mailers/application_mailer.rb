@@ -33,6 +33,11 @@ class ApplicationMailer < ActionMailer::Base
     mail to: email, subject: document.email_title
   end
 
+  def send_reset_password_instructions(user)
+    @user = user
+    mail to: @user.email, subject: t(".title")
+  end
+
   private
 
   def set_logo
