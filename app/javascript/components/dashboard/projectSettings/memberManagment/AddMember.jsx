@@ -42,7 +42,7 @@ function Footer({ handleSubmit, onSubmit, step, changeStep, closeModal }) {
             onClick={handleSubmit(values => onSubmit({ ...values, invite: true }))}
           >
             Invite
-              </button>
+          </button>
         </React.Fragment>
       }
 

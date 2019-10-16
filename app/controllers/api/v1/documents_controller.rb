@@ -25,6 +25,10 @@ class Api::V1::DocumentsController < ApplicationController
   def new
     convention = @project.conventions.active
     document = Document.build_from_convention(convention, signed_in_user)
+    document['review_status_options'] =
+      enum_keys_with_titles({ 'issued_for_approval' => '',
+                              'issued_for_review' => '',
+                              'issued_for_information' => ''})
     render json: document
   end
   # creates new fresh document

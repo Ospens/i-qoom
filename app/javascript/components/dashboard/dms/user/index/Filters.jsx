@@ -19,14 +19,14 @@ function Filter({ mainTitle, values, change }) {
             <li key={i} className={liClass}>
               <input
                 type='checkbox'
-                id={`${value}_${i}`}
+                id={`${value}_${i}_${title}`}
                 checked={checked}
                 onChange={() => change(value)}
               />
-              <label htmlFor={`${value}_${i}`} />
+              <label htmlFor={`${value}_${i}_${title}`} />
               <label
                 className='dms-topbar-menu__label-text'
-                htmlFor={`${value}_${i}`}
+                htmlFor={`${value}_${i}_${title}`}
               >
                 {title}
               </label>
@@ -38,7 +38,7 @@ function Filter({ mainTitle, values, change }) {
   )
 }
 
-function Filters({ docLength, match: { params: { project_id } } }) {
+function Filters({ match: { params: { project_id } } }) {
   const dispatch = useDispatch()
   const discipline = useSelector(state => state.documents.discipline)
   const document_types = useSelector(state => state.documents.document_types)
@@ -48,11 +48,6 @@ function Filters({ docLength, match: { params: { project_id } } }) {
     dispatch(toggleFilters(project_id, { type, value }))
   }, [dispatch])
 
-  const allFilters = discipline.map(el => el.checked)
-    .concat(document_types.map(el => el.checked))
-    .concat(originating_companies.map(el => el.checked))
-
-  if (!allFilters.includes(false) && docLength < 1) return <React.Fragment />
   
   return (
     <div className='dms-container__table-header'>

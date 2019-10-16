@@ -14,6 +14,9 @@ Rails.application.routes.draw do
       resources :users, only: [:create, :update, :destroy] do
         collection do
           get :confirm
+          post :send_reset_password_instructions
+          get :reset_password
+          patch :update_password
         end
       end
 

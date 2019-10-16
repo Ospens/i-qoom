@@ -29,6 +29,40 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def send_reset_password_instructions
+    user = User.find_by(email: params[:email])
+    if user.present?
+      user.reset_password
+      head 200
+    else
+      head 404
+    end
+  end
+
+  def reset_password
+    if params[:token].present?
+      render json: { token: params[:token] }
+    else
+      head 404
+    end
+  end
+
+  def update_password
+    @user =
+      User.find_by(reset_password_token: params[:token])
+    if @user.present? &&
+      (@user.reset_password_sent_at + 1.hour) > Time.now
+      if @user.update(user_password_params)
+        render json: @user
+      else
+        render json: @user.errors,
+               status: :unprocessable_entity
+      end
+    else
+      head :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params
@@ -42,5 +76,10 @@ class Api::V1::UsersController < ApplicationController
                                  :password,
                                  :password_confirmation,
                                  :accept_terms_and_conditions)
+  end
+
+  def user_password_params
+    params.require(:user).permit(:password,
+                                 :password_confirmation)
   end
 end

@@ -1,0 +1,8 @@
+en:
+  api:
+    v1:
+      documents:
+        new:
+          issued_for_approval: For approval
+          issued_for_review: For review
+          issued_for_information: For information

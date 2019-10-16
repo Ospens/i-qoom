@@ -104,8 +104,8 @@ function Content({ projectId, checkedDocs, checkItem }) {
   
   return (
     <div className='dms-content'>
-      <Filters docLength={documents.length} />
-      <div className={classnames('overview-table-contaniner', { 'mt-0': documents.length < 1 })}>
+      <Filters />
+      <div className='overview-table-contaniner'>
         <Table sortable striped className='main-table-block'>
           <Table.Header>
             <Table.Row>

@@ -12,7 +12,7 @@ class Api::V1::SessionsController < ApplicationController
     end
   end
 
-  # session is supposed to be destroyed on client-side
+  # session is supposed to be destroyed on client side
   # def destroy; end
 
   private

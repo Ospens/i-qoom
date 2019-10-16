@@ -1,5 +1,8 @@
 import axios from 'axios'
-import { SubmissionError } from 'redux-form'
+import {
+  SubmissionError,
+  initialize,
+} from 'redux-form'
 import {
   ACTIVE_MEMBERS_FETCHED_SUCCESS,
   ACTIVE_MEMBERS_UPDATED,
@@ -89,15 +92,15 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
 
   const request = {
     project_member: {
-      ...values,
-      creation_step: 'details'
+      ...values
     }
   }
   return (
     axios.post(`/api/v1/projects/${projectId}/members/`, request, headers)
       .then(response => {
         dispatch(createProjectMember(response.data))
-        dispatch(startFetchActiveProjectMembers(projectId))
+        // dispatch(startFetchActiveProjectMembers(projectId))
+        dispatch(initialize('project_member_form', response.data))
       })
       .catch(response => {
         errorNotify('Something went wrong')
@@ -123,6 +126,8 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
           dispatch(updateActiveMembers(response.data))
         } else if (type === 'pendingMemebers') {
           dispatch(updatePendingMembers(response.data))
+        } else if (type === 'creating') {
+          dispatch(initialize('project_member_form', response.data))
         }
       })
       .catch(response => {
