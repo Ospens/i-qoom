@@ -17,12 +17,13 @@ class SignUp extends Component {
 
   handleSubmit = values => {
     const { step } = this.state
+    const { signUpUser, history } = this.props
+    
     if (step < 2) {
       this.nextStep()
       return
     }
-    const { signUpUser, history } = this.props
-    return signUpUser(values).then(() => history.push({pathname: '/'}))
+    return signUpUser(values).then(() => history.push({ pathname: '/signedup' }))
   }
 
   nextStep = () => this.setState({step: 2})
