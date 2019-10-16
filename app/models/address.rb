@@ -26,8 +26,8 @@ class Address < ApplicationRecord
                             (project_member.creation_step_company_data? ||
                              project_member.creation_step_details? ||
                              project_member.creation_step_pending? ||
-                             project_member.creation_step_active? ||
-                             !project_member.creator?))
+                             project_member.creation_step_active?) &&
+                             !project_member.creator?)
                         }
   
   validates :company_name,

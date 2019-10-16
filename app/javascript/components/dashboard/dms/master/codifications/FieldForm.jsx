@@ -61,6 +61,7 @@ export const InputField = ({
             trigger={inputElement}
             position='right center'
             open={!!(touched && error) || (touched && props.id.includes('project_code') && !!errors) || (!touched && !!errors) }
+            hideOnScroll
           >
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>

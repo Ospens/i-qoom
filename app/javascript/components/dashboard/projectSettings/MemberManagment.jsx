@@ -9,7 +9,7 @@ import Tabs from '../../../elements/Tabs'
 import AddMember from './memberManagment/AddMember'
 import DisciplineList from './memberManagment/DisciplineList'
 import RoleList from './memberManagment/RoleList'
-import { startCreateProjectMember } from '../../../actions/projectMembersActions'
+import { startCreateProjectMember, startUpdateProjectMember } from '../../../actions/projectMembersActions'
 
 const initialState = {
   step: 1,
@@ -45,14 +45,36 @@ class MemberManagment extends Component {
 
   handleSubmitMember = values => {
     const { step } = this.state
+    const {
+      startCreateProjectMember,
+      startUpdateProjectMember,
+      match: { params: { project_id } }
+    } = this.props
 
-    const { startCreateProjectMember, match: { params: { project_id } } } = this.props
-    if (step < 4) {
-      this.nextStep()
-      return
+    switch (step) {
+      case '1':
+        values.creation_step = 'employment_type'
+        return
+      case '2':
+        values.creation_step = 'company_type'
+        return
+      case '3':
+        values.creation_step = 'company_data'
+        return
+      case '4':
+        values.creation_step = 'details'
+        return
+      default:
+        values.creation_step = 'employment_type'
     }
 
-    return startCreateProjectMember(values, project_id).then(this.closeModal)
+    if (!values.id) {
+      return startCreateProjectMember(values, project_id).then(this.nextStep())
+    } else if (step === 4) {
+      return startUpdateProjectMember(values, project_id).then(this.closeModal)
+    } else {
+      return startUpdateProjectMember(values, project_id).then(this.nextStep())
+    }
   }
 
   renderNewMemberModal = () => {
@@ -163,7 +185,8 @@ class MemberManagment extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  startCreateProjectMember: (values, projectId) => dispatch(startCreateProjectMember(values, projectId))
+  startCreateProjectMember: (values, projectId) => dispatch(startCreateProjectMember(values, projectId)),
+  startUpdateProjectMember: (values, projectId) => dispatch(startUpdateProjectMember(values, projectId, 'creating'))
 })
 
 export default withRouter(connect(null, mapDispatchToProps)(reduxForm({ form: 'project_member_form' })(MemberManagment)))

@@ -187,6 +187,7 @@ describe "ProjectMember", type: :request do
                     }.to_json,
             headers: headers
           expect(response).to have_http_status(:success)
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
           expect(ActionMailer::Base.deliveries.last.to).to include(email)
         end
       end
