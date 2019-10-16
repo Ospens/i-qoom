@@ -2,6 +2,7 @@ require 'csv'
 
 class Document < ApplicationRecord
   attr_accessor :review_status,
+                :review_status_options,
                 :reviewers,
                 :review_issuers
 
@@ -104,11 +105,6 @@ class Document < ApplicationRecord
 
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
-    doc['review_status_options'] = [
-      {title: 'For approval', value:'issued_for_approval'},
-      {title: 'For review', value:'issued_for_review'},
-      {title: 'For information', value:'issued_for_information'},
-    ]
     doc['document_fields'] = []
     convention.document_fields.each do |field|
       field_attributes = field.build_for_new_document(user)
