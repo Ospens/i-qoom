@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import FirstCard from './FirstCard'
 import WhatIsIQoom from './WhatIsIQoom'
 import SamplesContents from './SamplesContents'

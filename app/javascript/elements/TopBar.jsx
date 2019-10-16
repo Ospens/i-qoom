@@ -5,6 +5,9 @@ import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import { signOutUser } from '../actions/userActions'
 
+const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/signedup', '/menu']
+const backPaths = ['signin', '/signup', '/signedup', '/terms', '/imprint', '/menu']
+
 class TopBar extends Component {
 
   renderLandingLinks = navClass => (
@@ -57,8 +60,10 @@ class TopBar extends Component {
       location: { pathname }
     } = this.props
 
-    const backPaths = ['signin', '/signup', '/terms', '/imprint', '/menu']
-    const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel' && !location.pathname.includes('signin')
+    const nonMain = location.pathname !== '/'
+      && location.pathname !== '/admin_panel' 
+      && location.pathname !== '/signedup'
+      && !location.pathname.includes('signin')
     const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') })
     const headerClass = classnames({ 'colorful': nonMain })
 
@@ -117,7 +122,6 @@ class TopBar extends Component {
   )
 
   render() {
-    const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/menu']
     const { location: { pathname }, isOpen, toggle } = this.props
 
     if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin')) {
