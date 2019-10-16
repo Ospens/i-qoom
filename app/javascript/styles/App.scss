@@ -11,7 +11,7 @@ html {
 
   --color-blue: #0096FA;      // CTA, Links, Buttons, Hover
   --color-black: #293233;     // Page headline
-  --color-text: #475859;      // Headlines, Text, Icons
+  --color-text: #475759;      // Headlines, Text, Icons
   --color-labels: #8FB0B3;    // Info Text, Labels
   --color-disabled: #B8D6D9;  // Non-Clickable Forms
   --color-grey: #B2CED1;      // Input Forms Text
@@ -65,6 +65,7 @@ p {
 a {
   text-decoration: none !important;
   outline: none;
+  color: var(--color-blue);
 
   &:focus, &:active {
     outline: 0 !important;
@@ -507,18 +508,57 @@ header {
   height: 1000px;
 }
 
-.sign-in-form, .signedup-message {
+.sign-in-form, .signedup-message, .restore-password-block {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   min-width: 400px;
   color: #fff;
+}
 
+.sign-in-form {
   form {
-    width: 53%;
+    width: 34.7%;
+    min-width: 400px;
     margin-left: auto;
     margin-right: auto;
+    padding-bottom: 41px;
+    border-bottom: 1px solid #fff;
+
+    .sign-in-form__header {
+      font-size: 35px;
+      font-weight: 700;
+      margin-bottom: 82px;
+
+      @media only screen and (max-width: 1028px) {
+        font-size: 2em;
+      }
+    }
+
+    .btn-toolbar {
+      padding-top: 57px;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+
+      &:first-of-type {
+        padding-bottom: 42px;
+      }
+    }
+  }
+
+  .forgot-password-block {
+    padding-top: 60px;
+    font-size: 17px;
+
+    div {
+      text-align: center;
+      margin-bottom: 10px;
+    }
   }
 
   &.show-slider {
@@ -552,6 +592,7 @@ header {
     }
   }
 }
+
 .signedup-message {
   justify-content: center;
 
@@ -588,14 +629,36 @@ header {
   }
 }
 
-.sign-in-form__header {
-  font-weight: 700;
-  font-size: 3em;
-  margin-bottom: 1.5em;
+.restore-password-content {
+  width: 38.5%;
 
+  .form-group {
+    margin-bottom: 57px;
+  }
 
-  @media only screen and (max-width: 1028px) {
-    font-size: 2em;
+  .restore-password-content__header,
+  .restore-password-content__text-msg {
+    text-align: center;
+  }
+
+  .restore-password-content__text-msg {
+    margin-bottom: 42px;
+  }
+
+  .restore-password-content__header {
+    font-size: 35px;
+    font-weight: 700;
+    margin-bottom: 82px;
+    line-height: 1;
+  }
+
+  .btn-block {
+    display: flex;
+    justify-content: center;
+
+    .btn {
+      width: 45%;
+    }
   }
 }
 
@@ -1471,6 +1534,47 @@ header {
       width: 100%;
       margin-left: 0;
       margin-right: 0;
+    }
+  }
+}
+
+#new-password-form {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  justify-content: center;
+  background-color: white;
+  margin-top: 245px;
+  padding-bottom: 150px;
+
+  .new-password-form__header {
+    text-align: center;
+    color: #221F6D;
+    font-size: 35px;
+    font-weight: 700;
+    margin-bottom: 42px;
+  }
+
+  .new-password-form__body {
+
+    .new-password-form__body-info {
+      margin-bottom: 74px;
+      text-align: center;
+      color: var(--color-text)
+    }
+  }
+
+  .form-group {
+    margin-bottom: 40px;
+  }
+
+  .btn-block {
+    display: flex;
+    justify-content: center;
+    padding-top: 37px;
+
+    .btn {
+      width: 45%;
     }
   }
 }

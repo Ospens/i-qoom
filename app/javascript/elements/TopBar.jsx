@@ -5,8 +5,8 @@ import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import { signOutUser } from '../actions/userActions'
 
-const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/signedup', '/menu']
-const backPaths = ['signin', '/signup', '/signedup', '/terms', '/imprint', '/menu']
+const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/signedup', '/menu', '/restore-password', '/new-password']
+const backPaths = ['signin', '/signup', '/signedup', '/terms', '/imprint', '/menu', '/restore-password', '/new-password']
 
 class TopBar extends Component {
 
@@ -62,9 +62,10 @@ class TopBar extends Component {
 
     const nonMain = location.pathname !== '/'
       && location.pathname !== '/admin_panel' 
+      && location.pathname !== '/restore-password' 
       && location.pathname !== '/signedup'
       && !location.pathname.includes('signin')
-    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') })
+    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') || pathname.includes('new-password')})
     const headerClass = classnames({ 'colorful': nonMain })
 
     return (
@@ -124,7 +125,7 @@ class TopBar extends Component {
   render() {
     const { location: { pathname }, isOpen, toggle } = this.props
 
-    if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin')) {
+    if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin') || pathname.includes('new-password')) {
       return (this.renderLandingBar(isOpen, toggle))
     } else {
       return (this.renderDashboardBar(isOpen, toggle))
