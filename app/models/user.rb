@@ -20,7 +20,7 @@ class User < ApplicationRecord
   has_many :document_review_owners
 
   validates_presence_of :password_confirmation,
-    on: [:create, :password_changed?]
+    if: -> { password.present? }
 
   validates :first_name,
             :last_name,
