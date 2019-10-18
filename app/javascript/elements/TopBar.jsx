@@ -90,7 +90,7 @@ class TopBar extends Component {
               </div>
               {authed 
                 ? this.renderUserOptions(true)
-                : <ul className='nav navbar-nav justify-content-end auth-buttons'>
+                : <ul className='nav navbar-nav auth-buttons'>
                   <li className='nav-item'>
                     <Link to='/signup' className='nav-link btn-transparent'>
                       Register

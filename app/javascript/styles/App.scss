@@ -591,6 +591,14 @@ header {
       width: 70%;
     }
   }
+
+
+  @media only screen and (max-width: 600px) {
+    form {
+      min-width: 70%;
+      margin-top: 40px;
+    }
+  }
 }
 
 .signedup-message {
@@ -760,6 +768,11 @@ header {
   position: relative;
   align-self: flex-end !important;
   overflow: hidden;
+
+  @media only screen and (max-width: 600px) {
+    overflow: visible;
+    height: 70px;
+  }
 }
 
 .navbar-brand {
@@ -772,6 +785,7 @@ header {
   display: flex;
   flex-direction: row;
   width: 240px;
+  justify-content: flex-end;
 
   .nav-item:first-of-type {
     .nav-link {
@@ -803,6 +817,11 @@ header {
       text-transform: capitalize;
       margin-right: 1em;
     }
+  }
+
+  @media only screen and (max-width: 600px) {
+    justify-content: center !important;
+    width: 100%;
   }
 }
 
@@ -884,6 +903,11 @@ header {
   
   &.show-slider {
     left: 0;
+  }
+
+  @media only screen and (max-width: 600px) {
+    width: 100%;
+    top: 30px;
   }
 }
 
