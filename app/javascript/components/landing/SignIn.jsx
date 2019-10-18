@@ -32,26 +32,32 @@ function SignIn({ handleSubmit, history, ...props }) {
           <div className={classnames('sign-in-form', { 'show-slider': false })}>
             <form noValidate={true} onSubmit={handleSubmit(submit)}>
               <h2 className='sign-in-form__header text-center'>Log into your accont</h2>
-              <div className='form-group'>
-                <Field
-                  component={InputField}
-                  name='login'
-                  id='login'
-                  label='Type in e-mail adress or i-Qoom ID'
-                  placeholder='E-mail or i-Qoom ID'
-                  validate={[required]}
-                />
+              <div className='form-group-with-icon'>
+                <span className='icon-single-neutral white' />
+                <div className='form-group'>
+                  <Field
+                    component={InputField}
+                    name='login'
+                    id='login'
+                    label='Type in e-mail adress or i-Qoom ID'
+                    placeholder='E-mail or i-Qoom ID'
+                    validate={[required]}
+                  />
+                </div>
               </div>
-              <div className='form-group'>
-                <Field
-                  component={InputField}
-                  type='password'
-                  name='password'
-                  id='password'
-                  label='Type in password'
-                  placeholder='Password'
-                  validate={[required]}
-                />
+              <div className='form-group-with-icon'>
+                <span className='icon-password-type white' />
+                <div className='form-group'>
+                  <Field
+                    component={InputField}
+                    type='password'
+                    name='password'
+                    id='password'
+                    label='Type in password'
+                    placeholder='Password'
+                    validate={[required]}
+                  />
+                </div>
               </div>
               <div className='btn-toolbar'>
                 <div className='btn-group justify-content-center'>

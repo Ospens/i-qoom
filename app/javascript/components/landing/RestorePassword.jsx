@@ -31,14 +31,17 @@ function RestorePassword({ handleSubmit }) {
                 Just submit your e-mail address. After you submitted your email address,
                 you will get a conformation link. Then, you can enter a new password.
               </div>
-              <Field
-                component={InputField}
-                name='email'
-                label='Just type in your e-mail address'
-                placeholder='E-mail address'
-                validate={[required, email]}
-                className='form-group'
-              />
+              <div className='form-group-with-icon'>
+                <span className='icon-email-action-unread white' />
+                <Field
+                  component={InputField}
+                  name='email'
+                  label='Just type in your e-mail address'
+                  placeholder='E-mail address'
+                  validate={[required, email]}
+                  className='form-group'
+                />
+              </div>
               <div className='btn-block'>
                 <button type='submit' className='btn btn-primary'>Submit</button>
               </div>

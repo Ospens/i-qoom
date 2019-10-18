@@ -528,6 +528,26 @@ header {
     padding-bottom: 41px;
     border-bottom: 1px solid #fff;
 
+    .form-group-with-icon {
+      display: flex;
+
+      span {
+        font-size: 25px;
+        padding-bottom: 53px;
+        margin-right: 20px;
+        align-self: flex-end;
+      }
+
+      .icon-password-type {
+        font-size: 11px;
+        padding-bottom: 59px;
+      }
+
+      .form-group {
+        width: 100%;
+      }
+    }
+
     .sign-in-form__header {
       font-size: 35px;
       font-weight: 700;
@@ -639,6 +659,21 @@ header {
 
 .restore-password-content {
   width: 38.5%;
+
+  .form-group-with-icon {
+    display: flex;
+
+    span {
+      font-size: 25px;
+      padding-bottom: 66px;
+      margin-right: 20px;
+      align-self: flex-end;
+    }
+
+    .form-group {
+      width: 100%;
+    }
+  }
 
   .form-group {
     margin-bottom: 57px;
