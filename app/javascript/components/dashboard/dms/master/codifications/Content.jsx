@@ -1,12 +1,9 @@
-import React, { useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import SecondCodeStructure from './SecondCodeStructure'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import CodeStructure from './CodeStructure'
 import CodificationTable from './CodificationTable'
 import SelectConvention from './SelectConvention'
 import WellDone from './WellDone'
-import { startEditConvention } from '../../../../../actions/conventionActions'
 
 export const fields = [
     {
@@ -69,10 +66,8 @@ export const freeTextPlaceholders = el => (
   </React.Fragment>
 )
 
-function Content({ match: { params: { project_id } } }) {
-  const dispatch = useDispatch()
+function Content() {
   const project_code = useSelector(state => state.projects.current.project_code)
-  useEffect(() => { dispatch(startEditConvention(project_id)) }, [])
 
   return (
     <div className='dms-content'>
@@ -93,4 +88,4 @@ function Content({ match: { params: { project_id } } }) {
   )
 }
 
-export default withRouter(Content)
+export default Content

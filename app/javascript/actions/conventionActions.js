@@ -12,6 +12,28 @@ import {
 } from './types'
 import { errorNotify, successNotify } from '../elements/Notices'
 
+export const checkMainSections = documentFields => dispatch => {
+  if (!documentFields) return
+
+  let documentType = documentFields.find(el => el.codification_kind === 'document_type') || {}
+  let discipline = documentFields.find(el => el.codification_kind === 'discipline') || {}
+  let originatingCompany = documentFields.find(el => el.codification_kind === 'originating_company') || {}
+  if (discipline.document_field_values) {
+    discipline = discipline.document_field_values.filter(f => f.value)
+  }
+  if (documentType.document_field_values) {
+    documentType = documentType.document_field_values.filter(f => f.value)
+  }
+  if (originatingCompany.document_field_values) {
+    originatingCompany = originatingCompany.document_field_values.filter(f => f.value)
+  }
+  const finished = !(originatingCompany.length < 2
+      || documentType.length < 2
+      || discipline.length < 2
+  )
+  dispatch({ type: CHECK_MAIN_SECTION_DMS, payload: finished })
+}
+
 export const fieldByColumn = data => {
   const fields = data.document_fields
   const sorted = fields.reduce((accumulator, currentValue, index) => {
@@ -144,23 +166,4 @@ export const reorderFields = (result, fields) => dispatch => {
 
   dispatch(arraySplice('convention_form', `column_${source.droppableId}`, source.index, 1))
   dispatch(arraySplice('convention_form', `column_${destination.droppableId}`, destination.index, 0, movingField))
-}
-
-export const checkMainSections = documentFields => dispatch => {
-  if (!documentFields) return
-
-  let documentType = documentFields.find(el => el.codification_kind === 'document_type') || {}
-  let discipline = documentFields.find(el => el.codification_kind === 'discipline') || {}
-  let originatingCompany = documentFields.find(el => el.codification_kind === 'originating_company') || {}
-  if (discipline.document_field_values) {
-    discipline = discipline.document_field_values.filter(f => f.value)
-  }
-  if (documentType.document_field_values) {
-    documentType = documentType.document_field_values.filter(f => f.value)
-  }
-  if (originatingCompany.document_field_values) {
-    originatingCompany = originatingCompany.document_field_values.filter(f => f.value)
-  }
-  const finished = !(originatingCompany.length < 2 || documentType.length < 2 || discipline.length < 2)
-  dispatch({ type: CHECK_MAIN_SECTION_DMS, payload: finished })
 }

@@ -98,24 +98,23 @@ class DmsSideBar extends Component {
   renderMainItems = () => {
     const { project_code, dmsSections, folders, match: { path, params: {  project_id } } } = this.props
     const masterPath = `/dashboard/projects/${project_id}/documents/master`
-
     // TODO: Need check for master's permit
     
     const menuItems = [
       {
         title: 'Overview',
         icon: 'icon-task-checklist-check',
-        path: project_code ? `/dashboard/projects/${project_id}/documents/` : '#'
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/` : '#'
       },
       {
         title: 'DMS User Settings',
         icon: 'icon-task-list-settings',
-        path: project_code ? `/dashboard/projects/${project_id}/documents/settings/` : '#'
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/settings/` : '#'
       },
       {
         title: 'Document planning',
         icon: 'icon-calendar-3',
-        path: project_code ? `/dashboard/projects/${project_id}/documents/planning/` : '#'
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/planning/` : '#'
       },
       {
         title: 'Master settings',
