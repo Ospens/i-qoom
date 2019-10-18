@@ -37,12 +37,13 @@ export const InputField = ({
   type,
   isForm,
   popupClassName,
+  dmsSections,
   msg,
-  errors,
   projectCode,
   meta: { touched, error },
   ...props
 }) => {
+
   if (!isForm) {
     return (
       <div className={classnames(className, { 'full-wide': props.id !== 'value' })}>
@@ -65,14 +66,14 @@ export const InputField = ({
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
-      {props.id === 'value' // || props.id.includes('project_code')
+      {props.id === 'value'
         ? inputElement
         : <Popup
-            className={classnames(popupClassName, { 'error-tooltip-container': (touched && (errors || error)) }, { 'dark-tooltip-container': (!touched && (errors || error)) })}
+            className={classnames(popupClassName, { 'error-tooltip-container': touched && error }, { 'dark-tooltip-container': !touched && error })}
             trigger={inputElement}
             on='click'
             position='right center'
-            open={projectCode && (!!(touched && error) || (touched && props.id.includes('project_code') && !!errors) || (!touched && !!(errors || error))) }
+            open={projectCode && !dmsSections && (!!(touched && error) || (!touched && !!error)) }
             hideOnScroll
           >
             <div className='tooltip-block dark'>
@@ -87,7 +88,7 @@ export const InputField = ({
   )
 }
 
-const CodeList = ({ fields, title, isForm, projectCode }) => {
+const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
   return (
     <React.Fragment>
       <div>
@@ -120,6 +121,7 @@ const CodeList = ({ fields, title, isForm, projectCode }) => {
                 validate={validateTitle}
                 isForm={isForm}
                 projectCode={projectCode}
+                dmsSections={dmsSections}
                 disabled={!projectCode}
               />
               {fields.length > 2 && isForm &&
@@ -144,15 +146,22 @@ const CodeList = ({ fields, title, isForm, projectCode }) => {
 }
 
 function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match: { params: { project_id } } }) {
-  const [isForm, toggleIsForm] = useState(true)
+  const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
-  const document_fields = useSelector(state => state.conventions.current.document_fields)
+  const documentFields = useSelector(state => state.conventions.current.document_fields)
+  const dmsSections = useSelector(state => state.projects.current.dmsSections)
   const projectCode = useSelector(state => state.projects.current.project_code)
 
+  useEffect(() => {
+    if (dmsSections !== undefined && !dmsSections) {
+      toggleIsForm(true)
+    }
+  }, [dmsSections])
+
   const submitCodification = useCallback(values => {
-    const fieldIndex = document_fields.findIndex(el => el.codification_kind === form)
+    const fieldIndex = documentFields.findIndex(el => el.codification_kind === form)
     
-    const v = document_fields.map((item, i) => {
+    const v = documentFields.map((item, i) => {
       item.document_field_values = item.document_field_values.filter(({ title, value, position }) => title && value && position)
       if (i !== fieldIndex) return item
 
@@ -162,7 +171,7 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
     })
 
     dispatch(startUpdateCodification(project_id, v)).then(() => toggleIsForm(false))
-  }, [dispatch, document_fields])
+  }, [dispatch, documentFields])
 
   return (
     <form
@@ -179,6 +188,7 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
           validate={[validate]}
           isForm={isForm}
           projectCode={projectCode}
+          dmsSections={dmsSections}
         />
       </div>
       {!viewOnly &&

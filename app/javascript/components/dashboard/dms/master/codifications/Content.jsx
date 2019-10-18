@@ -67,19 +67,19 @@ export const freeTextPlaceholders = el => (
 )
 
 function Content() {
-  const project_code = useSelector(state => state.projects.current.project_code)
+  const projectCode = useSelector(state => state.projects.current.project_code)
 
   return (
     <div className='dms-content'>
       {/* <ModalInfo /> */}
-      <WellDone projectCode={project_code}/>
-      <SelectConvention projectCode={project_code}/>
-      <div className='dms-content__header'>
+      <WellDone projectCode={projectCode}/>
+      <SelectConvention projectCode={projectCode}/>
+      <div className='dms-content__header pl-3'>
         <h4>Convention 1 - <span className='green'>active</span></h4>
       </div>
       {/* TODO: make switch for number of convention */}
       <div className='content-body'>
-        <label>Administration codes for document codification</label>
+        <label className='pl-3'>Administration codes for document codification</label>
         {/*current ? <CodeStructure /> : <SecondCodeStructure />*/}
         <CodeStructure />
         <CodificationTable />

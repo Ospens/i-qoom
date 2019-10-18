@@ -1917,11 +1917,6 @@ input.search-input {
 .codification-codes-title-row-not-prisitne {
   background-color: #f0f7f7;
   border-radius: 5px;
-  padding-left: 20px;
-  margin-left: -20px;
-  padding-right: 20px;
-  margin-right: -20px;
-
 
   .confirmation-block {
     display: flex;
@@ -1966,7 +1961,7 @@ input.search-input {
   display: flex;
   align-items: center;
   // grid-template-columns: 142px 0.7fr repeat(3, 140px 0.5fr) 192px 0.5fr 90px 0.5fr 115px;
-  padding: 10px;
+  padding: 16px;
   padding-bottom: 43px;
   padding-top: 43px;
   border-radius: 5px;
@@ -1988,7 +1983,6 @@ input.search-input {
     }
 
     & > label {
-      white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
@@ -2012,6 +2006,7 @@ input.search-input {
 
     &.project {
       width: 10.5%;
+      min-width: 144px;
 
       .codification-codes-title-column__code {
         padding-top: 22px;
@@ -2352,9 +2347,8 @@ input.search-input {
 }
 
 .codification-codes-values-table {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 50px;
+  display: flex;
+  flex-wrap: wrap;
 
   .codification-input-group {
     display: flex;
@@ -2407,12 +2401,18 @@ input.search-input {
   .codification-codes-values-column {
     display: flex;
     flex-direction: column;
+    max-width: 415px;
+
+    &:not(:last-of-type) {
+      margin-right: 40px;
+    }
 
     .codification-codes-values-block {
       padding: 30px;
       border: 1px solid;
       border-radius: 5px;
-      margin-bottom: 15px;
+      margin-bottom: 40px;
+      min-width: 415px;
 
       &.disabled {
         opacity: 0.5;

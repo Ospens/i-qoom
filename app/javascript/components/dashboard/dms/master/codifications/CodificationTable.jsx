@@ -26,7 +26,7 @@ function CodificationTable({ viewOnly = false }) {
   if (!document_type || !discipline || !originating_company) return <div />
 
   return (
-    <div className='codification-codes-values-table'>
+    <div className='codification-codes-values-table px-3'>
       <div className='codification-codes-values-column'>
         <FieldForm 
           form='originating_company'
