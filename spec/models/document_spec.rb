@@ -447,10 +447,14 @@ RSpec.describe Document, type: :model do
   it '#values_for_filters' do
     values = Document.all.values_for_filters(codification_kind: :originating_company)
     expect(values.length).to eql(0)
-    FactoryBot.create(:document)
+    doc = FactoryBot.create(:document)
     values = Document.all.values_for_filters(codification_kind: :originating_company)
     expect(values.length).to eql(1)
     expect(values.first.first).to eql('---')
     expect(values.first.last).to eql('Originating company')
+    value = doc.document_fields.find_by(codification_kind: :originating_company).document_field_values.first
+    value.update_columns(selected: false)
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(0)
   end
 end
