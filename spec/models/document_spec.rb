@@ -443,4 +443,14 @@ RSpec.describe Document, type: :model do
     field['value'] = '0000'
     expect(Document.new(attrs)).to be_valid
   end
+
+  it '#values_for_filters' do
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(0)
+    FactoryBot.create(:document)
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(1)
+    expect(values.first.first).to eql('---')
+    expect(values.first.last).to eql('Originating company')
+  end
 end
