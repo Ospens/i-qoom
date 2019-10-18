@@ -1,14 +1,8 @@
-import React, { useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import CodeStructure from '../../master/codifications/CodeStructure'
 import CodificationTable from '../../master/codifications/CodificationTable'
-import { startEditConvention } from '../../../../../actions/conventionActions'
 
-function Codification({ match: { params: { project_id } } }) {
-  const dispatch = useDispatch()
-  useEffect(() => { dispatch(startEditConvention(project_id)) }, [])
-
+function Codification() {
   return (
     <div>
       <div className='my-4 d-flex'>
@@ -26,4 +20,4 @@ function Codification({ match: { params: { project_id } } }) {
   )
 }
 
-export default withRouter(Codification)
+export default Codification

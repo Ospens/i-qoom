@@ -104,6 +104,7 @@ class ProjectMember < ApplicationRecord
     self.inviter_id = new_inviter_id if invite && new_inviter_id.present?
     self.confirmation_sent_at = Time.now
     ApplicationMailer.send_project_member_confirmation(self).deliver_now
+    self.invite = false
   end
 
   def confirmation_token

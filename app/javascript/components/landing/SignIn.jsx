@@ -42,7 +42,7 @@ function SignIn({ handleSubmit, history, ...props }) {
                   validate={[required]}
                 />
               </div>
-              <div className='form-group pt-4'>
+              <div className='form-group'>
                 <Field
                   component={InputField}
                   type='password'
@@ -53,7 +53,7 @@ function SignIn({ handleSubmit, history, ...props }) {
                   validate={[required]}
                 />
               </div>
-              <div className='btn-toolbar pt-4'>
+              <div className='btn-toolbar'>
                 <div className='btn-group justify-content-center'>
                   <Link className='col-6 btn btn-back mx-auto' to='/'>
                     <span className='icon-arrow-button-left' />
@@ -65,6 +65,14 @@ function SignIn({ handleSubmit, history, ...props }) {
                 </div>
               </div>
             </form>
+            <div className='forgot-password-block'>
+              <div className='forgot-password-block__firstline'>
+                You forgot your <Link to='/restore-password'>Password</Link>?
+              </div>
+              <div className='forgot-password-block__second'>
+                You are not registered? <Link to='/signup'>Register here</Link>!
+              </div>
+            </div>
           </div>
         </div>
       </div>

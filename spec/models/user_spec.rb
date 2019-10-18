@@ -18,9 +18,16 @@ describe User, type: :model do
                         .is_at_least(2)
                         .is_at_most(255) }
 
-  it { is_expected.to validate_presence_of(:password_confirmation).on(:create) }
-  it { is_expected.to validate_presence_of(:password_confirmation).on(:password_changed?) }
-  it { is_expected.not_to validate_presence_of(:password_confirmation).on(:update) }
+  context "validates_presence_of password_confirmation" do
+    subject { FactoryBot.create(:user) }
+    it { is_expected.to validate_presence_of(:password_confirmation) }
+  end
+
+  it "shouldn't validates_presence_of password_confirmation" do
+    user = FactoryBot.create(:user)
+    user.update(username: "newusername")
+    expect(user).to be_valid
+  end
 
   it { is_expected.to validate_acceptance_of(:accept_terms_and_conditions).on(:create) }
   it { is_expected.not_to allow_value(nil).for(:accept_terms_and_conditions).on(:create) }

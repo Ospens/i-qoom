@@ -101,10 +101,22 @@ describe "User", type: :request do
       user = FactoryBot.create(:user)
       user.generate_reset_password_token
       user.update(reset_password_sent_at: Time.now - 2.hour)
-      patch "/api/v1/users/update_password?token=#{user.reset_password_token}",
-        params: { user: {
+      patch "/api/v1/users/update_password",
+        params: { token: user.reset_password_token,
+                  user: {
                     password: "newpassword",
                     password_confirmation: "newpassword" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(422)      
+    end
+    it "shouldn't update password with wrong password_confirmation" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      patch "/api/v1/users/update_password",
+        params: { token: user.reset_password_token,
+                  user: {
+                    password: "newpassword",
+                    password_confirmation: "wrongwrongwrong" } }.to_json,
         headers: headers
       expect(response).to have_http_status(422)      
     end

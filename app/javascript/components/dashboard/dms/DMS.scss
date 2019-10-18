@@ -1484,63 +1484,12 @@ input.search-input {
   }
 }
 
-.dark-tooltip-container {
-  background-color: var(--color-text) !important;
-  border-color: var(--color-text) !important;
-  box-shadow: 1px 1px 0px 0px var(--color-text) !important;
-  
-  .tooltip-text-block {
-    color: #fff;
-  }
-  
-  &:before {
-    background-color: var(--color-text) !important;
-    border-color: var(--color-text) !important;
-    box-shadow: 1px 1px 0px 0px var(--color-text) !important;
-  }
-
-  &.small-font {
-    padding: 5px !important;
-
-    .tooltip-block {
-      font-size: 10px;
-      color: #fff;
-    }
-  }
-}
-
-.error-tooltip-container {
-  background-color: #FF0042 !important;
-  border-color: #FF0042 !important;
-  box-shadow: 1px 1px 0px 0px #FF0042 !important;
-  margin-right: 30px !important;
-  z-index: 999 !important;
-  
-  &.without-margin {
-    margin-right: 0 !important;
-  }
-  .tooltip-text-block {
-    color: #fff;
-  }
-  
-  &:before {
-    background-color: #FF0042 !important;
-    border-color: #FF0042 !important;
-    box-shadow: 1px 1px 0px 0px #FF0042 !important;
-  }
-
-  &.small-font {
-    padding: 5px !important;
-
-    .tooltip-block {
-      font-size: 10px;
-      color: #fff;
-    }
-  }
-}
-
 .tooltip-block {
   min-width: 230px;
+
+  &.short {
+    min-width: auto;
+  }
 
   .tooltip-block-title {
     padding-bottom: 0;
@@ -1569,6 +1518,81 @@ input.search-input {
 
     a {
       margin-left: auto;
+    }
+  }
+}
+
+.dark-tooltip-container {
+  background-color: var(--color-text) !important;
+  border-color: var(--color-text) !important;
+  box-shadow: 1px 1px 0px 0px var(--color-text) !important;
+
+  &.for-codification {
+    margin-right: 30px !important;
+
+    .tooltip-block {
+      min-width: auto !important;
+    }
+  }
+
+  &.for-project-code {
+    margin-top: 10px !important;
+  }
+  
+  .tooltip-text-block {
+    color: #fff;
+  }
+  
+  &:before {
+    background-color: var(--color-text) !important;
+    border-color: var(--color-text) !important;
+    box-shadow: 1px 1px 0px 0px var(--color-text) !important;
+  }
+
+  &.small-font {
+    padding: 5px !important;
+
+    .tooltip-block {
+      font-size: 10px;
+      color: #fff;
+    }
+  }
+}
+
+.error-tooltip-container {
+  background-color: #FF0042 !important;
+  border-color: #FF0042 !important;
+  box-shadow: 1px 1px 0px 0px #FF0042 !important;
+  margin-right: 30px !important;
+  z-index: 999 !important;
+  
+  .tooltip-text-block {
+    color: #fff;
+  }
+  
+  &.for-project-code {
+    margin-right: 0 !important;
+    margin-top: 10px !important;
+  }
+
+  &.for-codification {
+    .tooltip-block {
+      min-width: auto !important;
+    }
+  }
+
+  &:before {
+    background-color: #FF0042 !important;
+    border-color: #FF0042 !important;
+    box-shadow: 1px 1px 0px 0px #FF0042 !important;
+  }
+
+  &.small-font {
+    padding: 5px !important;
+
+    .tooltip-block {
+      font-size: 10px;
+      color: #fff;
     }
   }
 }
@@ -1893,11 +1917,6 @@ input.search-input {
 .codification-codes-title-row-not-prisitne {
   background-color: #f0f7f7;
   border-radius: 5px;
-  padding-left: 20px;
-  margin-left: -20px;
-  padding-right: 20px;
-  margin-right: -20px;
-
 
   .confirmation-block {
     display: flex;
@@ -1942,7 +1961,7 @@ input.search-input {
   display: flex;
   align-items: center;
   // grid-template-columns: 142px 0.7fr repeat(3, 140px 0.5fr) 192px 0.5fr 90px 0.5fr 115px;
-  padding: 10px;
+  padding: 16px;
   padding-bottom: 43px;
   padding-top: 43px;
   border-radius: 5px;
@@ -1964,7 +1983,6 @@ input.search-input {
     }
 
     & > label {
-      white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
@@ -1988,10 +2006,17 @@ input.search-input {
 
     &.project {
       width: 10.5%;
-      
+      min-width: 144px;
+
       .codification-codes-title-column__code {
         padding-top: 22px;
         margin-bottom: -13px;
+
+        &.project-code-not-defined {
+          input {
+            box-shadow: 0px 0px 15px #0096FA80;
+          }
+        }
       }
 
       @media only screen and (max-width: 1300px) {
@@ -1999,6 +2024,7 @@ input.search-input {
           grid-gap: 5px;
         }
       }
+
       .codification-codes-title-column__title {
         color: #0a9caa;
         border-color: #0a9caa;
@@ -2321,9 +2347,8 @@ input.search-input {
 }
 
 .codification-codes-values-table {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 50px;
+  display: flex;
+  flex-wrap: wrap;
 
   .codification-input-group {
     display: flex;
@@ -2345,6 +2370,7 @@ input.search-input {
         input {
           text-align: center;
           text-transform: uppercase;
+          padding-right: 12px !important;
         }
       }
 
@@ -2375,12 +2401,22 @@ input.search-input {
   .codification-codes-values-column {
     display: flex;
     flex-direction: column;
+    max-width: 415px;
+
+    &:not(:last-of-type) {
+      margin-right: 40px;
+    }
 
     .codification-codes-values-block {
       padding: 30px;
       border: 1px solid;
       border-radius: 5px;
-      margin-bottom: 15px;
+      margin-bottom: 40px;
+      min-width: 415px;
+
+      &.disabled {
+        opacity: 0.5;
+      }
 
       &.originating_company {
         border-color: #5300B3;
