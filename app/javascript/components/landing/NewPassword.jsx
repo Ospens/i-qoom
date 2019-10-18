@@ -7,7 +7,7 @@ import InputField from '../../elements/InputField'
 import { required, minLength6 } from '../../elements/validations'
 
 const passwordsMatch = (value, allValues) =>
-  value !== allValues.user.password ? 'Passwords don\'t match' : undefined;
+  value !== allValues.user.password ? 'Passwords don\'t match' : undefined
 
 function NewPassword({ handleSubmit }) {
   const dispatch = useDispatch()
