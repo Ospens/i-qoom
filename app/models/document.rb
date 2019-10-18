@@ -105,7 +105,8 @@ class Document < ApplicationRecord
 
   scope :values_for_filters, -> (args) {
     fields = DocumentField.where(parent: all).where(args)
-    DocumentFieldValue.where(document_field: fields).pluck(:value, :title).uniq
+    DocumentFieldValue.where(document_field: fields, selected: true)
+                      .pluck(:value, :title).uniq
   }
 
   def self.build_from_convention(convention, user)
