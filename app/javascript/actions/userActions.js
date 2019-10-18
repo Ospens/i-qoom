@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import jwtDecode from 'jwt-decode'
-import { errorNotify } from '../elements/Notices'
+import { errorNotify, successNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
@@ -73,3 +73,23 @@ export const signUpUser = userFields => dispatch => {
       throw new SubmissionError(response.data)
     })
 }
+
+export const resetPassword = (values, callback) => () => axios.post('/api/v1/users/send_reset_password_instructions', values)
+  .then(() => {
+    callback()
+    successNotify('Email was sent!')
+  })
+  .catch(({ response }) => {
+    errorNotify('Something went wrong')
+    throw new SubmissionError(response.data)
+  })
+
+export const updatePassword = (values, callback) => () => axios.patch('/api/v1/users/update_password', values)
+  .then(() => {
+    callback()
+    successNotify('Password was changed!')
+  })
+  .catch(({ response }) => {
+    errorNotify('Something went wrong')
+    throw new SubmissionError(response.data)
+  })

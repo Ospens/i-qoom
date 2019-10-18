@@ -4,12 +4,14 @@ import { Switch, withRouter } from 'react-router-dom'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import { startFetchProject } from '../../actions/projectActions'
+import { startEditConvention } from '../../actions/conventionActions'
 import Page from '../../elements/Page'
 
 function Projects({ match, match: { params: { project_id } } }) {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(startFetchProject(project_id))
+    dispatch(startEditConvention(project_id))
   }, [dispatch, project_id])
 
   return (

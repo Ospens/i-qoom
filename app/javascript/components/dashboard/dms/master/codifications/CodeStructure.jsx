@@ -2,33 +2,31 @@ import React, { useCallback, useEffect } from 'react'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { Popup } from 'semantic-ui-react'
 import {
   reduxForm,
-  Field,
-  getFormSyncErrors
+  Field
 } from 'redux-form'
 import { required } from '../../../../../elements/validations'
 import InputField from '../../../../../elements/InputField'
-import { InputField as InputFieldPopUp} from './FieldForm'
 import { updateProjectCode } from '../../../../../actions/projectActions'
-import { fields, projectInputs, placeholders, freeTextPlaceholders } from './Content'
+import { fields, placeholders, freeTextPlaceholders } from './Content'
 
-export const requiredAll = values => value => {
-  /* console.log(values)
-  if (!values) return 'error'
-  console.log(values.project_code.filter(el => el === undefined))
-  return values.project_code.filter(el => el === undefined) ? 'error' : undefined */
-}
+const submitCodification = () => { console.log() }
 
-const submitCodification = () => {
-  console.log()
-}
-
-function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, match: { params: { project_id } } }) {
+function CodeStructure({
+  submitFailed,
+  initialize,
+  disabled,
+  pristine,
+  reset,
+  handleSubmit,
+  match: { params: { project_id } }
+}) {
   const dispatch = useDispatch()
   const project_code = useSelector(state => state.projects.current.project_code)
-  const errors = useSelector(state => getFormSyncErrors('convention_code_form')(state))
-
+  const dmsSections = useSelector(state => state.projects.current.dmsSections)
+  
   useEffect(() => {
     if (!project_code) return 
 
@@ -60,44 +58,64 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                 <span className='codification-codes-title-column__title'>
                   {el.title}
                 </span>
+                {i === 0 &&
+                <Popup
+                  className={classnames(
+                    'for-project-code',
+                    { 'error-tooltip-container': !project_code && submitFailed },
+                    { 'dark-tooltip-container': (!project_code && !submitFailed) || project_code }
+                  )}
+                  trigger={
+                    <div
+                      className={classnames(
+                        'codification-codes-title-column__code', 
+                        { 'project-code-not-defined': !project_code && project_code !== undefined }
+                      )}
+                    >
+                      <Field
+                        component={InputField}
+                        name='project_code[0]'
+                        placeholder='M'
+                        maxLength='1'
+                        validate={[required]}
+                        justHightlight={true}
+                        disabled={disabled}
+                      />
+                      <Field
+                        component={InputField}
+                        name='project_code[1]'
+                        placeholder='V'
+                        maxLength='1'
+                        validate={[required]}
+                        justHightlight={true}
+                        disabled={disabled}
+                      />
+                      <Field
+                        component={InputField}
+                        name='project_code[2]'
+                        placeholder='P'
+                        maxLength='1'
+                        validate={[required]}
+                        justHightlight={true}
+                        disabled={disabled}
+                      />
+                    </div>}
+                  position='right center'
+                  open={!dmsSections}
+                  hideOnScroll
+                >
+                  <div className='tooltip-block dark'>
+                    <div className='tooltip-text-block'>
+                      {project_code
+                        ? <span>Now add at least one position to these codification fields</span>
+                        : <span>Please define the Project code</span>}
+                    </div>
+                  </div>
+                </Popup>}
+                {i !== 0 && 
                 <div className='codification-codes-title-column__code'>
                   {(() => {
-                    if (i === 0) {
-                      return (
-                        <React.Fragment>
-                          <Field
-                            component={InputField}
-                            name='project_code[0]'
-                            placeholder='M'
-                            maxLength='1'
-                            validate={[required]}
-                            justHightlight={true}
-                            disabled={disabled}
-                          />
-                          <Field
-                            component={InputField}
-                            name='project_code[1]'
-                            placeholder='V'
-                            maxLength='1'
-                            validate={[required]}
-                            justHightlight={true}
-                            disabled={disabled}
-                          />
-                          <Field
-                            component={InputFieldPopUp}
-                            name='project_code[2]'
-                            id='project_code[2]'
-                            placeholder='P'
-                            maxLength='1'
-                            isForm={true}
-                            msg='Please define the Project code'
-                            popupClassName='without-margin'
-                            validate={[required]}
-                            errors={project_code || project_code === undefined ? undefined : errors}
-                            disabled={disabled}
-                          />
-                        </React.Fragment>)
-                    } else if (disabled) {
+                    if (disabled) {
                       return placeholders(el)
                     } else if (i === 6) {
                       return freeTextPlaceholders()
@@ -105,14 +123,14 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                       return placeholders(el)
                     }
                   })()}
-                </div>
+                </div>}
               </div>
               {i !== 6 &&
-                <div className={classnames('codification-codes-title-column dash', { disabled })}>
-                  {!disabled && <div />}
-                  <div className='codification-codes-title-column__title' />
-                  <span className='dash-symbol'>&mdash;</span>
-                </div>}
+              <div className={classnames('codification-codes-title-column dash', { disabled })}>
+                {!disabled && <div />}
+                <div className='codification-codes-title-column__title' />
+                <span className='dash-symbol'>&mdash;</span>
+              </div>}
             </React.Fragment>
           )
         })}
