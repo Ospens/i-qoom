@@ -61,8 +61,8 @@ class Ability
         convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # Document
-      can [:new, :create], Document do |document|
-        document.can_create?(user)
+      can [:new, :create], Document do |document, project|
+        project.can_create_documents?(user)
       end
       can [:show,
            :download_native_file,
