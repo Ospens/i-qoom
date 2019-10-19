@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {
   SubmissionError,
-  initialize,
+  initialize
 } from 'redux-form'
 import {
   ACTIVE_MEMBERS_FETCHED_SUCCESS,

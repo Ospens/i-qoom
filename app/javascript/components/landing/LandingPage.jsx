@@ -7,6 +7,8 @@ import Terms from './Terms'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import SignedUp from './SignedUp'
+import RestorePassword from './RestorePassword'
+import NewPassword from './NewPassword'
 
 class LandingPage extends Component {
 
@@ -33,6 +35,8 @@ class LandingPage extends Component {
           <Route path='/terms' component={Terms} />
           <Route exact={false} path={['/signin/:type/:msg', '/signin']} render={props => <SignIn {...props} />} />
           <Route path='/signup' render={props => <SignUp {...props} />} />
+          <Route path='/restore-password' render={props => <RestorePassword {...props} />} />
+          <Route path='/new-password/:token/' render={props => <NewPassword {...props} />} />
           <Route path='/signedup' render={props => <SignedUp {...props} />} />
         </Switch>
         

@@ -89,6 +89,18 @@ class Project < ApplicationRecord
     !members.find_by(user: user).try(:dms_module_access?).nil?
   end
 
+  def can_create_documents?(user)
+    # user cannot create document if he has no access to at least one value
+    # for each field that can be limited by value.
+    # when creating document we check current active convention
+    !conventions.active.document_fields.limit_by_value.map do |field|
+      field.document_rights.where(user: user,
+                                  limit_for: :value,
+                                  enabled: true,
+                                  view_only: false).any?
+    end.include?(false) || dms_master?(user)
+  end
+
   private
 
   def add_creator_as_admin

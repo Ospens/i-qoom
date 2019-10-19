@@ -7,6 +7,7 @@ import {
   PROJECT_ADMIN_DELETED,
   PROJECT_ADMIN_UPDATED,
   PROJECT_CODE_UPDATED,
+  CHECK_MAIN_SECTION_DMS,
   PROJECT_EXIT,
   PROJECT_FETCH_SUCCESS
 } from '../actions/types'
@@ -15,7 +16,8 @@ const initialState = {
   allProjects: [],
   current: {
     admins: [],
-    project_code: undefined
+    project_code: undefined,
+    dmsSections: undefined,
   },
   title: <h2>I-Qoom</h2>
 }
@@ -30,12 +32,26 @@ const projectReducer = (state = initialState, action) => {
   case PROJECT_CREATED_SUCCESS:
     return {
       ...state,
-      current: action.payload
+      current: {
+        ...state.current,
+        ...action.payload
+      }
     }
   case PROJECT_UPDATED_SUCCESS:
     return {
       ...state,
-      current: action.payload
+      current: {
+        ...state.current,
+        ...action.payload
+      }
+    }
+  case CHECK_MAIN_SECTION_DMS:
+    return {
+      ...state,
+      current: {
+        ...state.current,
+        dmsSections: action.payload
+      }
     }
   case PROJECT_ADMIN_UPDATED:
     return {
@@ -63,7 +79,10 @@ const projectReducer = (state = initialState, action) => {
   case PROJECT_FETCH_SUCCESS:
     return {
       ...state,
-      current: action.payload
+      current: {
+        ...state.current,
+        ...action.payload
+      }
     }
   case PROJECT_CODE_UPDATED:
     return {
