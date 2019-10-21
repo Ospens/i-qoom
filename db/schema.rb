@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_05_054626) do
+ActiveRecord::Schema.define(version: 2019_10_19_093907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(version: 2019_10_05_054626) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
-    t.string "project_code"
     t.integer "document_review_status", default: 0
+    t.string "project_code"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -228,14 +228,12 @@ ActiveRecord::Schema.define(version: 2019_10_05_054626) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.bigint "project_id"
     t.bigint "document_revision_id"
     t.bigint "convention_id"
     t.text "emails"
     t.string "title"
     t.index ["convention_id"], name: "index_documents_on_convention_id"
     t.index ["document_revision_id"], name: "index_documents_on_document_revision_id"
-    t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
@@ -362,6 +360,5 @@ ActiveRecord::Schema.define(version: 2019_10_05_054626) do
   add_foreign_key "document_rights", "users"
   add_foreign_key "documents", "conventions"
   add_foreign_key "documents", "document_revisions"
-  add_foreign_key "documents", "projects"
   add_foreign_key "documents", "users"
 end

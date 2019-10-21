@@ -16,7 +16,7 @@ RSpec.describe Document, type: :model do
   it 'project creator should have access to all fields and values even without rights' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)
-    project = Project.find(document['project_id'])
+    project = get_project_from_document_attrs(document)
     document = Document.build_from_convention(project.conventions.active, project.user)
     field = document['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
     expect(field).to be_present
@@ -51,9 +51,9 @@ RSpec.describe Document, type: :model do
     doc3 = FactoryBot.create(:document)
     doc3.revision.update!(revision_number: '3')
     doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
-    doc2.revision.update_columns(document_main_id: doc1.revision.document_main.id)
-    doc3.revision.update_columns(document_main_id: doc1.revision.document_main.id)
-    attrs = doc3.attributes_for_show
+    doc2.revision.update_columns(document_main_id: doc1.document_main.id)
+    doc3.revision.update_columns(document_main_id: doc1.document_main.id)
+    attrs = doc3.reload.attributes_for_show
     info = attrs['additional_information']
     expect(info.length).to eql(2)
     first_info = info.detect{ |i| i[:min] == '1' }
@@ -172,7 +172,8 @@ RSpec.describe Document, type: :model do
         value = Faker::Name.initials
         field = FactoryBot.build(:document_field, kind: :text_field, title: value)
         @attrs = doc_attrs
-        Project.find(@attrs['project_id']).conventions.active.document_fields << field
+        project = get_project_from_document_attrs(@attrs)
+        project.conventions.active.document_fields << field
         field.document_rights.create!(user: user, limit_for: :field, enabled: true)
         field_attrs = field.build_for_new_document(user)
         @attrs['document_fields_attributes'] << field_attrs
@@ -447,10 +448,14 @@ RSpec.describe Document, type: :model do
   it '#values_for_filters' do
     values = Document.all.values_for_filters(codification_kind: :originating_company)
     expect(values.length).to eql(0)
-    FactoryBot.create(:document)
+    doc = FactoryBot.create(:document)
     values = Document.all.values_for_filters(codification_kind: :originating_company)
     expect(values.length).to eql(1)
     expect(values.first.first).to eql('---')
     expect(values.first.last).to eql('Originating company')
+    value = doc.document_fields.find_by(codification_kind: :originating_company).document_field_values.first
+    value.update_columns(selected: false)
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(0)
   end
 end
