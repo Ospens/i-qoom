@@ -8,12 +8,14 @@ import {
   PROJECT_ADMIN_UPDATED,
   PROJECT_CODE_UPDATED,
   CHECK_MAIN_SECTION_DMS,
+  TOGGLE_SIDEBAR,
   PROJECT_EXIT,
   PROJECT_FETCH_SUCCESS
 } from '../actions/types'
 
 const initialState = {
   allProjects: [],
+  sidebar: true,
   current: {
     admins: [],
     project_code: undefined,
@@ -91,6 +93,11 @@ const projectReducer = (state = initialState, action) => {
         ...state.current,
         project_code: action.payload
       }
+    }
+  case TOGGLE_SIDEBAR:
+    return {
+      ...state,
+      sidebar: action.payload
     }
   case PROJECT_EXIT:
     return {

@@ -8,6 +8,7 @@ import {
   PROJECT_EXIT,
   PROJECT_ADMIN_DELETED,
   PROJECT_ADMIN_UPDATED,
+  TOGGLE_SIDEBAR,
   PROJECT_CODE_UPDATED,
   PROJECT_FETCH_SUCCESS
 } from './types'
@@ -59,6 +60,10 @@ export const setPageTitle = title => dispatch => {
     type: SET_PAGE_TITLE,
     payload: title
   })
+}
+
+export const toggleSidebar = payload => dispatch => {
+  dispatch({ type: TOGGLE_SIDEBAR, payload })
 }
 
 export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) => {

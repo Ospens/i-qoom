@@ -7,7 +7,7 @@ import InputField from '../../elements/InputField'
 import { required, minLength6 } from '../../elements/validations'
 
 const passwordsMatch = (value, allValues) =>
-  value !== allValues.user.password ? 'Passwords don\'t match' : undefined
+  value !== allValues.password ? 'Passwords don\'t match' : undefined
 
 function NewPassword({ handleSubmit }) {
   const dispatch = useDispatch()
@@ -15,7 +15,8 @@ function NewPassword({ handleSubmit }) {
   const history = useHistory()
   
   const submit = useCallback(values => {
-    return dispatch(updatePassword({ ...values, token: match.params.token }, () => history.push({ pathname: '/signin' })))
+    const v = { user: { ...values } }
+    return dispatch(updatePassword({ ...v, token: match.params.token }, () => history.push({ pathname: '/signin' })))
   }, [dispatch, match])
 
   return (
@@ -30,7 +31,7 @@ function NewPassword({ handleSubmit }) {
           </div>
           <Field
             component={InputField}
-            name='user[password]'
+            name='password'
             type='password'
             label='Type in password'
             placeholder='Password'
@@ -39,7 +40,7 @@ function NewPassword({ handleSubmit }) {
           />
           <Field
             component={InputField}
-            name='user[confirm_password]'
+            name='password_confirmation'
             type='password'
             label='Confirm password'
             placeholder='Password'
