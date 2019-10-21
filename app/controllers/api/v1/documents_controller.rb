@@ -3,6 +3,7 @@ class Api::V1::DocumentsController < ApplicationController
   include PdfRender
 
   load_resource :project
+
   load_resource :document, only: [ :edit,
                                    :update,
                                    :show,
@@ -12,17 +13,20 @@ class Api::V1::DocumentsController < ApplicationController
                                    :revisions,
                                    :revisions_and_versions ]
 
-  load_resource :document, through: :project, only: [ :new, :create ]
-  authorize_resource :document, except: [ :index,
+  authorize_resource :document, except: [ :new,
+                                          :create,
+                                          :index,
                                           :download_native_files,
                                           :download_list,
                                           :my_documents ]
+
   before_action :authorize_collection_actions, only: [ :index,
                                                        :download_native_files,
                                                        :download_list,
                                                        :my_documents ]
 
   def new
+    authorize! :new, Document.new, @project
     convention = @project.conventions.active
     document = Document.build_from_convention(convention, signed_in_user)
     document['review_status_options'] =
@@ -33,9 +37,10 @@ class Api::V1::DocumentsController < ApplicationController
   end
   # creates new fresh document
   def create
+    authorize! :create, Document.new, @project
     main = @project.document_mains.create
     rev = main.revisions.create
-    document = rev.versions.new(document_params(true).merge(project_id: @project.id))
+    document = rev.versions.new(document_params(true))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -50,8 +55,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
   # creates new revision version
   def update
-    project = @document.revision.document_main.project
-    document = @document.revision.versions.new(document_params(true).merge(project_id: project.id))
+    document = @document.revision.versions.new(document_params(true))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -61,9 +65,9 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new revision
   def create_revision
     authorize! :edit, @document
-    main = @document.revision.document_main
+    main = @document.document_main
     rev = main.revisions.create
-    document = rev.versions.new(document_params(true).merge(project_id: main.project.id))
+    document = rev.versions.new(document_params(true))
     if document.save
       render json: document.attributes_for_edit
     else
@@ -167,14 +171,11 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def revisions
-    render json: @document.revision.document_main.revisions
+    render json: @document.document_main.revisions
   end
 
   def my_documents
-    revision_ids = @project.documents.pluck(:document_revision_id).uniq
-    revisions = DocumentRevision.find(revision_ids)
-    main_ids = revisions.pluck(:document_main_id).uniq
-    mains = DocumentMain.where(id: main_ids)
+    mains = @project.document_mains
     documents = mains.documents_available_for(signed_in_user)
     render json: documents, include: {
       document_fields: { include: :document_field_values }
@@ -182,7 +183,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def revisions_and_versions
-    @main = @document.revision.document_main
+    @main = @document.document_main
     render formats: :json
   end
 

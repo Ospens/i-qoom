@@ -44,9 +44,8 @@ describe Document, type: :request do
     before do
       @params = { document: document_attributes(user, false) }
       @params[:document]['email_title'] = title
-      @project_id = @params[:document]['project_id']
-      @project_user = Project.find(@project_id).user
-      @project_user.password = 'password1'
+      project = get_project_from_document_attrs(@params[:document])
+      @project_id = project.id
     end
 
     it 'anon' do
@@ -109,7 +108,7 @@ describe Document, type: :request do
     file2 = fixture_file_upload('test.txt')
     field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
     field2 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title2')
-    project = Project.find(document_params['project_id'])
+    project = get_project_from_document_attrs(document_params)
     project.conventions.active.document_fields.create!(field1)
     project.conventions.active.document_fields.create!(field2)
     field1['file'] = file1
@@ -147,7 +146,7 @@ describe Document, type: :request do
       document_native_file['file'] = fixture_file_upload('test.txt')
       revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
       revision_number['value'] = '1'
-      rev.versions.create!(doc_attrs.merge(user_id: owner.id, project_id: project.id))
+      rev.versions.create!(doc_attrs.merge(user_id: owner.id))
     end
 
     context '#create_revision' do

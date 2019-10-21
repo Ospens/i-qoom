@@ -36,9 +36,9 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: #373737;
-  overflow: hidden;
   height: 100%;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .black {
@@ -238,7 +238,7 @@ img {
 
 .landing-page {
   position: relative;
-  height: calc(100vh + 38px);
+  height: 100vh;
   margin-top: -115px;
   h1,
   h2,
@@ -367,6 +367,16 @@ footer:after,
   justify-content: flex-end;
 }
 
+@keyframes dashboardSidebar{
+  0% {
+    margin-left: 300px;
+  }
+
+  100% {
+    margin-left: 300px;
+  }
+}
+
 #main {
   height: 100%;
   display: flex;
@@ -385,6 +395,15 @@ footer:after,
     padding-left: 2.5%;
     padding-right: 50px;
     padding-right: 2.5%;
+    transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+    margin-left: 300px;
+    animation-name: dashboardSidebar;
+    animation-duration: 300ms;
+    animation-fill-mode: none;
+
+    &.sidebar-off {
+      margin-left: 0px !important;
+    }
   }
 }
 
@@ -528,6 +547,26 @@ header {
     padding-bottom: 41px;
     border-bottom: 1px solid #fff;
 
+    .form-group-with-icon {
+      display: flex;
+
+      span {
+        font-size: 25px;
+        padding-bottom: 53px;
+        margin-right: 20px;
+        align-self: flex-end;
+      }
+
+      .icon-password-type {
+        font-size: 11px;
+        padding-bottom: 59px;
+      }
+
+      .form-group {
+        width: 100%;
+      }
+    }
+
     .sign-in-form__header {
       font-size: 35px;
       font-weight: 700;
@@ -596,7 +635,7 @@ header {
   @media only screen and (max-width: 600px) {
     form {
       min-width: 70%;
-      margin-top: 40px;
+      margin-top: 120px;
     }
   }
 }
@@ -639,6 +678,21 @@ header {
 
 .restore-password-content {
   width: 38.5%;
+
+  .form-group-with-icon {
+    display: flex;
+
+    span {
+      font-size: 25px;
+      padding-bottom: 66px;
+      margin-right: 20px;
+      align-self: flex-end;
+    }
+
+    .form-group {
+      width: 100%;
+    }
+  }
 
   .form-group {
     margin-bottom: 57px;
@@ -907,7 +961,7 @@ header {
 
   @media only screen and (max-width: 600px) {
     width: 100%;
-    top: 30px;
+    top: 40px;
   }
 }
 

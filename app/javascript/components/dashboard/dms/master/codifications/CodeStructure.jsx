@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -23,20 +23,76 @@ function CodeStructure({
   handleSubmit,
   match: { params: { project_id } }
 }) {
+  const [open, setOpen] = useState(false)
+  const [oldnSBState, setoldnSBState] = useState(true)
   const dispatch = useDispatch()
   const project_code = useSelector(state => state.projects.current.project_code)
   const dmsSections = useSelector(state => state.projects.current.dmsSections)
+  const openSB = useSelector(({ projects }) => projects.sidebar)
+
+  useEffect(() => {
+    if (openSB === oldnSBState) return
+
+    setTimeout(function () {
+      setoldnSBState(openSB)
+    }, 500)
+  }, [openSB])
   
   useEffect(() => {
+    if (dmsSections == undefined) return
+
+    setOpen(!dmsSections)
     if (!project_code) return 
 
     initialize({ project_code: [project_code[0], project_code[1], project_code[2]] })
-  }, [project_code])
-
+  }, [project_code, dmsSections])
+  
   const submitCodification = useCallback(values => {
     const code = values.project_code.join('').toUpperCase()
     dispatch(updateProjectCode(project_id, code))
   }, [dispatch])
+
+  const popUpClassnames = classnames(
+    'for-project-code',
+    { 'error-tooltip-container': !project_code && submitFailed },
+    { 'dark-tooltip-container': (!project_code && !submitFailed) || project_code }
+  )
+
+  const trigger = (
+    <div
+      className={classnames(
+        'codification-codes-title-column__code',
+        { 'project-code-not-defined': !project_code && project_code !== undefined }
+      )}
+    >
+      <Field
+        component={InputField}
+        name='project_code[0]'
+        placeholder='M'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+      <Field
+        component={InputField}
+        name='project_code[1]'
+        placeholder='V'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+      <Field
+        component={InputField}
+        name='project_code[2]'
+        placeholder='P'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+    </div>)
 
   return (
     <form
@@ -60,49 +116,10 @@ function CodeStructure({
                 </span>
                 {i === 0 &&
                 <Popup
-                  className={classnames(
-                    'for-project-code',
-                    { 'error-tooltip-container': !project_code && submitFailed },
-                    { 'dark-tooltip-container': (!project_code && !submitFailed) || project_code }
-                  )}
-                  trigger={
-                    <div
-                      className={classnames(
-                        'codification-codes-title-column__code', 
-                        { 'project-code-not-defined': !project_code && project_code !== undefined }
-                      )}
-                    >
-                      <Field
-                        component={InputField}
-                        name='project_code[0]'
-                        placeholder='M'
-                        maxLength='1'
-                        validate={[required]}
-                        justHightlight={true}
-                        disabled={disabled}
-                      />
-                      <Field
-                        component={InputField}
-                        name='project_code[1]'
-                        placeholder='V'
-                        maxLength='1'
-                        validate={[required]}
-                        justHightlight={true}
-                        disabled={disabled}
-                      />
-                      <Field
-                        component={InputField}
-                        name='project_code[2]'
-                        placeholder='P'
-                        maxLength='1'
-                        validate={[required]}
-                        justHightlight={true}
-                        disabled={disabled}
-                      />
-                    </div>}
+                  className={popUpClassnames}
+                  trigger={trigger}
                   position='right center'
-                  open={!dmsSections}
-                  hideOnScroll
+                  open={(oldnSBState === openSB) && open}
                 >
                   <div className='tooltip-block dark'>
                     <div className='tooltip-text-block'>

@@ -10,16 +10,17 @@ class Document < ApplicationRecord
 
   belongs_to :user
 
-  belongs_to :project
-
   belongs_to :convention
 
   belongs_to :revision,
              class_name: 'DocumentRevision',
              foreign_key: 'document_revision_id'
 
-  delegate :document_main,
-           to: :revision
+  has_one :document_main,
+          through: :revision
+
+  has_one :project,
+          through: :document_main
 
   has_many :document_fields,
            as: :parent,
@@ -105,7 +106,8 @@ class Document < ApplicationRecord
 
   scope :values_for_filters, -> (args) {
     fields = DocumentField.where(parent: all).where(args)
-    DocumentFieldValue.where(document_field: fields).pluck(:value, :title).uniq
+    DocumentFieldValue.where(document_field: fields, selected: true)
+                      .pluck(:value, :title).uniq
   }
 
   def self.build_from_convention(convention, user)
@@ -121,15 +123,7 @@ class Document < ApplicationRecord
   end
 
   def can_create?(user)
-    # user cannot create document if he has no access to at least one value
-    # for each field that can be limited by value.
-    # when creating document we check current active convention
-    !project.conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user,
-                                  limit_for: :value,
-                                  enabled: true,
-                                  view_only: false).any?
-    end.include?(false) || project.dms_master?(user)
+    project.can_create_documents?(user)
   end
 
   def can_view?(user)
