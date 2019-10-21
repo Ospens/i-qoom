@@ -367,6 +367,16 @@ footer:after,
   justify-content: flex-end;
 }
 
+@keyframes dashboardSidebar{
+  0% {
+    margin-left: 300px;
+  }
+
+  100% {
+    margin-left: 300px;
+  }
+}
+
 #main {
   height: 100%;
   display: flex;
@@ -385,11 +395,14 @@ footer:after,
     padding-left: 2.5%;
     padding-right: 50px;
     padding-right: 2.5%;
-    margin-left: 300px;
     transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
+    margin-left: 300px;
+    animation-name: dashboardSidebar;
+    animation-duration: 300ms;
+    animation-fill-mode: none;
 
     &.sidebar-off {
-      margin-left: 0px;
+      margin-left: 0px !important;
     }
   }
 }
