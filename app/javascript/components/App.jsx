@@ -9,6 +9,7 @@ import Dashboard from './dashboard/Dashboard'
 import TopBar from '../elements/TopBar'
 import SideBar from '../elements/SideBar'
 import LandingMenu from './landing/LandingMenu'
+import Notifications from './notifications/Notifications'
 import { toggleSidebar } from '../actions/projectActions'
 
 const App = ({ location: { pathname } }) => {
@@ -37,6 +38,7 @@ const App = ({ location: { pathname } }) => {
           {/*<PrivateRoute authed={authed && isAdmin} path='/admin_panel' component={AdminPanel} />*/}
           <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
         </Switch>
+        <Notifications />
       </div>
     </div>
   )
