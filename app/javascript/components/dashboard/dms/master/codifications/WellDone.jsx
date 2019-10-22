@@ -12,7 +12,10 @@ function Content({ close }) {
       </div>
       <div className='new-modal__body'>
         <div><span className='icon-d-print-warning2' /></div>
-        <div>If you do not do it, navigating through documents is possible, but uploading documents cannot be done.</div>
+        <div>
+          <div>Please do these task in order to use i-Qoom document managment.</div>
+          <div>You can still change the project code later.</div>
+        </div>
       </div>
       <div className='new-modal__footer'>
         <button
@@ -39,6 +42,7 @@ function WellDone({ projectCode }) {
       content={<Content close={() => toggleModal(!open)} />}
       open={open}
       onClose={() => toggleModal()}
+      closeOnDimmerClick={false}
     />
   )
 }

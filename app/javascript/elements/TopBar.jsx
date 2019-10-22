@@ -5,6 +5,9 @@ import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import { signOutUser } from '../actions/userActions'
 
+const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/signedup', '/menu', '/restore-password', '/new-password']
+const backPaths = ['signin', '/signup', '/signedup', '/terms', '/imprint', '/menu', '/restore-password', '/new-password']
+
 class TopBar extends Component {
 
   renderLandingLinks = navClass => (
@@ -57,9 +60,12 @@ class TopBar extends Component {
       location: { pathname }
     } = this.props
 
-    const backPaths = ['signin', '/signup', '/terms', '/imprint', '/menu']
-    const nonMain = location.pathname !== '/' && location.pathname !== '/admin_panel' && !location.pathname.includes('signin')
-    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') })
+    const nonMain = location.pathname !== '/'
+      && location.pathname !== '/admin_panel' 
+      && location.pathname !== '/restore-password' 
+      && location.pathname !== '/signedup'
+      && !location.pathname.includes('signin')
+    const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') || pathname.includes('new-password')})
     const headerClass = classnames({ 'colorful': nonMain })
 
     return (
@@ -84,7 +90,7 @@ class TopBar extends Component {
               </div>
               {authed 
                 ? this.renderUserOptions(true)
-                : <ul className='nav navbar-nav justify-content-end auth-buttons'>
+                : <ul className='nav navbar-nav auth-buttons'>
                   <li className='nav-item'>
                     <Link to='/signup' className='nav-link btn-transparent'>
                       Register
@@ -117,10 +123,9 @@ class TopBar extends Component {
   )
 
   render() {
-    const landingBarPath = ['/', '/terms', '/imprint', '/signin', '/signup', '/menu']
     const { location: { pathname }, isOpen, toggle } = this.props
 
-    if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin')) {
+    if (landingBarPath.includes(pathname) || pathname === '/admin_panel' || pathname.includes('signin') || pathname.includes('new-password')) {
       return (this.renderLandingBar(isOpen, toggle))
     } else {
       return (this.renderDashboardBar(isOpen, toggle))

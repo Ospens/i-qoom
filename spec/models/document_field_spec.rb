@@ -32,6 +32,7 @@ RSpec.describe DocumentField, type: :model do
         it kind do
           subject.kind = :text_field
           subject.codification_kind = kind
+          subject.value = '1000' if kind == :document_number
           should be_valid
           subject.document_field_values.delete_all
           should be_valid

@@ -8,6 +8,8 @@ export const email = value => (
 
 export const minLength = min => value => (value && value.length < min ? `Must be ${min} characters or more` : undefined)
 
+export const minLength6 = value => (value && value.length < 6 ? 'Must be 6 characters or more' : undefined)
+
 export const maxLength15 = value => (value && value.length > 15 ? 'Must be 15 characters or less' : undefined)
 
-export const lessThan100 = value => (value && value > 100 ? 'Must be less then 100' : undefined)
+export const lessThan9999 = value => (value && value > 9999 ? 'Must be less then 9999' : undefined)

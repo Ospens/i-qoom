@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { formValueSelector, Field, FieldArray, change } from 'redux-form'
 import SelectField from '../../../../elements/SelectField'
@@ -8,17 +8,6 @@ import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
 import { errorNotify } from '../../../../elements/Notices'
 
 const selector = formValueSelector('document_form')
-
-const ddItems = [
-  {
-    value: 'STX',
-    title: 'STX'
-  },
-  {
-    value: 'EOS',
-    title: 'EOS'
-  }
-]
 
 const renderField = ({ input: { value } }) => <span>{value}</span>
 
@@ -66,9 +55,17 @@ const EmailSubjects = ({ fields, discardValue }) => (
 )
 
 const AccessAndCommunication = ({ backStep }) => {
-  const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
-
   const dispatch = useDispatch()
+  const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
+  const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
+  const title = useSelector(state => selector(state, 'title'))
+  const users = useSelector(state => state.user)
+
+  useEffect(() => {
+    if (!emailTitleLikeDocument) return
+    
+    dispatch(change('document_form', 'mail_subject', title))
+  }, [dispatch, title, emailTitleLikeDocument])
 
   const discardValue = useCallback(() => {
     dispatch(change('document_form', 'email_addresses', null))
@@ -89,17 +86,6 @@ const AccessAndCommunication = ({ backStep }) => {
               component={props => <EmailSubjects {...props} discardValue={discardValue}/>}
             />
           </div>
-          {/*<div className='form-group'>
-            <Field
-              name='сс'
-              id='сс'
-              options={ddItems}
-              component={SelectField}
-              isMulti={true}
-              placeholder='E-mail'
-              label='CC'
-            />
-          </div>*/}
 
           <div className='row'>
             <div className='col-6'>
@@ -111,6 +97,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 label='Mail subject'
                 placeholder='Define a mail subject'
                 disabled={emailTitleLikeDocument}
+                value={'title'}
               />
             </div>
             <div className='col-6 subject-like-document'>
@@ -118,7 +105,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 component={CheckField}
                 id='email_title_like_document'
                 name='email_title_like_document'
-                className='form-group'
+                className='form-group m-0'
                 labelClass='mr-2'
                 text='Subject like document title'
               />
@@ -128,12 +115,12 @@ const AccessAndCommunication = ({ backStep }) => {
           <div className='row'>
             <div className='col-6'>
               <Field
-                name='isssued_for'
-                id='isssued_for'
+                name='review_status'
+                id='review_status'
                 className='form-group'
-                options={ddItems}
+                options={reviewStatusValues}
                 component={SelectField}
-                label='Issued for...'
+                label='Review status'
               />
             </div>
             <div className='col-6' />
@@ -142,26 +129,28 @@ const AccessAndCommunication = ({ backStep }) => {
           <div className='row'>
             <div className='col-6'>
               <Field
-                name='select_reviewers'
-                id='select_reviewers'
+                name='reviewers'
+                id='reviewers'
                 className='form-group'
-                options={ddItems}
+                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Reviewers*'
                 placeholder='Select reviwers'
+                isMulti={true}
               />
             </div>
             <div className='col-6'>
               <Field
-                name='isssuers_review'
-                id='isssuers_review'
+                name='review_issuers'
+                id='review_issuers'
                 className='form-group'
-                options={ddItems}
+                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'
+                isMulti={true}
               />
-            </div>
+            </div>  
           </div>
         </div>
 

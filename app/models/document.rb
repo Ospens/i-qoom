@@ -1,13 +1,14 @@
 require 'csv'
 
 class Document < ApplicationRecord
-  enum issued_for: [ :information, :review ], _prefix: true
+  attr_accessor :review_status,
+                :review_status_options,
+                :reviewers,
+                :review_issuers
 
   serialize :emails
 
   belongs_to :user
-
-  belongs_to :project
 
   belongs_to :convention
 
@@ -17,6 +18,9 @@ class Document < ApplicationRecord
 
   has_one :document_main,
           through: :revision
+
+  has_one :project,
+          through: :document_main
 
   has_many :document_fields,
            as: :parent,
@@ -29,6 +33,15 @@ class Document < ApplicationRecord
   accepts_nested_attributes_for :document_fields
 
   validates_associated :document_fields
+
+  validates :review_status,
+            presence: true,
+            if: :first_document_in_chain?
+
+  validates :reviewers,
+            :review_issuers,
+            length: { minimum: 1 },
+            if: :reviewers_and_review_issuers_required?
 
   validate :prevent_update_of_codification_string,
            on: :create
@@ -51,10 +64,20 @@ class Document < ApplicationRecord
   validate :prevent_update_of_previous_revisions,
            on: :create
 
+  validate :review_status_value,
+           on: :create,
+           if: :first_document_in_chain?
+
   before_validation :assign_document_revision_version_field,
                     unless: :document_revision_version_present?
 
   before_validation :assign_convention
+
+  before_create :set_review_status_in_document_main,
+                if: :first_document_in_chain?
+
+  before_create :set_reviewers_and_review_issuers_in_document_main,
+                if: :reviewers_and_review_issuers_required?
 
   after_create :send_emails, if: -> { emails.try(:any?) }
 
@@ -72,11 +95,19 @@ class Document < ApplicationRecord
   }
 
   scope :filter_by_codification_kind_and_value, -> (codification_kind, value, selected = true) {
-    joins(document_fields: :document_field_values)
+    documents =
+      joins(document_fields: :document_field_values)
       .where(document_fields: {
               codification_kind: codification_kind,
               document_field_values: {
                 value: value, selected: selected } })
+    Document.where(id: documents)
+  }
+
+  scope :values_for_filters, -> (args) {
+    fields = DocumentField.where(parent: all).where(args)
+    DocumentFieldValue.where(document_field: fields, selected: true)
+                      .pluck(:value, :title).uniq
   }
 
   def self.build_from_convention(convention, user)
@@ -92,15 +123,7 @@ class Document < ApplicationRecord
   end
 
   def can_create?(user)
-    # user cannot create document if he has no access to at least one value
-    # for each field that can be limited by value.
-    # when creating document we check current active convention
-    !project.conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user,
-                                  limit_for: :value,
-                                  enabled: true,
-                                  view_only: false).any?
-    end.include?(false) || project.dms_master?(user)
+    project.can_create_documents?(user)
   end
 
   def can_view?(user)
@@ -212,11 +235,15 @@ class Document < ApplicationRecord
   end
 
   def first_document_in_chain?
-    !revision.document_main.revisions.first_revision.versions.any?
+    !document_main.revisions.first_revision.versions.any?
   end
 
   def revision_number_field
     document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }
+  end
+
+  def reviewers_and_review_issuers_required?
+    review_status != 'issued_for_information' && first_document_in_chain?
   end
 
   private
@@ -233,7 +260,7 @@ class Document < ApplicationRecord
   end
 
   def prevent_update_of_previous_revisions
-    if revision != revision.document_main.revisions.last_revision
+    if revision != document_main.revisions.last_revision
       errors.add(:document_fields, :updating_of_previous_revisions_is_not_allowed)
     end
   end
@@ -317,7 +344,7 @@ class Document < ApplicationRecord
 
   def additional_information
     return if additional_information_field.blank?
-    revisions = revision.document_main.revisions.order_by_revision_number
+    revisions = document_main.revisions.order_by_revision_number
     temporal_value = []
     revisions.each do |rev|
       val = rev.last_version.additional_information_field.value
@@ -358,5 +385,21 @@ class Document < ApplicationRecord
     emails.each do |email|
       ApplicationMailer.new_document(self, email).deliver_later
     end
+  end
+
+  def set_review_status_in_document_main
+    revision.document_main.update(document_review_status: review_status)
+  end
+
+  def review_status_value
+    if !DocumentMain.document_review_statuses.keys.include?(review_status) ||
+        ['in_progress', 'accepted', 'rejected'].include?(review_status)
+      errors.add(:review_status, :invalid)
+    end
+  end
+
+  def set_reviewers_and_review_issuers_in_document_main
+    document_main.reviewers << User.find(reviewers)
+    document_main.review_issuers << User.find(review_issuers)
   end
 end

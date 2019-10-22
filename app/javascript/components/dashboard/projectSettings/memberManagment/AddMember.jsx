@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   reduxForm,
   FormSection,
@@ -8,226 +8,187 @@ import {
 import AddressFields from '../../../../elements/forms/AddressFields'
 import InputField from '../../../../elements/InputField'
 import SelectField from '../../../../elements/SelectField'
-import {
-  startCreatingProjectMember,
-  startCreateProjectMember
-} from '../../../../actions/projectMembersActions'
+import { startCreatingProjectMember } from '../../../../actions/projectMembersActions'
 import { required, email } from '../../../../elements/validations'
 
-class AddMember extends Component {
-  state = {
-    step: 1
-  }
-
-  UNSAFE_componentWillMount() {
-    const { startCreatingProjectMember, projectId } = this.props
-    startCreatingProjectMember(projectId)
-  }
-
-  handleSubmit = values => {
-    const { step } = this.state
-
-    const { startCreateProjectMember, projectId } = this.props
-    if (step < 4) {
-      this.nextStep()
-      return
-    }
-
-    return startCreateProjectMember(values, projectId).then(this.closeModal)
-  }
-  
-  changeStep = (val) => {
-    this.setState({ step: val })
-  }
-  
-  nextStep = () => this.setState(prevState => ({ step: prevState.step + 1 }))
-
-  closeModal = () => {
-    const { closeModal } = this.props
-    this.changeStep(1)
-    closeModal()
-  }
-
-  renderButtons = () => {
-    let { step } = this.state
-
-    return (
-      <div className='modal-footer'>
-        {step > 1 &&
+function Footer({ handleSubmit, onSubmit, step, changeStep, closeModal }) {
+  return (
+    <div className='new-modal__footer'>
+      {step > 1 &&
         <button
           type='button'
-          className='btn btn-back back-member-details'
-          onClick={() => this.changeStep(step - 1)}
+          className='btn btn-back'
+          onClick={() => changeStep(step - 1)}
         >
           <span className='icon-arrow-button-left' />
           Back
         </button>}
-        <button
-          type='button'
-          className='btn btn-white'
-          onClick={this.closeModal}
-        >
-          Cancel
+      <button
+        type='button'
+        className='btn btn-white'
+        onClick={closeModal}
+      >
+        Cancel
         </button>
-        {step < 4
-          ? <button
-              type='submit'
-              className='btn btn-purple'
-            >
-              Next
+      {step < 4
+        ? <button type='submit' className='btn btn-purple'>
+          Next
             </button>
-          : <React.Fragment>
-              <button type='submit' className='btn btn-purple'>Save</button>
-              <button type='submit' className='btn btn-purple'>Invite</button>
-            </React.Fragment>
-        }
+        : <React.Fragment>
+          <button type='submit' className='btn btn-purple ml-2'>Save</button>
+          <button
+            type='submit'
+            className='btn btn-purple'
+            onClick={handleSubmit(values => onSubmit({ ...values, invite: true }))}
+          >
+            Invite
+          </button>
+        </React.Fragment>
+      }
 
-      </div>
-    )
-  }
-
-  renderTypeEmployment = () => (
-    <React.Fragment>
-      <h6>Please select type of employment</h6>
-      <div className='form-group'>
-        <Field
-          name='employment_type'
-          id='employment_type'
-          options={this.props.employment_type_options}
-          component={SelectField}
-          validate={[required]}
-        />
-      </div>
-    </React.Fragment>
-  )
-
-  renderCompanyEmplyee = () => (
-    <React.Fragment>
-      <h6>From which company is the employee?</h6>
-      <div className='form-group'>
-        <Field
-          name='company_type'
-          id='company_type'
-          options={this.props.company_type_options}
-          component={SelectField}
-          validate={[required]}
-        />
-      </div>
-    </React.Fragment>
-  )
-
-  renderMemberDetails = () => (
-    <div>
-      <h6>Please enter member details</h6>
-      <Field
-        component={InputField}
-        name='first_name'
-        id='first_name'
-        className='form-group'
-        placeholder='First Name'
-        validate={[required]}
-        label='Member details'
-      />
-      <Field
-        component={InputField}
-        name='last_name'
-        id='last_name'
-        className='form-group'
-        placeholder='Last name'
-        validate={[required]}
-      />
-      <Field
-        component={InputField}
-        name='email'
-        id='email'
-        className='form-group'
-        placeholder='Email address'
-        validate={[required, email]}
-      />
-      <div className='form-row'>
-        <Field
-          component={InputField}
-          className='form-group col-md-4'
-          name='phone_code'
-          id='phone_code'
-          placeholder='+00'
-        />
-        <Field
-          component={InputField}
-          className='form-group col-md-8'
-          name='phone_number'
-          id='phone_number'
-          placeholder='Phone number'
-        />
-      </div>
-      <div className='form-row'>
-        <Field
-          component={InputField}
-          className='form-group col-md-6'
-          name='job_title'
-          id='job_title'
-          placeholder='Job title'
-        />
-        <Field
-          component={SelectField}
-          className='form-group col-md-6'
-          name='discipline_id'
-          id='discipline_id'
-          options={this.props.discipline_options}
-          placeholder='Discipline'
-        />
-      </div>
     </div>
   )
-
-  renderCompanyData = () => (
-    <div>
-      <h6>Please enter company data</h6>
-      <FormSection name='company_address'>
-        <AddressFields />
-      </FormSection>
+}
+const TypeEmployment = ({ options }) => (
+  <React.Fragment>
+    <h6>Please select type of employment</h6>
+    <div className='form-group'>
+      <Field
+        name='employment_type'
+        id='employment_type'
+        options={options}
+        component={SelectField}
+        validate={[required]}
+      />
     </div>
+  </React.Fragment>
+)
+
+const CompanyEmplyee = ({ options }) => (
+  <React.Fragment>
+    <h6>From which company is the employee?</h6>
+    <div className='form-group'>
+      <Field
+        name='company_type'
+        id='company_type'
+        options={options}
+        component={SelectField}
+        validate={[required]}
+      />
+    </div>
+  </React.Fragment>
+)
+
+const MemberDetails = ({ disciplines }) => (
+  <div>
+    <h6>Please enter member details</h6>
+    <Field
+      component={InputField}
+      name='first_name'
+      id='first_name'
+      className='form-group'
+      placeholder='First Name'
+      validate={[required]}
+      label='Member details'
+    />
+    <Field
+      component={InputField}
+      name='last_name'
+      id='last_name'
+      className='form-group'
+      placeholder='Last name'
+      validate={[required]}
+    />
+    <Field
+      component={InputField}
+      name='email'
+      id='email'
+      className='form-group'
+      placeholder='Email address'
+      validate={[required, email]}
+    />
+    <div className='form-row'>
+      <Field
+        component={InputField}
+        className='form-group col-md-4'
+        name='phone_code'
+        id='phone_code'
+        placeholder='+00'
+      />
+      <Field
+        component={InputField}
+        className='form-group col-md-8'
+        name='phone_number'
+        id='phone_number'
+        placeholder='Phone number'
+      />
+    </div>
+    <div className='form-row'>
+      <Field
+        component={InputField}
+        className='form-group col-md-6'
+        name='job_title'
+        id='job_title'
+        placeholder='Job title'
+      />
+      <Field
+        component={SelectField}
+        className='form-group col-md-6'
+        name='discipline_id'
+        id='discipline_id'
+        options={disciplines}
+        placeholder='Discipline'
+      />
+    </div>
+  </div>
+)
+
+const CompanyData = () => (
+  <div>
+    <h6>Please enter company data</h6>
+    <FormSection name='company_address'>
+      <AddressFields />
+    </FormSection>
+  </div>
+)
+
+function AddMember({ handleSubmit, onSubmit, step, projectId, closeModal, changeStep }) {
+  const dispatch = useDispatch()
+  useEffect(() => { dispatch(startCreatingProjectMember(projectId)) }, [])
+  const employment_type_options = useSelector(({ projectMembers: { creating } }) => creating.employment_types)
+  const company_type_options = useSelector(({ projectMembers: { creating } }) => creating.company_types)
+  const discipline_options = useSelector(({ projectMembers: { disciplines } }) => disciplines)
+
+  return (
+    <form noValidate={true} onSubmit={handleSubmit(onSubmit)} className='new-modal'>
+      <div className='new-modal__header'>
+        <h4>New member</h4>
+      </div>
+      <div className='new-modal__body'>
+        {(() => {
+          switch (step) {
+            case 1:
+              return <TypeEmployment options={employment_type_options} />
+            case 2:
+              return <CompanyEmplyee options={company_type_options} />
+            case 3:
+              return <CompanyData />
+            case 4:
+              return <MemberDetails disciplines={discipline_options} />
+            default:
+              return <TypeEmployment />
+          }
+        })()}
+      </div>
+      <Footer
+        handleSubmit={handleSubmit} 
+        onSubmit={onSubmit} 
+        step={step} 
+        closeModal={closeModal}
+        changeStep={changeStep}
+      />
+    </form>
   )
-
-  render() { 
-    const { step } = this.state
-    return (
-      <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-
-        <div className='new-project-modal'>
-          <h4>New member</h4>
-          <div className='modal-body project-name'>
-            {(() => {
-              switch (step) {
-                case 1:
-                  return this.renderTypeEmployment()
-                case 2:
-                  return this.renderCompanyEmplyee()
-                case 3:
-                  return this.renderCompanyData()
-                case 4:
-                  return this.renderMemberDetails()
-                default:
-                  return this.renderTypeEmployment()
-              }
-            })()}
-          </div>
-          {this.renderButtons()}
-        </div>
-      </form>
-    )
-  }
 }
 
-const mapDispatchToProps = dispatch => ({
-  startCreatingProjectMember: id => dispatch(startCreatingProjectMember(id)),
-  startCreateProjectMember: (values, projectId) => dispatch(startCreateProjectMember(values, projectId))
-})
-
-const mapStateToProps = ({ projectMembers: { creating, disciplines }}) => ({
-  company_type_options: creating.company_types,
-  employment_type_options: creating.employment_types,
-  discipline_options: disciplines,
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'project_member_form' })(AddMember))
+export default reduxForm({ form: 'project_member_form' })(AddMember)

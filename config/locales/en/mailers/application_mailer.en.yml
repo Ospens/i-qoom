@@ -8,3 +8,5 @@ en:
       title: You've been added to a new project
     send_project_member_confirmation:
       title: You've been invited to a project
+    send_reset_password_instructions:
+      title: Reset password instructions

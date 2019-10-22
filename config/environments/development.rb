@@ -66,4 +66,6 @@ Rails.application.configure do
   end
 
   routes.default_url_options = { host: 'lvh.me:3000'}
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

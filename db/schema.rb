@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_05_071230) do
+ActiveRecord::Schema.define(version: 2019_10_19_093907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,8 +119,85 @@ ActiveRecord::Schema.define(version: 2019_10_05_071230) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
+    t.integer "document_review_status", default: 0
     t.string "project_code"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
+  end
+
+  create_table "document_mains_review_issuers", id: false, force: :cascade do |t|
+    t.bigint "document_main_id", null: false
+    t.bigint "review_issuer_id", null: false
+  end
+
+  create_table "document_mains_reviewers", id: false, force: :cascade do |t|
+    t.bigint "document_main_id", null: false
+    t.bigint "reviewer_id", null: false
+  end
+
+  create_table "document_review_comments", force: :cascade do |t|
+    t.bigint "document_review_subject_id"
+    t.bigint "user_id"
+    t.text "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_review_subject_id"], name: "index_document_review_comments_on_document_review_subject_id"
+    t.index ["user_id"], name: "index_document_review_comments_on_user_id"
+  end
+
+  create_table "document_review_owners", force: :cascade do |t|
+    t.bigint "project_id"
+    t.bigint "user_id"
+    t.string "originating_company"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_document_review_owners_on_project_id"
+    t.index ["user_id"], name: "index_document_review_owners_on_user_id"
+  end
+
+  create_table "document_review_subjects", force: :cascade do |t|
+    t.integer "status", default: 0
+    t.string "title"
+    t.string "document_reference"
+    t.bigint "document_revision_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "review_issuer_id"
+    t.index ["document_revision_id"], name: "index_document_review_subjects_on_document_revision_id"
+    t.index ["review_issuer_id"], name: "index_document_review_subjects_on_review_issuer_id"
+    t.index ["user_id"], name: "index_document_review_subjects_on_user_id"
+  end
+
+  create_table "document_review_subjects_review_completes", force: :cascade do |t|
+    t.bigint "document_review_subject_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_review_subject_id"], name: "document_review_subject_id"
+    t.index ["user_id"], name: "user_id"
+  end
+
+  create_table "document_review_subjects_reviewers", id: false, force: :cascade do |t|
+    t.bigint "document_review_subject_id", null: false
+    t.bigint "reviewer_id", null: false
+    t.index ["document_review_subject_id"], name: "index_document_review_subjects_reviewers_on_subject_id"
+    t.index ["reviewer_id"], name: "index_document_review_subjects_reviewers_on_reviewer_id"
+  end
+
+  create_table "document_review_subjects_tags", id: false, force: :cascade do |t|
+    t.bigint "document_review_subject_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["document_review_subject_id"], name: "index_on_document_review_subject_id"
+    t.index ["tag_id"], name: "index_document_review_subjects_tags_on_tag_id"
+  end
+
+  create_table "document_review_tags", force: :cascade do |t|
+    t.string "name"
+    t.integer "position", default: 1
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_document_review_tags_on_project_id"
   end
 
   create_table "document_revisions", force: :cascade do |t|
@@ -144,7 +221,6 @@ ActiveRecord::Schema.define(version: 2019_10_05_071230) do
   end
 
   create_table "documents", force: :cascade do |t|
-    t.integer "issued_for"
     t.string "email_title"
     t.boolean "email_title_like_document", default: true
     t.text "email_text"
@@ -152,14 +228,12 @@ ActiveRecord::Schema.define(version: 2019_10_05_071230) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id"
-    t.bigint "project_id"
     t.bigint "document_revision_id"
     t.bigint "convention_id"
     t.text "emails"
     t.string "title"
     t.index ["convention_id"], name: "index_documents_on_convention_id"
     t.index ["document_revision_id"], name: "index_documents_on_document_revision_id"
-    t.index ["project_id"], name: "index_documents_on_project_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
 
@@ -243,6 +317,17 @@ ActiveRecord::Schema.define(version: 2019_10_05_071230) do
     t.boolean "archived", default: false
   end
 
+  create_table "read_marks", id: :serial, force: :cascade do |t|
+    t.string "readable_type", null: false
+    t.integer "readable_id"
+    t.string "reader_type", null: false
+    t.integer "reader_id"
+    t.datetime "timestamp"
+    t.index ["readable_type", "readable_id"], name: "index_read_marks_on_readable_type_and_readable_id"
+    t.index ["reader_id", "reader_type", "readable_type", "readable_id"], name: "read_marks_reader_readable_index", unique: true
+    t.index ["reader_type", "reader_id"], name: "index_read_marks_on_reader_type_and_reader_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "title"
     t.integer "project_id"
@@ -276,12 +361,21 @@ ActiveRecord::Schema.define(version: 2019_10_05_071230) do
   add_foreign_key "document_folders", "projects"
   add_foreign_key "document_folders", "users"
   add_foreign_key "document_mains", "projects"
+  add_foreign_key "document_review_comments", "document_review_subjects"
+  add_foreign_key "document_review_comments", "users"
+  add_foreign_key "document_review_owners", "projects"
+  add_foreign_key "document_review_owners", "users"
+  add_foreign_key "document_review_subjects", "document_revisions"
+  add_foreign_key "document_review_subjects", "users"
+  add_foreign_key "document_review_subjects", "users", column: "review_issuer_id"
+  add_foreign_key "document_review_subjects_review_completes", "document_review_subjects"
+  add_foreign_key "document_review_subjects_review_completes", "users"
+  add_foreign_key "document_review_tags", "projects"
   add_foreign_key "document_revisions", "document_mains"
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"
   add_foreign_key "document_rights", "users"
   add_foreign_key "documents", "conventions"
   add_foreign_key "documents", "document_revisions"
-  add_foreign_key "documents", "projects"
   add_foreign_key "documents", "users"
 end

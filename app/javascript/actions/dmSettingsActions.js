@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { errorNotify } from '../elements/Notices'
 
-export const getAttributes = projectId => (_, getState) => {
+const getAttributes = projectId => (_, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
@@ -14,3 +14,5 @@ export const getAttributes = projectId => (_, getState) => {
       })
   )
 }
+
+export default getAttributes

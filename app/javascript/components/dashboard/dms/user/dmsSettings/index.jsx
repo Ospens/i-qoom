@@ -7,7 +7,7 @@ import Overview from './Overview'
 import UploadForm from './UploadForm'
 import QuickSearch from './QuickSearch'
 import Codification from './Codification'
-import { getAttributes } from '../../../../../actions/dmSettingsActions'
+import getAttributes from '../../../../../actions/dmSettingsActions'
 
 function Content() {
   const project = useSelector(state => state.projects.current)

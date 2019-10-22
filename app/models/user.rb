@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :validatable
 
+  acts_as_reader
+
   attr_accessor :accept_terms_and_conditions
 
   has_many :projects
@@ -13,6 +15,9 @@ class User < ApplicationRecord
   has_many :document_rights
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
+  has_many :document_review_subjects
+  has_many :document_review_comments
+  has_many :document_review_owners
 
   has_many :sent_messages,
            class_name: "Message",
@@ -25,7 +30,7 @@ class User < ApplicationRecord
            source: :message
 
   validates_presence_of :password_confirmation,
-    on: [:create, :password_changed?]
+    if: -> { password.present? }
 
   validates :first_name,
             :last_name,
@@ -35,7 +40,8 @@ class User < ApplicationRecord
 
   validates :accept_terms_and_conditions,
     acceptance: true,
-    allow_nil: false
+    allow_nil: false,
+    on: :create
 
   validates_inclusion_of :country,
     in: ISO3166::Country.codes
@@ -64,5 +70,15 @@ class User < ApplicationRecord
 
   def confirmation_token
     ::JsonWebToken.encode(user_id: id, email: email)
+  end
+
+  def generate_reset_password_token
+    update(reset_password_token:   SecureRandom.hex(10),
+           reset_password_sent_at: Time.now)
+  end
+
+  def reset_password
+    generate_reset_password_token
+    ApplicationMailer.send_reset_password_instructions(self).deliver_now
   end
 end

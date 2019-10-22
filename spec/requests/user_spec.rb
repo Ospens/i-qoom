@@ -39,4 +39,86 @@ describe "User", type: :request do
       expect(User.find_by(id: user.id).confirmed?).to be_falsy
     end
   end
+
+  context "send_reset_password_instructions" do
+    it "should send a token by email" do
+      user = FactoryBot.create(:user)
+      post "/api/v1/users/send_reset_password_instructions",
+        params: { email: user.email }.to_json,
+        headers: headers
+      expect(response).to have_http_status(200)
+      expect(ActionMailer::Base.deliveries.last.to).to include(user.email)
+    end
+    it "shouldn't found a user" do
+      user = FactoryBot.create(:user)
+      post "/api/v1/users/send_reset_password_instructions",
+        params: { email: "wrong email" }.to_json,
+        headers: headers
+      expect(response).to have_http_status(404)
+      expect(ActionMailer::Base.deliveries.count).to eq(0)
+    end
+  end
+  context "reset_password" do
+    it "should get and render reset password token" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      get "/api/v1/users/reset_password?token=#{user.reset_password_token}",
+        headers: headers
+      expect(response).to have_http_status(200)
+    end
+    it "shouldn't get and render reset password token" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      get "/api/v1/users/reset_password",
+        headers: headers
+      expect(response).to have_http_status(404)
+    end
+  end
+  context "update_password" do
+    it "should update password" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      patch "/api/v1/users/update_password",
+        params: { token: user.reset_password_token,
+                  user: {
+                    password: "newpassword",
+                    password_confirmation: "newpassword" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(200)
+    end
+    it "shouldn't update password with wrong token" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      patch "/api/v1/users/update_password",
+        params: { token: "fsdfdsfsdfdsfsd",
+                  user: {
+                    password: "newpassword",
+                    password_confirmation: "newpassword" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(422)      
+    end
+    it "shouldn't update password if expired" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      user.update(reset_password_sent_at: Time.now - 2.hour)
+      patch "/api/v1/users/update_password",
+        params: { token: user.reset_password_token,
+                  user: {
+                    password: "newpassword",
+                    password_confirmation: "newpassword" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(422)      
+    end
+    it "shouldn't update password with wrong password_confirmation" do
+      user = FactoryBot.create(:user)
+      user.generate_reset_password_token
+      patch "/api/v1/users/update_password",
+        params: { token: user.reset_password_token,
+                  user: {
+                    password: "newpassword",
+                    password_confirmation: "wrongwrongwrong" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(422)      
+    end
+  end
 end

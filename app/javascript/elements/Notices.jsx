@@ -35,16 +35,6 @@ export const successNotify =  msg => {
   )
 }
 
-export const customSuccessNotify = msg => {
-  toast.success(<Msg text={msg} />, {
-    position: 'top-right',
-    autoClose: false,
-    closeOnClick: true,
-    draggable: false
-  }
-  )
-}
-
 export const infoNotify = msg => {
   toast.info(msg, {
     position: 'top-right',

@@ -142,6 +142,7 @@ describe "ProjectMember", type: :request do
         it 'should get a status "success"' do
           discipline = 
             FactoryBot.create(:discipline, project_id: project.id)
+
           patch "/api/v1/projects/#{project.id}/members/#{project_member_company_data.id}",
             params: { project_member:
                       { creation_step: "details",
@@ -154,6 +155,7 @@ describe "ProjectMember", type: :request do
           expect(response).to have_http_status(:success)
           expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).to eq("pending")
           expect(ProjectMember.find_by(id: project_member_company_data.id).discipline).to be_truthy
+          expect(ActionMailer::Base.deliveries.count).to eq(0)
         end
         it 'should get a status "error"' do
           patch "/api/v1/projects/#{project.id}/members/#{project_member_company_data.id}",
@@ -163,6 +165,30 @@ describe "ProjectMember", type: :request do
             headers: headers
           expect(response).to have_http_status(:unprocessable_entity)
           expect(ProjectMember.find_by(id: project_member_company_data.id).creation_step).not_to eq("pending")
+        end
+      end
+      context "creation_step 'details' invite" do
+        let(:project_member_company_data) {
+          FactoryBot.create(:project_member_company_data,
+                            project_id: project.id)
+        }
+        it 'should get a status "success" and send invitation' do
+          discipline = 
+            FactoryBot.create(:discipline, project_id: project.id)
+          email = Faker::Internet.email
+          patch "/api/v1/projects/#{project.id}/members/#{project_member_company_data.id}",
+            params: { project_member:
+                      { creation_step: "details",
+                        email: email,
+                        first_name: Faker::Name.first_name,
+                        last_name: Faker::Name.last_name,
+                        discipline_id: discipline.id,
+                        invite: true }
+                    }.to_json,
+            headers: headers
+          expect(response).to have_http_status(:success)
+          expect(ActionMailer::Base.deliveries.count).to eq(1)
+          expect(ActionMailer::Base.deliveries.last.to).to include(email)
         end
       end
     end

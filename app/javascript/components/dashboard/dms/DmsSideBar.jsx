@@ -1,39 +1,59 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component, useCallback } from 'react'
+import { submit } from 'redux-form'
+import { connect, useDispatch } from 'react-redux'
 import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 import CreateFolder from './user/CreateFolder'
 
-export const DmsSideBarItem = ({ path, label, icon, root, nested }) => (
-  <Route path={path} exact>
-    {({ match, location }) => {
-      const matched = match || location.pathname.indexOf(root) > -1
-      return (
-        <li className='dms-sidebar-menu__item'>
-          <Link className={classnames('btn', { 'active': matched })} to={path}>
-            <span className={classnames('dark-gray mr-2', icon)} />
-            <span className='head-button__gray-text'>{label}</span>
-          </Link>
-          {matched && nested &&
-          <ul className='dms-sidebar-menu__sublitem'>
-            {nested.map((subItem, i) => (
-              <li
-                key={i}
-                className='dms-sidebar-menu__sublink'
-              >
-                <Link
-                  className={classnames({ 'active': location.pathname.indexOf(subItem.path) > -1})}
-                  to={subItem.path}
-                >
-                  {subItem.title}
+export const DmsSideBarItem = ({ path, label, icon, root, nested, projectCode, dmsSections }) => {
+  const dispatch = useDispatch()
+
+  const remoteSubmit = useCallback(() => {
+    if (!projectCode) {
+      dispatch(submit('convention_code_form'))
+    } else if (!dmsSections) {
+      dispatch(submit('originating_company'))
+      dispatch(submit('document_type'))
+      dispatch(submit('discipline'))
+    }
+  }, [projectCode])
+
+  return (
+    <Route path={path} exact>
+      {({ match, location }) => {
+        const matched = match || location.pathname.indexOf(root) > -1
+        return (
+          <li className='dms-sidebar-menu__item'>
+            {projectCode && dmsSections
+              ? <Link className={classnames('btn', { 'active': matched })} to={path}>
+                  <span className={classnames('dark-gray mr-2', icon)} />
+                  <span className='head-button__gray-text'>{label}</span>
                 </Link>
-              </li>
-            ))}
-          </ul>}
-        </li>
-      )}}
-  </Route>
-)
+              : <button className={classnames('btn', { 'active': matched })} onClick={remoteSubmit} type='submit'>
+                  <span className={classnames('dark-gray mr-2', icon)} />
+                  <span className='head-button__gray-text'>{label}</span>
+                </button>}
+            {matched && nested &&
+            <ul className='dms-sidebar-menu__sublitem'>
+              {nested.map((subItem, i) => (
+                <li
+                  key={i}
+                  className='dms-sidebar-menu__sublink'
+                >
+                  <Link
+                    className={classnames({ 'active': location.pathname.indexOf(subItem.path) > -1})}
+                    to={subItem.path}
+                  >
+                    {subItem.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>}
+          </li>
+        )}}
+    </Route>
+  )
+}
 
 export const renderFoldersBlock = (folders, projectId) => {
   return (
@@ -76,31 +96,30 @@ export const renderFoldersBlock = (folders, projectId) => {
 class DmsSideBar extends Component {
 
   renderMainItems = () => {
-    const { project_code, folders, match: { path, params: {  project_id } } } = this.props
+    const { project_code, dmsSections, folders, match: { path, params: {  project_id } } } = this.props
     const masterPath = `/dashboard/projects/${project_id}/documents/master`
-
     // TODO: Need check for master's permit
     
     const menuItems = [
       {
         title: 'Overview',
         icon: 'icon-task-checklist-check',
-        path: `/dashboard/projects/${project_id}/documents/`
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/` : '#'
       },
       {
-        title: 'DMS Settings',
+        title: 'DMS User Settings',
         icon: 'icon-task-list-settings',
-        path: `/dashboard/projects/${project_id}/documents/settings/`
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/settings/` : '#'
       },
       {
         title: 'Document planning',
         icon: 'icon-calendar-3',
-        path: `/dashboard/projects/${project_id}/documents/planning/`
+        path: project_code && dmsSections ? `/dashboard/projects/${project_id}/documents/planning/` : '#'
       },
       {
         title: 'Master settings',
         icon: 'icon-task-list-settings',
-        path: project_code ? `${masterPath}/edit_convention` : `${masterPath}/codifications/1/`,
+        path: project_code && dmsSections ? `${masterPath}/edit_convention` : `${masterPath}/codifications/1/`,
         root: `${masterPath}/`
       }
     ]
@@ -176,6 +195,8 @@ class DmsSideBar extends Component {
             <React.Fragment key={i}>
               <DmsSideBarItem
                 path={path}
+                projectCode={project_code}
+                dmsSections={dmsSections}
                 label={title}
                 icon={icon}
                 root={root}
@@ -194,7 +215,9 @@ class DmsSideBar extends Component {
                   {masterMenu.map(({ path, title, icon, root, nested }, i) => (
                     <React.Fragment key={i}>
                       <DmsSideBarItem
-                        path={path}
+                        path={project_code ? path : `#`}
+                        projectCode={project_code}
+                        dmsSections={dmsSections}
                         label={title}
                         icon={icon}
                         root={root}
@@ -211,13 +234,18 @@ class DmsSideBar extends Component {
   }
 
   render() {
-    const { children } = this.props
+    const { children, match: { params: { project_id } } } = this.props
 
     return (
       <React.Fragment>
         <div className='dms-sidebar-menu'>
           {this.renderMainItems()}
           {children}
+
+          <Link to={`/dashboard/projects/${project_id}`} className='btn-back-to-prev-page'>
+            <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+            BACK
+          </Link>
         </div>
       </React.Fragment>
     )
@@ -226,7 +254,8 @@ class DmsSideBar extends Component {
 
 const mapStateToProps = ({ projects, folders }) => ({
   folders: folders.allFolders,
-  project_code: projects.current.project_code
+  project_code: projects.current.project_code,
+  dmsSections: projects.current.dmsSections
 })
 
 export default connect(mapStateToProps)(withRouter(DmsSideBar))

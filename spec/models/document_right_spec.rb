@@ -51,7 +51,7 @@ RSpec.describe DocumentRight, type: :model do
     project = FactoryBot.create(:project)
     convention = project.conventions.active
     user = FactoryBot.create(:user)
-    expect(Document.new(project: project).can_create?(user)).to eql(false)
+    expect(project.can_create_documents?(user)).to eql(false)
     originating_company =
       convention.document_fields.find_by(codification_kind: :originating_company)
     originating_company.document_rights.create(user: user,
@@ -74,7 +74,7 @@ RSpec.describe DocumentRight, type: :model do
         user_params.delete(:document_rights)
       User.find(user_params[:id]).update!(user_params.except(:id).merge(accept_terms_and_conditions: true))
     end
-    expect(Document.new(project: project).can_create?(user)).to eql(true)
+    expect(project.can_create_documents?(user)).to eql(true)
     user2 = FactoryBot.create(:user)
     attrs = DocumentRight.attributes_for_edit(project, true)
     expect(attrs[:users].map{ |i| i[:id] }).to\

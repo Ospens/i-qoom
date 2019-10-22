@@ -1,5 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
+import { Link, withRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { formValueSelector } from 'redux-form'
 import FolderInfo from './FolderInfo'
@@ -19,7 +20,7 @@ const menuItems = [
   }
 ]
 
-const DocumentSideBar = ({ step, toggleStep }) => {
+const DocumentSideBar = ({ step, toggleStep, match: { params: { project_id } } }) => {
   const title = useSelector(state => selector(state, 'title'))
 
   return (
@@ -60,8 +61,17 @@ const DocumentSideBar = ({ step, toggleStep }) => {
           ))}
         </ul>
       </div>
+      {step === 1
+        ? <Link to={`/dashboard/projects/${project_id}/documents`} className='btn-back-to-prev-page'>
+            <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+            BACK
+          </Link>
+        : <button type='button' onClick={() => toggleStep(1)} className='btn-back-to-prev-page'>
+            <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+            BACK
+          </button>}
     </div>
   )
 }
 
-export default DocumentSideBar
+export default withRouter(DocumentSideBar)

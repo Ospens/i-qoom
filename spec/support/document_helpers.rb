@@ -1,8 +1,6 @@
 include ActionDispatch::TestProcess::FixtureFile
 
 module DocumentHelpers
-  # if you want to use project.user from this method in request specs
-  # you need to assign password to user like: project.user.password = 'password1'
   def document_attributes(user, suffix = true)
     project = FactoryBot.create(:project)
     main = project.document_mains.create
@@ -20,8 +18,8 @@ module DocumentHelpers
       end
     end
     doc_attrs = Document.build_from_convention(convention, user)
+    doc_attrs['review_status'] = 'issued_for_information'
     doc_attrs['user_id'] = user.id
-    doc_attrs['project_id'] = project.id
     doc_attrs['convention_id'] = convention.id
     doc_attrs['document_fields'].each do |field|
       if field['kind'] == 'select_field'
@@ -29,6 +27,8 @@ module DocumentHelpers
         value['selected'] = true
       elsif field['codification_kind'] == 'revision_number'
         field['value'] = '1'
+      elsif field['codification_kind'] == 'document_number'
+        field['value'] = '1000'
       elsif field['kind'] == 'text_field' || field['kind'] == 'textarea_field'
         field['value'] = Faker::Name.initials
       elsif field['kind'] == 'date_field'
@@ -51,5 +51,10 @@ module DocumentHelpers
       field['document_field_values_attributes'] = field.delete('document_field_values')
     end
     attrs
+  end
+
+  def get_project_from_document_attrs(attrs)
+    rev = DocumentRevision.find(attrs['document_revision_id'])
+    rev.document_main.project
   end
 end

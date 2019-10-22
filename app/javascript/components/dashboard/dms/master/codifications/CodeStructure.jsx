@@ -1,29 +1,98 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { Popup } from 'semantic-ui-react'
 import {
   reduxForm,
   Field
 } from 'redux-form'
+import { required } from '../../../../../elements/validations'
 import InputField from '../../../../../elements/InputField'
 import { updateProjectCode } from '../../../../../actions/projectActions'
-import { fields, projectInputs, placeholders, freeTextPlaceholders } from './Content'
+import { fields, placeholders, freeTextPlaceholders } from './Content'
 
-function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, match: { params: { project_id } }  }) {
+const submitCodification = () => { console.log() }
+
+function CodeStructure({
+  submitFailed,
+  initialize,
+  disabled,
+  pristine,
+  reset,
+  handleSubmit,
+  match: { params: { project_id } }
+}) {
+  const [open, setOpen] = useState(false)
+  const [oldnSBState, setoldnSBState] = useState(true)
   const dispatch = useDispatch()
   const project_code = useSelector(state => state.projects.current.project_code)
+  const dmsSections = useSelector(state => state.projects.current.dmsSections)
+  const openSB = useSelector(({ projects }) => projects.sidebar)
+
+  useEffect(() => {
+    if (openSB === oldnSBState) return
+
+    setTimeout(function () {
+      setoldnSBState(openSB)
+    }, 500)
+  }, [openSB])
   
   useEffect(() => {
+    if (dmsSections == undefined) return
+
+    setOpen(!dmsSections)
     if (!project_code) return 
 
     initialize({ project_code: [project_code[0], project_code[1], project_code[2]] })
-  }, [project_code])
-
+  }, [project_code, dmsSections])
+  
   const submitCodification = useCallback(values => {
     const code = values.project_code.join('').toUpperCase()
     dispatch(updateProjectCode(project_id, code))
   }, [dispatch])
+
+  const popUpClassnames = classnames(
+    'for-project-code',
+    { 'error-tooltip-container': !project_code && submitFailed },
+    { 'dark-tooltip-container': (!project_code && !submitFailed) || project_code }
+  )
+
+  const trigger = (
+    <div
+      className={classnames(
+        'codification-codes-title-column__code',
+        { 'project-code-not-defined': !project_code && project_code !== undefined }
+      )}
+    >
+      <Field
+        component={InputField}
+        name='project_code[0]'
+        placeholder='M'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+      <Field
+        component={InputField}
+        name='project_code[1]'
+        placeholder='V'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+      <Field
+        component={InputField}
+        name='project_code[2]'
+        placeholder='P'
+        maxLength='1'
+        validate={[required]}
+        justHightlight={true}
+        disabled={disabled}
+      />
+    </div>)
 
   return (
     <form
@@ -45,46 +114,40 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
                 <span className='codification-codes-title-column__title'>
                   {el.title}
                 </span>
+                {i === 0 &&
+                <Popup
+                  className={popUpClassnames}
+                  trigger={trigger}
+                  position='right center'
+                  open={(oldnSBState === openSB) && open}
+                >
+                  <div className='tooltip-block dark'>
+                    <div className='tooltip-text-block'>
+                      {project_code
+                        ? <span>Now add at least one position to these codification fields</span>
+                        : <span>Please define the Project code</span>}
+                    </div>
+                  </div>
+                </Popup>}
+                {i !== 0 && 
                 <div className='codification-codes-title-column__code'>
                   {(() => {
-                    if (i === 0) {
-                      return (
-                        <React.Fragment>
-                          <Field
-                            component={InputField}
-                            name='project_code[0]'
-                            placeholder='M'
-                            maxLength='1'
-                          />
-                          <Field
-                            component={InputField}
-                            name='project_code[1]'
-                            placeholder='V'
-                            maxLength='1'
-                          />
-                          <Field
-                            component={InputField}
-                            name='project_code[2]'
-                            placeholder='P'
-                            maxLength='1'
-                          />
-                        </React.Fragment>)
-                    } else if (disabled) {
-                      return projectInputs(el.symbols, disabled)
+                    if (disabled) {
+                      return placeholders(el)
                     } else if (i === 6) {
                       return freeTextPlaceholders()
                     } else {
                       return placeholders(el)
                     }
                   })()}
-                </div>
+                </div>}
               </div>
               {i !== 6 &&
-                <div className={classnames('codification-codes-title-column', { disabled })}>
-                  {!disabled && <div />}
-                  <div className='codification-codes-title-column__title' />
-                  <span className='dash-symbol'>&mdash;</span>
-                </div>}
+              <div className={classnames('codification-codes-title-column dash', { disabled })}>
+                {!disabled && <div />}
+                <div className='codification-codes-title-column__title' />
+                <span className='dash-symbol'>&mdash;</span>
+              </div>}
             </React.Fragment>
           )
         })}
@@ -104,4 +167,7 @@ function CodeStructure({ initialize , disabled, pristine, reset, handleSubmit, m
   )
 }
 
-export default withRouter(reduxForm({ form: 'convention_code_form' })(CodeStructure))
+export default withRouter(reduxForm({
+  form: 'convention_code_form',
+  onSubmit: submitCodification // submit function must be passed to onSubmit
+})(CodeStructure))

@@ -45,6 +45,8 @@ class Ability
       # Role
       can :manage, Role,
           project: { id: user.project_administrators.map(&:project_id) }
+      # Message
+      can :create, Message
       # Convention
       can :manage, Convention do |convention|
         # When i started testing, the first thing i did was to setup a project
@@ -61,12 +63,13 @@ class Ability
         convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
       # Document
-      can [:new, :create], Document do |document|
-        document.can_create?(user)
+      can [:new, :create], Document do |document, project|
+        project.can_create_documents?(user)
       end
       can [:show,
            :download_native_file,
            :download_details,
+           :revisions,
            :revisions_and_versions], Document do |document|
         document.user == user ||
           document.can_view?(user)
@@ -87,8 +90,49 @@ class Ability
       can [:edit, :update], DmsSetting
       # DocumentFolder
       can :manage, DocumentFolder, user_id: user.id
-
-      can :create, Message
+      # DocumentReviewSubject
+      can [:new,
+           :create,
+           :show,
+           :download_files], DocumentReviewSubject do |subject|
+        subject.document_revision.last_version.can_view?(user)
+      end
+      can :update_status, DocumentReviewSubject do |subject|
+        subject.document_revision.can_update_review_status?(user)
+      end
+      can :complete_review, DocumentReviewSubject do |subject|
+        subject.can_complete_review?(user)
+      end
+      # DocumentReviewComment
+      can [:new,
+           :create,
+           :download_file], DocumentReviewComment do |comment|
+        comment.document_review_subject.document_revision.last_version.can_view?(user)
+      end
+      can :update, DocumentReviewComment, user_id: user.id
+      # DocumentReviewOwner
+      can :index, DocumentReviewOwner do |owner, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
+      can :update, DocumentReviewOwner do |owner|
+        owner.project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
+      # DocumentRevision
+      can [:show,
+           :review_show], DocumentRevision do |revision|
+        revision.last_version.can_view?(user)
+      end
+      can :update_review_status, DocumentRevision do |revision|
+        revision.can_update_review_status?(user)
+      end
+      can [:review_menu,
+           :review_index], DocumentRevision do |revision, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_access?)
+      end
+      # DocumentReviewTag
+      can :manage, DocumentReviewTag do |tag, project|
+        project.members.find_by(user: user).try(:dms_module_master?)
+      end
     end
   end
 end

@@ -55,10 +55,10 @@ describe DocumentRight, type: :request do
     end
 
     it 'project user' do
-      expect(Document.new(project: project).can_create?(user)).to eql(false)
+      expect(project.can_create_documents?(user)).to eql(false)
       patch "/api/v1/projects/#{project.id}/document_rights", params: @attrs, headers: credentials(project.user)
       expect(response).to have_http_status(:success)
-      expect(Document.new(project: project).can_create?(user)).to eql(true)
+      expect(project.can_create_documents?(user)).to eql(true)
     end
   end
 end

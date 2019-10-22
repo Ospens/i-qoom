@@ -44,9 +44,8 @@ describe Document, type: :request do
     before do
       @params = { document: document_attributes(user, false) }
       @params[:document]['email_title'] = title
-      @project_id = @params[:document]['project_id']
-      @project_user = Project.find(@project_id).user
-      @project_user.password = 'password1'
+      project = get_project_from_document_attrs(@params[:document])
+      @project_id = project.id
     end
 
     it 'anon' do
@@ -109,7 +108,7 @@ describe Document, type: :request do
     file2 = fixture_file_upload('test.txt')
     field1 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title1')
     field2 = FactoryBot.attributes_for(:document_field, kind: :upload_field, title: 'title2')
-    project = Project.find(document_params['project_id'])
+    project = get_project_from_document_attrs(document_params)
     project.conventions.active.document_fields.create!(field1)
     project.conventions.active.document_fields.create!(field2)
     field1['file'] = file1
@@ -140,17 +139,14 @@ describe Document, type: :request do
         end
       end
       doc_attrs = Document.build_from_convention(convention, user)
-      doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
-      doc_attrs['document_fields_attributes'].each do |field|
-        next if field['document_field_values'].blank?
-        field['document_field_values_attributes'] = field.delete('document_field_values')
-      end
+      doc_attrs = assign_attributes_suffix_to_document(doc_attrs)
+      doc_attrs['review_status'] = 'issued_for_information'
       document_native_file =
         doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
       document_native_file['file'] = fixture_file_upload('test.txt')
       revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
       revision_number['value'] = '1'
-      rev.versions.create!(doc_attrs.merge(user_id: owner.id, project_id: project.id))
+      rev.versions.create!(doc_attrs.merge(user_id: owner.id))
     end
 
     context '#create_revision' do
@@ -469,63 +465,61 @@ describe Document, type: :request do
     end
 
     context 'has documents' do
-      before do
-        rev1 = FactoryBot.create(:document_revision)
-        @project = rev1.document_main.project
-        @project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
-        convention = @project.conventions.active
-        convention.document_fields.each do |field|
-          if field.document_number? || field.revision_date?
-            field.update(value: rand(1000..9999))
-          end
-          if field.select_field?
-            field.document_field_values.first.update(selected: true)
-          end
-          if field.can_limit_by_value?
-            field.document_rights.create(user: user,
-                                         document_field_value: field.document_field_values.first,
-                                         limit_for: :value,
-                                         enabled: true)
-          else
-            field.document_rights.create(user: user, limit_for: :field)
-          end
-        end
-        doc_attrs = Document.build_from_convention(convention, user)
-        doc_attrs['document_fields_attributes'] = doc_attrs.delete('document_fields')
-        doc_attrs['document_fields_attributes'].each do |field|
-          next if field['document_field_values'].blank?
-          field['document_field_values_attributes'] = field.delete('document_field_values')
-        end
-        document_native_file =
-          doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_native_file' }
-        document_native_file['file'] = fixture_file_upload('test.txt')
-        revision_number = doc_attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'revision_number' }
-        revision_number['value'] = '1'
-        @doc1 = rev1.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
-        revision_number['value'] = '2'
-        rev2 = FactoryBot.create(:document_revision, document_main: rev1.document_main)
-        @doc2 = rev2.versions.create!(doc_attrs.merge(user_id: user.id, project_id: @project.id))
-      end
+      let(:document) { FactoryBot.create(:document) }
+      let(:project) { document.project }
 
-      it 'latest revision and latest version' do
-        get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
+      it do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
         expect(json['originating_companies'].length).to eql(1)
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
-        expect(json['documents'][0]['id']).to eql(@doc2.id)
+        expect(json['documents'][0]['id']).to eql(document.id)
         expect(json['documents'][0]['document_fields'].length).to eql(9)
         expect(json['documents'].length).to eql(1)
       end
 
-      it 'all revisions and latest version of each revision' do
-        @project.dms_settings.create(name: 'show_all_revisions', value: 'true', user: user)
-        get "/api/v1/projects/#{@project.id}/documents", headers: credentials(user)
-        expect(json['documents'][0]['id']).to eql(@doc1.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(9)
-        expect(json['documents'][1]['id']).to eql(@doc2.id)
-        expect(json['documents'].length).to eql(2)
+      it 'search by valid value' do
+        value =
+          document.document_fields
+                  .find_by(codification_kind: :originating_company)
+                  .document_field_values.find_by(selected: true)
+                  .value
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { originating_companies: [value] }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid value' do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { originating_companies: ['AAAA'] }
+        expect(json['documents'].length).to eql(0)
       end
     end
+  end
+
+  it 'revisions' do
+    title = Faker::Lorem.sentence
+    document = FactoryBot.create(:document)
+    document.update(title: title)
+    get "/api/v1/documents/#{document.id}/revisions",\
+      headers: credentials(document.user)
+    expect(response).to have_http_status(:success)
+    revision = json.first
+    expect(revision['id']).to eql(document.revision.id)
+    expect(revision['codification_string']).to eql(document.codification_string)
+    expect(revision['title']).to eql(title)
+    expect(revision['review_status']).to eql('issued_for_information')
   end
 
   context '#my_documents' do

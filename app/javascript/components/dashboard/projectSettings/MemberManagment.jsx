@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
 import ActiveMembers from './memberManagment/ActiveMembers'
 import PendingMembers from './memberManagment/PendingMembers'
 import NewModal from '../../../elements/Modal'
@@ -7,8 +9,10 @@ import Tabs from '../../../elements/Tabs'
 import AddMember from './memberManagment/AddMember'
 import DisciplineList from './memberManagment/DisciplineList'
 import RoleList from './memberManagment/RoleList'
+import { startCreateProjectMember, startUpdateProjectMember } from '../../../actions/projectMembersActions'
 
 const initialState = {
+  step: 1,
   addMemberModal: false,
   discipline: false,
   role: false,
@@ -28,16 +32,61 @@ class MemberManagment extends Component {
 
   state = initialState
 
+  changeStep = val => { this.setState({ step: val }) }
+
+  nextStep = () => this.setState(prevState => ({ step: prevState.step + 1 }))
+
   openModal = type => () => this.setState({ modal: true, [type]: true })
 
-  closeModal = () => this.setState(initialState)
+  closeModal = () => {
+    this.setState(initialState)
+    this.changeStep(1)
+  }
+
+  handleSubmitMember = values => {
+    const { step } = this.state
+    const {
+      startCreateProjectMember,
+      startUpdateProjectMember,
+      match: { params: { project_id } }
+    } = this.props
+
+    switch (step) {
+      case '1':
+        values.creation_step = 'employment_type'
+        return
+      case '2':
+        values.creation_step = 'company_type'
+        return
+      case '3':
+        values.creation_step = 'company_data'
+        return
+      case '4':
+        values.creation_step = 'details'
+        return
+      default:
+        values.creation_step = 'employment_type'
+    }
+
+    if (!values.id) {
+      return startCreateProjectMember(values, project_id).then(this.nextStep())
+    } else if (step === 4) {
+      return startUpdateProjectMember(values, project_id).then(this.closeModal)
+    } else {
+      return startUpdateProjectMember(values, project_id).then(this.nextStep())
+    }
+  }
 
   renderNewMemberModal = () => {
+    const { step } = this.state
     const { match: { params: { project_id } } } = this.props
     return (
       <AddMember
         closeModal={this.closeModal}
         projectId={project_id}
+        onSubmit={this.handleSubmitMember}
+        step={step}
+        changeStep={this.changeStep}
       />
     )
   }
@@ -128,10 +177,16 @@ class MemberManagment extends Component {
           content={this.rendeModalContent()}
           open={modal}
           onClose={this.closeModal}
+          closeOnDimmerClick={false}
         />
       </div>
     )
   }
 }
 
-export default withRouter(MemberManagment)
+const mapDispatchToProps = dispatch => ({
+  startCreateProjectMember: (values, projectId) => dispatch(startCreateProjectMember(values, projectId)),
+  startUpdateProjectMember: (values, projectId) => dispatch(startUpdateProjectMember(values, projectId, 'creating'))
+})
+
+export default withRouter(connect(null, mapDispatchToProps)(reduxForm({ form: 'project_member_form' })(MemberManagment)))

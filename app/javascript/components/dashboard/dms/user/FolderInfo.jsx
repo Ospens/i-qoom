@@ -84,7 +84,7 @@ function FolderInfo({ match: { params: { document_id, project_id } } }) {
         {JSON.stringify(initIds) !== JSON.stringify(checkedFolders) &&
         <button
           type='button'
-          className='btn btn-white-blue wide-button'
+          className='btn btn-white-blue full-wide'
           onClick={addDocToFolders}
         >
           Copy to folder(s)

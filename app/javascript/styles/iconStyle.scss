@@ -38,7 +38,7 @@
   }
 
   &.dark-gray {
-    color: #475859 !important;
+    color: var(--color-text) !important;
   }
 
   &.pink {
@@ -50,6 +50,12 @@
   }
 }
 
+.icon-password-type:before {
+  content: "\e98b";
+}
+.icon-single-neutral:before {
+  content: "\e9ab";
+}
 .icon-d-print-warning:before {
   content: "\e96f";
 }
@@ -400,7 +406,7 @@
 }
 .icon-question-circle:before {
   content: "\e9d7";
-  color: #0096fa;
+  color: var(--color-blue);
 }
 .icon-rating-star-add-1:before {
   content: "\e9d8";
@@ -440,7 +446,7 @@
 }
 .icon-attachment-1:before {
   content: "\e9e4";
-  color: #0096fa;
+  color: var(--color-blue);
 }
 .icon-book-address-1:before {
   content: "\e9e5";
@@ -588,7 +594,7 @@
 }
 .icon-check_1:before {
   content: "\e91e";
-  color: #0096fa;
+  color: var(--color-blue);
   font-size: 15px;
 }
 .icon-choose_1 .path1:before {
@@ -938,19 +944,19 @@
 }
 .icon-handle-1:before {
   content: "\e966";
-  color: #b2ced1;
+  color: var(--color-grey);
 }
 .icon-handle-2:before {
   content: "\e967";
-  color: #b2ced1;
+  color: var(--color-grey);
 }
 .icon-handle-3:before {
   content: "\e968";
-  color: #b2ced1;
+  color: var(--color-grey);
 }
 .icon-handle-4:before {
   content: "\e969";
-  color: #b2ced1;
+  color: var(--color-grey);
 }
 .icon-Menu_fix:before {
   content: "\e96a";

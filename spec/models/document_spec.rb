@@ -16,7 +16,7 @@ RSpec.describe Document, type: :model do
   it 'project creator should have access to all fields and values even without rights' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)
-    project = Project.find(document['project_id'])
+    project = get_project_from_document_attrs(document)
     document = Document.build_from_convention(project.conventions.active, project.user)
     field = document['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }
     expect(field).to be_present
@@ -51,9 +51,9 @@ RSpec.describe Document, type: :model do
     doc3 = FactoryBot.create(:document)
     doc3.revision.update!(revision_number: '3')
     doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
-    doc2.revision.update_columns(document_main_id: doc1.revision.document_main.id)
-    doc3.revision.update_columns(document_main_id: doc1.revision.document_main.id)
-    attrs = doc3.attributes_for_show
+    doc2.revision.update_columns(document_main_id: doc1.document_main.id)
+    doc3.revision.update_columns(document_main_id: doc1.document_main.id)
+    attrs = doc3.reload.attributes_for_show
     info = attrs['additional_information']
     expect(info.length).to eql(2)
     first_info = info.detect{ |i| i[:min] == '1' }
@@ -71,7 +71,11 @@ RSpec.describe Document, type: :model do
     field1 = doc1.document_fields.find_by(codification_kind: :originating_company)
     field_value1 = field1.document_field_values.find_by(selected: true)
     field_value1.update(value: Faker::Name.initials)
-    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, field_value1.value).pluck(:id)
+    field2 = doc1.document_fields.find_by(codification_kind: :discipline)
+    field_value2 = field2.document_field_values.find_by(selected: true)
+    field_value2.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_codification_kind_and_value(:originating_company, field_value1.value)
+    ids = ids.filter_by_codification_kind_and_value(:discipline, field_value2.value).pluck(:id)
     expect(ids).to eql([doc1.id])
     field2 = doc2.document_fields.find_by(codification_kind: :originating_company)
     field_value2 = field2.document_field_values.find_by(selected: true)
@@ -168,7 +172,8 @@ RSpec.describe Document, type: :model do
         value = Faker::Name.initials
         field = FactoryBot.build(:document_field, kind: :text_field, title: value)
         @attrs = doc_attrs
-        Project.find(@attrs['project_id']).conventions.active.document_fields << field
+        project = get_project_from_document_attrs(@attrs)
+        project.conventions.active.document_fields << field
         field.document_rights.create!(user: user, limit_for: :field, enabled: true)
         field_attrs = field.build_for_new_document(user)
         @attrs['document_fields_attributes'] << field_attrs
@@ -185,6 +190,7 @@ RSpec.describe Document, type: :model do
             if attribute == 'kind'
               'textarea_field'
             elsif attribute == 'codification_kind'
+              field['value'] = '1000'
               'document_number'
             elsif attribute == 'column' || attribute == 'row'
               if field[attribute] == 1
@@ -323,6 +329,69 @@ RSpec.describe Document, type: :model do
     expect(doc3).to_not be_valid
   end
 
+  it '#set_review_status_in_document_main' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['review_status'] = 'issued_for_approval'
+    attrs['reviewers'] = [FactoryBot.create(:user).id]
+    attrs['review_issuers'] = [FactoryBot.create(:user).id]
+    doc = Document.create!(attrs)
+    expect(doc.revision.document_main).to be_issued_for_approval
+  end
+
+  it '#review_status_value' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['reviewers'] = [FactoryBot.create(:user).id]
+    attrs['review_issuers'] = [FactoryBot.create(:user).id]
+    doc = Document.new(attrs)
+    expect(doc).to be_valid
+    doc.review_status = 'in_progress'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'accepted'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_review'
+    expect(doc).to be_valid
+    doc.review_status = 'rejected'
+    expect(doc).to_not be_valid
+    doc.review_status = 'issued_for_information'
+    expect(doc).to be_valid
+  end
+
+  it 'set_reviewers_and_review_issuers_in_document_main' do
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    user3 = FactoryBot.create(:user)
+    attrs = document_attributes(user1)
+    attrs['review_status'] = 'issued_for_approval'
+    attrs['reviewers'] = [user2.id]
+    attrs['review_issuers'] = [user3.id]
+    doc = Document.create!(attrs)
+    main = doc.document_main
+    expect(main.reviewers.pluck(:id)).to eql([user2.id])
+    expect(main.review_issuers.pluck(:id)).to eql([user3.id])
+  end
+
+  it 'validates reviewers and review issuers length' do
+    user1 = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    user3 = FactoryBot.create(:user)
+    attrs = document_attributes(user1)
+    attrs['review_status'] = 'issued_for_information'
+    expect(Document.new(attrs)).to be_valid
+    ['issued_for_approval', 'issued_for_review'].each do |status|
+      attrs = document_attributes(user1)
+      attrs['review_status'] = status
+      expect(Document.new(attrs)).to_not be_valid
+      attrs['reviewers'] = [user2.id]
+      expect(Document.new(attrs)).to_not be_valid
+      attrs['review_issuers'] = [user3.id]
+      expect(Document.new(attrs)).to be_valid
+    end
+  end
+
   it 'codification_string' do
     user = FactoryBot.create(:user)
     attrs = document_attributes(user)
@@ -359,5 +428,34 @@ RSpec.describe Document, type: :model do
     doc = Document.create(attrs)
     expect(doc).to receive(:attributes_for_edit).and_call_original
     doc.attributes_for_show
+  end
+
+  it 'validates document number' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    field =
+      attrs['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'document_number' }
+    field['value'] = '10000'
+    expect(Document.new(attrs)).to_not be_valid
+    field['value'] = 'AAA'
+    expect(Document.new(attrs)).to_not be_valid
+    field['value'] = '9999'
+    expect(Document.new(attrs)).to be_valid
+    field['value'] = '0000'
+    expect(Document.new(attrs)).to be_valid
+  end
+
+  it '#values_for_filters' do
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(0)
+    doc = FactoryBot.create(:document)
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(1)
+    expect(values.first.first).to eql('---')
+    expect(values.first.last).to eql('Originating company')
+    value = doc.document_fields.find_by(codification_kind: :originating_company).document_field_values.first
+    value.update_columns(selected: false)
+    values = Document.all.values_for_filters(codification_kind: :originating_company)
+    expect(values.length).to eql(0)
   end
 end
