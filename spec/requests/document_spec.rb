@@ -505,6 +505,28 @@ describe Document, type: :request do
           params: { originating_companies: ['AAAA'] }
         expect(json['documents'].length).to eql(0)
       end
+
+      it 'search by title and value' do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: '---' },
+                              { title: 'Discipline', value: '---' }] }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid title and value' do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: 'AAAA' },
+                              { title: 'Discipline', value: '---' }] }
+        expect(json['documents'].length).to eql(0)
+      end
     end
   end
 

@@ -110,6 +110,32 @@ class Document < ApplicationRecord
                       .pluck(:value, :title).uniq
   }
 
+  scope :filter_by_document_field_title_and_value, -> (title, value) {
+    documents1 = filter_by_document_select_field_title_and_value(title, value)
+    documents2 = filter_by_document_text_field_title_and_value(title, value)
+    Document.where(id: documents1.pluck(:id) + documents2.pluck(:id))
+  }
+
+  scope :filter_by_document_select_field_title_and_value, -> (title, value) {
+    documents =
+      joins(document_fields: :document_field_values)
+      .where(document_fields: {
+              title: title,
+              document_field_values: {
+                value: value,
+                selected: true } })
+    Document.where(id: documents)
+  }
+
+  scope :filter_by_document_text_field_title_and_value, -> (title, value) {
+    documents =
+      joins(:document_fields)
+      .where(document_fields: {
+        title: title,
+        value: value })
+    Document.where(id: documents)
+  }
+
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
     doc['document_fields'] = []

@@ -458,4 +458,39 @@ RSpec.describe Document, type: :model do
     values = Document.all.values_for_filters(codification_kind: :originating_company)
     expect(values.length).to eql(0)
   end
+
+  it '#filter_by_document_select_field_title_and_value' do
+    doc1 = FactoryBot.create(:document)
+    doc2 = FactoryBot.create(:document)
+    FactoryBot.create(:document)
+    field1 = doc1.document_fields.find_by(codification_kind: :originating_company)
+    field_value1 = field1.document_field_values.find_by(selected: true)
+    field_value1.update(value: Faker::Name.initials)
+    field2 = doc1.document_fields.find_by(codification_kind: :discipline)
+    field_value2 = field2.document_field_values.find_by(selected: true)
+    field_value2.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_document_select_field_title_and_value('Originating company', field_value1.value)
+    ids = ids.filter_by_document_select_field_title_and_value('Discipline', field_value2.value).pluck(:id)
+    expect(ids).to eql([doc1.id])
+    field2 = doc2.document_fields.find_by(codification_kind: :originating_company)
+    field_value2 = field2.document_field_values.find_by(selected: true)
+    field_value2.update(value: Faker::Name.initials)
+    ids = Document.all.filter_by_document_select_field_title_and_value('Originating company', [field_value1.value, field_value2.value]).pluck(:id)
+    expect(ids).to match_array([doc1.id, doc2.id])
+  end
+
+  it '#filter_by_document_text_field_title_and_value' do
+    doc1 = FactoryBot.create(:document)
+    doc2 = FactoryBot.create(:document)
+    FactoryBot.create(:document)
+    field = doc1.document_fields.find_by(codification_kind: :document_number)
+    field.update!(value: '1111')
+    field = doc1.document_fields.find_by(codification_kind: :revision_number)
+    field.update!(value: '111')
+    ids = Document.all.filter_by_document_text_field_title_and_value('Document number', '1111').pluck(:id)
+    expect(ids).to eql([doc1.id])
+    ids = Document.all.filter_by_document_text_field_title_and_value('Document number', '1111')
+    ids = ids.filter_by_document_text_field_title_and_value('Revision number', '111').pluck(:id)
+    expect(ids).to eql([doc1.id])
+  end
 end
