@@ -21,9 +21,10 @@ describe User, type: :model do
   it { is_expected.to have_many(:sent_messages)
                         .class_name("Message")
                         .with_foreign_key(:sender_id) }
+  it { is_expected.to have_many(:message_recipients) }
   it { is_expected.to have_many(:received_messages)
-                        .class_name("Message")
-                        .with_foreign_key(:recipient_id) }
+                        .through(:message_recipients)
+                        .source(:message) }
   it { is_expected.to validate_presence_of(:password_confirmation).on(:create) }
   it { is_expected.to validate_presence_of(:password_confirmation).on(:password_changed?) }
   it { is_expected.not_to validate_presence_of(:password_confirmation).on(:update) }

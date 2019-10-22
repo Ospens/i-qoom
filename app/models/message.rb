@@ -1,21 +1,23 @@
 class Message < ApplicationRecord
-  enum recipient_status: [ :unread,
-                           :read,
-                           :deleted ],
-                          _prefix: true
-
-  enum sender_status: [ :sent,
-                        :deleted ],
-                       _prefix: true
+  enum status: [ :sent,
+                 :deleted ]
 
   has_many_attached :files
   
   belongs_to :sender,
              class_name: 'User'
 
-  belongs_to :recipient,
-             class_name: 'User'
-  
+  has_many :message_recipients,
+           dependent: :destroy
+
+  validates_presence_of :message_recipients
+
+  has_many :recipients,
+           through: :message_recipients,
+           source: :user
+
+  accepts_nested_attributes_for :message_recipients
+
   validates :subject,
             presence: true,
             length: { minimum: 2,
@@ -23,5 +25,20 @@ class Message < ApplicationRecord
   
   validates :body,
             presence: true
+
+  before_create :set_sent_at
+
+  # after_create :send_email
+
+  private
+
+  def set_sent_at
+    self.sent_at = Time.now
+  end
+
+  # def send_email
+    # not ready yet    
+  # end
+
 
 end

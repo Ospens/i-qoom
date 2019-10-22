@@ -14,9 +14,16 @@ class Api::V1::MessagesController < ApplicationController
   private
 
   def message_params
+    if params[:message][:message_recipients].present?
+      params[:message][:message_recipients_attributes] =
+        params[:message][:message_recipients]
+      params[:message].delete(:message_recipients)
+    end
     params.fetch(:message,
                  { }).permit(:subject,
                              :body,
-                             :recipient_id)
+                             message_recipients_attributes: [
+                              :id,
+                              :user_id ])
   end
 end

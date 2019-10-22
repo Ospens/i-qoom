@@ -18,10 +18,16 @@ describe "Message", type: :request do
             { message:
               FactoryBot.attributes_for(:message,
                                         sender_id: user.id,
-                                        recipient_id: recipient.id)
+                                        message_recipients: {
+                                          id: "",
+                                          user_id: recipient.id
+                                        })
             }.to_json,
           headers: headers
-        expect(response).to have_http_status(:success)        
+        expect(response).to have_http_status(:success)
+        expect(user.sent_messages.count).to eq(1)
+        expect(user.sent_messages.last.recipients.count).to eq(1)
+        expect(recipient.received_messages.count).to eq(1)
       end
       it "should get unprocessable entity status" do
         post "/api/v1/messages",
@@ -30,10 +36,15 @@ describe "Message", type: :request do
               FactoryBot.attributes_for(:message,
                                         body: "",
                                         sender_id: user.id,
-                                        recipient_id: recipient.id)
+                                        message_recipients: {
+                                          id: "",
+                                          user_id: recipient.id
+                                        })
             }.to_json,
           headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)        
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(user.sent_messages.count).to eq(0)
+        expect(recipient.received_messages.count).to eq(0)
       end
     end
   end
@@ -46,7 +57,10 @@ describe "Message", type: :request do
           { message:
             FactoryBot.attributes_for(:message,
                                       sender_id: user.id,
-                                      recipient_id: recipient.id)
+                                      message_recipients: {
+                                        id: "",
+                                        user_id: recipient.id  
+                                      })
           }.to_json,
         headers: headers
       expect(response).to have_http_status(:forbidden)
