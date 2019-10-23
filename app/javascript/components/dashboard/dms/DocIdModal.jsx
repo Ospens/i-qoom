@@ -12,7 +12,7 @@ import { formvalue } from './user/DocumentsAndFiles'
 import NewModal from '../../../elements/Modal'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'
-import { infoNotify } from '../../../elements/Notices'
+import { addNotification } from '../../../actions/notificationsActions'
 import DocumentIdInputs from './DocumentIdInputs'
 import { fileNameReg, initValues } from './initDocId'
 
@@ -22,21 +22,22 @@ class DocIdModal extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    const { info } = this.props
+    const { info, addNotification } = this.props
     if (!info) return
 
-    info.forEach(el => infoNotify(el.message))
+    info.forEach(el => addNotification(el.message))
   }
   
   hadlePopup = () => this.setState(prevState => ({ popup: !prevState.popup }))
 
   updateForm = (index, files) => {
-    const { documentFields, initialize } = this.props
+    const { documentFields, initialize, infoNotify } = this.props
     documentFields[index].file = files
-    initialize(initValues(documentFields))
+    initialize(initValues(documentFields, infoNotify))
   }
 
   fileField = ({ input, index }) => {
+    const { errorNotify } = this.props
     return (
       <div className='form-group'>
         <div className='d-flex mb-2'>
@@ -54,7 +55,7 @@ class DocIdModal extends Component {
               this.updateForm(index, e.target.files)
               return
             }
-            infoNotify('Filename is not valid')
+            errorNotify(el.message)
           }}
           className='d-none'
         />
@@ -276,6 +277,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   initMainForm: values => dispatch(initialize('document_form', values)),
+  errorNotify: text => addNotification({ title: 'Filename is not valid', text, type: 'info' }),
+  infoNotify: title => dispatch(addNotification({ title: 'Documents', text: `Can not get data from title ${title}`, type: 'info' }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'doc_id_form' })(DocIdModal))

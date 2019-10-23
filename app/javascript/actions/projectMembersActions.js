@@ -11,7 +11,7 @@ import {
   PROJECT_MEMBER_CREATED,
   CREATING_PROJECT_MEMBER
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 const projectMembersFetched = payload => ({
   type: ACTIVE_MEMBERS_FETCHED_SUCCESS,
@@ -52,7 +52,7 @@ export const startFetchActiveProjectMembers = id => (dispatch, getState) => {
         dispatch(projectMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -66,7 +66,7 @@ export const startFetchPendingProjectMembers = id => (dispatch, getState) => {
         dispatch(pendingMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -81,7 +81,7 @@ export const startCreatingProjectMember = id => (dispatch, getState) => {
         dispatch(projectMemberCreating(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -103,7 +103,7 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
         dispatch(initialize('project_member_form', response.data))
       })
       .catch(response => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -131,7 +131,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
         }
       })
       .catch(response => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )

@@ -12,7 +12,7 @@ import {
   PROJECT_CODE_UPDATED,
   PROJECT_FETCH_SUCCESS
 } from './types'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 import { paramsToFormData } from './documentsActions'
 
 const projectCreated = payload => ({
@@ -95,7 +95,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
         if (afterUpdate) afterUpdate(response.data)
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -120,7 +120,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
         afterCreate(response.data)
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -135,7 +135,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
         dispatch(projectsFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -150,7 +150,7 @@ export const startFetchProject = id => (dispatch, getState) => {
         dispatch(projectFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -162,11 +162,11 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
   return (
     axios.delete(`/api/v1/projects/${projectId}/admins/${adminId}`, headers)
       .then(response => {
-        successNotify(response.data.message)
+        dispatch(addNotification({ title: 'Projects', text: response.data.message, type: 'success' }))
         dispatch(adminDeleted(adminId))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -184,10 +184,10 @@ export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
     axios.put(`/api/v1/projects/${projectId}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
-        successNotify('The project admin were successfully saved!')
+        dispatch(addNotification({ title: 'Projects', text: 'The project admin were successfully saved!', type: 'success' }))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -200,10 +200,10 @@ export const startResendConfirmAdmin = (projectId, adminId) => (dispatch, getSta
   return (
     axios.get(`/api/v1/projects/${projectId}/admins/${adminId}/resend_confirmation`, headers)
       .then(() => {
-        successNotify('A new invitation has been sent to this address!')
+        dispatch(addNotification({ title: 'Projects', text: 'A new invitation has been sent to this address!', type: 'success' }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -218,7 +218,7 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
         dispatch(adminUpdated(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -231,10 +231,10 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
     axios.post(`/api/v1/projects/${projectId}/update_project_code`, { project_code: projectCode }, headers)
       .then(() => {
         dispatch(projectCodeUpdated(projectCode))
-        successNotify('Project code updated!')
+        dispatch(addNotification({ title: 'Projects', text: 'Project code was updated!', type: 'success' }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

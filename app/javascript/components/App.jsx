@@ -6,7 +6,7 @@ import PrivateRoute from '../elements/PrivateRoute'
 import LandingPage from './landing/LandingPage'
 import Dashboard from './dashboard/Dashboard'
 // import AdminPanel from './adminPanel/AdminPanel'
-import TopBar from '../elements/TopBar'
+import TopBar from './topBar/TopBar'
 import SideBar from '../elements/SideBar'
 import LandingMenu from './landing/LandingMenu'
 import Notifications from './notifications/Notifications'
@@ -38,8 +38,8 @@ const App = ({ location: { pathname } }) => {
           {/*<PrivateRoute authed={authed && isAdmin} path='/admin_panel' component={AdminPanel} />*/}
           <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
         </Switch>
-        <Notifications />
       </div>
+      <Notifications />
     </div>
   )
 }

@@ -10,7 +10,7 @@ import {
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 export const paramsToFormData = (data, params, preceding = '') => {
   let newData = data
@@ -90,7 +90,7 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
         dispatch(documentsFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -119,7 +119,7 @@ export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
         dispatch(documentsFetchedWithoutFilters(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -136,7 +136,7 @@ export const newDocument = projectId => (dispatch, getState) => {
         dispatch(creatingDocument(sortedData))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -159,10 +159,10 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
       data: formData,
       headers
     }).then(() => {
-      successNotify('Document successfully created')
+      dispatch(addNotification({ title: 'DMS', text: 'Document successfully created!', type: 'success' }))
     })
       .catch(response => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response)
       })
   )
@@ -185,10 +185,10 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
       data: formData,
       headers
     }).then(() => {
-      successNotify('Document successfully updated')
+      dispatch(addNotification({ title: 'DMS', text: 'Document successfully updated!', type: 'success' }))
     })
       .catch(response => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response)
       })
   )
@@ -204,7 +204,7 @@ export const startFetchDocument = documentId => (dispatch, getState) => {
         dispatch(documentFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -221,7 +221,7 @@ export const startEditDocument = documentId => (dispatch, getState) => {
         dispatch(editDocument(sortedData))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -236,7 +236,7 @@ export const getRevisionsAndVersions = docId => (dispatch, getState) => {
         dispatch(getRevAndVer(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -258,7 +258,7 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
         downloadFile(response)
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   ))
 }
@@ -277,7 +277,7 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
       downloadFile(response)
     })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -296,7 +296,7 @@ export const downloadNativeFile = docId => (dispatch, getState) => {
       downloadFile(response)
     })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

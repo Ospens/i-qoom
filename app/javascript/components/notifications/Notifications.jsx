@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { removeNotification } from '../../actions/notificationsActions'
+import moment from 'moment'
 
 function Notifications() {
   const ref = useRef()
@@ -10,31 +11,40 @@ function Notifications() {
   const [fixed, setFixed] = useState(false)
   const [scrollTop, setScrollTop] = useState(0)
   const notifications = useSelector(state => state.notifications.all)
+  const state = useSelector(state => state.notifications.open)
   const removeItem = useCallback(index => dispatch(removeNotification(index)), [dispatch])
+  const withErrors = notifications.filter(el => el.type === 'error').length > 0
 
   useLayoutEffect(() => {
-    if (!document.getElementById('main')) return
-    const posTopRef = ref.current.getBoundingClientRect().top
-    const onScroll = e => {
-      setScrollTop(e.target.closest('#main').scrollTop)
-      if (fixed) return
-
-      setFixed(posTopRef < 0)
+    if (!document.body) return
+    // const posTopRef = ref.current.getBoundingClientRect()
+    const onScroll = () => {
+      setScrollTop(window.scrollY)
+      if (window.scrollY > 0) {
+        setFixed(true)
+      } else {
+        setFixed(false)
+      }
     }
-    document.getElementById('main').addEventListener('scroll', onScroll)
+    document.addEventListener('scroll', onScroll)
 
-    return () => document.getElementById('main').removeEventListener('scroll', onScroll)
-  }, [scrollTop])
+    return () => document.removeEventListener('scroll', onScroll)
+  }, [scrollTop, fixed])
 
   const multi = notifications.length > 1
 
   return (
     <CSSTransitionGroup
       transitionName='notifications_block'
-      transitionEnterTimeout={700}
-      transitionLeaveTimeout={700}
+      transitionEnterTimeout={300}
+      transitionLeaveTimeout={300}
     >
-      {notifications.length > 0 && <div className={classnames('notifications_block errors', { fixed })} ref={ref} key='notifications_block'>
+      {notifications.length > 0 && state &&
+      <div 
+        className={classnames('notifications_block', { fixed }, { 'errors': withErrors })}
+        ref={ref}
+        key='notifications_block'
+      >
         <div className={classnames('notifications_header', { 'one-child': !multi })}>
           <div>Notifications</div>
           <div>{notifications.length}</div>
@@ -56,7 +66,7 @@ function Notifications() {
                       {text}
                     </div>
                     <div className='notifications_content__element-time'>
-                      {time}
+                      {moment(time).fromNow()}
                     </div>
                   </div>
                   <div className='notifications_content__element-close-button'>
