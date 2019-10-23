@@ -493,4 +493,22 @@ RSpec.describe Document, type: :model do
     ids = ids.filter_by_document_text_field_title_and_value('Revision number', '111').pluck(:id)
     expect(ids).to eql([doc1.id])
   end
+
+  it '#search' do
+    doc1 = FactoryBot.create(:document)
+    doc2 = FactoryBot.create(:document)
+    FactoryBot.create(:document)
+    field = doc1.document_fields.find_by(codification_kind: :document_number)
+    field.update!(value: '1111')
+    ids = Document.all.search('1111').pluck(:id)
+    expect(ids).to eql([doc1.id])
+    doc2.update!(title: '2222')
+    ids = Document.all.search('2222').pluck(:id)
+    expect(ids).to eql([doc2.id])
+    field = doc1.document_fields.find_by(codification_kind: :originating_company)
+    field_value = field.document_field_values.find_by(selected: true)
+    field_value.update!(value: '333')
+    ids = Document.all.search('333').pluck(:id)
+    expect(ids).to eql([doc1.id])
+  end
 end

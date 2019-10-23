@@ -93,6 +93,9 @@ class Api::V1::DocumentsController < ApplicationController
         documents = documents.filter_by_document_field_title_and_value(filter['title'], filter['value'])
       end
     end
+    if params[:search].present?
+      documents = documents.search(params[:search])
+    end
     documents =
       documents.as_json(include: { document_fields: { include: :document_field_values } },
                         methods: [:codification_string])

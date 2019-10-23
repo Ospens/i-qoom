@@ -136,6 +136,19 @@ class Document < ApplicationRecord
     Document.where(id: documents)
   }
 
+  scope :search, -> (text) {
+    documents =
+      includes(document_fields: :document_field_values)
+        .where('LOWER(documents.title) LIKE :search OR
+                (document_fields.kind = :select_field AND LOWER(document_field_values.value) LIKE :search) OR
+                (document_fields.kind = :text_field AND LOWER(document_fields.value) LIKE :search)',
+                search: "%#{text.downcase}%",
+                select_field: DocumentField.kinds[:select_field],
+                text_field: DocumentField.kinds[:text_field])
+        .distinct
+    Document.where(id: documents.pluck(:id))
+  }
+
   def self.build_from_convention(convention, user)
     doc = self.new.attributes.except('id', 'created_at', 'updated_at')
     doc['document_fields'] = []
