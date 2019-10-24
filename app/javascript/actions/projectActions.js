@@ -92,7 +92,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
     axios.put(`/api/v1/projects/${values.id}`, formData, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
-        dispatch(addNotification({ title: 'Projects', text: 'Project was updated!', type: 'success' }))
+        // dispatch(addNotification({ title: 'Projects', text: 'Project was updated!', type: 'success' }))
         if (afterUpdate) afterUpdate(response.data)
       })
       .catch(({ response }) => {
