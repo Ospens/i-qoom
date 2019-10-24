@@ -1,7 +1,3 @@
-
-
-import { infoNotify } from '../../../elements/Notices'
-
 const checkInitOptions = (options, value) => (
   options.map(option => {
     const selected = option.value === value
@@ -29,7 +25,7 @@ const idField = (field, value) => {
 
 export const fileNameReg = /^([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([0-9]{1,5})([-_\s])([0-9]+)([-_\s])(.+?(?=\.pdf))/i
 
-export const initValues = fields => {
+export function initValues(fields, notify) {
   if (!fields) return undefined
 
   const { file } = fields.find(el => el.codification_kind === 'document_native_file')
@@ -38,7 +34,7 @@ export const initValues = fields => {
   const documentName = file[0].name
   const docNameInfo = documentName.match(fileNameReg)
   if (!docNameInfo) {
-    infoNotify(`Can not get data from title ${file[0].name}`)
+    notify(file[0].name)
     return undefined
   }
   docNameInfo.shift()

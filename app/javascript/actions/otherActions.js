@@ -1,14 +1,14 @@
 import axios from 'axios'
-import { errorNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
-const sendEmail = (values, afterUpdate) => () => {
+const sendEmail = (values, afterUpdate) => dispatch => {
   const request = { contact: { ...values } }
 
   return (
     axios.post('/api/v1/contacts', request)
       .then(() => afterUpdate())
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

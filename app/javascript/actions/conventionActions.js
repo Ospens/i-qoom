@@ -10,7 +10,7 @@ import {
   CHECK_MAIN_SECTION_DMS,
   CONVENTION_UPDATED
 } from './types'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 export const checkMainSections = documentFields => dispatch => {
   if (!documentFields) return
@@ -89,13 +89,13 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-        successNotify('The convention was updated!')
+        dispatch(addNotification({ title: 'Convention', text: 'The convention was updated!', type: 'success' }))
         dispatch(conventionUpdated(sortedData))
         dispatch(initialize('convention_form', sortedData.grouped_fields))
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(err => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(err)
       })
   )
@@ -116,12 +116,12 @@ export const startUpdateCodification = (projectId, values) => (dispatch, getStat
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-        successNotify('The values was updated!')
+        dispatch(addNotification({ title: 'Codification', text: 'The values was updated!', type: 'success' }))
         dispatch(conventionUpdated(sortedData))
         dispatch(checkMainSections(data.document_fields))
       })
-      .catch(err => {
-        errorNotify('Something went wrong')
+      .catch(({ err }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(err)
       })
   )
@@ -141,7 +141,7 @@ export const startEditConvention = projectId => (dispatch, getState) => {
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

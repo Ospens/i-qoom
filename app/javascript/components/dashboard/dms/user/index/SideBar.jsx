@@ -5,7 +5,7 @@ import DropDown from '../../../../../elements/DropDown'
 import DocumentPopup from '../../DocumentPopup'
 import { reviewStatuses } from '../../constants'
 import DmsSideBar from '../../DmsSideBar'
-import { renderFoldersBlock } from '../../DmsSideBar'
+import { Folders } from '../../DmsSideBar'
 import { DropDownItems } from './elements'
 
 function SideBar({ projectId, checkedDocs, popup }) {
@@ -30,8 +30,7 @@ function SideBar({ projectId, checkedDocs, popup }) {
         </DropDown>
       </div>
 
-      {renderFoldersBlock(folders, projectId)}
-
+      <Folders folders={folders} projectId={projectId} />
       <div className='dms-sidebar-menu__block'>
         <h4>Review process</h4>
         <div className='dms-sidebar-menu__reviews-list'>

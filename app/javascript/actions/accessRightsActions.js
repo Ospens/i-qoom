@@ -3,7 +3,7 @@ import {
   GET_NEW_MEMBERS_LIST,
   GET_CURRENT_MEMBERS_LIST
 } from './types'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 const newMembersFetched = payload => ({
   type: GET_NEW_MEMBERS_LIST,
@@ -25,7 +25,7 @@ export const getGrantAccessMembers = projectId => (dispatch, getState) => {
         dispatch(newMembersFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -40,7 +40,7 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
         dispatch(currentMembersFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -59,10 +59,10 @@ export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, 
         } else if (type === 'oldMembers') {
           dispatch(getGrandedAccessMembers(projectId))
         }
-        successNotify('Rights succcessfully updated')
+        dispatch(addNotification({ title: 'Access rights', text: 'Rights succcessfully updated', type: 'success' }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

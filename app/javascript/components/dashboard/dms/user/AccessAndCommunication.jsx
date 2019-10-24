@@ -5,7 +5,7 @@ import SelectField from '../../../../elements/SelectField'
 import InputField from '../../../../elements/InputField'
 import CheckField from '../../../../elements/CheckField'
 import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
-import { errorNotify } from '../../../../elements/Notices'
+import { addNotification } from '../../../../actions/notificationsActions'
 
 const selector = formValueSelector('document_form')
 
@@ -18,10 +18,12 @@ const email = value => (
 )
 
 const updateEmails = (e, fields, discardValue) => {
+  const dispatch = useDispatch()
+  
   if (e.charCode === 13) {
     e.preventDefault()
     const error = email(e.target.value)
-    if (error) return errorNotify(error)
+    if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
 
     fields.push(e.target.value)
     discardValue()

@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import 'react-datepicker/dist/react-datepicker.css'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
 import '../../../node_modules/bootstrap/dist/css/bootstrap.css'
 import mainStore from '../stores/mainStore'
 import App from '../components/App'
@@ -19,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
       <BrowserRouter>
         <App />
       </BrowserRouter>
-      <ToastContainer />
     </Provider>,
     document.getElementById('app'),
   )
