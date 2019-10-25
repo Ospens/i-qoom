@@ -1,12 +1,15 @@
 import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames'
-import { toggleState } from '../../actions/notificationsActions'
+import { toggleState, stopStateOffTimer } from '../../actions/notificationsActions'
 
 function Bell({ activeColor }) {
   const dispatch = useDispatch()
   const notifications = useSelector(({ notifications }) => notifications.all)
-  const toggleNotices = useCallback(() => dispatch(toggleState()))
+  const toggleNotices = useCallback(() => {
+    dispatch(toggleState())
+    stopStateOffTimer()
+  })
 
   return (
     <li className='nav-item nav-item-icon notifications-bell-container'>
