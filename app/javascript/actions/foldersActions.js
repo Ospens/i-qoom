@@ -7,7 +7,7 @@ import {
   FOLDER_UPDATED,
   FOLDERS_FETCHED
 } from './types'
-import { errorNotify, successNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 const folderCreated = payload => ({
   type: FOLDER_CREATED,
@@ -51,7 +51,7 @@ export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
         dispatch(foldersFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -67,7 +67,7 @@ export const startEditFolder = folderId => (dispatch, getState) => {
         dispatch(editingFolder(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -88,7 +88,7 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
         dispatch(folderCreated(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -110,7 +110,7 @@ export const startUpdateFolder = values => (dispatch, getState) => {
         dispatch(initialize('folder_form', response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
@@ -130,10 +130,10 @@ export const addDocumentToFolders = (docId, ids) => (dispatch, getState) => {
           ? { ...el, enabled: true }
           : el))
         dispatch(documentAddedToFolder(updatedFolders))
-        successNotify('Copied to folders')
+        dispatch(addNotification({ title: 'Folders', text: 'Copied to folder(s)', type: 'success' }))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }

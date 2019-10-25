@@ -17,6 +17,7 @@ import TextAreaField from '../../../../elements/TextAreaField'
 import { required, lessThan9999 } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
 import DocumentIdInputs from '../DocumentIdInputs'
+import { addNotification } from '../../../../actions/notificationsActions'
 
 const codificationString = [
   'originating_company',
@@ -170,7 +171,13 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
     }
     if (!generateId) return
 
-    const values = initValues(documentFields)
+    const infoMsg = title => dispatch(addNotification({
+      title: 'Documents', 
+      text: `Can not get data from title ${title}`, 
+      type: 'info' 
+    }))
+    
+    const values = initValues(documentFields, (title) => infoMsg(title))
     if (!values) return
 
     initDocIdForm(values)

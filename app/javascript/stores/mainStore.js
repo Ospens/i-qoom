@@ -16,6 +16,7 @@ import distributionGroupReducer from '../reducers/distributionGroupReducer'
 import documentFolderReducer from '../reducers/documentFolderReducer'
 import settingsReducer from '../reducers/settingsReducer'
 import planningReducer from '../reducers/planningReducer'
+import notificationsReducer from '../reducers/notificationsReducer'
 import loadState from './localStorage'
 
 const rootReducer = combineReducers({
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   plannings: planningReducer,
   distributionGroups: distributionGroupReducer,
   folders: documentFolderReducer,
+  notifications: notificationsReducer,
   form: reduxFormReducer
 })
 

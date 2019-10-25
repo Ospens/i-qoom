@@ -1,6 +1,6 @@
 import React, { Component, useCallback } from 'react'
 import { submit } from 'redux-form'
-import { connect, useDispatch } from 'react-redux'
+import { connect, useDispatch, useSelector } from 'react-redux'
 import { Link, Route, withRouter } from 'react-router-dom'
 import classnames from 'classnames'
 import CreateFolder from './user/CreateFolder'
@@ -55,7 +55,10 @@ export const DmsSideBarItem = ({ path, label, icon, root, nested, projectCode, d
   )
 }
 
-export const renderFoldersBlock = (folders, projectId) => {
+export function Folders({ folders, projectId }) {
+  const projectCode = useSelector(({ projects }) => projects.current.project_code)
+  const dmsSections = useSelector(({ projects }) => projects.current.dmsSections)
+  
   return (
     <div className='dms-sidebar-menu__block'>
       <h4>My Folders</h4>
@@ -64,11 +67,15 @@ export const renderFoldersBlock = (folders, projectId) => {
           path={`/dashboard/projects/${projectId}/documents/folders/my_documents`}
           label='My documents'
           icon='icon-folder-image'
+          projectCode={projectCode}
+          dmsSections={dmsSections}
         />
         <DmsSideBarItem
           path={`/dashboard/projects/${projectId}/documents/folders/all`}
           label='All documents'
           icon='icon-folder-image-1'
+          projectCode={projectCode}
+          dmsSections={dmsSections}
         />
         {folders.map(({ id, title }, i) => (
           <DmsSideBarItem
@@ -76,6 +83,8 @@ export const renderFoldersBlock = (folders, projectId) => {
             path={`/dashboard/projects/${projectId}/documents/folders/${id}`}
             label={title}
             icon='icon-folder-empty'
+            projectCode={projectCode}
+            dmsSections={dmsSections}
           />
         ))}
 
@@ -206,7 +215,7 @@ class DmsSideBar extends Component {
         </ul>
         {(() => {
           if (path.includes('dashboard/projects/:project_id/documents/folders')) {
-            return renderFoldersBlock(folders, project_id)
+            return <Folders folders={folders} projectId={project_id} />
           } else if (path.includes('/master/')) {
             return (
               <React.Fragment>

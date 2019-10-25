@@ -6,7 +6,7 @@ import {
   DISCIPLINES_UPDATED,
   DISCIPLINE_CREATED
 } from './types'
-import { errorNotify } from '../elements/Notices'
+import { addNotification } from './notificationsActions'
 
 const disciplineFetched = payload => ({
   type: DISCIPLINES_FETCHED,
@@ -44,7 +44,7 @@ export const startCreateDiscipline = (values, projectId) => (dispatch, getState)
         dispatch(disciplineCreated(response.data))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -66,7 +66,7 @@ export const startUpdateDiscipline = (values, projectId) => (dispatch, getState)
         dispatch(disciplineUpdated(response.data))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -82,7 +82,7 @@ export const deleteDiscipline = (id, projectId) => (dispatch, getState) => {
         dispatch(disciplineDeleted({ id }))
       })
       .catch(({ response }) => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         throw new SubmissionError(response.data)
       })
   )
@@ -98,7 +98,7 @@ export const fetchDisciplineList = projectId => (dispatch, getState) => {
         dispatch(disciplineFetched(response.data))
       })
       .catch(() => {
-        errorNotify('Something went wrong')
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       })
   )
 }
