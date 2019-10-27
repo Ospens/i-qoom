@@ -1,19 +1,29 @@
 class Api::V1::ConventionsController < ApplicationController
+  include PdfRender
   load_resource :project, id_param: :project_id
-  before_action :set_convention
-  before_action :authorize_convention
+  load_and_authorize_resource :convention, only: [:download_codification]
+  before_action :set_convention, only: [ :edit, :update ]
 
   def edit
+    authorize! :edit, @convention
     render json: @convention.attributes_for_edit
   end
 
   def update
+    authorize! :update, @convention
     @convention = @project.conventions.new(convention_params(true).merge(number: 1))
     if @convention.save
       render json: @convention.attributes_for_edit
     else
       render json: @convention.errors, status: :unprocessable_entity
     end
+  end
+
+  def download_codification
+    send_data codification_render(@convention),
+              filename: 'project_codification.pdf',
+              type: 'application/pdf',
+              disposition: 'attachment'
   end
 
   private
@@ -29,10 +39,6 @@ class Api::V1::ConventionsController < ApplicationController
       next if field[:document_field_values].blank?
       field[:document_field_values_attributes] = field.delete(:document_field_values)
     end
-  end
-
-  def authorize_convention
-    authorize! :manage, @convention
   end
 
   def convention_params(assign_attrs = false)
