@@ -79,17 +79,22 @@ class Api::V1::DocumentsController < ApplicationController
   def index
     documents = @project.document_mains.documents_available_for(signed_in_user)
     documents_not_filtered = documents
-
     if params[:originating_companies].present? && params[:originating_companies].any?
       documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
     end
-
     if params[:discipline].present? && params[:discipline].any?
       documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
     end
-
     if params[:document_types].present? && params[:document_types].any?
       documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
+    end
+    if params[:filters].present? && params[:filters].any?
+      params[:filters].each do |filter|
+        documents = documents.filter_by_document_field_title_and_value(filter['title'], filter['value'])
+      end
+    end
+    if params[:search].present?
+      documents = documents.search(params[:search])
     end
     documents =
       documents.as_json(include: { document_fields: { include: :document_field_values } },

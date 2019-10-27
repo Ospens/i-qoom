@@ -127,7 +127,7 @@ class SideBar extends Component {
         <div className='sidebar-sticky'>
           <div className='side-bar-logo'>
             <div className='side-bar-logo__container'>
-              <i className='svg-icon logo-header sidebar' />
+              <i className='svg-icon logo-header' />
               {isAdmin && <span className='text-white'>Admin access</span>}
             </div>
             <button type='button' onClick={toggle}>

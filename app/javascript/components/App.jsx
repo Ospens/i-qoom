@@ -1,22 +1,31 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { Route, Switch, withRouter } from 'react-router-dom'
 import PrivateRoute from '../elements/PrivateRoute'
 import LandingPage from './landing/LandingPage'
 import Dashboard from './dashboard/Dashboard'
 // import AdminPanel from './adminPanel/AdminPanel'
-import TopBar from '../elements/TopBar'
+import TopBar from './topBar/TopBar'
 import SideBar from '../elements/SideBar'
 import LandingMenu from './landing/LandingMenu'
+import Notifications from './notifications/Notifications'
+import { toggleSidebar } from '../actions/projectActions'
 
-const App = ({ authed, location: { pathname } }) => {
-  const [openSB, toggleSB] = useState(true)
-  const mainClass = classnames({ 'dashboard': pathname.includes('/dashboard')} )
+const App = ({ location: { pathname } }) => {
+  const dispatch = useDispatch()
+  const authed = useSelector(({ user }) => user.authStatus)
+  const openSB = useSelector(({ projects }) => projects.sidebar)
+  const toggleSB = useCallback(() => dispatch(toggleSidebar(!openSB)), [openSB])
 
+  const mainClass = classnames(
+    { 'dashboard': pathname.includes('/dashboard') },
+    { 'sidebar-off': !openSB }
+  )
+  
   return (
     <div id='wrapper'>
-      {authed && <SideBar toggle={() => toggleSB(!openSB)} isOpen={openSB}/>}
+      {authed && <SideBar toggle={toggleSB} isOpen={openSB}/>}
       <div id='main' className={mainClass}>
         <header id='header'>
           <div className='wrap'>
@@ -30,12 +39,9 @@ const App = ({ authed, location: { pathname } }) => {
           <Route path='/' render={props => <LandingPage {...props} authed={authed} />} />
         </Switch>
       </div>
+      <Notifications />
     </div>
   )
 }
-const mapStateToProps = ({ user }) => ({
-  authed: user.authStatus,
-  isAdmin: user.isAdmin
-})
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(App)

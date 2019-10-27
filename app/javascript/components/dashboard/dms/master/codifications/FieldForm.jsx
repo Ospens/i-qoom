@@ -43,6 +43,22 @@ export const InputField = ({
   meta: { touched, error },
   ...props
 }) => {
+  const [open, setOpen] = useState(false)
+  const [oldnSBState, setoldnSBState] = useState(true)
+  const openSB = useSelector(({ projects }) => projects.sidebar)
+
+  useEffect(() => {
+    if (openSB === oldnSBState) return
+
+    setTimeout(function () {
+      setoldnSBState(openSB)
+    }, 500)
+  }, [openSB])
+
+  useEffect(() => {
+    const condition = projectCode && !dmsSections && (!!(touched && error) || (!touched && !!error)) 
+    setOpen(condition)
+  }, [projectCode, dmsSections, touched, error])
 
   if (!isForm) {
     return (
@@ -62,7 +78,7 @@ export const InputField = ({
       pattern=".*\S.*"
     />
   )
-
+  
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -73,8 +89,7 @@ export const InputField = ({
             trigger={inputElement}
             on='click'
             position='right center'
-            open={projectCode && !dmsSections && (!!(touched && error) || (!touched && !!error)) }
-            hideOnScroll
+            open={(oldnSBState === openSB) && open}
           >
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>

@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import jwtDecode from 'jwt-decode'
-import { errorNotify, successNotify } from '../elements/Notices'
 import {
   SIGN_IN_USER,
   SIGN_UP_USER,
   SIGN_OUT_USER
 } from './types'
+import { addNotification } from './notificationsActions'
 
 const signIn = payload => ({
   type: SIGN_IN_USER,
@@ -49,9 +49,9 @@ export const signInUser = values => (dispatch, getState) => {
       })
       .catch(({ response }) => {
         if (response.data.user) {
-          errorNotify(response.data.user[0])
+          dispatch(addNotification({ title: 'Problem', text: response.data.user[0], type: 'error' }))
         } else {
-          errorNotify('Something went wrong')
+          dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
         }
         throw new SubmissionError(response.data)
       })
@@ -69,27 +69,27 @@ export const signUpUser = userFields => dispatch => {
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {
-      errorNotify('Something went wrong')
+      dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
       throw new SubmissionError(response.data)
     })
 }
 
-export const resetPassword = (values, callback) => () => axios.post('/api/v1/users/send_reset_password_instructions', values)
+export const resetPassword = (values, callback) => dispatch => axios.post('/api/v1/users/send_reset_password_instructions', values)
   .then(() => {
     callback()
-    successNotify('Email was sent!')
+    dispatch(addNotification({ title: 'System', text: 'Email was sent!', type: 'success' }))
   })
   .catch(({ response }) => {
-    errorNotify('Something went wrong')
+    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
     throw new SubmissionError(response.data)
   })
 
-export const updatePassword = (values, callback) => () => axios.patch('/api/v1/users/update_password', values)
+export const updatePassword = (values, callback) => dispatch => axios.patch('/api/v1/users/update_password', values)
   .then(() => {
     callback()
-    successNotify('Password was changed!')
+    dispatch(addNotification({ title: 'System', text: 'Password was changed!', type: 'success' }))
   })
   .catch(({ response }) => {
-    errorNotify('Something went wrong')
+    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
     throw new SubmissionError(response.data)
   })

@@ -5,7 +5,7 @@ import CompanyFields from '../../../../elements/forms/CompanyFields'
 import NewModal from '../../../../elements/Modal'
 import BillingAddress from '../../projectOverview/BillingAddress'
 import { startUpdateProject, startFetchProject } from '../../../../actions/projectActions'
-import { successNotify } from '../../../../elements/Notices'
+import { addNotification } from '../../../../actions/notificationsActions'
 
 export class CompanyBlock extends Component {
   nodeRef = React.createRef()
@@ -19,10 +19,10 @@ export class CompanyBlock extends Component {
   }
 
   handleSubmit = values => {
-    const { updateProject } = this.props
+    const { updateProject, addNotification } = this.props
     return updateProject(values)
       .then(() => {
-        successNotify('The changes were successfully saved!')
+        addNotification()
         this.toggleModals('billingForm', false)
       })
   }
@@ -119,7 +119,8 @@ const mapStateToProps = ({ projects: { current: { id, company_data } }}) => ({
 const mapDispatchToProps = dispatch => ({
   resetSection: () => dispatch(resetSection('company_form', 'company_data.billing_address')),
   updateProject: (values) => dispatch(startUpdateProject(values)),
-  startFetchProject: id => dispatch(startFetchProject(id))
+  startFetchProject: id => dispatch(startFetchProject(id)),
+  addNotification: () => addNotification({ title: 'Projects', text: 'The changes were successfully saved!', type: 'success' }),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({

@@ -67,6 +67,11 @@ Rails.application.routes.draw do
           post :update_project_code
         end
         resource :conventions, only: [:edit, :update]
+        resources :conventions, only: [] do
+          member do
+            get :download_codification
+          end
+        end
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files

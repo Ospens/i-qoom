@@ -1,0 +1,14 @@
+en:
+  api:
+    v1:
+      conventions:
+        pdf:
+          codification:
+            codification: Codification
+            description: The following file code structure is to use
+            project: Project
+            company: Company
+            discipline: Discipline
+            document_type: Document type
+            document_number: Document number
+            originating_company: Originating company
