@@ -23,7 +23,7 @@ describe Convention, type: :request do
                               dms_module_access: true,
                               employment_type: :employee)
       get "/api/v1/projects/#{project.id}/conventions/edit", headers: credentials(user)
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(:success)
     end
 
     it 'dms master' do

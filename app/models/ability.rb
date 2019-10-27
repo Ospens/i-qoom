@@ -47,7 +47,7 @@ class Ability
       can :manage, Role,
           project: { id: user.project_administrators.map(&:project_id) }
       # Convention
-      can [:edit, :update], Convention do |convention|
+      can :update, Convention do |convention|
         # When i started testing, the first thing i did was to setup a project
         # (after i have registered). So i setup a project (project settings) and
         # then i saw that i could access the DMS immediately. This is fine, but
@@ -61,7 +61,7 @@ class Ability
         # Hope this helps. (c) Yasser
         convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
       end
-      can :download_codification, Convention do |convention|
+      can [:edit, :download_codification], Convention do |convention|
         convention.project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
       # Document
