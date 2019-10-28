@@ -80,12 +80,12 @@ const getRevAndVer = payload => ({
   payload
 })
 
-export const startFetchDocuments = projectId => (dispatch, getState) => {
+export const startFetchDocuments = (projectId, params = {}) => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { headers: { Authorization: token } }
+  const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, headers)
+    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
       .then(response => {
         dispatch(documentsFetched(response.data))
       })

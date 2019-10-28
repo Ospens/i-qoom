@@ -107,21 +107,33 @@
   }
 }
 
+.dms-header {
+  height: 125px !important;
+}
+
 .buttons-with-icons-list {
   display: flex;
-  height: 125px !important;
   margin-bottom: 0;
+  align-items: center;
 
   li {
     padding-left: 20px;
     padding-right: 20px;
 
+    &.search-item {
+      width: 21%;
+      margin-left: auto;
+      padding-left: 0;
+
+      input {
+        width: 100%;
+      }
+    }
+
     &:first-of-type {
       padding-left: 0;
     }
   }
-
-  
 
   button {
     align-items: center;

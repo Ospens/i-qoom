@@ -152,7 +152,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
                     <input type='checkbox' id={doc.id} />
                     <label
                       htmlFor={doc.id}
-                      onClick={() => checkItem('checkedDocs', checkedDocs, doc.id)}
+                      onClick={() => checkItem(doc.id)}
                     />
                   </div>
                 </Table.Cell>
