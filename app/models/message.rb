@@ -30,6 +30,11 @@ class Message < ApplicationRecord
 
   # after_create :send_email
 
+  def mark_as_read!(recipient_id)
+    message_recipients.find_by(user_id: recipient_id)
+                      .try(:mark_as_read!)
+  end
+
   private
 
   def set_sent_at

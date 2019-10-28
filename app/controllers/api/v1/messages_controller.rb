@@ -1,6 +1,11 @@
 class Api::V1::MessagesController < ApplicationController
   load_and_authorize_resource
 
+  def show
+    @message.mark_as_read!(signed_in_user.id)
+    render json: @message, user: signed_in_user
+  end
+
   def create
     @message = signed_in_user.sent_messages.new(message_params)
     if @message.save
@@ -10,7 +15,7 @@ class Api::V1::MessagesController < ApplicationController
              status: :unprocessable_entity
     end
   end
-  
+
   private
 
   def message_params

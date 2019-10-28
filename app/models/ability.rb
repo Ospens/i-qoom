@@ -48,6 +48,10 @@ class Ability
           project: { id: user.project_administrators.map(&:project_id) }
       # Message
       can :create, Message
+      can :show, Message do |message|
+        message.recipients.ids.include?(user.id) ||
+          message.sender_id == user.id
+      end
       # Convention
       can :update, Convention do |convention|
         # When i started testing, the first thing i did was to setup a project

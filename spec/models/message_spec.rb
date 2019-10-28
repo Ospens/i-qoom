@@ -27,4 +27,50 @@ RSpec.describe Message, type: :model do
     it { expect(subject.sent_at).to be_present }
   end
 
+  context "mark_as_read!" do
+    let (:message) {
+      FactoryBot.create(:message,
+                        message_recipients: [ FactoryBot.build(:message_recipient),
+                                              FactoryBot.build(:message_recipient) ])
+
+    }
+    let (:recipient) {
+      message.recipients.first
+    }
+
+    it "should work" do
+      message.mark_as_read!(recipient.id)
+      expect(message.message_recipients
+                    .find_by(user_id: recipient.id)
+                    .read?).to be_truthy
+    end
+
+    context "shouldn't work" do
+      it "with sender id" do
+        message.mark_as_read!(message.sender.id)
+        expect(message.message_recipients
+                      .find_by(user_id: recipient.id)
+                      .read?).to be_falsy
+      end
+      it "without id" do
+        message.mark_as_read!(nil)
+        expect(message.message_recipients
+                      .find_by(user_id: recipient.id)
+                      .read?).to be_falsy
+      end
+      it "with wrong id" do
+        message.mark_as_read!(698698667)
+        expect(message.message_recipients
+                      .find_by(user_id: recipient.id)
+                      .read?).to be_falsy
+      end
+      it "with different recipient id" do
+        message.mark_as_read!(message.recipients.last.id)
+        expect(message.message_recipients
+                      .find_by(user_id: recipient.id)
+                      .read?).to be_falsy
+      end
+    end
+  end
+
 end
