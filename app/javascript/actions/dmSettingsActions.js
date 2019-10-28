@@ -10,7 +10,7 @@ const getAttributes = projectId => (dispatch, getState) => {
       .then(() => {
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'DMS', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'DMS', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }

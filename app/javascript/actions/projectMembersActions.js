@@ -52,7 +52,7 @@ export const startFetchActiveProjectMembers = id => (dispatch, getState) => {
         dispatch(projectMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -66,7 +66,7 @@ export const startFetchPendingProjectMembers = id => (dispatch, getState) => {
         dispatch(pendingMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -81,7 +81,7 @@ export const startCreatingProjectMember = id => (dispatch, getState) => {
         dispatch(projectMemberCreating(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -103,7 +103,7 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
         dispatch(initialize('project_member_form', response.data))
       })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
       })
   )
@@ -131,7 +131,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
         }
       })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
       })
   )

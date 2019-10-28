@@ -20,6 +20,11 @@ const stateOffTimer = dispatch => {
   offTimer = setTimeout(() => { dispatch(toggleState(false)) }, 5000)
 }
 
+export const removeNotification = id => dispatch => {
+  stopStateOffTimer()
+  dispatch({ type: REMOVE_NOTIFICATION, payload: id })
+}
+
 export const addNotification = (values, autodelete = false) => dispatch => {
   const notification = {
     ...values,
@@ -32,9 +37,4 @@ export const addNotification = (values, autodelete = false) => dispatch => {
   }
   dispatch(toggleState(true))
   stateOffTimer(dispatch)
-}
-
-export const removeNotification = id => dispatch => {
-  stopStateOffTimer()
-  dispatch({ type: REMOVE_NOTIFICATION, payload: id })
 }

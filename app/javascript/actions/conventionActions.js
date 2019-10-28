@@ -95,7 +95,7 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(err => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(err)
       })
   )
@@ -121,7 +121,7 @@ export const startUpdateCodification = (projectId, values) => (dispatch, getStat
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(({ err }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(err)
       })
   )
@@ -141,7 +141,7 @@ export const startEditConvention = projectId => (dispatch, getState) => {
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }

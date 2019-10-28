@@ -8,7 +8,7 @@ const sendEmail = (values, afterUpdate) => dispatch => {
     axios.post('/api/v1/contacts', request)
       .then(() => afterUpdate())
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }

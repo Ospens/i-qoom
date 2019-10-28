@@ -25,7 +25,7 @@ export const getGrantAccessMembers = projectId => (dispatch, getState) => {
         dispatch(newMembersFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -40,7 +40,7 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
         dispatch(currentMembersFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -62,7 +62,7 @@ export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, 
         dispatch(addNotification({ title: 'Access rights', text: 'Rights succcessfully updated', type: 'success' }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }

@@ -51,7 +51,7 @@ export const startFetchFolders = (projectId, docId) => (dispatch, getState) => {
         dispatch(foldersFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -67,7 +67,7 @@ export const startEditFolder = folderId => (dispatch, getState) => {
         dispatch(editingFolder(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -88,7 +88,7 @@ export const startCreateFolder = (projectId, values) => (dispatch, getState) => 
         dispatch(folderCreated(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -110,7 +110,7 @@ export const startUpdateFolder = values => (dispatch, getState) => {
         dispatch(initialize('folder_form', response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -133,7 +133,7 @@ export const addDocumentToFolders = (docId, ids) => (dispatch, getState) => {
         dispatch(addNotification({ title: 'Folders', text: 'Copied to folder(s)', type: 'success' }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
