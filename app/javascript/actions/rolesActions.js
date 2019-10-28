@@ -44,7 +44,7 @@ export const startCreateRole = (values, projectId) => (dispatch, getState) => {
         dispatch(roleCreated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -66,7 +66,7 @@ export const startUpdateRole = (values, projectId) => (dispatch, getState) => {
         dispatch(roleUpdated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -82,7 +82,7 @@ export const deleteRole = (id, projectId) => (dispatch, getState) => {
         dispatch(roleDeleted({ id }))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -98,7 +98,7 @@ export const fetchRoleList = projectId => (dispatch, getState) => {
         dispatch(rolesFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }

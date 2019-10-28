@@ -44,7 +44,7 @@ export const startCreateDiscipline = (values, projectId) => (dispatch, getState)
         dispatch(disciplineCreated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -66,7 +66,7 @@ export const startUpdateDiscipline = (values, projectId) => (dispatch, getState)
         dispatch(disciplineUpdated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -82,7 +82,7 @@ export const deleteDiscipline = (id, projectId) => (dispatch, getState) => {
         dispatch(disciplineDeleted({ id }))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response.data)
       })
   )
@@ -98,7 +98,7 @@ export const fetchDisciplineList = projectId => (dispatch, getState) => {
         dispatch(disciplineFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }

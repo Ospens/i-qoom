@@ -51,7 +51,7 @@ export const signInUser = values => (dispatch, getState) => {
         if (response.data.user) {
           dispatch(addNotification({ title: 'Problem', text: response.data.user[0], type: 'error' }))
         } else {
-          dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+          dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         }
         throw new SubmissionError(response.data)
       })
@@ -69,7 +69,7 @@ export const signUpUser = userFields => dispatch => {
       dispatch(signUp(response.data, response.headers))
     })
     .catch(({ response }) => {
-      dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+      dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       throw new SubmissionError(response.data)
     })
 }
@@ -80,7 +80,7 @@ export const resetPassword = (values, callback) => dispatch => axios.post('/api/
     dispatch(addNotification({ title: 'System', text: 'Email was sent!', type: 'success' }))
   })
   .catch(({ response }) => {
-    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
     throw new SubmissionError(response.data)
   })
 
@@ -90,6 +90,6 @@ export const updatePassword = (values, callback) => dispatch => axios.patch('/ap
     dispatch(addNotification({ title: 'System', text: 'Password was changed!', type: 'success' }))
   })
   .catch(({ response }) => {
-    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
     throw new SubmissionError(response.data)
   })

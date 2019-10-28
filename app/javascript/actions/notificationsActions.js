@@ -20,14 +20,14 @@ const stateOffTimer = dispatch => {
   offTimer = setTimeout(() => { dispatch(toggleState(false)) }, 5000)
 }
 
-export const addNotification = values => dispatch => {
+export const addNotification = (values, autodelete = false) => dispatch => {
   const notification = {
     ...values,
     id: `f${((Math.random() * 1e8)).toString(16)}`,
     time: values.time ? values.time : new Date()
   }
   dispatch(({ type: ADD_NOTIFICATION, payload: notification }))
-  if (values.type === 'error') {
+  if (autodelete) {
     setTimeout(() => { dispatch(removeNotification(notification.id)) }, 4900)
   }
   dispatch(toggleState(true))

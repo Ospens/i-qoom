@@ -90,7 +90,7 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
         dispatch(documentsFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -119,7 +119,7 @@ export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
         dispatch(documentsFetchedWithoutFilters(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -136,7 +136,7 @@ export const newDocument = projectId => (dispatch, getState) => {
         dispatch(creatingDocument(sortedData))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -162,7 +162,7 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully created!', type: 'success' }))
     })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response)
       })
   )
@@ -188,7 +188,7 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully updated!', type: 'success' }))
     })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
         throw new SubmissionError(response)
       })
   )
@@ -204,7 +204,7 @@ export const startFetchDocument = documentId => (dispatch, getState) => {
         dispatch(documentFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -221,7 +221,7 @@ export const startEditDocument = documentId => (dispatch, getState) => {
         dispatch(editDocument(sortedData))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -236,7 +236,7 @@ export const getRevisionsAndVersions = docId => (dispatch, getState) => {
         dispatch(getRevAndVer(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -258,7 +258,7 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
         downloadFile(response)
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   ))
 }
@@ -277,7 +277,7 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
       downloadFile(response)
     })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
@@ -296,7 +296,7 @@ export const downloadNativeFile = docId => (dispatch, getState) => {
       downloadFile(response)
     })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error', autodelete: true }))
       })
   )
 }
