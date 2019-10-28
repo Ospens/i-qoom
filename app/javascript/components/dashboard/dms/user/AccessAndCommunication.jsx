@@ -59,6 +59,7 @@ const EmailSubjects = ({ fields, discardValue }) => (
 const AccessAndCommunication = ({ backStep }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
+  const conventionId = useSelector(state => selector(state, 'convention_id'))
   const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
   const users = useSelector(state => state.user)
@@ -114,6 +115,7 @@ const AccessAndCommunication = ({ backStep }) => {
             </div>
           </div>
 
+          {!conventionId &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -126,8 +128,9 @@ const AccessAndCommunication = ({ backStep }) => {
               />
             </div>
             <div className='col-6' />
-          </div>
+          </div>}
 
+          {!conventionId &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -153,7 +156,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 isMulti={true}
               />
             </div>  
-          </div>
+          </div>}
         </div>
 
         <div className='form-group'>

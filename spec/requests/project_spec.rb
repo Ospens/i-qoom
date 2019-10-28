@@ -11,6 +11,7 @@ describe "Project", type: :request do
 
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
+    let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
     context "index" do
       it 'should get a status "success" and render projects' do
         get "/api/v1/projects",
@@ -206,19 +207,28 @@ describe "Project", type: :request do
       it "should confirm a member" do
         project_member =
           FactoryBot.create(:project_member_pending)
-        project_member.update(email: user.email)
+        project_member.update(email: second_user.email)
         get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers
+          headers: headers_for_second_user
         expect(response).to have_http_status(:success)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(user)
+        expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
       end
       it "shouldn't confirm a member with wrong user" do
         project_member =
           FactoryBot.create(:project_member_pending)
         get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers
+          headers: headers_for_second_user
         expect(response).to have_http_status(:unprocessable_entity)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+      end
+      it "should't confirm a member with different signed_in_user" do
+        project_member =
+          FactoryBot.create(:project_member_pending)
+        project_member.update(email: second_user.email)
+        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+          headers: headers
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(ProjectMember.find_by(id: project_member.id).user).not_to eq(user)
       end
     end
 
