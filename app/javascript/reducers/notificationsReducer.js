@@ -27,7 +27,7 @@ const notificationsReducer = (state = initialState, action) => {
     return {
       ...state,
       all: state.all
-        .filter((_, i) => i !== action.payload)
+        .filter(({ id }) => id !== action.payload)
         .filter((_, i) => i < 10)
     }
   default:
