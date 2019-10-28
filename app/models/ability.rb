@@ -28,6 +28,7 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
+
     if user.present?
       # Project
       can :create, Project, user_id: user.id
@@ -48,7 +49,7 @@ class Ability
       # Message
       can :create, Message
       # Convention
-      can :manage, Convention do |convention|
+      can :update, Convention do |convention|
         # When i started testing, the first thing i did was to setup a project
         # (after i have registered). So i setup a project (project settings) and
         # then i saw that i could access the DMS immediately. This is fine, but
@@ -61,6 +62,9 @@ class Ability
         # rights to the DMS for "Document MS" and "Modul Master" must be active.
         # Hope this helps. (c) Yasser
         convention.project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
+      can [:edit, :download_codification], Convention do |convention|
+        convention.project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
       # Document
       can [:new, :create], Document do |document, project|

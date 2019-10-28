@@ -468,10 +468,13 @@ describe Document, type: :request do
       let(:document) { FactoryBot.create(:document) }
       let(:project) { document.project }
 
-      it do
+      before do
         project.members.create!(user: user,
                                 dms_module_access: true,
                                 employment_type: :employee)
+      end
+
+      it do
         get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
         expect(json['originating_companies'].length).to eql(1)
         expect(json['discipline'].length).to eql(1)
@@ -487,9 +490,6 @@ describe Document, type: :request do
                   .find_by(codification_kind: :originating_company)
                   .document_field_values.find_by(selected: true)
                   .value
-        project.members.create!(user: user,
-                                dms_module_access: true,
-                                employment_type: :employee)
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
           params: { originating_companies: [value] }
@@ -497,12 +497,39 @@ describe Document, type: :request do
       end
 
       it 'search by invalid value' do
-        project.members.create!(user: user,
-                                dms_module_access: true,
-                                employment_type: :employee)
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
           params: { originating_companies: ['AAAA'] }
+        expect(json['documents'].length).to eql(0)
+      end
+
+      it 'search by title and value' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: '---' },
+                              { title: 'Discipline', value: '---' }] }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid title and value' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: 'AAAA' },
+                              { title: 'Discipline', value: '---' }] }
+        expect(json['documents'].length).to eql(0)
+      end
+
+      it 'search by text' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { search: '---' }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid text' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { search: 'AAAA' }
         expect(json['documents'].length).to eql(0)
       end
     end
