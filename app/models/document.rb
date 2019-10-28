@@ -123,7 +123,13 @@ class Document < ApplicationRecord
               title: title,
               document_field_values: {
                 value: value,
-                selected: true } })
+                selected: true } }).or(
+      joins(document_fields: :document_field_values)
+      .where(document_fields: {
+              title: title,
+              document_field_values: {
+                title: value,
+                selected: true } }))
     Document.where(id: documents)
   }
 
