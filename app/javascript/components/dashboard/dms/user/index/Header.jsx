@@ -10,12 +10,12 @@ function Header({ checkedDocs }) {
   const { project_id } = useParams()
   const checkedLength = checkedDocs.length
   const btnClass = classnames('with-icon', { 'disable': checkedLength === 0 })
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState(undefined)
   // const [isSearching, setIsSearching] = useState(false)
   const debouncedSearchTerm = useDebounce(searchTerm, 500)
-
+  
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (debouncedSearchTerm !== undefined) {
       // setIsSearching(true)
       dispatch(startFetchDocuments(project_id, { search: debouncedSearchTerm })).then(results => {
         // setIsSearching(false)
@@ -57,7 +57,6 @@ function Header({ checkedDocs }) {
             className='search-input ml-auto'
             placeholder='Search'
             onChange={e => setSearchTerm(e.target.value)}
-            // onChange={({ target }) => search(target.value)}
           />
         </li>
       </ul>

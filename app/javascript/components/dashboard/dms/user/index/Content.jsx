@@ -149,11 +149,12 @@ function Content({ projectId, checkedDocs, checkItem }) {
 
                 <Table.Cell className='table-checkbox'>
                   <div>
-                    <input type='checkbox' id={doc.id} />
-                    <label
-                      htmlFor={doc.id}
-                      onClick={() => checkItem(doc.id)}
+                    <input
+                      type='checkbox' id={doc.id}
+                      onChange={() => checkItem(doc.id)}
+                      checked={checkedDocs.includes(doc.id)}
                     />
+                    <label htmlFor={doc.id} />
                   </div>
                 </Table.Cell>
 

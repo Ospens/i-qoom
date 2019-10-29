@@ -73,6 +73,10 @@
   -webkit-overflow-scrolling: touch;
   padding-bottom: 360px;
 
+  tr {
+    transition: all 200ms ease-in-out;
+  }
+
   .checked-document-row {
     background-color: #dcfcfb !important;
     border-radius: 5px;
