@@ -47,7 +47,9 @@ class Ability
       can :manage, Role,
           project: { id: user.project_administrators.map(&:project_id) }
       # Message
-      can :create, Message
+      can [ :create,
+            :inbox,
+            :sent ], Message
       can :show, Message do |message|
         message.recipients.ids.include?(user.id) ||
           message.sender_id == user.id

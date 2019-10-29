@@ -17,6 +17,9 @@ describe "Message", type: :request do
   context "logged in" do
     let(:headers_for_sender) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_for_recipient) { credentials(recipient).merge("CONTENT_TYPE" => "application/json") }
+    before :each do
+      message.reload
+    end
     context "create" do
       it "should get a status success" do
         post "/api/v1/messages",
@@ -31,9 +34,9 @@ describe "Message", type: :request do
             }.to_json,
           headers: headers_for_sender
         expect(response).to have_http_status(:success)
-        expect(user.sent_messages.count).to eq(1)
+        expect(user.sent_messages.count).to eq(2)
         expect(user.sent_messages.last.recipients.count).to eq(1)
-        expect(recipient.received_messages.count).to eq(1)
+        expect(recipient.received_messages.count).to eq(2)
       end
       it "should get a status unprocessable entity" do
         post "/api/v1/messages",
@@ -49,8 +52,8 @@ describe "Message", type: :request do
             }.to_json,
           headers: headers_for_sender
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(user.sent_messages.count).to eq(0)
-        expect(recipient.received_messages.count).to eq(0)
+        expect(user.sent_messages.count).to eq(1)
+        expect(recipient.received_messages.count).to eq(1)
       end
     end
     context "show" do
@@ -81,6 +84,34 @@ describe "Message", type: :request do
           expect(response).to have_http_status(:forbidden)
       end
     end
+    context "inbox" do
+      it 'if recipient' do
+        get "/api/v1/messages/inbox",
+          headers: headers_for_recipient
+        expect(response).to have_http_status(:success)
+        expect(json.count).to eq 1
+      end
+      it 'if sender' do
+        get "/api/v1/messages/inbox",
+          headers: headers_for_sender
+        expect(response).to have_http_status(:success)
+        expect(json.count).to eq 0
+      end
+    end
+    context 'sent' do
+      it 'if sender' do
+        get "/api/v1/messages/sent",
+          headers: headers_for_sender
+        expect(response).to have_http_status(:success)
+        expect(json.count).to eq 1
+      end
+      it 'if recipient' do
+        get "/api/v1/messages/sent",
+          headers: headers_for_recipient
+        expect(response).to have_http_status(:success)
+        expect(json.count).to eq 0
+      end
+    end
   end
 
   context 'not logged in and should get a status "forbidden" on' do
@@ -102,6 +133,16 @@ describe "Message", type: :request do
     it 'show' do
       message = FactoryBot.create(:message)
       get "/api/v1/messages/#{message.id}",
+        headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'inbox' do
+      get "/api/v1/messages/inbox",
+        headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'sent' do
+      get "/api/v1/messages/sent",
         headers: headers
       expect(response).to have_http_status(:forbidden)
     end

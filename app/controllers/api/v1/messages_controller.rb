@@ -3,7 +3,18 @@ class Api::V1::MessagesController < ApplicationController
 
   def show
     @message.mark_as_read!(signed_in_user.id)
-    render json: @message, user: signed_in_user
+    render json: @message,
+           user: signed_in_user
+  end
+
+  def inbox
+    render json: signed_in_user.received_messages,
+           user: signed_in_user
+  end
+
+  def sent
+    render json: signed_in_user.sent_messages,
+           user: signed_in_user
   end
 
   def create
