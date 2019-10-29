@@ -72,27 +72,6 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 360px;
-
-  tr {
-    transition: all 200ms ease-in-out;
-  }
-
-  .checked-document-row {
-    background-color: #dcfcfb !important;
-    border-radius: 5px;
-
-    td {
-      &:first-of-type {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-      }
-      
-      &:last-of-type {
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-      }
-    }
-  }
 }
 
 .link, .add-button {
@@ -1741,6 +1720,10 @@ input.search-input {
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+
+  .table-row {
+    grid-template-columns: 35px 200px 150px 240px  240px  240px 1fr;
   }
 }
 

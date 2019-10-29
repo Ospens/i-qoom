@@ -35,14 +35,14 @@ export const actionDDitems = (projectId, documentId) => (
 
 export const columns = [
   { title: 'DOC-ID', divider: true },
-  { title: 'Document Title', divider: true },
+  { title: 'Document title', divider: true, searchable: true },
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },
   { title: 'Additional', divider: true },
   { title: 'Revision date', divider: true },
-  { title: 'Dicipline', divider: true },
-  { title: 'Document types', divider: true },
-  { title: 'Originating companies', divider: true }
+  { title: 'Discipline', divider: true, searchable: true  },
+  { title: 'Document type', divider: true, searchable: true  },
+  { title: 'Originating company', divider: true, searchable: true  }
 ]
 
 export const DtOptions = [

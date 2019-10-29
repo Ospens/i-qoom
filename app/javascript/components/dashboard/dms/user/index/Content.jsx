@@ -1,15 +1,17 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import moment from 'moment'
-import { Table } from 'semantic-ui-react'
 import DropDown from '../../../../../elements/DropDown'
-import { columns, DtOptions } from '../../constants'
+import { columns } from '../../constants'
 import { DropDownItems } from './elements'
 import Filters from './Filters'
+import DownloadDocuments from './DownloadDocuments'
 import { downloadList, downloadDetailFile, downloadNativeFile } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
+import { startFetchDocuments } from '../../../../../actions/documentsActions'
+import useDebounce from '../../../../../elements/useDebounce'
 
 function DropDownValue({ fields, type }) {
   const field = fields.find(field => field.codification_kind === type)
@@ -17,70 +19,6 @@ function DropDownValue({ fields, type }) {
 
   const value = field.document_field_values.find(v => v.selected) || {}
   return value.title
-}
-
-function DownloadDocuments({ docId, downloadByOption }) {
-  const [types, setTypes] = useState([])
-
-  const toggleTypes = useCallback((checked, value) => {
-    setTypes(toggleArray(checked, value))
-  }, [types])
-  
-  return (
-    <DropDown
-      className='dropdown-submenu show'
-      btnClass='dropdown-submenu'
-      btnComponent={<span className='icon-common-file-text-download black' />}
-    >
-      <div className='download-files-dropdown'>
-        <div className='download-files-dropdown__title'>
-          <span>Download</span>
-        </div>
-        <div className='download-files-dropdown__list'>
-          <div className='download-files-dropdown__list_item'>
-            <input 
-              type='checkbox'
-              checked={types.includes('native')}
-              id={`download_native_file_${docId}`}
-              onChange={() => toggleTypes(types, 'native')}
-            />
-            <label htmlFor={`download_native_file_${docId}`} />
-            <label htmlFor={`download_native_file_${docId}`} className='label-with-icon'>
-              <span className='icon-common-file-text_big mx-2'><span className='path1'></span><span className='path2'></span><span className='path3'></span><span className='path4'></span></span>
-              Native file title
-            </label>
-          </div>
-          <div className='download-files-dropdown__list_item'>
-            <input
-              type='checkbox'
-              checked={types.includes('details')}
-              id={`download_details_${docId}`}
-              onChange={() => toggleTypes(types, 'details')}
-            />
-            <label htmlFor={`download_details_${docId}`} />
-            <label htmlFor={`download_details_${docId}`} className='label-with-icon'>
-              <span className='icon-common-file-text-download mx-2' />
-              Download details
-            </label>
-          </div>
-        </div>
-        <div className='button-block'>
-          <button type='button' className='btn btn-white cancel-button'>Cancel</button>
-          <button
-            type='button'
-            onClick={() => {
-              downloadByOption(types)
-              setTypes([])
-            }}
-            disabled={types.length < 1}
-            className='btn btn-white-blue'
-          >
-            Download files
-          </button>
-        </div>
-      </div>
-    </DropDown>
-  )
 }
 
 function Content({ projectId, checkedDocs, checkItem }) {
@@ -102,53 +40,83 @@ function Content({ projectId, checkedDocs, checkItem }) {
     changeFormats(toggleArray(checked, value))
   }, [formats])
   
+  const [searchTerm, setSearchTerm] = useState([])
+  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
+  useEffect(() => {
+    if (debouncedSearchTerm.length > 0) {
+      dispatch(startFetchDocuments(projectId, { filters: debouncedSearchTerm }))
+    } else {
+      dispatch(startFetchDocuments(projectId))
+    }
+  }, [debouncedSearchTerm, projectId])
+
+  const changeFilters = useCallback((filters, title, value) => {
+    let newVal = []
+    newVal = newVal.concat(filters)
+    const index = newVal.findIndex(el => el.title === title)
+
+    if (value.length === 0) {
+      newVal = newVal.filter((_, i) => i !== index)
+    } else if (index < 0) {
+      newVal.push({ title, value })
+    } else {
+      newVal[index] = { title, value }
+    }
+    setSearchTerm(newVal)
+  }, [searchTerm])
+
   return (
     <div className='dms-content'>
       <Filters />
       <div className='overview-table-contaniner'>
-        <Table sortable striped className='main-table-block'>
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell />
-              <Table.HeaderCell className='table-checkbox'>
-                <div>
+        <div className='Rtable'>
+          <div className='Rtable__header'>
+            <div className='Rtable-row'>
+              <div className='Rtable__row-cell' />
+              <div className='Rtable__row-cell table-checkbox'>
+                <div className='d-flex'>
                   <input
                     type='checkbox'
                     id='check_all'
                   />
                   <label htmlFor='check_all' />
                 </div>
-              </Table.HeaderCell>
-              {columns.map(({ title, divider }, i) => (
-                <Table.HeaderCell key={i}>
-                  {divider && <span className='divider' />}
-                  <span>{title}</span>
-                </Table.HeaderCell>
-              ))}
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            {documents.map((doc, i) => (
-              <Table.Row key={i} className={classnames({ 'checked-document-row': checkedDocs.includes(doc.id) })}>
-
-                <Table.Cell>
-                  <DropDown
-                    dots={true}
-                    className='dropdown-with-icon'
-                  >
-                    <DropDownItems
-                      key='DropDownItems__Content'
-                      id={doc.id}
-                      projectId={projectId}
-                      downloadFiles={() => downloadFiles(doc.id)}
-                      formats={formats}
-                      toggleFormats={v => toggleFormats(formats, v)}
+              </div>
+              {columns.map(({ title, searchable }) => (
+                <div className='Rtable__row-cell' key={title}>
+                  {searchable
+                  ? <input
+                      type='text'
+                      className='searchable-title' placeholder={title}
+                      onChange={({ target }) => changeFilters(searchTerm, title, target.value)}
                     />
-                  </DropDown>
-                </Table.Cell>
+                  : title}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className='Rtable__body'>
+            {documents.map((doc, i) => {
+              return (
+                <div key={i} className={classnames('Rtable-row', { 'Rtable-row__checked': checkedDocs.includes(doc.id) })}>
+                  <div className='Rtable__row-cell table-checkbox'>
+                    <DropDown
+                      dots={true}
+                      className='dropdown-with-icon'
+                    >
+                      <DropDownItems
+                        key='DropDownItems__Content'
+                        id={doc.id}
+                        projectId={projectId}
+                        downloadFiles={() => downloadFiles(doc.id)}
+                        formats={formats}
+                        toggleFormats={v => toggleFormats(formats, v)}
+                      />
+                    </DropDown>
+                  </div>
 
-                <Table.Cell className='table-checkbox'>
-                  <div>
+                  <div className='Rtable__row-cell table-checkbox'>
                     <input
                       type='checkbox' id={doc.id}
                       onChange={() => checkItem(doc.id)}
@@ -156,61 +124,64 @@ function Content({ projectId, checkedDocs, checkItem }) {
                     />
                     <label htmlFor={doc.id} />
                   </div>
-                </Table.Cell>
 
-                <Table.Cell className='doc-id-cell'>
-                  <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
-                    {doc.codification_string}
-                  </Link>
-                </Table.Cell>
-
-                <Table.Cell className='title-cell'>
-                  <Link
-                    to={`/dashboard/projects/${projectId}/documents/${doc.id}`}
-                  >
-                    {doc.title || 'Undefined'}
-                  </Link>
-                </Table.Cell>
-
-                <Table.Cell className='td-files'>
-                  <DownloadDocuments
-                    downloadFiles={downloadFiles}
-                    docId={doc.id}
-                    downloadByOption={types => downloadByOption(doc.id, types)}
-                  />
-                </Table.Cell>
-
-                <Table.Cell className='td-files'>
-                  <div>
-                    <span className='icon-common-file-text_big'><span className='path1'></span><span className='path2'></span><span className='path3'></span><span className='path4'></span></span>
+                  <div className='Rtable__row-cell doc-id-cell'>
+                    <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
+                      {doc.codification_string}
+                    </Link>
                   </div>
-                </Table.Cell>
 
-                <Table.Cell className='td-files'>
-                  {/* <div>
+                  <div className='Rtable__row-cell title-cell'>
+                    <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
+                      {doc.title || 'Undefined'}
+                    </Link>
+                  </div>
+
+                  <div className='Rtable__row-cell td-files'>
+                    <DownloadDocuments
+                      downloadFiles={downloadFiles}
+                      docId={doc.id}
+                      downloadByOption={types => downloadByOption(doc.id, types)}
+                    />
+                  </div>
+
+                  <div className='Rtable__row-cell td-files'>
+                    <div>
+                      <span className='icon-common-file-text_big'>
+                        <span className='path1' />
+                        <span className='path2' />
+                        <span className='path3' />
+                        <span className='path4' />
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className='Rtable__row-cell td-files'>
+                    {/* <div>
                     <span className='icon-Work-Office-Companies---Office-Files---office-file-pdf' />
-                  </div> */}
-                </Table.Cell>
+                    </div> */}
+                  </div>
 
-                <Table.Cell className='td-date'>
-                  {moment(doc.created_at).format('M.D.YYYY')}
-                </Table.Cell>
+                  <div className='Rtable__row-cell td-date'>
+                    {moment(doc.created_at).format('M.D.YYYY')}
+                  </div>
 
-                <Table.Cell>
-                  <DropDownValue fields={doc.document_fields} type='discipline' />
-                </Table.Cell>
+                  <div className='Rtable__row-cell'>
+                    <DropDownValue fields={doc.document_fields} type='discipline' />
+                  </div>
 
-                <Table.Cell>
-                  <DropDownValue fields={doc.document_fields} type='document_type' />
-                </Table.Cell>
+                  <div className='Rtable__row-cell'>
+                    <DropDownValue fields={doc.document_fields} type='document_type' />
+                  </div>
 
-                <Table.Cell>
-                  <DropDownValue fields={doc.document_fields} type='originating_company' />
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+                  <div className='Rtable__row-cell'>
+                    <DropDownValue fields={doc.document_fields} type='originating_company' />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
         <div className='d-flex'>
           <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>{documents.length} total documents</span>
         </div>

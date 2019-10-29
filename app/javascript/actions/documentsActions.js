@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 import { SubmissionError } from 'redux-form'
 import {
   DOCUMENTS_FETCH_SUCCESS,
@@ -85,7 +86,7 @@ export const startFetchDocuments = (projectId, params = {}) => (dispatch, getSta
   const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
+    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers, paramsSerializer: p => qs.stringify(p, { arrayFormat: 'brackets'})})
       .then(response => {
         dispatch(documentsFetched(response.data))
       })
