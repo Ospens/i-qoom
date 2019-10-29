@@ -519,6 +519,22 @@ describe Document, type: :request do
         expect(json['documents'].length).to eql(0)
       end
 
+      it 'search by title and title' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: 'Originating company' },
+                              { title: 'Discipline', value: 'Discipline' }] }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid title and title' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { filters: [{ title: 'Originating company', value: 'Originating company2' },
+                              { title: 'Discipline', value: 'Discipline' }] }
+        expect(json['documents'].length).to eql(0)
+      end
+
       it 'search by text' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
@@ -530,6 +546,22 @@ describe Document, type: :request do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
           params: { search: 'AAAA' }
+        expect(json['documents'].length).to eql(0)
+      end
+
+      it 'search by document title' do
+        document.update!(title: 'ZZZZ')
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { document_title: 'zzz' }
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by invalid document title' do
+        document.update!(title: 'ZZZZ')
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { document_title: 'zzx' }
         expect(json['documents'].length).to eql(0)
       end
     end

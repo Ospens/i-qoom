@@ -79,6 +79,10 @@ class Api::V1::DocumentsController < ApplicationController
   def index
     documents = @project.document_mains.documents_available_for(signed_in_user)
     documents_not_filtered = documents
+    # If we add to filters fields like "document number" then under this filter
+    # could be hundreds of selections. Is this acceptable?
+    # > i agree. Filters like document number or revision number are not needed
+    # (c) Yasser
     if params[:originating_companies].present? && params[:originating_companies].any?
       documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
     end
@@ -92,6 +96,9 @@ class Api::V1::DocumentsController < ApplicationController
       params[:filters].each do |filter|
         documents = documents.filter_by_document_field_title_and_value(filter['title'], filter['value'])
       end
+    end
+    if params[:document_title].present?
+      documents = documents.where('LOWER(title) LIKE :title', title: "%#{params[:document_title].downcase}%")
     end
     if params[:search].present?
       documents = documents.search(params[:search])
