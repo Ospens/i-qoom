@@ -32,6 +32,9 @@ class Ability
     if user.present?
       # Project
       can :create, Project, user_id: user.id
+      can :dms_users, Project do |project|
+        project.members.find_by(user_id: user.id).try(:dms_module_access?)
+      end
       can :manage, Project,
           id: user.project_administrators.map(&:project_id)
       # ProjectAdministrator

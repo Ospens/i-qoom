@@ -97,6 +97,12 @@ class Api::V1::ProjectsController < ApplicationController
     end
   end
 
+  def dms_users
+    members = @project.members.where(dms_module_access: true)
+    users = User.where(id: members.pluck(:user_id))
+    render json: users
+  end
+
   private
 
   def project_params

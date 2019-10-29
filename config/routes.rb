@@ -65,6 +65,7 @@ Rails.application.routes.draw do
         member do
           post :invite
           post :update_project_code
+          get :dms_users
         end
         resource :conventions, only: [:edit, :update]
         resources :conventions, only: [] do
