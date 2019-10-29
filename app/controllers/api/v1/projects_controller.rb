@@ -100,7 +100,7 @@ class Api::V1::ProjectsController < ApplicationController
   def dms_users
     members = @project.members.where(dms_module_access: true)
     users = User.where(id: members.pluck(:user_id))
-    render json: users
+    render json: users.as_json(only: [:id, :first_name, :last_name, :username])
   end
 
   private

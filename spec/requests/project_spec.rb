@@ -289,6 +289,7 @@ describe "Project", type: :request do
            headers: credentials(user)
         expect(response).to have_http_status(:success)
         expect(json.length).to eql(2)
+        expect(json.first).to have_key('id')
       end
     end
   end
