@@ -82,12 +82,12 @@ const getRevAndVer = payload => ({
   payload
 })
 
-export const startFetchDocuments = (projectId, params = {}) => (dispatch, getState) => {
+export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers, paramsSerializer: p => qs.stringify(p, { arrayFormat: 'brackets' }) })
+    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
       .then(response => {
         dispatch(documentsFetched(response.data))
       })
@@ -97,42 +97,25 @@ export const startFetchDocuments = (projectId, params = {}) => (dispatch, getSta
   )
 }
 
-export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
-  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
-
+const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
   const {
     user: { token },
     documents: {
+      searchFilters,
       discipline,
       originating_companies: originatingCompanies,
       document_types: documentTypes
     }
   } = getState()
   const headers = { Authorization: token }
+  const { document_title, ...filters } = searchFilters
   const params = {
+    document_title,
     discipline: discipline.filter(el => el.checked).map(v => v.value),
     originating_companies: originatingCompanies.filter(el => el.checked).map(v => v.value),
-    document_types: documentTypes.filter(el => el.checked).map(v => v.value)
+    document_types: documentTypes.filter(el => el.checked).map(v => v.value),
+    ...filters
   }
-
-  return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
-      .then(response => {
-        dispatch(documentsFetchedWithoutFilters(response.data))
-      })
-      .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-      })
-  )
-}
-
-export const toggleSearchFilters = (projectId, values) => (dispatch, getState) => {
-  dispatch(({ type: TOGGLE_SEARCH_FILTERS, payload: values }))
-
-  const { user: { token }, documents: { searchFilters } } = getState()
-  const headers = { Authorization: token }
-  const { document_title, ...filters } = searchFilters
-  const params = { document_title, ...filters }
 
   return (
     axios.get(
@@ -144,12 +127,27 @@ export const toggleSearchFilters = (projectId, values) => (dispatch, getState) =
       }
     )
       .then(response => {
-        dispatch(documentsFetched(response.data))
+        dispatch(documentsFetchedWithoutFilters(response.data))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
+}
+export const toggleFilters = (projectId, filter) => dispatch => {
+  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
+  dispatch(fetchDocumentsWithFilters(projectId))
+}
+
+export const toggleSearchFilters = (projectId, values) => dispatch => {
+  dispatch(({ type: TOGGLE_SEARCH_FILTERS, payload: values }))
+  if (
+    values.search !== undefined
+    || (values.filters && values.filters.filter(({ value }) => value.length > 0).length > 0)
+    || values.document_title !== undefined
+  ) {
+    dispatch(fetchDocumentsWithFilters(projectId))
+  }
 }
 
 export const newDocument = projectId => (dispatch, getState) => {

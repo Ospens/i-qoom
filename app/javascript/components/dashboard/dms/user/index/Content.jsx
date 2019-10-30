@@ -50,7 +50,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
     if (title === 'Document title') {
       newVal = { ...newVal, document_title: value }
     } else if (value.length === 0) {
-      newVal = newVal.filters.filter((_, i) => i !== index)
+      newVal.filters = newVal.filters.filter((_, i) => i !== index)
     } else if (index < 0) {
       newVal.filters.push({ title, value })
     } else {
@@ -60,11 +60,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
   }, [dispatch, filters])
 
   useEffect(() => {
-    if ((debouncedSearchTerm.filters && debouncedSearchTerm.filters.length > 0) || debouncedSearchTerm.document_title !== undefined) {
-      dispatch(toggleSearchFilters(projectId, debouncedSearchTerm))
-    } else {
-      dispatch(startFetchDocuments(projectId))
-    }
+    dispatch(toggleSearchFilters(projectId, debouncedSearchTerm))
   }, [debouncedSearchTerm, projectId])
 
   return (
