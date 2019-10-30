@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import classnames from 'classnames'
-import { startFetchDocuments } from '../../../../../actions/documentsActions'
+import { toggleSearchFilters } from '../../../../../actions/documentsActions'
 import useDebounce from '../../../../../elements/useDebounce'
 
 function Header({ checkedDocs }) {
@@ -11,17 +11,16 @@ function Header({ checkedDocs }) {
   const checkedLength = checkedDocs.length
   const btnClass = classnames('with-icon', { 'disable': checkedLength === 0 })
   const [searchTerm, setSearchTerm] = useState(undefined)
-  // const [isSearching, setIsSearching] = useState(false)
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+  const debouncedSearchTerm = useDebounce(searchTerm, 300)
   
   useEffect(() => {
     if (debouncedSearchTerm !== undefined) {
-      // setIsSearching(true)
-      dispatch(startFetchDocuments(project_id, { search: debouncedSearchTerm })).then(results => {
+      dispatch(toggleSearchFilters(project_id, { search: debouncedSearchTerm }))
+      /* .then(results => {
         // setIsSearching(false)
-      })
+      }) */
     }
-  }, [debouncedSearchTerm, project_id])
+  }, [dispatch, debouncedSearchTerm, project_id])
 
   return (
     <div className='dms-header'>

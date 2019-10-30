@@ -10,7 +10,7 @@ import Filters from './Filters'
 import DownloadDocuments from './DownloadDocuments'
 import { downloadList, downloadDetailFile, downloadNativeFile } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
-import { startFetchDocuments } from '../../../../../actions/documentsActions'
+import { startFetchDocuments, toggleSearchFilters } from '../../../../../actions/documentsActions'
 import useDebounce from '../../../../../elements/useDebounce'
 
 function DropDownValue({ fields, type }) {
@@ -24,8 +24,11 @@ function DropDownValue({ fields, type }) {
 function Content({ projectId, checkedDocs, checkItem }) {
   const dispatch = useDispatch()
   const [formats, changeFormats] = useState([])
+  const [searchTerm, setSearchTerm] = useState({})
   const documents = useSelector(state => state.documents.allDocuments)
+  const filters = useSelector(state => state.documents.searchFilters)
   const downloadFiles = useCallback(docId => { dispatch(downloadList(projectId, docId, formats)) }, [dispatch, formats])
+  const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
   const downloadByOption = useCallback((docId, types) => {
     if (types.includes('native')) {
@@ -40,31 +43,29 @@ function Content({ projectId, checkedDocs, checkItem }) {
     changeFormats(toggleArray(checked, value))
   }, [formats])
   
-  const [searchTerm, setSearchTerm] = useState([])
-  const debouncedSearchTerm = useDebounce(searchTerm, 500)
+
+  const changeFilters = useCallback((title, value) => {
+    let newVal = { ...filters }
+    const index = newVal.filters.findIndex(el => el.title === title)
+    if (title === 'Document title') {
+      newVal = { ...newVal, document_title: value }
+    } else if (value.length === 0) {
+      newVal = newVal.filters.filter((_, i) => i !== index)
+    } else if (index < 0) {
+      newVal.filters.push({ title, value })
+    } else {
+      newVal.filters[index] = { title, value }
+    }
+    setSearchTerm(newVal)
+  }, [dispatch, filters])
 
   useEffect(() => {
-    if (debouncedSearchTerm.length > 0) {
-      dispatch(startFetchDocuments(projectId, { filters: debouncedSearchTerm }))
+    if ((debouncedSearchTerm.filters && debouncedSearchTerm.filters.length > 0) || debouncedSearchTerm.document_title !== undefined) {
+      dispatch(toggleSearchFilters(projectId, debouncedSearchTerm))
     } else {
       dispatch(startFetchDocuments(projectId))
     }
   }, [debouncedSearchTerm, projectId])
-
-  const changeFilters = useCallback((filters, title, value) => {
-    let newVal = []
-    newVal = newVal.concat(filters)
-    const index = newVal.findIndex(el => el.title === title)
-
-    if (value.length === 0) {
-      newVal = newVal.filter((_, i) => i !== index)
-    } else if (index < 0) {
-      newVal.push({ title, value })
-    } else {
-      newVal[index] = { title, value }
-    }
-    setSearchTerm(newVal)
-  }, [searchTerm])
 
   return (
     <div className='dms-content'>
@@ -89,7 +90,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
                   ? <input
                       type='text'
                       className='searchable-title' placeholder={title}
-                      onChange={({ target }) => changeFilters(searchTerm, title, target.value)}
+                      onChange={({ target }) => changeFilters(title, target.value)}
                     />
                   : title}
                 </div>

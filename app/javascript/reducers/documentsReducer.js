@@ -6,10 +6,16 @@ import {
   REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   TOGGLE_FILTERS,
+  TOGGLE_SEARCH_FILTERS,
   CREATING_DOCUMENT
 } from '../actions/types'
 
 const initialState = {
+  searchFilters: {
+    filters: [],
+    search: '',
+    document_title: ''
+  },
   allDocuments: [],
   discipline: [],
   originating_companies: [],
@@ -55,6 +61,14 @@ const documentsReducer = (state = initialState, action) => {
       ...state,
       [action.payload.type]: state[action.payload.type]
         .map(el => (el.value === action.payload.value ? { ...el, checked: !el.checked } : el))
+    }
+  case TOGGLE_SEARCH_FILTERS:
+    return {
+      ...state,
+      searchFilters: {
+        ...state.searchFilters,
+        ...action.payload
+      }
     }
   case DOCUMENT_FETCH_SUCCESS:
     return {

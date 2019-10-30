@@ -8,6 +8,7 @@ import {
   REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   TOGGLE_FILTERS,
+  TOGGLE_SEARCH_FILTERS,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
@@ -118,6 +119,32 @@ export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
     axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
       .then(response => {
         dispatch(documentsFetchedWithoutFilters(response.data))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
+export const toggleSearchFilters = (projectId, values) => (dispatch, getState) => {
+  dispatch(({ type: TOGGLE_SEARCH_FILTERS, payload: values }))
+
+  const { user: { token }, documents: { searchFilters } } = getState()
+  const headers = { Authorization: token }
+  const { document_title, ...filters } = searchFilters
+  const params = { document_title, ...filters }
+
+  return (
+    axios.get(
+      `/api/v1/projects/${projectId}/documents`,
+      {
+        params,
+        headers,
+        paramsSerializer: p => qs.stringify(p, { arrayFormat: 'brackets' })
+      }
+    )
+      .then(response => {
+        dispatch(documentsFetched(response.data))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
