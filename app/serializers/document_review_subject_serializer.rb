@@ -35,14 +35,18 @@ class DocumentReviewSubjectSerializer < ActiveModel::Serializer
   end
 
   def reviewers
-    if object.new_record?
+    if object.new_record? && document_main.reviewers.any?
       user_attrs(document_main.reviewers)
+    else
+      user_attrs(object.project.dms_users)
     end
   end
 
   def review_issuers
-    if object.new_record?
+    if object.new_record? && document_main.review_issuers.any?
       user_attrs(document_main.review_issuers)
+    else
+      user_attrs(object.project.dms_users)
     end
   end
 end

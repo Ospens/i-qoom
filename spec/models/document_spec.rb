@@ -360,18 +360,38 @@ RSpec.describe Document, type: :model do
     expect(doc).to be_valid
   end
 
-  it 'set_reviewers_and_review_issuers_in_document_main' do
-    user1 = FactoryBot.create(:user)
-    user2 = FactoryBot.create(:user)
-    user3 = FactoryBot.create(:user)
-    attrs = document_attributes(user1)
-    attrs['review_status'] = 'issued_for_approval'
-    attrs['reviewers'] = [user2.id]
-    attrs['review_issuers'] = [user3.id]
-    doc = Document.create!(attrs)
-    main = doc.document_main
-    expect(main.reviewers.pluck(:id)).to eql([user2.id])
-    expect(main.review_issuers.pluck(:id)).to eql([user3.id])
+  context 'set_reviewers_and_review_issuers_in_document_main' do
+    let(:user1) { FactoryBot.create(:user) }
+    let(:user2) { FactoryBot.create(:user) }
+    let(:user3) { FactoryBot.create(:user) }
+    let(:attrs) do
+      attrs = document_attributes(user1)
+      attrs['review_status'] = 'issued_for_approval'
+      attrs['reviewers'] = [user2.id]
+      attrs['review_issuers'] = [user3.id]
+      attrs
+    end
+
+    it do
+      doc = Document.create!(attrs)
+      main = doc.document_main
+      expect(main.reviewers.pluck(:id)).to eql([])
+      expect(main.review_issuers.pluck(:id)).to eql([])
+    end
+
+    it do
+      project = get_project_from_document_attrs(attrs)
+      project.members.create!(user: user2,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      project.members.create!(user: user3,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      doc = Document.create!(attrs)
+      main = doc.document_main
+      expect(main.reviewers.pluck(:id)).to eql([user2.id])
+      expect(main.review_issuers.pluck(:id)).to eql([user3.id])
+    end
   end
 
   it 'validates reviewers and review issuers length' do

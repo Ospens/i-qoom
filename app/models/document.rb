@@ -444,7 +444,15 @@ class Document < ApplicationRecord
   end
 
   def set_reviewers_and_review_issuers_in_document_main
-    document_main.reviewers << User.find(reviewers)
-    document_main.review_issuers << User.find(review_issuers)
+    reviewers.each do |reviewer|
+      if project.members.find_by(user_id: reviewer).try(:dms_module_access?)
+        document_main.reviewers << User.find_by(id: reviewer)
+      end
+    end
+    review_issuers.each do |review_issuer|
+      if project.members.find_by(user_id: review_issuer).try(:dms_module_access?)
+        document_main.review_issuers << User.find_by(id: review_issuer)
+      end
+    end
   end
 end
