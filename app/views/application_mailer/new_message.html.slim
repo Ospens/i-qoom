@@ -1,0 +1,8 @@
+.new-message
+  div = t(".you_received_")
+  br
+  div = t(".from_", from: @message.sender.full_name)
+  br
+  div = t(".subject_", subject: @message.subject)
+  br
+  i = @message.body

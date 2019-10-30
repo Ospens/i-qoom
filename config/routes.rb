@@ -116,6 +116,12 @@ Rails.application.routes.draw do
         end
         resources :document_review_tags, except: [:new, :edit, :show]
       end
+      resources :messages, only: [:create, :show] do
+        collection do
+          get :inbox
+          get :sent
+        end
+      end
     end
   end
 

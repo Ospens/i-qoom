@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
-    t.integer "document_review_status", default: 0
     t.string "project_code"
+    t.integer "document_review_status", default: 0
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -235,6 +235,23 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
     t.index ["convention_id"], name: "index_documents_on_convention_id"
     t.index ["document_revision_id"], name: "index_documents_on_document_revision_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
+  end
+
+  create_table "message_recipients", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "message_id"
+    t.integer "status", default: 0
+    t.datetime "read_at"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "subject"
+    t.text "body"
+    t.integer "sender_id"
+    t.integer "status", default: 0
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "project_administrators", force: :cascade do |t|
