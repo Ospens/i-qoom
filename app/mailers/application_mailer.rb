@@ -35,7 +35,14 @@ class ApplicationMailer < ActionMailer::Base
 
   def send_reset_password_instructions(user)
     @user = user
-    mail to: @user.email, subject: t(".title")
+    mail to: @user.email,
+         subject: t(".title")
+  end
+
+  def new_message(message)
+    @message = message
+    mail to: @message.recipients.map(&:email),
+         subject: t(".title")
   end
 
   private

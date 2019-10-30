@@ -37,6 +37,7 @@ describe "Message", type: :request do
         expect(user.sent_messages.count).to eq(2)
         expect(user.sent_messages.last.recipients.count).to eq(1)
         expect(recipient.received_messages.count).to eq(2)
+        expect(ActionMailer::Base.deliveries.count).to eq(2)
       end
       it "should get a status unprocessable entity" do
         post "/api/v1/messages",
@@ -54,6 +55,7 @@ describe "Message", type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
         expect(user.sent_messages.count).to eq(1)
         expect(recipient.received_messages.count).to eq(1)
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
     end
     context "show" do

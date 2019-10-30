@@ -28,7 +28,7 @@ class Message < ApplicationRecord
 
   before_create :set_sent_at
 
-  # after_create :send_email
+  after_create :send_email
 
   def mark_as_read!(recipient_id)
     message_recipients.find_by(user_id: recipient_id)
@@ -41,9 +41,9 @@ class Message < ApplicationRecord
     self.sent_at = Time.now
   end
 
-  # def send_email
-    # not ready yet    
-  # end
+  def send_email
+    ApplicationMailer.new_message(self).deliver_now
+  end
 
 
 end
