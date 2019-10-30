@@ -17,4 +17,8 @@ class ApplicationMailerPreview < ActionMailer::Preview
   def send_reset_password_instructions
     ApplicationMailer.send_reset_password_instructions(FactoryBot.build(:user))
   end
+
+  def new_message
+    ApplicationMailer.new_message(FactoryBot.build(:message))
+  end
 end

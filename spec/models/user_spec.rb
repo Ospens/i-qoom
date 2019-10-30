@@ -18,6 +18,14 @@ describe User, type: :model do
                         .is_at_least(2)
                         .is_at_most(255) }
 
+  it { is_expected.to have_many(:sent_messages)
+                        .class_name("Message")
+                        .with_foreign_key(:sender_id) }
+  it { is_expected.to have_many(:message_recipients) }
+  it { is_expected.to have_many(:received_messages)
+                        .through(:message_recipients)
+                        .source(:message) }
+
   context "validates_presence_of password_confirmation" do
     subject { FactoryBot.create(:user) }
     it { is_expected.to validate_presence_of(:password_confirmation) }

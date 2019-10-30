@@ -19,6 +19,16 @@ class User < ApplicationRecord
   has_many :document_review_comments
   has_many :document_review_owners
 
+  has_many :sent_messages,
+           class_name: "Message",
+           foreign_key: 'sender_id'
+
+  has_many :message_recipients
+
+  has_many :received_messages,
+           through: :message_recipients,
+           source: :message
+
   validates_presence_of :password_confirmation,
     if: -> { password.present? }
 

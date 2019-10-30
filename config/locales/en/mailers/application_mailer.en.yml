@@ -10,3 +10,5 @@ en:
       title: You've been invited to a project
     send_reset_password_instructions:
       title: Reset password instructions
+    new_message:
+      title: New message
