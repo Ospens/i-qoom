@@ -1,6 +1,6 @@
 en:
   application_mailer:
-    send_contact_form:
+    contact_form:
       email_: "E-Mail: "
       phone_number_: "Phone number: "
       text_: "Text: "

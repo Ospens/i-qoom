@@ -65,7 +65,7 @@ class User < ApplicationRecord
 
   def send_confirmation_email
     self.confirmation_sent_at = Time.now
-    ApplicationMailer.send_user_confirmation(self).deliver_now
+    ApplicationMailer.user_confirmation(self).deliver_now
   end
 
   def confirmation_token
@@ -79,6 +79,6 @@ class User < ApplicationRecord
 
   def reset_password
     generate_reset_password_token
-    ApplicationMailer.send_reset_password_instructions(self).deliver_now
+    ApplicationMailer.reset_password_instructions(self).deliver_now
   end
 end

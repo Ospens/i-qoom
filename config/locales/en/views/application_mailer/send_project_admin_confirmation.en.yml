@@ -1,6 +1,6 @@
 en:
   application_mailer:
-    send_project_admin_confirmation:
+    project_admin_confirmation:
       becoming_an_admin: "Becoming an admin: Your registration
         to i-Qoom Content Management Solutions"
       welcome: Welcome to i-Qoom.com
