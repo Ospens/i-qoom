@@ -142,6 +142,12 @@ class Document < ApplicationRecord
     Document.where(id: documents)
   }
 
+  scope :filter_by_document_title, -> (title) {
+    documents =
+      where('LOWER(documents.title) LIKE :title', title: "%#{title.downcase}%")
+    Document.where(id: documents)
+  }
+
   scope :search, -> (text) {
     documents =
       includes(document_fields: :document_field_values)
