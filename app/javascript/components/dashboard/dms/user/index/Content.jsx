@@ -27,9 +27,9 @@ function Content({ projectId, checkedDocs, checkItem }) {
   const [searchTerm, setSearchTerm] = useState({})
   const documents = useSelector(state => state.documents.allDocuments)
   const filters = useSelector(state => state.documents.searchFilters)
+  const loading = useSelector(state => state.documents.loading)
   const downloadFiles = useCallback(docId => { dispatch(downloadList(projectId, docId, formats)) }, [dispatch, formats])
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
-
   const downloadByOption = useCallback((docId, types) => {
     if (types.includes('native')) {
       dispatch(downloadNativeFile(docId))
@@ -57,16 +57,20 @@ function Content({ projectId, checkedDocs, checkItem }) {
       newVal.filters[index] = { title, value }
     }
     setSearchTerm(newVal)
-  }, [dispatch, filters])
+  }, [filters])
 
   useEffect(() => {
     dispatch(toggleSearchFilters(projectId, debouncedSearchTerm))
-  }, [debouncedSearchTerm, projectId])
+  }, [dispatch, debouncedSearchTerm, projectId])
 
   return (
     <div className='dms-content'>
       <Filters />
       <div className='overview-table-contaniner'>
+        {loading &&
+        <div className='loader-container'>
+          <div className='lds-ring'><div></div><div></div><div></div><div></div></div>
+        </div>}
         <div className='Rtable'>
           <div className='Rtable__header'>
             <div className='Rtable-row'>

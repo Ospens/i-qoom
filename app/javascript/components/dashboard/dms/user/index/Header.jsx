@@ -16,9 +16,6 @@ function Header({ checkedDocs }) {
   useEffect(() => {
     if (debouncedSearchTerm !== undefined) {
       dispatch(toggleSearchFilters(project_id, { search: debouncedSearchTerm }))
-      /* .then(results => {
-        // setIsSearching(false)
-      }) */
     }
   }, [dispatch, debouncedSearchTerm, project_id])
 

@@ -6,11 +6,13 @@ import {
   REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
   DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   TOGGLE_FILTERS,
+  TOGGLE_LOADING,
   TOGGLE_SEARCH_FILTERS,
   CREATING_DOCUMENT
 } from '../actions/types'
 
 const initialState = {
+  loading: false,
   searchFilters: {
     filters: [],
     search: '',
@@ -35,6 +37,11 @@ const initialState = {
 
 const documentsReducer = (state = initialState, action) => {
   switch (action.type) {
+  case TOGGLE_LOADING:
+    return {
+      ...state,
+      loading: action.payload
+    }
   case DOCUMENT_CREATE_SUCCESS:
     return {
       ...state,

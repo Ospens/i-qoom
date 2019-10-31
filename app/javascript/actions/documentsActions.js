@@ -9,6 +9,7 @@ import {
   DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   TOGGLE_FILTERS,
   TOGGLE_SEARCH_FILTERS,
+  TOGGLE_LOADING,
   CREATING_DOCUMENT
 } from './types'
 import { fieldByColumn } from './conventionActions'
@@ -82,9 +83,15 @@ const getRevAndVer = payload => ({
   payload
 })
 
+const toggleLoading = payload => ({
+  type: TOGGLE_LOADING,
+  payload
+})
+
 export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
+  dispatch(toggleLoading(true))
 
   return (
     axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
@@ -93,6 +100,8 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      }).finally(() => {
+        dispatch(toggleLoading(false))
       })
   )
 }
@@ -116,6 +125,7 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
     document_types: documentTypes.filter(el => el.checked).map(v => v.value),
     ...filters
   }
+  dispatch(toggleLoading(true))
 
   return (
     axios.get(
@@ -131,9 +141,12 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      }).finally(() => {
+        dispatch(toggleLoading(false))
       })
   )
 }
+
 export const toggleFilters = (projectId, filter) => dispatch => {
   dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
   dispatch(fetchDocumentsWithFilters(projectId))
