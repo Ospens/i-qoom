@@ -1,12 +1,14 @@
 en:
   application_mailer:
-    send_contact_form:
+    contact_form:
       title: New message by contact form from I-Qoom
-    send_user_confirmation:
+    user_confirmation:
       title: Registration confirmation
-    send_project_admin_confirmation:
+    project_admin_confirmation:
       title: You've been added to a new project
-    send_project_member_confirmation:
+    project_member_confirmation:
       title: You've been invited to a project
-    send_reset_password_instructions:
+    reset_password_instructions:
       title: Reset password instructions
+    new_message:
+      title: New message

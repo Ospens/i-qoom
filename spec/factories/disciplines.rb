@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :discipline do
-    title { Faker::Job.unique.field }
+    title { "Some name" }
   end
 end

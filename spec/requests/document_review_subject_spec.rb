@@ -18,6 +18,9 @@ describe DocumentReviewSubject, type: :request do
     end
 
     it 'user' do
+      main = document.revision.document_main
+      main.reviewers << FactoryBot.create(:user)
+      main.review_issuers << FactoryBot.create(:user)
       document.revision.project.document_review_tags.create!(name: '111')
       expect_any_instance_of(Document).to receive(:can_view?).with(user).and_return(true)
       get "/api/v1/documents/#{document.id}/document_review_subjects/new", headers: credentials(user)
@@ -32,6 +35,10 @@ describe DocumentReviewSubject, type: :request do
       expect(json).to_not have_key('created_at')
       expect(json).to_not have_key('updated_at')
       expect(json['all_tags'].length).to eql(1)
+      expect(json['reviewers'].length).to eql(1)
+      expect(json['review_issuers'].length).to eql(1)
+      expect(json['reviewers'].first).to have_key('id')
+      expect(json['review_issuers'].first).to have_key('id')
     end
   end
 

@@ -271,6 +271,27 @@ describe "Project", type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
+
+    context 'dms_users' do
+      it 'project admin' do
+        get "/api/v1/projects/#{project.id}/dms_users",
+           headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+      end
+
+      it 'user with dms access' do
+        user = FactoryBot.create(:user)
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/dms_users",
+           headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(2)
+        expect(json.first).to have_key('id')
+      end
+    end
   end
 
   context 'not logged in and should get a status "forbidden" on' do
@@ -335,6 +356,12 @@ describe "Project", type: :request do
              headers: headers
       expect(response).to have_http_status(:forbidden)
       expect(project.reload.project_code).to be_nil
+    end
+
+    it 'dms_users' do
+      get "/api/v1/projects/#{project.id}/dms_users",
+         headers: headers
+      expect(response).to have_http_status(:forbidden)
     end
   end
 end

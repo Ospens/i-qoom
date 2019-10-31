@@ -19,6 +19,16 @@ class User < ApplicationRecord
   has_many :document_review_comments
   has_many :document_review_owners
 
+  has_many :sent_messages,
+           class_name: "Message",
+           foreign_key: 'sender_id'
+
+  has_many :message_recipients
+
+  has_many :received_messages,
+           through: :message_recipients,
+           source: :message
+
   validates_presence_of :password_confirmation,
     if: -> { password.present? }
 
@@ -55,7 +65,7 @@ class User < ApplicationRecord
 
   def send_confirmation_email
     self.confirmation_sent_at = Time.now
-    ApplicationMailer.send_user_confirmation(self).deliver_now
+    ApplicationMailer.user_confirmation(self).deliver_now
   end
 
   def confirmation_token
@@ -69,6 +79,6 @@ class User < ApplicationRecord
 
   def reset_password
     generate_reset_password_token
-    ApplicationMailer.send_reset_password_instructions(self).deliver_now
+    ApplicationMailer.reset_password_instructions(self).deliver_now
   end
 end

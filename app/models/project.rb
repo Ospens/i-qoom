@@ -101,6 +101,11 @@ class Project < ApplicationRecord
     end.include?(false) || dms_master?(user)
   end
 
+  def dms_users
+    project_members = members.where(dms_module_access: true)
+    User.where(id: project_members.pluck(:user_id))
+  end
+
   private
 
   def add_creator_as_admin
