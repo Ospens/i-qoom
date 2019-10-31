@@ -1821,6 +1821,28 @@ i.arrow {
 
     .Rtable__row-cell {
       display: table-cell;
+
+      .Rtable__row-cell__header {
+        display: flex;
+        align-items: center;
+        align-content: center;
+
+        div:first-child {
+          padding-right: 20px;
+        }
+
+        .order-arrow {
+          font-size: 7px;
+          cursor: pointer;
+          margin-left: auto;
+
+          &.desc {
+            &:before {
+              content: "\e914" !important;
+            }
+          }
+        }
+      }
     }
   }
 
