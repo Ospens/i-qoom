@@ -95,7 +95,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
         if (afterUpdate) afterUpdate(response.data)
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
       })
   )
@@ -120,7 +120,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
         afterCreate(response.data)
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
       })
   )
@@ -135,7 +135,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
         dispatch(projectsFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -150,7 +150,7 @@ export const startFetchProject = id => (dispatch, getState) => {
         dispatch(projectFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -166,7 +166,7 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
         dispatch(adminDeleted(adminId))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -187,7 +187,7 @@ export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
         dispatch(addNotification({ title: 'Projects', text: 'The project admin were successfully saved!', type: 'success' }))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
       })
   )
@@ -203,7 +203,7 @@ export const startResendConfirmAdmin = (projectId, adminId) => (dispatch, getSta
         dispatch(addNotification({ title: 'Projects', text: 'A new invitation has been sent to this address!', type: 'success' }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -218,7 +218,7 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
         dispatch(adminUpdated(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -234,7 +234,7 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
         dispatch(addNotification({ title: 'Projects', text: 'Project code was updated!', type: 'success' }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }

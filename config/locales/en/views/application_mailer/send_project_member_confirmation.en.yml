@@ -1,6 +1,6 @@
 en:
   application_mailer:
-    send_project_member_confirmation:
+    project_member_confirmation:
       becoming_a_member: "Becoming a member: Your registration to
         i-Qoom Content Management Solutions"
       welcome: Welcome to i-Qoom.com

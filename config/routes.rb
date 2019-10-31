@@ -65,6 +65,7 @@ Rails.application.routes.draw do
         member do
           post :invite
           post :update_project_code
+          get :dms_users
         end
         resource :conventions, only: [:edit, :update]
         resources :conventions, only: [] do
@@ -114,6 +115,12 @@ Rails.application.routes.draw do
           end
         end
         resources :document_review_tags, except: [:new, :edit, :show]
+      end
+      resources :messages, only: [:create, :show] do
+        collection do
+          get :inbox
+          get :sent
+        end
       end
     end
   end

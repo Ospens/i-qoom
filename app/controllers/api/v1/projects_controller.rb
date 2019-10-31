@@ -97,6 +97,13 @@ class Api::V1::ProjectsController < ApplicationController
     end
   end
 
+  def dms_users
+    render json: @project.dms_users.as_json(only: [:id,
+                                                   :first_name,
+                                                   :last_name,
+                                                   :username])
+  end
+
   private
 
   def project_params

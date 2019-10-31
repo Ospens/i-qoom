@@ -12,7 +12,7 @@ function Notifications() {
   const [scrollTop, setScrollTop] = useState(0)
   const notifications = useSelector(state => state.notifications.all)
   const state = useSelector(state => state.notifications.open)
-  const removeItem = useCallback(index => dispatch(removeNotification(index)), [dispatch])
+  const removeItem = useCallback(id => dispatch(removeNotification(id)), [dispatch])
   const withErrors = notifications.filter(el => el.type === 'error').length > 0
 
   useLayoutEffect(() => {
@@ -70,7 +70,7 @@ function Notifications() {
                     </div>
                   </div>
                   <div className='notifications_content__element-close-button'>
-                    <button type='button' onClick={() => removeItem(i)}>
+                    <button type='button' onClick={() => removeItem(id)}>
                       <span className='icon-delete_2'><span className='path1'></span><span className='path2'></span></span>
                     </button>
                   </div>

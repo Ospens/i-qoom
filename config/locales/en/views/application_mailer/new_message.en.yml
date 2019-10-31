@@ -1,0 +1,6 @@
+en:
+  application_mailer:
+    new_message:
+      you_received_: You received a new message
+      from_: "From: %{from}"
+      subject_: "Subject: %{subject}"

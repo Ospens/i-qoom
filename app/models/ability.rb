@@ -32,6 +32,9 @@ class Ability
     if user.present?
       # Project
       can :create, Project, user_id: user.id
+      can :dms_users, Project do |project|
+        project.members.find_by(user_id: user.id).try(:dms_module_access?)
+      end
       can :manage, Project,
           id: user.project_administrators.map(&:project_id)
       # ProjectAdministrator
@@ -46,6 +49,14 @@ class Ability
       # Role
       can :manage, Role,
           project: { id: user.project_administrators.map(&:project_id) }
+      # Message
+      can [ :create,
+            :inbox,
+            :sent ], Message
+      can :show, Message do |message|
+        message.recipients.ids.include?(user.id) ||
+          message.sender_id == user.id
+      end
       # Convention
       can :update, Convention do |convention|
         # When i started testing, the first thing i did was to setup a project

@@ -33,7 +33,7 @@ class ProjectAdministrator < ApplicationRecord
       else
         self.confirmation_resent_at = Time.now
       end
-      ApplicationMailer.send_project_admin_confirmation(self).deliver_now
+      ApplicationMailer.project_admin_confirmation(self).deliver_now
       self.save
     end
   end

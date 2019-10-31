@@ -1,6 +1,6 @@
 en:
   application_mailer:
-    send_user_confirmation:
+    user_confirmation:
       your_registration: "Your registration
         to i-Qoom Content Management Solutions"
       welcome: Welcome to i-Qoom.com
