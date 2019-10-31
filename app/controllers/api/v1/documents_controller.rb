@@ -98,7 +98,7 @@ class Api::V1::DocumentsController < ApplicationController
       end
     end
     if params[:document_title].present?
-      documents = documents.where('LOWER(title) LIKE :title', title: "%#{params[:document_title].downcase}%")
+      documents = documents.filter_by_document_title(params[:document_title])
     end
     if params[:search].present?
       documents = documents.search(params[:search])
