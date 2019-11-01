@@ -564,6 +564,14 @@ describe Document, type: :request do
           params: { document_title: 'zzx' }
         expect(json['documents'].length).to eql(0)
       end
+
+      it 'search by text and document title' do
+        document.update!(title: 'ZZZZ')
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { document_title: 'zzz', search: '---' }
+        expect(json['documents'].length).to eql(1)
+      end
     end
   end
 
