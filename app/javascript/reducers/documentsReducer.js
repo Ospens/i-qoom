@@ -9,6 +9,7 @@ import {
   TOGGLE_LOADING,
   TOGGLE_SEARCH_FILTERS,
   CREATING_DOCUMENT,
+  DMS_USERS_FETCHED,
   DOCUMENTS_SORTED
 } from '../actions/types'
 
@@ -21,6 +22,7 @@ const initialState = {
     document_title: ''
   },
   allDocuments: [],
+  users: [],
   discipline: [],
   originating_companies: [],
   document_types: [],
@@ -125,6 +127,11 @@ const documentsReducer = (state = initialState, action) => {
         order: action.payload.order
       },
       allDocuments: transformatedDocuments(action.payload.documents)
+    }
+  case DMS_USERS_FETCHED:
+    return {
+      ...state,
+      users: action.payload
     }
   default:
     return state

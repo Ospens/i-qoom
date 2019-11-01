@@ -42,7 +42,7 @@ export const paramsToFormData = (data, params, preceding = '') => {
 
 const regexp = /(filename=")(.*)"/i
 
-const downloadFile = response => {
+export const downloadFile = response => {
   const disposition = response.headers['content-disposition'].match(regexp)
   const title = disposition ? disposition[2] : 'file.pdf'
   const url = window.URL.createObjectURL(new Blob([response.data]))

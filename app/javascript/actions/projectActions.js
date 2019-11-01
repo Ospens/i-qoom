@@ -10,7 +10,8 @@ import {
   PROJECT_ADMIN_UPDATED,
   TOGGLE_SIDEBAR,
   PROJECT_CODE_UPDATED,
-  PROJECT_FETCH_SUCCESS
+  PROJECT_FETCH_SUCCESS,
+  DMS_USERS_FETCHED
 } from './types'
 import { addNotification } from './notificationsActions'
 import { paramsToFormData } from './documentsActions'
@@ -232,6 +233,21 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
       .then(() => {
         dispatch(projectCodeUpdated(projectCode))
         dispatch(addNotification({ title: 'Projects', text: 'Project code was updated!', type: 'success' }))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
+export const dmsUsers = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/dms_users`, headers)
+      .then(({ data }) => {
+        dispatch({ type: DMS_USERS_FETCHED, payload: data })
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))

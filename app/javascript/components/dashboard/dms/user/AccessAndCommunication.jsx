@@ -62,7 +62,7 @@ const AccessAndCommunication = ({ backStep }) => {
   const conventionId = useSelector(state => selector(state, 'convention_id'))
   const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
-  const users = useSelector(state => state.user)
+  const users = useSelector(state => state.documents.users)
 
   useEffect(() => {
     if (!emailTitleLikeDocument) return
@@ -137,7 +137,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 name='reviewers'
                 id='reviewers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Reviewers*'
                 placeholder='Select reviwers'
@@ -149,7 +149,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 name='review_issuers'
                 id='review_issuers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'
