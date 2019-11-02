@@ -94,7 +94,7 @@ class Project < ApplicationRecord
     # for each field that can be limited by value.
     # when creating document we check current active convention
     !conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user,
+      field.document_rights.where(parent: user,
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?

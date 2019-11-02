@@ -1,7 +1,8 @@
 class DocumentRight < ApplicationRecord
   enum limit_for: [ :field, :value ], _prefix: true
 
-  belongs_to :user
+  belongs_to :parent,
+             polymorphic: true
 
   belongs_to :document_field
 
@@ -14,7 +15,7 @@ class DocumentRight < ApplicationRecord
 
   has_one :project, through: :convention
 
-  validates :user,
+  validates :parent,
             :document_field,
             presence: true
 
@@ -30,7 +31,7 @@ class DocumentRight < ApplicationRecord
     fields =
       project.conventions.active.document_fields.where(codification_kind: kinds)
     user_ids =
-      DocumentRight.where(document_field: fields, enabled: true).pluck(:user_id).uniq
+      DocumentRight.where(document_field: fields, enabled: true, parent_type: 'User').pluck(:parent_id).uniq
     users =
       only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
     attrs = {

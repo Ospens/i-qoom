@@ -10,7 +10,7 @@ describe DocumentRight, type: :request do
     originating_company =
       convention.document_fields.find_by(codification_kind: :originating_company)
     originating_company.document_rights
-                       .create(user: user,
+                       .create(parent: user,
                                limit_for: :value,
                                document_field_value:
                                 originating_company.document_field_values.first,

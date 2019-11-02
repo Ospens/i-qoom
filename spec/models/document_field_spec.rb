@@ -49,7 +49,7 @@ RSpec.describe DocumentField, type: :model do
       before do
         subject.document_rights.create(document_field: subject,
                                        limit_for: :field,
-                                       user: user,
+                                       parent: user,
                                        enabled: true)
       end
       # limitation by field is temporarily disabled
@@ -79,13 +79,13 @@ RSpec.describe DocumentField, type: :model do
 
       it do
         expect(subject.document_field_values).to be_any
-        subject.document_rights.create(limit_for: :field, user: user)
+        subject.document_rights.create(limit_for: :field, parent: user)
         expect(subject.can_build?(user)).to eql(false)
       end
 
       it do
         subject.document_rights.create(limit_for: :value,
-                                       user: user,
+                                       parent: user,
                                        document_field_value: subject.document_field_values.first)
         expect(subject.can_build?(user)).to eql(true)
       end

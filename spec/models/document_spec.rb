@@ -174,7 +174,7 @@ RSpec.describe Document, type: :model do
         @attrs = doc_attrs
         project = get_project_from_document_attrs(@attrs)
         project.conventions.active.document_fields << field
-        field.document_rights.create!(user: user, limit_for: :field, enabled: true)
+        field.document_rights.create!(parent: user, limit_for: :field, enabled: true)
         field_attrs = field.build_for_new_document(user)
         @attrs['document_fields_attributes'] << field_attrs
         fields = @attrs['document_fields_attributes']

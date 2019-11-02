@@ -191,7 +191,7 @@ class DocumentField < ApplicationRecord
 
   def has_access_for_limit_by_value_value?(user, value)
     return true if user == parent.project.user
-    document_rights.find_by(user: user,
+    document_rights.find_by(parent: user,
                             document_field_value: value,
                             enabled: true,
                             view_only: false).present?
@@ -218,9 +218,9 @@ class DocumentField < ApplicationRecord
     rights = document_rights
     limit_for = DocumentRight.limit_fors
     if can_limit_by_value?
-      rights.where(user: user, limit_for: limit_for[:value]).any?
+      rights.where(parent: user, limit_for: limit_for[:value]).any?
     elsif codification_kind.present?
-      !rights.any? || rights.where(user: user, limit_for: limit_for[:field]).any?
+      !rights.any? || rights.where(parent: user, limit_for: limit_for[:field]).any?
       true # limitation by field is temporarily disabled
     else
       false

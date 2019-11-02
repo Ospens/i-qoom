@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_19_093907) do
+ActiveRecord::Schema.define(version: 2019_11_02_190315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,14 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
     t.index ["user_id"], name: "index_dms_settings_on_user_id"
   end
 
+  create_table "dms_teams", force: :cascade do |t|
+    t.string "name"
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_dms_teams_on_project_id"
+  end
+
   create_table "document_field_values", force: :cascade do |t|
     t.bigint "document_field_id"
     t.string "value"
@@ -119,8 +127,8 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
-    t.string "project_code"
     t.integer "document_review_status", default: 0
+    t.string "project_code"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -207,7 +215,6 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
   end
 
   create_table "document_rights", force: :cascade do |t|
-    t.bigint "user_id"
     t.bigint "document_field_id"
     t.integer "limit_for"
     t.boolean "enabled", default: false
@@ -215,9 +222,11 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "document_field_value_id"
+    t.string "parent_type"
+    t.bigint "parent_id"
     t.index ["document_field_id"], name: "index_document_rights_on_document_field_id"
     t.index ["document_field_value_id"], name: "index_document_rights_on_document_field_value_id"
-    t.index ["user_id"], name: "index_document_rights_on_user_id"
+    t.index ["parent_type", "parent_id"], name: "index_document_rights_on_parent_type_and_parent_id"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -357,6 +366,7 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
   add_foreign_key "conventions", "projects"
   add_foreign_key "dms_settings", "projects"
   add_foreign_key "dms_settings", "users"
+  add_foreign_key "dms_teams", "projects"
   add_foreign_key "document_field_values", "document_fields"
   add_foreign_key "document_folders", "projects"
   add_foreign_key "document_folders", "users"
@@ -374,7 +384,6 @@ ActiveRecord::Schema.define(version: 2019_10_19_093907) do
   add_foreign_key "document_revisions", "document_mains"
   add_foreign_key "document_rights", "document_field_values"
   add_foreign_key "document_rights", "document_fields"
-  add_foreign_key "document_rights", "users"
   add_foreign_key "documents", "conventions"
   add_foreign_key "documents", "document_revisions"
   add_foreign_key "documents", "users"

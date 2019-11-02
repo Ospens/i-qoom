@@ -189,7 +189,7 @@ class Document < ApplicationRecord
         selected_field.document_field_values.find_by(selected: true)
       field.document_rights
            .joins(:document_field_value)
-           .where(user: user,
+           .where(parent: user,
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
