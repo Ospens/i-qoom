@@ -83,15 +83,15 @@ class Api::V1::DocumentsController < ApplicationController
     # could be hundreds of selections. Is this acceptable?
     # > i agree. Filters like document number or revision number are not needed
     # (c) Yasser
-    if params[:originating_companies].present? && params[:originating_companies].any?
-      documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
-    end
-    if params[:discipline].present? && params[:discipline].any?
-      documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
-    end
-    if params[:document_types].present? && params[:document_types].any?
-      documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
-    end
+    # Filters are not working properly. For example on "Originating companies":
+    # As default all boxes are ticked for available companies (there are two:
+    # General Electric and SIEMENS). If i untick SIEMENS, then only documents
+    # with General Electric appears.
+    # So when i untick all, then no document shall appear.
+    # (c) Yasser
+    documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
+    documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
+    documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
     if params[:filters].present? && params[:filters].any?
       params[:filters].each do |filter|
         documents = documents.filter_by_document_field_title_and_value(filter['title'], filter['value'])
