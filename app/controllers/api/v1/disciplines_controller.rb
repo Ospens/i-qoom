@@ -3,7 +3,7 @@ class Api::V1::DisciplinesController < ApplicationController
   load_and_authorize_resource :discipline,
                               through: :project
   def index
-    render json: @project.disciplines.order(title: :asc)
+    render json: @project.disciplines
   end
 
   def edit
