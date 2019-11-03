@@ -497,7 +497,18 @@ describe Document, type: :request do
                                 employment_type: :employee)
       end
 
-      it do
+      it 'no filters all documents' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user)
+        expect(json['originating_companies'].length).to eql(1)
+        expect(json['discipline'].length).to eql(1)
+        expect(json['document_types'].length).to eql(1)
+        expect(json['documents'][0]['id']).to eql(document.id)
+        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'default filters' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
           params: default_filters

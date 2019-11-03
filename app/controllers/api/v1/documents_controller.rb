@@ -89,9 +89,11 @@ class Api::V1::DocumentsController < ApplicationController
     # with General Electric appears.
     # So when i untick all, then no document shall appear.
     # (c) Yasser
-    documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
-    documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
-    documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
+    if params[:originating_companies].present? || params[:discipline].present? || params[:document_types].present?
+      documents = documents.filter_by_codification_kind_and_value(:originating_company, params[:originating_companies])
+      documents = documents.filter_by_codification_kind_and_value(:discipline, params[:discipline])
+      documents = documents.filter_by_codification_kind_and_value(:document_type, params[:document_types])
+    end
     if params[:filters].present? && params[:filters].any?
       params[:filters].each do |filter|
         documents = documents.filter_by_document_field_title_and_value(filter['title'], filter['value'])
