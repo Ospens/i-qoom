@@ -467,6 +467,29 @@ describe Document, type: :request do
     context 'has documents' do
       let(:document) { FactoryBot.create(:document) }
       let(:project) { document.project }
+      let(:originating_company) do
+        document.document_fields
+                .find_by(codification_kind: :originating_company)
+                .document_field_values.find_by(selected: true)
+                .value
+      end
+      let(:discipline) do
+        document.document_fields
+                .find_by(codification_kind: :discipline)
+                .document_field_values.find_by(selected: true)
+                .value
+      end
+      let(:document_type) do
+        document.document_fields
+                .find_by(codification_kind: :document_type)
+                .document_field_values.find_by(selected: true)
+                .value
+      end
+      let(:default_filters) do
+        { originating_companies: [originating_company],
+          discipline: [discipline],
+          document_types: [document_type] }
+      end
 
       before do
         project.members.create!(user: user,
@@ -474,8 +497,21 @@ describe Document, type: :request do
                                 employment_type: :employee)
       end
 
-      it do
-        get "/api/v1/projects/#{project.id}/documents", headers: credentials(user)
+      it 'no filters all documents' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user)
+        expect(json['originating_companies'].length).to eql(1)
+        expect(json['discipline'].length).to eql(1)
+        expect(json['document_types'].length).to eql(1)
+        expect(json['documents'][0]['id']).to eql(document.id)
+        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'default filters' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: default_filters
         expect(json['originating_companies'].length).to eql(1)
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
@@ -485,67 +521,62 @@ describe Document, type: :request do
       end
 
       it 'search by valid value' do
-        value =
-          document.document_fields
-                  .find_by(codification_kind: :originating_company)
-                  .document_field_values.find_by(selected: true)
-                  .value
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { originating_companies: [value] }
+          params: default_filters
         expect(json['documents'].length).to eql(1)
       end
 
       it 'search by invalid value' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { originating_companies: ['AAAA'] }
+          params: default_filters.merge(originating_companies: ['AAAA'])
         expect(json['documents'].length).to eql(0)
       end
 
       it 'search by title and value' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { filters: [{ title: 'Originating company', value: '---' },
-                              { title: 'Discipline', value: '---' }] }
+          params: default_filters.merge(filters: [{ title: 'Originating company', value: '---' },
+                                                  { title: 'Discipline', value: '---' }])
         expect(json['documents'].length).to eql(1)
       end
 
       it 'search by invalid title and value' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { filters: [{ title: 'Originating company', value: 'AAAA' },
-                              { title: 'Discipline', value: '---' }] }
+          params: default_filters.merge(filters: [{ title: 'Originating company', value: 'AAAA' },
+                                                    { title: 'Discipline', value: '---' }])
         expect(json['documents'].length).to eql(0)
       end
 
       it 'search by title and title' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { filters: [{ title: 'Originating company', value: 'Originating company' },
-                              { title: 'Discipline', value: 'Discipline' }] }
+          params: default_filters.merge(filters: [{ title: 'Originating company', value: 'Originating company' },
+                                                  { title: 'Discipline', value: 'Discipline' }])
         expect(json['documents'].length).to eql(1)
       end
 
       it 'search by invalid title and title' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { filters: [{ title: 'Originating company', value: 'Originating company2' },
-                              { title: 'Discipline', value: 'Discipline' }] }
+          params: default_filters.merge(filters: [{ title: 'Originating company', value: 'Originating company2' },
+                                                  { title: 'Discipline', value: 'Discipline' }])
         expect(json['documents'].length).to eql(0)
       end
 
       it 'search by text' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { search: '---' }
+          params: default_filters.merge({ search: '---' })
         expect(json['documents'].length).to eql(1)
       end
 
       it 'search by invalid text' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { search: 'AAAA' }
+          params: default_filters.merge({ search: 'AAAA' })
         expect(json['documents'].length).to eql(0)
       end
 
@@ -553,7 +584,7 @@ describe Document, type: :request do
         document.update!(title: 'ZZZZ')
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { document_title: 'zzz' }
+          params: default_filters.merge({ document_title: 'zzz' })
         expect(json['documents'].length).to eql(1)
       end
 
@@ -561,7 +592,7 @@ describe Document, type: :request do
         document.update!(title: 'ZZZZ')
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { document_title: 'zzx' }
+          params: default_filters.merge({ document_title: 'zzx' })
         expect(json['documents'].length).to eql(0)
       end
 
@@ -569,7 +600,7 @@ describe Document, type: :request do
         document.update!(title: 'ZZZZ')
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: { document_title: 'zzz', search: '---' }
+          params: default_filters.merge({ document_title: 'zzz', search: '---' })
         expect(json['documents'].length).to eql(1)
       end
     end
