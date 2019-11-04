@@ -3,7 +3,7 @@ class Message < ApplicationRecord
                  :deleted ]
 
   has_many_attached :files
-  
+
   belongs_to :sender,
              class_name: 'User'
 
@@ -22,7 +22,7 @@ class Message < ApplicationRecord
             presence: true,
             length: { minimum: 2,
                       maximum: 255 }
-  
+
   validates :body,
             presence: true
 

@@ -1,5 +1,5 @@
 class ProjectCompanyData < ApplicationRecord
-  attr_accessor :same_for_billing_address
+  attr_accessor :same_for_billing_address, :remove_logo
 
   has_one_attached :logo
 
@@ -12,6 +12,7 @@ class ProjectCompanyData < ApplicationRecord
     class_name: "Address",
     inverse_of: :project_company_billing_data,
     required: false
+
 
   accepts_nested_attributes_for :company_address,
                                 :billing_address,
@@ -27,10 +28,18 @@ class ProjectCompanyData < ApplicationRecord
   before_validation :add_billing_address,
     if: -> { same_for_billing_address && !billing_address }
 
+
+  after_validation :purge_logo,
+    if: :remove_logo
+
   private
 
   def add_billing_address
     build_billing_address(company_address.attributes.except("id"))
+  end
+
+  def purge_logo
+    logo.purge
   end
 
 end
