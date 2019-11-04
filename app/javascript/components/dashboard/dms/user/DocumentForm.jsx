@@ -38,7 +38,22 @@ function DocumentForm({ initialize, handleSubmit, history, match: { params: { pr
     dispatch(dmsUsers(project_id))
   }, [dispatch, project_id, document_id])
 
-  useEffect(() => { initialize({ ...documentFields }) }, [documentFields])
+  useEffect(() => {
+    if (document_id) {
+      initialize({ ...documentFields })
+    } else {
+      const newFields = documentFields.document_fields.map(df => {
+        if (df.codification_kind === 'revision_number') {
+          df.value = '00'
+        } else if (df.codification_kind === 'document_number') {
+          df.value = '0000'
+        }
+        return df
+      })
+      console.log(documentFields)
+      initialize({ ...documentFields, ...newFields })
+    }
+  }, [document_id, documentFields])
 
   return (
     <DMSLayout

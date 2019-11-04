@@ -4,6 +4,7 @@ import {
   formValueSelector,
   Field,
   change,
+  touch,
   initialize
 } from 'redux-form'
 import { Link, withRouter } from 'react-router-dom'
@@ -14,7 +15,7 @@ import DatePickerField from '../../../../elements/DatePickerField'
 import DropZoneField from '../../../../elements/DropZoneField'
 import InputField from '../../../../elements/InputField'
 import TextAreaField from '../../../../elements/TextAreaField'
-import { required, lessThan9999 } from '../../../../elements/validations'
+import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../elements/validations'
 import { initValues } from '../initDocId'
 import DocumentIdInputs from '../DocumentIdInputs'
 import { addNotification } from '../../../../actions/notificationsActions'
@@ -34,13 +35,16 @@ const validationList = field => {
   if (field.required) {
     list.push(required)
   }
-  if (['document_number', 'revision_number'].includes(field.codification_kind)) {
-    list.push(lessThan9999)
+  if ('document_number' === field.codification_kind) {
+    list.push(maxLength4, minLength4)
+  }
+  if ('revision_number' === field.codification_kind) {
+    list.push(maxLength2, minLength2)
   }
   return list
 }
 
-function InputByType({ field, modal, toggleModal, conventionId, changeValues, changeDocNumber }) {
+function InputByType({ field, modal, toggleModal, conventionId, changeValues, blurPadStart }) {
   const uniqName = `document_fields[${field.index}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
 
@@ -53,7 +57,10 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, ch
     disabled
   }
   if (field.codification_kind === 'document_number') {
-    commonProps.onBlur = v => changeDocNumber(field.index, v)
+    commonProps.onBlur = v => blurPadStart(field.index, 4, v)
+  }
+  if (field.codification_kind === 'revision_number') {
+    commonProps.onBlur = v => blurPadStart(field.index, 2, v)
   }
 
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
@@ -154,10 +161,11 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
     dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
   }, [dispatch])
 
-  const changeDocNumber = useCallback((index, event) => {
+  const blurPadStart = useCallback((index, padStart, event) => {
     event.preventDefault()
-    const newValue = String(event.target.value).padStart(4, 0)
+    const newValue = String(event.target.value).padStart(padStart, 0)
     dispatch(change('document_form', `document_fields[${index}].value`, newValue))
+    dispatch(touch('document_form', `document_fields[${index}].value`))
   }, [dispatch])
 
   const initDocIdForm = useCallback(values => {
@@ -241,7 +249,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
                   field={field}
                   conventionId={conventionId}
                   changeValues={changeValues}
-                  changeDocNumber={changeDocNumber}
+                  blurPadStart={blurPadStart}
                 />
               </div>
             ))}
@@ -266,7 +274,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
                   field={field}
                   conventionId={conventionId}
                   changeValues={changeValues}
-                  changeDocNumber={changeDocNumber}
+                  blurPadStart={blurPadStart}
                 />
               </div>
             ))}
