@@ -27,15 +27,12 @@ const initialState = {
   originating_companies: [],
   document_types: [],
   revisions: [],
-  documentFields: {
+  current: {
     document_fields: [],
     grouped_fields: {
       column_1: [{}],
       column_2: [{}]
     }
-  },
-  current: {
-    document_fields: []
   }
 }
 
@@ -101,16 +98,16 @@ const documentsReducer = (state = initialState, action) => {
   case CREATING_DOCUMENT:
     return {
       ...state,
-      documentFields: {
-        ...state.documentFields,
+      current: {
+        ...state.current,
         ...action.payload
       }
     }
   case EDIT_DOCUMENT:
     return {
       ...state,
-      documentFields: {
-        ...state.documentFields,
+      current: {
+        ...state.current,
         ...action.payload
       }
     }

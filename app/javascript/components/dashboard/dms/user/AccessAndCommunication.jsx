@@ -56,11 +56,11 @@ const EmailSubjects = ({ fields, discardValue }) => (
   </React.Fragment>
 )
 
-const AccessAndCommunication = ({ backStep }) => {
+const AccessAndCommunication = ({ backStep, revision }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
-  const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
+  const reviewStatusValues = useSelector(state => state.documents.current.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
   const users = useSelector(state => state.documents.users)
 
@@ -115,7 +115,7 @@ const AccessAndCommunication = ({ backStep }) => {
             </div>
           </div>
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -130,7 +130,7 @@ const AccessAndCommunication = ({ backStep }) => {
             <div className='col-6' />
           </div>}
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field

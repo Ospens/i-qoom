@@ -1556,6 +1556,7 @@ i.arrow {
 }
 
 .drop-zone-area {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1573,6 +1574,22 @@ i.arrow {
 
   &.with-file {
     background-color: #fff;
+  }
+
+  .new-file-label {
+    position: absolute;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    top: -22px;
+    right: 6%;
+    height: 22px;
+    width: 9%;
+    background: #475759 0% 0% no-repeat padding-box;
+    color: #fff;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 11px;
   }
 
   p {

@@ -19,7 +19,7 @@ const renderForm = (handleSubmit, step, backStep) => (
 
 function DocumentForm({ initialize, handleSubmit, history, match: { params: { project_id, document_id } } }) {
   const [step, toggleStep] = useState(1)
-  const documentFields = useSelector(state => state.documents.documentFields)
+  const documentFields = useSelector(state => state.documents.current)
   const dispatch = useDispatch()
 
   const submitDocument = useCallback(values => {

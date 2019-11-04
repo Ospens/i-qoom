@@ -128,7 +128,7 @@ export const formvalue = (fields = [], codKind) => {
 
 function DocumentsAndFiles({ match: { params: { project_id } } }) {
   const [modal, toggleModal] = useState(false)
-  const groupedFields = useSelector(state => state.documents.documentFields.grouped_fields)
+  const groupedFields = useSelector(state => state.documents.current.grouped_fields)
   const documentFields = useSelector(state => selector(state, 'document_fields'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
 
