@@ -722,11 +722,18 @@ input[type=checkbox]+label {
   margin-top: 0;
   margin-bottom: 0;
   border-radius: 3px;
-    min-height: 15px;
-    min-width: 15px;
-    height: 15px;
-    width: 15px;
+  min-height: 15px;
+  min-width: 15px;
+  height: 15px;
+  width: 15px;
   cursor: pointer;
+}
+
+input[type=checkbox]:not(:checked)+label:hover {
+  background:url('../../images/checked_checkbox.svg') no-repeat;
+  background-color: #e8f3f4;
+  background-size: 100%;
+  opacity: 0.5;
 }
 
 input[type=checkbox]:checked+label {
