@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   reduxForm,
   FieldArray,
@@ -9,7 +9,7 @@ import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { Popup } from 'semantic-ui-react'
 import { startUpdateCodification } from '../../../../../actions/conventionActions'
-import { required } from '../../../../../elements/validations'
+import { required, minLength3 } from '../../../../../elements/validations'
 
 const validate = value => !value || !value.length ? 'Required' : undefined
 
@@ -94,7 +94,7 @@ export const InputField = ({
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>
                 <span>
-                  {msg || 'Add at least one'}
+                  {msg}
               </span>
               </div>
             </div>
@@ -119,7 +119,7 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
                 id='value'
                 placeholder='XXX'
                 label={i > 0 ? '' : 'Code'}
-                validate={[required, uniq]}
+                validate={[required, uniq, minLength3]}
                 maxLength='3'
                 isForm={isForm}
                 projectCode={projectCode}
@@ -138,9 +138,18 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
                 projectCode={projectCode}
                 dmsSections={dmsSections}
                 disabled={!projectCode}
+                msg={`Add at least one ${title} in order to continue`}
               />
-              {fields.length > 2 && isForm &&
-              <button type='button' onClick={() => fields.remove(i)} className={classnames({ 'first-line': i < 1 })}>
+              {isForm &&
+              <button
+                type='button'
+                onClick={() => {
+                  fields.length > 2
+                  ? fields.remove(i)
+                  : fields.splice(i, 1, {value: '', title: '', position: i + 1 })
+                }}
+                className={classnames({ 'first-line': i < 1 })}
+              >
                 <span className='icon-bin-1' />
               </button>}
             </div>
@@ -160,7 +169,8 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
   )
 }
 
-function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match: { params: { project_id } } }) {
+function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine }) {
+  const { project_id } = useParams()
   const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
   const documentFields = useSelector(state => state.conventions.current.document_fields)
@@ -221,6 +231,6 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
 
 const submitCodification = () => { console.log() } // submit function must be passed to onSubmit
 
-export default withRouter(reduxForm({
+export default reduxForm({
   onSubmit: submitCodification // submit function must be passed to onSubmit
-})(FieldForm))
+})(FieldForm)
