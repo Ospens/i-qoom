@@ -37,7 +37,7 @@ export const InputField = ({
   type,
   isForm,
   popupClassName,
-  dmsSections,
+  startPositions,
   msg,
   projectCode,
   meta: { touched, error },
@@ -56,9 +56,9 @@ export const InputField = ({
   }, [openSB])
 
   useEffect(() => {
-    const condition = projectCode && !dmsSections && (!!(touched && error) || (!touched && !!error)) 
+    const condition = projectCode && startPositions && (!!(touched && error) || (!touched && !!error)) 
     setOpen(condition)
-  }, [projectCode, dmsSections, touched, error])
+  }, [projectCode, startPositions, touched, error])
 
   if (!isForm) {
     return (
@@ -103,7 +103,7 @@ export const InputField = ({
   )
 }
 
-const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
+const CodeList = ({ fields, title, isForm, projectCode }) => {
   return (
     <React.Fragment>
       <div>
@@ -136,7 +136,7 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
                 validate={validateTitle}
                 isForm={isForm}
                 projectCode={projectCode}
-                dmsSections={dmsSections}
+                startPositions={i < 2}
                 disabled={!projectCode}
                 msg={`Add at least one ${title} in order to continue`}
               />
@@ -169,7 +169,7 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
   )
 }
 
-function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine }) {
+function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, initialize }) {
   const { project_id } = useParams()
   const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
@@ -195,7 +195,10 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine }) {
       return item
     })
 
-    dispatch(startUpdateCodification(project_id, v)).then(() => toggleIsForm(false))
+    dispatch(startUpdateCodification(project_id, v)).then(() => {
+      initialize(values)
+      toggleIsForm(false)
+    })
   }, [dispatch, documentFields])
 
   return (
@@ -213,7 +216,6 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine }) {
           validate={[validate]}
           isForm={isForm}
           projectCode={projectCode}
-          dmsSections={dmsSections}
         />
       </div>
       {!viewOnly &&
