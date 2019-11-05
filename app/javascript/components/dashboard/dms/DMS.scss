@@ -173,7 +173,9 @@
   height: 100%;
 
   .sidemenu-column {
-    width: 215px;
+    width: 15.1%;
+    min-width: 215px;
+    max-width: 215px;
   }
 
   .content-column {
@@ -625,6 +627,9 @@
     margin-left: 10px;
     cursor: pointer;
     color: #475859;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 

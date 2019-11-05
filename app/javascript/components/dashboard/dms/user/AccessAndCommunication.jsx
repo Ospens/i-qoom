@@ -56,13 +56,13 @@ const EmailSubjects = ({ fields, discardValue }) => (
   </React.Fragment>
 )
 
-const AccessAndCommunication = ({ backStep }) => {
+const AccessAndCommunication = ({ backStep, revision }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
-  const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
+  const reviewStatusValues = useSelector(state => state.documents.current.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
-  const users = useSelector(state => state.user)
+  const users = useSelector(state => state.documents.users)
 
   useEffect(() => {
     if (!emailTitleLikeDocument) return
@@ -115,7 +115,7 @@ const AccessAndCommunication = ({ backStep }) => {
             </div>
           </div>
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -130,14 +130,14 @@ const AccessAndCommunication = ({ backStep }) => {
             <div className='col-6' />
           </div>}
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field
                 name='reviewers'
                 id='reviewers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Reviewers*'
                 placeholder='Select reviwers'
@@ -149,7 +149,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 name='review_issuers'
                 id='review_issuers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'

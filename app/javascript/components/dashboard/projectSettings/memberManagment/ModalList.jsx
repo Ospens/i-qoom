@@ -1,5 +1,8 @@
 import React from 'react'
+import classnames from 'classnames'
 import DropDown from '../../../../elements/DropDown'
+
+const mainVals = ['Project Administrator', 'i-Qoom Admin']
 
 function ModalList({ closeModal, items, openForm, removeItem, type }) {
   const ddOptions = item => [
@@ -27,19 +30,21 @@ function ModalList({ closeModal, items, openForm, removeItem, type }) {
               <span>{`Add a ${type}`}</span>
             </button>
           </li>
-          {items.map((item, index) => (
-            <li key={index} className='item-block'>
-              <div>
-                <div className='item-block__title'>{item.title}</div>
-                {item.title !== 'Project Administrator' && item.title !== 'i-Qoom Admin' &&
-                <DropDown
-                  dots={true}
-                  className='dropdown-with-icon dropright ml-2'
-                  defaultValues={ddOptions(item)}
-                />}
-              </div>
-            </li>
-          ))}
+          {items.map((item, index) => {
+            const isMain = mainVals.includes(item.title)
+            return (
+              <li key={index} className='item-block'>
+                <div>
+                  <div className={classnames('item-block__title', { 'bold': isMain })}>{item.title}</div>
+                  {!isMain &&
+                  <DropDown
+                    dots={true}
+                    className='dropdown-with-icon dropright ml-2'
+                    defaultValues={ddOptions(item)}
+                  />}
+                </div>
+              </li>
+            )})}
         </ul>
       </div>
       <div className='new-modal__footer'>

@@ -2,6 +2,10 @@
   width: 100%;
 }
 
+.bold {
+  font-weight: 700 !important;
+}
+
 .dashboard-container {
   display: block;
   width: 100%;
@@ -693,6 +697,8 @@ form {
   input[type=checkbox]+label {
     background-color: #e8f3f4;
     border-radius: 3px;
+    min-height: 15px;
+    min-width: 15px;
     height: 15px;
     width: 15px;
     cursor: pointer;
@@ -703,6 +709,8 @@ form {
     margin-bottom: 0;
     background-color: #e8f3f4;
     border-radius: 3px;
+    min-height: 15px;
+    min-width: 15px;
     height: 15px;
     width: 15px;
     cursor: pointer;
@@ -714,8 +722,10 @@ input[type=checkbox]+label {
   margin-top: 0;
   margin-bottom: 0;
   border-radius: 3px;
-  height: 15px;
-  width: 15px;
+    min-height: 15px;
+    min-width: 15px;
+    height: 15px;
+    width: 15px;
   cursor: pointer;
 }
 
@@ -725,6 +735,8 @@ input[type=checkbox]:checked+label {
   margin-bottom: 0;
   background-color: #e8f3f4;
   border-radius: 3px;
+  min-height: 15px;
+  min-width: 15px;
   height: 15px;
   width: 15px;
   cursor: pointer;
@@ -1556,6 +1568,7 @@ i.arrow {
 }
 
 .drop-zone-area {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1573,6 +1586,22 @@ i.arrow {
 
   &.with-file {
     background-color: #fff;
+  }
+
+  .new-file-label {
+    position: absolute;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    top: -22px;
+    right: 6%;
+    height: 22px;
+    width: 9%;
+    background: #475759 0% 0% no-repeat padding-box;
+    color: #fff;
+    border-radius: 10px 10px 0px 0px;
+    font-size: 11px;
   }
 
   p {
