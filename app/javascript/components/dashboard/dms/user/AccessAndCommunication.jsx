@@ -38,7 +38,7 @@ const EmailSubjects = ({ fields, discardValue }) => (
       name='email_addresses'
       id='email_addresses'
       placeholder='E-mail and press Enter'
-      label='Enter E-mail addresses*'
+      label='Enter E-mail addresses'
     />
     <ul className='document__email_addresses-list'>
       {fields.map((field, index) => (
