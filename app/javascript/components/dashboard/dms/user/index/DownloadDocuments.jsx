@@ -29,7 +29,12 @@ function DownloadDocuments({ docId, downloadByOption }) {
             />
             <label htmlFor={`download_native_file_${docId}`} />
             <label htmlFor={`download_native_file_${docId}`} className='label-with-icon'>
-              <span className='icon-common-file-text_big mx-2'><span className='path1'></span><span className='path2'></span><span className='path3'></span><span className='path4'></span></span>
+              <span className='icon-common-file-text_big mx-2'>
+                <span className='path1' />
+                <span className='path2' />
+                <span className='path3' />
+                <span className='path4' />
+              </span>
               Native file title
             </label>
           </div>

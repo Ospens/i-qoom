@@ -20,7 +20,7 @@ import DmsSettings from './user/dmsSettings/index'
 import DocumentPlanning from './user/documentPlanning/index'
 
 const documentHeader = title => {
-  const current = useSelector(state => state.documents.documentFields)
+  const current = useSelector(state => state.documents.current)
   if (!current) return
   
   const ver = current.document_fields.find(el => el.codification_kind === 'document_number')

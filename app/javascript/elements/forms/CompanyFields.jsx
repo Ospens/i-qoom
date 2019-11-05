@@ -103,6 +103,7 @@ const CompanyFields = () => (
           options={countryList}
           component={SelectField}
           validate={[required]}
+          placeholder='Select country'
         />
       </div>
       <div className='row'>

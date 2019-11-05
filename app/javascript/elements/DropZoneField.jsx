@@ -40,6 +40,9 @@ function DropZoneField({ input, filename, label, disabled = false, meta: { touch
   })
 
   const isFileRejected = rejectedFiles.length !== 0
+  const sectionClass = classnames({ 'is-invalid': touched && error })
+  const currentFile = input.value ? input.value[0] : acceptedFiles[0]
+  const fileChanged = input.value ? input.value[0].name !== currentFile : false
 
   const mainClass = classnames(
     'drop-zone-area',
@@ -49,13 +52,11 @@ function DropZoneField({ input, filename, label, disabled = false, meta: { touch
     }
   )
 
-  const sectionClass = classnames({ 'is-invalid': touched && error })
-  const currentFile = input.value ? input.value[0] : acceptedFiles[0]
-
   return (
     <section className={sectionClass}>
       {label && <label htmlFor={input.name}>{label}</label>}
       <div {...getRootProps()} className={mainClass}>
+        {fileChanged && <div className='new-file-label'>NEW</div>}
         <input {...getInputProps()}/>
         {(() => {
           if (currentFile || filename) {
