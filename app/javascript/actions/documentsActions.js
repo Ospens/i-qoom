@@ -227,9 +227,9 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
     }).then(() => {
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully created!', type: 'success' }))
     })
-      .catch(response => {
+      .catch(({ response: { data } }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-        throw new SubmissionError(response)
+        throw new SubmissionError(data)
       })
   )
 }
@@ -253,9 +253,9 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
     }).then(() => {
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully updated!', type: 'success' }))
     })
-      .catch(response => {
+      .catch(({ response: { data } }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-        throw new SubmissionError(response)
+        throw new SubmissionError(data)
       })
   )
 }

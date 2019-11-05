@@ -173,14 +173,13 @@
   height: 100%;
 
   .sidemenu-column {
-    width: 15.1%;
-    min-width: 215px;
-    max-width: 215px;
+    width: 195px;
+    min-width: 195px;
   }
 
   .content-column {
-    margin-left: auto;
-    width: 75%;
+    margin-left: 6.35%;
+    width: 100%;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -609,6 +608,14 @@
   width: 100%;
   min-height: 35px;
   padding: 5px;
+
+  &:not(.checked) {
+    &:hover {
+      .dms-topbar-menu__label-text {
+        color: var(--color-blue);
+      }
+    }
+  }
 
   &.checked {
     background-color: #f5fcfc;
@@ -1551,11 +1558,13 @@ input.search-input {
   }
 
   &.small-font {
-    padding: 5px !important;
+    padding: 11px !important;
 
     .tooltip-block {
       font-size: 10px;
       color: #fff;
+      line-height: 1;
+      text-align: center;
     }
   }
 }
@@ -2927,6 +2936,7 @@ span.column-title {
     transition: .2s;
 
     i.arrow.up {
+      transition: color .5s ease-in-out;
       border-color: var(--color-text) !important;
     }
 
@@ -2936,6 +2946,10 @@ span.column-title {
 
       span {
         color: #fff !important;
+      }
+
+      i.arrow {
+        border-color: #fff !important;
       }
     }
   }
@@ -2951,25 +2965,52 @@ span.column-title {
 
   &.show {
     .dms-topbar-menu__dropdown_button {
+      border-radius: 18px 18px 0px 0px;
       background-color: var(--color-blue);
       border-color: var(--color-blue);
 
       span {
         color: #fff !important;
       }
+
+      i.arrow.up {
+        border-color: #fff !important;
+      }
     }
   }
 
   .dropdown-menu {
-    padding: 0 !important;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    padding: 7px 7px 9px 7px !important;
+    min-width: 215px;
+    width: 100%;
+    box-shadow: 0px 3px 15px #0000000D;
+
+    .dms-topbar-menu__label-text {
+      margin-left: 15px;
+      line-height: normal;
+    }
   }
 
   .dms-topbar-menu__li-item {
     padding-left: 10px;
     padding-right: 10px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    cursor: pointer;
+
+    &:hover {
+      input[type=checkbox]:not(:checked)+label {
+        background: url('../../../images/checked_checkbox.svg') no-repeat;
+        background-color: #e8f3f4;
+        background-size: 100%;
+        opacity: 0.5;
+      }
+    }
 
     &.checked {
-      background-color: #F0F7F7;
+      background-color:#F9F9F9;
     }
 
     &:first-of-type {

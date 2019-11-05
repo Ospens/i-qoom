@@ -404,6 +404,12 @@ footer:after,
 
     &.sidebar-off {
       margin-left: 0px !important;
+      padding-left: 60px;
+      padding-left: 3.2%;
+
+      .content-column {
+        margin-left: 9.8% !important;
+      }
     }
   }
 }
