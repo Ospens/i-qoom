@@ -6,6 +6,7 @@ import InputField from '../../../../elements/InputField'
 import CheckField from '../../../../elements/CheckField'
 import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
 import { addNotification } from '../../../../actions/notificationsActions'
+import { required } from '../../../../elements/validations'
 
 const selector = formValueSelector('document_form')
 
@@ -17,44 +18,46 @@ const email = value => (
     : undefined
 )
 
-const updateEmails = (e, fields, discardValue) => {
+const EmailSubjects = ({ fields, discardValue }) => {
   const dispatch = useDispatch()
-  
-  if (e.charCode === 13) {
-    e.preventDefault()
-    const error = email(e.target.value)
-    if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
 
-    fields.push(e.target.value)
-    discardValue()
-  }
-}
+  const updateEmails = useCallback((e, fields, discardValue) => {
+    if (e.charCode === 13) {
+      e.preventDefault()
+      const error = email(e.target.value)
+      if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
 
-const EmailSubjects = ({ fields, discardValue }) => (
-  <React.Fragment>
-    <Field
-      component={InputField}
-      onKeyPress={e => updateEmails(e, fields, discardValue)}
-      name='email_addresses'
-      id='email_addresses'
-      placeholder='E-mail and press Enter'
-      label='Enter E-mail addresses'
-    />
-    <ul className='document__email_addresses-list'>
-      {fields.map((field, index) => (
-        <li className='document__email_addresses-list__item' key={index}>
-          <Field
-            name={field}
-            component={renderField}
-          />
-          <button type='button' onClick={() => fields.remove(index)}>
-            x
+      fields.push(e.target.value)
+      discardValue()
+    }
+  }, [dispatch])
+
+  return (
+    <React.Fragment>
+      <Field
+        component={InputField}
+        onKeyPress={e => updateEmails(e, fields, discardValue)}
+        name='email_addresses'
+        id='email_addresses'
+        placeholder='Type in an e-mail and press Enter'
+        label='Enter E-mail addresses'
+      />
+      <ul className='document__email_addresses-list'>
+        {fields.map((field, index) => (
+          <li className='document__email_addresses-list__item' key={index}>
+            <Field
+              name={field}
+              component={renderField}
+            />
+            <button type='button' onClick={() => fields.remove(index)}>
+              x
           </button>
-        </li>
-      ))}
-    </ul>
-  </React.Fragment>
-)
+          </li>
+        ))}
+      </ul>
+    </React.Fragment>
+  )
+}
 
 const AccessAndCommunication = ({ backStep, revision }) => {
   const dispatch = useDispatch()
@@ -124,7 +127,9 @@ const AccessAndCommunication = ({ backStep, revision }) => {
                 className='form-group'
                 options={reviewStatusValues}
                 component={SelectField}
-                label='Review status'
+                label='Review status*'
+                placeholder='Select status'
+                validate={[required]}
               />
             </div>
             <div className='col-6' />

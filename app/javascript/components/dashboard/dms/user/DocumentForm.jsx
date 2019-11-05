@@ -50,7 +50,6 @@ function DocumentForm({ initialize, handleSubmit, history, match: { params: { pr
         }
         return df
       })
-      console.log(documentFields)
       initialize({ ...documentFields, ...newFields })
     }
   }, [document_id, documentFields])
