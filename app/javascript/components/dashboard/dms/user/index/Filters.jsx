@@ -36,7 +36,7 @@ function Filter({ mainTitle, values, change }) {
           </label>
 
         return (
-          <li key={i} className={liClass} onClick={() => change(value)}>
+          <li key={i} className={liClass}>
             <input
               type='checkbox'
               id={`${value}_${i}_${title}`}
