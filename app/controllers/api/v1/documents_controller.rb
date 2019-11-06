@@ -102,12 +102,14 @@ class Api::V1::DocumentsController < ApplicationController
     if params[:document_title].present?
       documents = documents.filter_by_document_title(params[:document_title])
     end
+    if params[:doc_id].present?
+      documents = documents.filter_by_doc_id(params[:doc_id])
+    end
     if params[:search].present?
       documents = documents.search(params[:search])
     end
     documents =
-      documents.as_json(include: { document_fields: { include: :document_field_values } },
-                        methods: [:codification_string])
+      documents.as_json(include: { document_fields: { include: :document_field_values } })
     # i meant that the filter buttons shall be shown but no content. This way
     # the user knows
     # 1. that filter exists and

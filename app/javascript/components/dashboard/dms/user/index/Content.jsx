@@ -34,14 +34,16 @@ function Content({ projectId, checkedDocs, checkItem }) {
   } , [dispatch])
 
   const toggleFormats = useCallback((checked, value) => { changeFormats(toggleArray(checked, value)) }, [formats])
-  
+
   const toggleSort = useCallback(column => { dispatch(sortTable(column)) }, [dispatch])
-  
+
   const changeFilters = useCallback((title, value) => {
     let newVal = { ...filters }
     const index = newVal.filters.findIndex(el => el.title === title)
     if (title === 'Document title') {
       newVal = { ...newVal, document_title: value }
+    } else if (title === 'DOC-ID') {
+      newVal = { ...newVal, doc_id: value }
     } else if (value.length === 0) {
       newVal.filters = newVal.filters.filter((_, i) => i !== index)
     } else if (index < 0) {
@@ -133,7 +135,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
 
                   <div className='Rtable__row-cell doc-id-cell'>
                     <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
-                      {doc.codification_string}
+                      {doc.doc_id}
                     </Link>
                   </div>
 

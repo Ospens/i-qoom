@@ -28,4 +28,19 @@ RSpec.describe ProjectCompanyData, type: :model do
     it { is_expected.to be_valid }
     it { expect(subject.billing_address).to be_present }
   end
+
+  context "logo" do
+    let(:project) { FactoryBot.create(:project) }
+    before(:each) do
+      project.company_data.logo.attach(fixture_file_upload("test.txt"))
+    end
+    it "should have logo" do
+      expect(project.company_data.logo).to be_attached
+    end
+
+    it "should remove logo" do
+      project.update(company_data_attributes: { remove_logo: true })
+      expect(project.company_data.logo).not_to be_attached
+    end
+  end
 end
