@@ -24,7 +24,8 @@ export const actionDDitems = (projectId, documentId) => (
     },
     {
       title: 'Add revision',
-      icon: 'icon-Revise_1'
+      icon: 'icon-Revise_1',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}/add_revision`
     },
     {
       title: 'Review document',

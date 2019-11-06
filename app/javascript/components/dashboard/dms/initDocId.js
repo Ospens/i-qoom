@@ -23,7 +23,7 @@ const idField = (field, value) => {
   }
 }
 
-export const fileNameReg = /^([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([A-Za-z0-9]{3,5})([-_\s])([0-9]{1,5})([-_\s])([0-9]+)([-_\s])(.+?(?=\.))/i
+export const fileNameReg = /^([A-Za-z\-0-9]{3,5})([-_\s])([A-Za-z\-0-9]{3,5})([-_\s])([A-Za-z\-0-9]{3,5})([-_\s])([A-Za-z\-0-9]{3,5})([-_\s])([0-9]{1,5})([-_\s])([0-9]+)([-_\s])(.+?(?=\.))/i
 
 export function initValues(fields, notify) {
   if (!fields) return undefined

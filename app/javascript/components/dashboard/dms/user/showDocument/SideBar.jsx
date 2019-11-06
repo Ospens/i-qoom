@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useRouteMatch, Link } from 'react-router-dom'
 import classnames from 'classnames'
 import FolderInfo from '../FolderInfo'
 import { getRevisionsAndVersions } from '../../../../../actions/documentsActions'
 
 export function DocHistory() {
   const { project_id, document_id } = useParams()
+  const { path } = useRouteMatch()
   const dispatch = useDispatch()
   const document = useSelector(state => state.documents.current)
   const revisions = useSelector(state => state.documents.revisions)
@@ -49,7 +50,8 @@ export function DocHistory() {
           <ul className='dms-sidebar-menu__ul-list'>
             {versionsList.map(({ id, revision_version }, i) => (
               <li key={i} className={classnames({ 'active': id === Number(document_id) })}>
-                <Link to={`/dashboard/projects/${project_id}/documents/${id}`}>{revision_version}</Link>
+                <Link to={path.replace(':project_id', project_id).replace(':document_id', id)}
+                >{revision_version}</Link>
               </li>
             ))}
           </ul>
