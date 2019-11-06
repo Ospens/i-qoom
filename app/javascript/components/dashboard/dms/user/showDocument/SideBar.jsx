@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
 import classnames from 'classnames'
 import FolderInfo from '../FolderInfo'
+import { getRevisionsAndVersions } from '../../../../../actions/documentsActions'
 
 export function DocHistory() {
   const { project_id, document_id } = useParams()
+  const dispatch = useDispatch()
   const document = useSelector(state => state.documents.current)
   const revisions = useSelector(state => state.documents.revisions)
   const [revision, toggleRevision] = useState(0)
@@ -15,6 +17,8 @@ export function DocHistory() {
   versionsList = versionsList ? versionsList.versions : []
 
   useEffect(() => { toggleRevision(currentRevisionNumber) }, [currentRevisionNumber, document_id])
+
+  useEffect(() => { dispatch(getRevisionsAndVersions(document_id)) }, [dispatch, document_id])
 
   return (
     <React.Fragment>

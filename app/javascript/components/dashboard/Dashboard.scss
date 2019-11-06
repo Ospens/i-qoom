@@ -1676,6 +1676,10 @@ i.arrow {
     min-width: 350px;
   }
 
+  span {
+    color: var(--color-text);
+  }
+
   .acceess-rights__drop-down-content {
     display: flex;
     flex-direction: column;
