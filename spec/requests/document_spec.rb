@@ -569,14 +569,47 @@ describe Document, type: :request do
       it 'search by text' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: default_filters.merge({ search: '---' })
+          params: default_filters.merge(search: '---')
         expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by unselected document field value' do
+        field =
+          document.document_fields
+                  .find_by(codification_kind: :originating_company)
+        field.document_field_values.create!(title: 'ZZZ', value: 'VVV', position: 3)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { originating_companies: [field.document_field_values.pluck(:value)],
+                    discipline: [discipline],
+                    document_types: [document_type] }.merge(search: 'vv')
+        expect(json['documents'].length).to eql(0)
+      end
+
+      it 'search by document field value title' do
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: default_filters.merge(search: 'origina')
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by unselected document field value title' do
+        field =
+          document.document_fields
+                  .find_by(codification_kind: :originating_company)
+        field.document_field_values.create!(title: 'ZZZ', value: 'VVV', position: 3)
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: { originating_companies: [field.document_field_values.pluck(:value)],
+                    discipline: [discipline],
+                    document_types: [document_type] }.merge(search: 'zz')
+        expect(json['documents'].length).to eql(0)
       end
 
       it 'search by invalid text' do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
-          params: default_filters.merge({ search: 'AAAA' })
+          params: default_filters.merge(search: 'AAAA')
         expect(json['documents'].length).to eql(0)
       end
 
@@ -585,6 +618,14 @@ describe Document, type: :request do
         get "/api/v1/projects/#{project.id}/documents",
           headers: credentials(user),
           params: default_filters.merge({ document_title: 'zzz' })
+        expect(json['documents'].length).to eql(1)
+      end
+
+      it 'search by doc id' do
+        document.update_columns(doc_id: 'ZZZZ')
+        get "/api/v1/projects/#{project.id}/documents",
+          headers: credentials(user),
+          params: default_filters.merge(doc_id: 'zzz')
         expect(json['documents'].length).to eql(1)
       end
 

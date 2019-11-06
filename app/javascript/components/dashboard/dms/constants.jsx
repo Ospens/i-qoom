@@ -34,7 +34,7 @@ export const actionDDitems = (projectId, documentId) => (
 )
 
 export const columns = [
-  { title: 'DOC-ID', divider: true, sortable: 'codification_string' },
+  { title: 'DOC-ID', divider: true, searchable: true, sortable: 'codification_string' },
   { title: 'Document title', divider: true, searchable: true, sortable: 'title' },
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },
