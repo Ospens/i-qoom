@@ -113,6 +113,7 @@ function DMS({ match, match: { params: { project_id } } }) {
       />
       <Page
         title='Add revision'
+        titleContent={documentHeader('Add revision')}
         path={`${match.path}/:document_id/add_revision/`}
         component={AddRevision}
       />

@@ -27,6 +27,7 @@ function DocumentForm({ initialize, handleSubmit, history, match: { params: { pr
 
     return document_id
       ? dispatch(startUpdateDocument(document_id, values))
+        .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` })) 
       : dispatch(startCreateDocument(project_id, values))
         .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
   }, [dispatch, step])

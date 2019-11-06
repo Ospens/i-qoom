@@ -24,7 +24,8 @@ export const actionDDitems = (projectId, documentId) => (
     },
     {
       title: 'Add revision',
-      icon: 'icon-Revise_1'
+      icon: 'icon-Revise_1',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}/add_revision`
     },
     {
       title: 'Review document',
@@ -34,7 +35,7 @@ export const actionDDitems = (projectId, documentId) => (
 )
 
 export const columns = [
-  { title: 'DOC-ID', divider: true, searchable: true, sortable: 'codification_string' },
+  { title: 'DOC-ID', divider: true, searchable: true, sortable: 'doc_id' },
   { title: 'Document title', divider: true, searchable: true, sortable: 'title' },
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { reduxForm, Field } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import { useParams } from 'react-router-dom'
 import DMSLayout from '../../DMSLayout'
 import DocumentSideBar from '../DocumentSideBar'
-import { startEditDocument, startUpdateDocument, getRevisionsAndVersions } from '../../../../../actions/documentsActions'
+import { startEditDocument, startUpdateDocument } from '../../../../../actions/documentsActions'
 import UploadFile from './UploadFile'
 import AccessAndCommunication from '../AccessAndCommunication'
 import { dmsUsers } from '../../../../../actions/projectActions'
@@ -26,7 +26,6 @@ function AddRevision({ initialize, handleSubmit }) {
   const documentFields = useSelector(state => state.documents.current)
   useEffect(() => {
     dispatch(startEditDocument(document_id))
-    dispatch(getRevisionsAndVersions(document_id)) 
     dispatch(dmsUsers(project_id))
   }, [dispatch, project_id, document_id])
 

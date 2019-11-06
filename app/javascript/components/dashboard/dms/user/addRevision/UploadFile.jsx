@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { formValueSelector, reduxForm, Field } from 'redux-form'
-import { useParams } from 'react-router-dom'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { formValueSelector, Field } from 'redux-form'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 
@@ -19,14 +18,6 @@ function UploadFile() {
       <div className='dms-content__header'>
         <div className='d-flex'>
           <h4>Add new revision:</h4>
-          <label className='rounded-label red ml-4'>
-            Revision 41
-            <i className='icon-Locked ml-2' />
-          </label>
-          <label className='rounded-label red ml-4'>
-            Version 0.0
-            <i className='icon-Locked ml-2' />
-          </label>
         </div>
       </div>
 
@@ -49,6 +40,7 @@ function UploadFile() {
               // validate={validationList(field)} 
               placeholder={docFile.command}
               component={DropZoneField}
+              renameFile={true}
               filename={docFile.filename}
             />
           </div>

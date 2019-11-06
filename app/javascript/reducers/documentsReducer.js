@@ -91,18 +91,7 @@ const documentsReducer = (state = initialState, action) => {
       }
     }
   case DOCUMENT_FETCH_SUCCESS:
-    return {
-      ...state,
-      current: action.payload
-    }
   case CREATING_DOCUMENT:
-    return {
-      ...state,
-      current: {
-        ...state.current,
-        ...action.payload
-      }
-    }
   case EDIT_DOCUMENT:
     return {
       ...state,
