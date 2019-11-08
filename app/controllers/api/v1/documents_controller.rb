@@ -225,6 +225,7 @@ class Api::V1::DocumentsController < ApplicationController
                                      :email_title,
                                      :email_title_like_document,
                                      :email_text,
+                                     :contractor,
                                      emails: [],
                                      reviewers: [],
                                      review_issuers: [],

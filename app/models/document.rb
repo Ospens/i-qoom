@@ -43,6 +43,10 @@ class Document < ApplicationRecord
             length: { minimum: 1 },
             if: :reviewers_and_review_issuers_required?
 
+  validates :contractor,
+            presence: true,
+            if: -> { !first_document_in_chain? && !revision.versions.any? }
+
   validate :prevent_update_of_codification_string,
            on: :create
 

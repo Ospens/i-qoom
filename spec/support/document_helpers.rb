@@ -41,6 +41,7 @@ module DocumentHelpers
       doc_attrs = assign_attributes_suffix_to_document(doc_attrs)
     end
     doc_attrs['document_revision_id'] = rev.id
+    doc_attrs['contractor'] = Faker::Name.initials
     doc_attrs
   end
 
