@@ -8,7 +8,7 @@ import {
   Field,
   initialize
 } from 'redux-form'
-import { formvalue } from './user/DocumentsAndFiles'
+import { formvalue } from './user/documentForm/DocumentsAndFiles'
 import NewModal from '../../../elements/Modal'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'

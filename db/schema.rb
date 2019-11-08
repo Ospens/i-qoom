@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(version: 2019_11_08_041504) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
-    t.integer "document_review_status", default: 0
     t.string "project_code"
+    t.integer "document_review_status", default: 0
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 

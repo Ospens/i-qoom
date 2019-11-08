@@ -138,14 +138,14 @@ class AddRevisionModal extends Component {
 }
 
 const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('revision_form')(state)
+  submitErrors: getFormSubmitErrors('document_form')(state)
 })
 
 export default connect(
   mapStateToProps
 )(reduxForm(
   {
-    form: 'revision_form',
+    form: 'document_form',
     destroyOnUnmount: false
   })
   (AddRevisionModal))
