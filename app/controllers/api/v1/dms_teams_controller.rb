@@ -18,7 +18,7 @@ class Api::V1::DmsTeamsController < ApplicationController
   end
 
   def index
-    render json: @project.dms_teams
+    render json: DocumentRight.attributes_for_teams(@project)
   end
 
   def update_members
@@ -30,11 +30,31 @@ class Api::V1::DmsTeamsController < ApplicationController
   end
 
   def update_rights
+
   end
 
   private
 
   def authorize_project
     authorize! :manage, DmsTeam.new, @project
+  end
+
+  def teams_params(assign_attrs = false)
+    if assign_attrs
+      params[:teams].each do |user_params|
+        user_params[:document_rights_attributes] =
+          user_params.delete(:document_rights)
+      end
+    end
+    params.permit(users: [
+                    :id,
+                    document_rights_attributes: [
+                      :id,
+                      :document_field_id,
+                      :document_field_value_id,
+                      :enabled,
+                      :view_only
+                    ]
+                  ])
   end
 end
