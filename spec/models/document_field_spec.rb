@@ -139,7 +139,8 @@ RSpec.describe DocumentField, type: :model do
     attrs = assign_attributes_suffix_to_document(doc1.reload.attributes_for_edit)
     rev2 = main.revisions.create
     doc2 = rev2.versions.new(attrs)
-    expect(doc2).to_not be_valid
+    expect(doc2).to be_valid
+    expect(doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value).to eql('1')
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '2'
     expect(doc2).to be_valid
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '100'
