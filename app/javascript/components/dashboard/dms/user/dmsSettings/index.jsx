@@ -18,8 +18,8 @@ function Content() {
         <h4>{project.name}</h4>
       </div>
       <div className='content-body pt-0'>
-        <Tabs>
-          <div label='Overview'>
+        <Tabs oneTab={true}>
+          {/* <div label='Overview'>
             <Overview />
           </div>
           <div label='Upload form'>
@@ -27,7 +27,7 @@ function Content() {
           </div>
           <div label='Quick search'>
             <QuickSearch />
-          </div>
+          </div> */}
           <div label='Codification'>
             <Codification />
           </div>

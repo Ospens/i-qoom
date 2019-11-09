@@ -43,6 +43,10 @@ class Document < ApplicationRecord
             length: { minimum: 1 },
             if: :reviewers_and_review_issuers_required?
 
+  validates :contractor,
+            presence: true,
+            if: -> { !first_document_in_chain? && !revision.versions.any? }
+
   validate :prevent_update_of_codification_string,
            on: :create
 
@@ -79,6 +83,8 @@ class Document < ApplicationRecord
   before_create :set_reviewers_and_review_issuers_in_document_main,
                 if: :reviewers_and_review_issuers_required?
 
+  before_create :assign_doc_id
+
   after_create :send_emails, if: -> { emails.try(:any?) }
 
   scope :order_by_revision_version, -> { order(Arel.sql('revision_version::integer ASC')) }
@@ -101,7 +107,7 @@ class Document < ApplicationRecord
               codification_kind: codification_kind,
               document_field_values: {
                 value: value, selected: selected } })
-    Document.where(id: documents)
+    Document.where(id: documents.pluck(:id))
   }
 
   scope :values_for_filters, -> (args) {
@@ -130,7 +136,7 @@ class Document < ApplicationRecord
               document_field_values: {
                 title: value,
                 selected: true } }))
-    Document.where(id: documents)
+    Document.where(id: documents.pluck(:id))
   }
 
   scope :filter_by_document_text_field_title_and_value, -> (title, value) {
@@ -139,20 +145,29 @@ class Document < ApplicationRecord
       .where(document_fields: {
         title: title,
         value: value })
-    Document.where(id: documents)
+    Document.where(id: documents.pluck(:id))
   }
 
   scope :filter_by_document_title, -> (title) {
     documents =
       where('LOWER(documents.title) LIKE :title', title: "%#{title.downcase}%")
-    Document.where(id: documents)
+    Document.where(id: documents.pluck(:id))
+  }
+
+  scope :filter_by_doc_id, -> (doc_id) {
+    documents =
+      where('LOWER(documents.doc_id) LIKE :title', title: "%#{doc_id.downcase}%")
+    Document.where(id: documents.pluck(:id))
   }
 
   scope :search, -> (text) {
     documents =
       includes(document_fields: :document_field_values)
         .where('LOWER(documents.title) LIKE :search OR
-                (document_fields.kind = :select_field AND LOWER(document_field_values.value) LIKE :search) OR
+                (document_fields.kind = :select_field AND
+                   document_field_values.selected = true AND
+                   (LOWER(document_field_values.value) LIKE :search OR
+                    LOWER(document_field_values.title) LIKE :search)) OR
                 (document_fields.kind = :text_field AND LOWER(document_fields.value) LIKE :search)',
                 search: "%#{text.downcase}%",
                 select_field: DocumentField.kinds[:select_field],
@@ -460,5 +475,9 @@ class Document < ApplicationRecord
         document_main.review_issuers << User.find_by(id: review_issuer)
       end
     end
+  end
+
+  def assign_doc_id
+    self.doc_id = codification_string
   end
 end

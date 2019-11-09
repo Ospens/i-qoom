@@ -24,7 +24,8 @@ export const actionDDitems = (projectId, documentId) => (
     },
     {
       title: 'Add revision',
-      icon: 'icon-Revise_1'
+      icon: 'icon-Revise_1',
+      link: `/dashboard/projects/${projectId}/documents/${documentId}/add_revision`
     },
     {
       title: 'Review document',
@@ -34,15 +35,15 @@ export const actionDDitems = (projectId, documentId) => (
 )
 
 export const columns = [
-  { title: 'DOC-ID', divider: true },
-  { title: 'Document Title', divider: true },
+  { title: 'DOC-ID', divider: true, searchable: true, sortable: 'doc_id' },
+  { title: 'Document title', divider: true, searchable: true, sortable: 'title' },
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },
   { title: 'Additional', divider: true },
-  { title: 'Revision date', divider: true },
-  { title: 'Dicipline', divider: true },
-  { title: 'Document types', divider: true },
-  { title: 'Originating companies', divider: true }
+  { title: 'Revision date', divider: true, sortable: 'revision_date'},
+  { title: 'Discipline', divider: true, searchable: true, sortable: 'discipline' },
+  { title: 'Document type', divider: true, searchable: true, sortable: 'document_type' },
+  { title: 'Originating company', divider: true, searchable: true, sortable: 'originating_company' }
 ]
 
 export const DtOptions = [

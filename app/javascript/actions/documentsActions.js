@@ -1,13 +1,17 @@
 import axios from 'axios'
+import qs from 'qs'
 import { SubmissionError } from 'redux-form'
 import {
   DOCUMENTS_FETCH_SUCCESS,
   DOCUMENT_FETCH_SUCCESS,
   EDIT_DOCUMENT,
-  REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
+  REVISIONS_AND_VERSIONS_FETCH_SUCCESS,
   DOCUMENTS_FETCHED_WITHOUT_FILTERS_SUCCESS,
   TOGGLE_FILTERS,
-  CREATING_DOCUMENT
+  TOGGLE_SEARCH_FILTERS,
+  TOGGLE_LOADING,
+  CREATING_DOCUMENT,
+  DOCUMENTS_SORTED
 } from './types'
 import { fieldByColumn } from './conventionActions'
 import { addNotification } from './notificationsActions'
@@ -38,7 +42,7 @@ export const paramsToFormData = (data, params, preceding = '') => {
 
 const regexp = /(filename=")(.*)"/i
 
-const downloadFile = response => {
+export const downloadFile = response => {
   const disposition = response.headers['content-disposition'].match(regexp)
   const title = disposition ? disposition[2] : 'file.pdf'
   const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -76,56 +80,118 @@ const editDocument = payload => ({
 })
 
 const getRevAndVer = payload => ({
-  type: REVISIONS_AND_VERSIONS_FETCH__SUCCESS,
+  type: REVISIONS_AND_VERSIONS_FETCH_SUCCESS,
   payload
 })
 
+const toggleLoading = payload => ({
+  type: TOGGLE_LOADING,
+  payload
+})
+
+export const sortTable = column => (dispatch, getState) => {
+  const { documents: { allDocuments, sortBy } } = getState()
+  let newval = sortBy
+
+  if (column) {
+    if (sortBy.column !== column) {
+      newval = { column, order: 'desc' }
+    } else {
+      newval = { column, order: sortBy.order === 'asc' ? 'desc' : 'asc' }
+    }
+  }
+
+  allDocuments.sort((a, b) => {
+    if (a[newval.column] > b[newval.column]) {
+      return newval.order === 'asc' ? 1 : -1
+    }
+    if (a[newval.column] < b[newval.column]) {
+      return newval.order === 'asc' ? -1 : 1
+    }
+    return 0
+  })
+  dispatch({ type: DOCUMENTS_SORTED, payload: { documents: allDocuments, ...newval } })
+}
+
 export const startFetchDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { headers: { Authorization: token } }
+  const headers = { Authorization: token }
+  dispatch(toggleLoading(true))
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, headers)
+    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
       .then(response => {
         dispatch(documentsFetched(response.data))
+        dispatch(sortTable())
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      }).finally(() => {
+        dispatch(toggleLoading(false))
       })
   )
 }
 
-export const toggleFilters = (projectId, filter) => (dispatch, getState) => {
-  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
-
+const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
   const {
     user: { token },
     documents: {
+      searchFilters,
       discipline,
       originating_companies: originatingCompanies,
       document_types: documentTypes
     }
   } = getState()
   const headers = { Authorization: token }
+  const { document_title, ...filters } = searchFilters
   const params = {
+    document_title,
     discipline: discipline.filter(el => el.checked).map(v => v.value),
     originating_companies: originatingCompanies.filter(el => el.checked).map(v => v.value),
-    document_types: documentTypes.filter(el => el.checked).map(v => v.value)
+    document_types: documentTypes.filter(el => el.checked).map(v => v.value),
+    ...filters
   }
+  dispatch(toggleLoading(true))
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { params, headers })
+    axios.get(
+      `/api/v1/projects/${projectId}/documents`,
+      {
+        params,
+        headers,
+        paramsSerializer: p => qs.stringify(p, { arrayFormat: 'brackets' })
+      }
+    )
       .then(response => {
         dispatch(documentsFetchedWithoutFilters(response.data))
+        dispatch(sortTable())
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      }).finally(() => {
+        dispatch(toggleLoading(false))
       })
   )
 }
 
+export const toggleFilters = (projectId, filter) => dispatch => {
+  dispatch(({ type: TOGGLE_FILTERS, payload: filter }))
+  dispatch(fetchDocumentsWithFilters(projectId))
+}
+
+export const toggleSearchFilters = (projectId, values) => dispatch => {
+  dispatch(({ type: TOGGLE_SEARCH_FILTERS, payload: values }))
+  if (
+    values.search !== undefined
+    || (values.filters && values.filters.filter(({ value }) => value.length > 0).length > 0)
+    || values.document_title !== undefined
+  ) {
+    dispatch(fetchDocumentsWithFilters(projectId))
+  }
+}
+
 export const newDocument = projectId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
@@ -142,7 +208,7 @@ export const newDocument = projectId => (dispatch, getState) => {
 }
 
 export const startCreateDocument = (projectId, values) => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
 
@@ -161,15 +227,15 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
     }).then(() => {
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully created!', type: 'success' }))
     })
-      .catch(response => {
+      .catch(({ response: { data } }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-        throw new SubmissionError(response)
+        throw new SubmissionError(data)
       })
   )
 }
 
 export const startUpdateDocument = (documentId, values) => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
 
@@ -187,15 +253,15 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
     }).then(() => {
       dispatch(addNotification({ title: 'DMS', text: 'Document successfully updated!', type: 'success' }))
     })
-      .catch(response => {
+      .catch(({ response: { data } }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-        throw new SubmissionError(response)
+        throw new SubmissionError(data)
       })
   )
 }
 
 export const startFetchDocument = documentId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
@@ -210,7 +276,7 @@ export const startFetchDocument = documentId => (dispatch, getState) => {
 }
 
 export const startEditDocument = documentId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
@@ -227,7 +293,7 @@ export const startEditDocument = documentId => (dispatch, getState) => {
 }
 
 export const getRevisionsAndVersions = docId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
@@ -242,7 +308,7 @@ export const getRevisionsAndVersions = docId => (dispatch, getState) => {
 }
 
 export const downloadList = (projectId, docIds, types) => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { Authorization: token }
   const params = docIds ? { document_ids: [docIds] } : {}
 
@@ -264,7 +330,7 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
 }
 
 export const downloadDetailFile = docId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { Authorization: token }
 
   return (
@@ -283,7 +349,7 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
 }
 
 export const downloadNativeFile = docId => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { Authorization: token }
 
   return (

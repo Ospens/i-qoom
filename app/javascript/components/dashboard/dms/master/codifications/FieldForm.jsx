@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   reduxForm,
   FieldArray,
@@ -9,7 +9,7 @@ import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { Popup } from 'semantic-ui-react'
 import { startUpdateCodification } from '../../../../../actions/conventionActions'
-import { required } from '../../../../../elements/validations'
+import { required, minLength3 } from '../../../../../elements/validations'
 
 const validate = value => !value || !value.length ? 'Required' : undefined
 
@@ -37,7 +37,7 @@ export const InputField = ({
   type,
   isForm,
   popupClassName,
-  dmsSections,
+  startPositions,
   msg,
   projectCode,
   meta: { touched, error },
@@ -56,9 +56,9 @@ export const InputField = ({
   }, [openSB])
 
   useEffect(() => {
-    const condition = projectCode && !dmsSections && (!!(touched && error) || (!touched && !!error)) 
+    const condition = projectCode && startPositions && (!!(touched && error) || (!touched && !!error)) 
     setOpen(condition)
-  }, [projectCode, dmsSections, touched, error])
+  }, [projectCode, startPositions, touched, error])
 
   if (!isForm) {
     return (
@@ -94,7 +94,7 @@ export const InputField = ({
             <div className='tooltip-block dark'>
               <div className='tooltip-text-block'>
                 <span>
-                  {msg || 'Add at least one'}
+                  {msg}
               </span>
               </div>
             </div>
@@ -103,7 +103,7 @@ export const InputField = ({
   )
 }
 
-const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
+const CodeList = ({ fields, title, isForm, projectCode }) => {
   return (
     <React.Fragment>
       <div>
@@ -119,7 +119,7 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
                 id='value'
                 placeholder='XXX'
                 label={i > 0 ? '' : 'Code'}
-                validate={[required, uniq]}
+                validate={[required, uniq, minLength3]}
                 maxLength='3'
                 isForm={isForm}
                 projectCode={projectCode}
@@ -136,11 +136,20 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
                 validate={validateTitle}
                 isForm={isForm}
                 projectCode={projectCode}
-                dmsSections={dmsSections}
+                startPositions={i < 2}
                 disabled={!projectCode}
+                msg={`Add at least one ${title} in order to continue`}
               />
-              {fields.length > 2 && isForm &&
-              <button type='button' onClick={() => fields.remove(i)} className={classnames({ 'first-line': i < 1 })}>
+              {isForm &&
+              <button
+                type='button'
+                onClick={() => {
+                  fields.length > 2
+                  ? fields.remove(i)
+                  : fields.splice(i, 1, {value: '', title: '', position: i + 1 })
+                }}
+                className={classnames({ 'first-line': i < 1 })}
+              >
                 <span className='icon-bin-1' />
               </button>}
             </div>
@@ -160,7 +169,8 @@ const CodeList = ({ fields, title, isForm, projectCode, dmsSections }) => {
   )
 }
 
-function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match: { params: { project_id } } }) {
+function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, initialize }) {
+  const { project_id } = useParams()
   const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
   const documentFields = useSelector(state => state.conventions.current.document_fields)
@@ -185,7 +195,10 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
       return item
     })
 
-    dispatch(startUpdateCodification(project_id, v)).then(() => toggleIsForm(false))
+    dispatch(startUpdateCodification(project_id, v)).then(() => {
+      initialize(values)
+      toggleIsForm(false)
+    })
   }, [dispatch, documentFields])
 
   return (
@@ -203,7 +216,6 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
           validate={[validate]}
           isForm={isForm}
           projectCode={projectCode}
-          dmsSections={dmsSections}
         />
       </div>
       {!viewOnly &&
@@ -221,6 +233,6 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, match
 
 const submitCodification = () => { console.log() } // submit function must be passed to onSubmit
 
-export default withRouter(reduxForm({
+export default reduxForm({
   onSubmit: submitCodification // submit function must be passed to onSubmit
-})(FieldForm))
+})(FieldForm)

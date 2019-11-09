@@ -1,9 +1,10 @@
 import React from 'react'
 import classnames from 'classnames'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { formValueSelector } from 'redux-form'
 import FolderInfo from './FolderInfo'
+import { DocHistory } from './showDocument/SideBar'
 
 const selector = formValueSelector('document_form')
 
@@ -20,12 +21,12 @@ const menuItems = [
   }
 ]
 
-const DocumentSideBar = ({ step, toggleStep, match: { params: { project_id } } }) => {
+const DocumentSideBar = ({ step, toggleStep }) => {
+  const { project_id, document_id } = useParams()
   const title = useSelector(state => selector(state, 'title'))
 
   return (
     <div className='dms-sidebar-menu'>
-
       <div className='dms-sidebar-menu__document-title'>
         <div className='editable-title'>
           <h5>{title || '(Document name)'}</h5>
@@ -61,6 +62,9 @@ const DocumentSideBar = ({ step, toggleStep, match: { params: { project_id } } }
           ))}
         </ul>
       </div>
+
+      {document_id && <DocHistory />}
+
       {step === 1
         ? <Link to={`/dashboard/projects/${project_id}/documents`} className='btn-back-to-prev-page'>
             <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
@@ -74,4 +78,4 @@ const DocumentSideBar = ({ step, toggleStep, match: { params: { project_id } } }
   )
 }
 
-export default withRouter(DocumentSideBar)
+export default DocumentSideBar

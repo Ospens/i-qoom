@@ -6,6 +6,7 @@ import InputField from '../../../../elements/InputField'
 import CheckField from '../../../../elements/CheckField'
 import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
 import { addNotification } from '../../../../actions/notificationsActions'
+import { required } from '../../../../elements/validations'
 
 const selector = formValueSelector('document_form')
 
@@ -17,52 +18,54 @@ const email = value => (
     : undefined
 )
 
-const updateEmails = (e, fields, discardValue) => {
+const EmailSubjects = ({ fields, discardValue }) => {
   const dispatch = useDispatch()
-  
-  if (e.charCode === 13) {
-    e.preventDefault()
-    const error = email(e.target.value)
-    if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
 
-    fields.push(e.target.value)
-    discardValue()
-  }
+  const updateEmails = useCallback((e, fields, discardValue) => {
+    if (e.charCode === 13) {
+      e.preventDefault()
+      const error = email(e.target.value)
+      if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
+
+      fields.push(e.target.value)
+      discardValue()
+    }
+  }, [dispatch])
+
+  return (
+    <React.Fragment>
+      <Field
+        component={InputField}
+        onKeyPress={e => updateEmails(e, fields, discardValue)}
+        name='email_addresses'
+        id='email_addresses'
+        placeholder='Type in an e-mail and press Enter'
+        label='Enter E-mail addresses'
+      />
+      <ul className='document__email_addresses-list'>
+        {fields.map((field, index) => (
+          <li className='document__email_addresses-list__item' key={index}>
+            <Field
+              name={field}
+              component={renderField}
+            />
+            <button type='button' onClick={() => fields.remove(index)}>
+              x
+          </button>
+          </li>
+        ))}
+      </ul>
+    </React.Fragment>
+  )
 }
 
-const EmailSubjects = ({ fields, discardValue }) => (
-  <React.Fragment>
-    <Field
-      component={InputField}
-      onKeyPress={e => updateEmails(e, fields, discardValue)}
-      name='email_addresses'
-      id='email_addresses'
-      placeholder='E-mail and press Enter'
-      label='Enter E-mail addresses*'
-    />
-    <ul className='document__email_addresses-list'>
-      {fields.map((field, index) => (
-        <li className='document__email_addresses-list__item' key={index}>
-          <Field
-            name={field}
-            component={renderField}
-          />
-          <button type='button' onClick={() => fields.remove(index)}>
-            x
-          </button>
-        </li>
-      ))}
-    </ul>
-  </React.Fragment>
-)
-
-const AccessAndCommunication = ({ backStep }) => {
+const AccessAndCommunication = ({ backStep, revision }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
-  const reviewStatusValues = useSelector(state => state.documents.documentFields.review_status_options)
+  const reviewStatusValues = useSelector(state => state.documents.current.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
-  const users = useSelector(state => state.user)
+  const users = useSelector(state => state.documents.users)
 
   useEffect(() => {
     if (!emailTitleLikeDocument) return
@@ -115,7 +118,7 @@ const AccessAndCommunication = ({ backStep }) => {
             </div>
           </div>
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -124,20 +127,22 @@ const AccessAndCommunication = ({ backStep }) => {
                 className='form-group'
                 options={reviewStatusValues}
                 component={SelectField}
-                label='Review status'
+                label='Review status*'
+                placeholder='Select status'
+                validate={[required]}
               />
             </div>
             <div className='col-6' />
           </div>}
 
-          {!conventionId &&
+          {!(conventionId || revision) &&
           <div className='row'>
             <div className='col-6'>
               <Field
                 name='reviewers'
                 id='reviewers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Reviewers*'
                 placeholder='Select reviwers'
@@ -149,7 +154,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 name='review_issuers'
                 id='review_issuers'
                 className='form-group'
-                options={[users].map(u => ({ value: u.user_id, title: `${u.first_name} ${u.last_name}` }))}
+                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
                 component={SelectField}
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'

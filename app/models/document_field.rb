@@ -231,7 +231,11 @@ class DocumentField < ApplicationRecord
     prev_revision =
       parent.revision.document_main.revisions.where.not(id: parent.revision.id).last_revision
     if prev_revision.present? && value.to_i <= prev_revision.revision_number.to_i
-      errors.add(:value, :revision_number_must_be_greater_than_last_revision_number)
+      if value.to_i < prev_revision.revision_number.to_i
+        errors.add(:value, :revision_number_must_be_greater_than_last_revision_number)
+      else
+        self.value = prev_revision.revision_number.to_i + 1
+      end
     elsif value.to_i == 0 && value != '0' && value != '00'
       errors.add(:value, :revision_number_must_be_zero_or_greater)
     elsif value.to_i >= 100
