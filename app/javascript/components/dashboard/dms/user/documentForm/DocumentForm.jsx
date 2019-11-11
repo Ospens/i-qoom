@@ -5,6 +5,7 @@ import { reduxForm } from 'redux-form'
 import {
   startEditDocument,
   startUpdateDocument,
+  startCreateRevision,
   newDocument,
   startCreateDocument
 } from '../../../../../actions/documentsActions'
@@ -15,9 +16,7 @@ import DocumentsAndFiles from './DocumentsAndFiles'
 import UploadFile from './UploadFile'
 import AccessAndCommunication from './AccessAndCommunication'
 
-function Content({ handleSubmit, step, backStep }) {
-  const { path } = useRouteMatch()
-  const revision = path.includes('add_revision')
+function Content({ handleSubmit, step, backStep, revision }) {
   return (
     <form noValidate={true} className='dms-content bordered' onSubmit={handleSubmit}>
       {step === 1
@@ -33,17 +32,25 @@ function DocumentForm({ initialize, handleSubmit }) {
   const { document_id, project_id } = useParams()
   const dispatch = useDispatch()
   const history = useHistory()
+  const { path } = useRouteMatch()
+  const revision = path.includes('add_revision')
   const [step, toggleStep] = useState(1)
   const documentFields = useSelector(state => state.documents.current)
+
   const submitDocument = useCallback(values => {
     if (step === 1) return toggleStep(2)
+    
+    if (revision) {
+      return dispatch(startCreateRevision(document_id, values))
+        .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` })) 
+    }
 
     return document_id
       ? dispatch(startUpdateDocument(document_id, values))
         .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` })) 
       : dispatch(startCreateDocument(project_id, values))
         .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
-  }, [dispatch, step])
+  }, [dispatch, step, revision])
 
   useEffect(() => {
     document_id
@@ -71,7 +78,12 @@ function DocumentForm({ initialize, handleSubmit }) {
   return (
     <DMSLayout
       sidebar={<DocumentSideBar {...{ step, toggleStep }} />}
-      content={<Content handleSubmit={handleSubmit(submitDocument)} step={step} backStep={() => toggleStep(1)} />}
+      content={<Content
+        handleSubmit={handleSubmit(submitDocument)}
+        step={step} 
+        revision={revision} 
+        backStep={() => toggleStep(1)}
+      />}
     />
   )
 }

@@ -31,11 +31,11 @@ export function DocHistory() {
             <span>Revisions</span>
           </div>
           <ul className='dms-sidebar-menu__ul-list'>
-            {revisions.map(({ revision_number }, i) => (
+            {revisions.map(({ revision_number, versions }, i) => (
               <li className={classnames({ 'active': revision_number === revision })} key={i}>
-                <button type='button'>
-                  {revision_number}
-                </button>
+                <Link to={path.replace(':project_id', project_id).replace(':document_id', versions[versions.length - 1].id)}>
+                  {revision_number.padStart(2, 0)}
+                </Link>
               </li>
             ))} 
           </ul>
@@ -50,8 +50,9 @@ export function DocHistory() {
           <ul className='dms-sidebar-menu__ul-list'>
             {versionsList.map(({ id, revision_version }, i) => (
               <li key={i} className={classnames({ 'active': id === Number(document_id) })}>
-                <Link to={path.replace(':project_id', project_id).replace(':document_id', id)}
-                >{revision_version}</Link>
+                <Link to={path.replace(':project_id', project_id).replace(':document_id', id)}>
+                  {revision_version}
+                </Link>
               </li>
             ))}
           </ul>
