@@ -235,6 +235,7 @@ class DocumentField < ApplicationRecord
         errors.add(:value, :revision_number_must_be_greater_than_last_revision_number)
       else
         self.value = prev_revision.revision_number.to_i + 1
+        self.value = "0#{value.to_i}" if value.to_i < 10
       end
     elsif value.to_i == 0 && value != '0' && value != '00'
       errors.add(:value, :revision_number_must_be_zero_or_greater)
