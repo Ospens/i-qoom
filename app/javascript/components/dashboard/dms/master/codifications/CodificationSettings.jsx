@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { Link, withRouter } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 
 function Card({ number, projectId }) {
   const active = number === 1
