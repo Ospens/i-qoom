@@ -84,46 +84,86 @@ RSpec.describe Document, type: :model do
     expect(ids).to match_array([doc1.id, doc2.id])
   end
 
-  it 'can_view?' do
-    user = FactoryBot.create(:user)
-    document = document_attributes(user)
-    convention = Convention.find(document['convention_id'])
-    con_field =
-      convention.document_fields.find_by(codification_kind: :originating_company)
-    con_value =
-      con_field.document_field_values
-               .create(value: Faker::Name.initials,
-                       position: 1,
-                       title: '')
-    field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
-    field['document_field_values_attributes'] << con_value.attributes.except('id')
-    doc = Document.new(document)
-    doc.save!
-    expect(doc.can_view?(user)).to eql(true)
-    field = doc.document_fields.find_by(codification_kind: :originating_company)
-    field_true = field.document_field_values.find_by(selected: true)
-    field_false = field.document_field_values.find_by(selected: false)
-    field_true.update_columns(selected: false)
-    field_false.update_columns(selected: true)
-    expect(doc.reload.can_view?(user)).to eql(false)
-    doc.project.members.create!(user: user,
-                                dms_module_master: true,
-                                employment_type: :employee)
-    expect(doc.can_view?(user)).to eql(true)
+  context 'can_view?' do
+    it 'solo' do
+      user = FactoryBot.create(:user)
+      document = document_attributes(user)
+      convention = Convention.find(document['convention_id'])
+      con_field =
+        convention.document_fields.find_by(codification_kind: :originating_company)
+      con_value =
+        con_field.document_field_values
+                 .create(value: Faker::Name.initials,
+                         position: 1,
+                         title: '')
+      field = document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }
+      field['document_field_values_attributes'] << con_value.attributes.except('id')
+      doc = Document.new(document)
+      doc.save!
+      expect(doc.can_view?(user)).to eql(true)
+      field = doc.document_fields.find_by(codification_kind: :originating_company)
+      field_true = field.document_field_values.find_by(selected: true)
+      field_false = field.document_field_values.find_by(selected: false)
+      field_true.update_columns(selected: false)
+      field_false.update_columns(selected: true)
+      expect(doc.reload.can_view?(user)).to eql(false)
+      doc.project.members.create!(user: user,
+                                  dms_module_master: true,
+                                  employment_type: :employee)
+      expect(doc.can_view?(user)).to eql(true)
+    end
 
+    it 'in team' do
+      user = FactoryBot.create(:user)
+      document = document_attributes(user)
+      doc = Document.new(document)
+      doc.save!
+      project = doc.project
+      expect(doc.can_view?(user)).to eql(true)
+      DocumentRight.destroy_all
+      expect(doc.can_view?(user)).to eql(false)
+      project.dms_teams.create
+      attrs = DocumentRight.attributes_for_teams(project, true)
+      team_attrs = attrs[:teams].first
+      team_attrs[:document_rights].each{ |i| i['enabled'] = true }
+      team = DmsTeam.find(team_attrs[:id])
+      team.users << user
+      team.update!(document_rights_attributes: team_attrs[:document_rights])
+      expect(doc.can_view?(user)).to eql(true)
+    end
   end
 
-  it 'can_create?' do
-    user = FactoryBot.create(:user)
-    document = document_attributes(user)
-    doc = Document.new(document)
-    expect(doc.can_create?(user)).to eql(true)
-    DocumentRight.destroy_all
-    expect(doc.can_create?(user)).to eql(false)
-    doc.project.members.create!(user: user,
-                                dms_module_master: true,
-                                employment_type: :employee)
-    expect(doc.can_create?(user)).to eql(true)
+  context 'can_create?' do
+    it 'solo' do
+      user = FactoryBot.create(:user)
+      document = document_attributes(user)
+      doc = Document.new(document)
+      expect(doc.can_create?(user)).to eql(true)
+      DocumentRight.destroy_all
+      expect(doc.can_create?(user)).to eql(false)
+      doc.project.members.create!(user: user,
+                                  dms_module_master: true,
+                                  employment_type: :employee)
+      expect(doc.can_create?(user)).to eql(true)
+    end
+
+    it 'in team' do
+      user = FactoryBot.create(:user)
+      document = document_attributes(user)
+      doc = Document.new(document)
+      project = doc.project
+      expect(doc.can_create?(user)).to eql(true)
+      DocumentRight.destroy_all
+      expect(doc.can_create?(user)).to eql(false)
+      project.dms_teams.create
+      attrs = DocumentRight.attributes_for_teams(project, true)
+      team_attrs = attrs[:teams].first
+      team_attrs[:document_rights].each{ |i| i['enabled'] = true }
+      team = DmsTeam.find(team_attrs[:id])
+      team.users << user
+      team.update!(document_rights_attributes: team_attrs[:document_rights])
+      expect(doc.can_create?(user)).to eql(true)
+    end
   end
 
   context 'prevent update of fields and values from convention' do

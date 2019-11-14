@@ -18,7 +18,7 @@ class Api::V1::DmsTeamsController < ApplicationController
   end
 
   def index
-    render json: DocumentRight.attributes_for_teams(@project)
+    render json: DocumentRight.attributes_for_teams(@project, params[:only_new] == 'true')
   end
 
   def update_members
@@ -30,7 +30,11 @@ class Api::V1::DmsTeamsController < ApplicationController
   end
 
   def update_rights
-
+    teams_params(true)[:teams].each do |team_params|
+      team = DmsTeam.find(team_params[:id])
+      team.update(team_params.except(:id))
+    end
+    head 200
   end
 
   private
@@ -41,12 +45,12 @@ class Api::V1::DmsTeamsController < ApplicationController
 
   def teams_params(assign_attrs = false)
     if assign_attrs
-      params[:teams].each do |user_params|
-        user_params[:document_rights_attributes] =
-          user_params.delete(:document_rights)
+      params[:teams].each do |team_params|
+        team_params[:document_rights_attributes] =
+          team_params.delete(:document_rights)
       end
     end
-    params.permit(users: [
+    params.permit(teams: [
                     :id,
                     document_rights_attributes: [
                       :id,

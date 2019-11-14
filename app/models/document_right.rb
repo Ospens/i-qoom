@@ -80,7 +80,7 @@ class DocumentRight < ApplicationRecord
       only_new_teams ? DmsTeam.where.not(id: team_ids) : DmsTeam.where(id: team_ids)
     attrs = {
       fields: {}, # used just for info
-      users: []
+      teams: []
     }
     fields.each do |field|
       values = DocumentFieldValue.where(document_field: field).as_json(only: [:id, :value])

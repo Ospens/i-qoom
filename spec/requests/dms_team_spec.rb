@@ -131,9 +131,10 @@ describe DmsTeam, type: :request do
 
     it 'dms master' do
       get "/api/v1/projects/#{team.project.id}/dms_teams",
-        headers: credentials(team.project.user)
+        headers: credentials(team.project.user),
+        params: { only_new: true }
       expect(response).to have_http_status(:success)
-      expect(json.length).to eql(1)
+      expect(json['teams'].length).to eql(1)
     end
   end
 
@@ -170,6 +171,40 @@ describe DmsTeam, type: :request do
       expect(response).to have_http_status(:success)
       expect(team.users.count).to eql(1)
       expect(team.users.first.id).to eql(user.id)
+    end
+  end
+
+  context '#update_rights' do
+    let(:team) { FactoryBot.create(:dms_team) }
+
+    it 'anon' do
+      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms user' do
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms master' do
+      attrs = DocumentRight.attributes_for_teams(team.project, true)
+      attrs[:teams].first[:document_rights].first['enabled'] = true
+      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+        headers: credentials(team.project.user),
+        params: attrs
+      expect(response).to have_http_status(:success)
+      expect(team.document_rights.where(enabled: true).count).to eql(1)
     end
   end
 end
