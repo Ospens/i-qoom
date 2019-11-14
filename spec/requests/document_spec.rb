@@ -9,7 +9,7 @@ describe Document, type: :request do
     convention = project.conventions.active
     convention.document_fields.limit_by_value.each do |field|
       field.document_rights
-           .create(user: user,
+           .create(parent: user,
                    limit_for: :value,
                    document_field_value: field.document_field_values.first,
                    enabled: true)

@@ -12,7 +12,10 @@ class User < ApplicationRecord
   has_many :project_administrators
 
   has_many :documents, class_name: 'DocumentMain'
-  has_many :document_rights
+  has_many :document_rights,
+           as: :parent,
+           index_errors: true,
+           dependent: :destroy
   accepts_nested_attributes_for :document_rights
   has_many :document_folders
   has_many :document_review_subjects
