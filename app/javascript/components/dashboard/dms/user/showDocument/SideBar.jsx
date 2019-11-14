@@ -18,7 +18,6 @@ export function DocHistory() {
   versionsList = versionsList ? versionsList.versions : []
 
   useEffect(() => { toggleRevision(currentRevisionNumber) }, [currentRevisionNumber, document_id])
-
   useEffect(() => { dispatch(getRevisionsAndVersions(document_id)) }, [dispatch, document_id])
 
   return (

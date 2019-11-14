@@ -5,6 +5,8 @@ import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import { required } from '../../../../../elements/validations'
 
+export const changeFile = value => (value || typeof value === 'number' ? undefined : 'Please change the file')
+
 const selector = formValueSelector('document_form')
 
 function UploadFile() {
@@ -39,7 +41,7 @@ function UploadFile() {
               label={docFile.title}
               name={`document_fields[${docIndex}].value`}
               id={`document_fields[${docIndex}].value`}
-              // validate={validationList(field)} 
+              validate={[changeFile]}
               placeholder={docFile.command}
               component={DropZoneField}
               renameFile={true}

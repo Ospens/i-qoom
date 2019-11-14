@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { formValueSelector } from 'redux-form'
 import FolderInfo from './FolderInfo'
-import { DocHistory } from './showDocument/SideBar'
 
 const selector = formValueSelector('document_form')
 
@@ -22,7 +21,7 @@ const menuItems = [
 ]
 
 const DocumentSideBar = ({ step, toggleStep }) => {
-  const { project_id, document_id } = useParams()
+  const { project_id } = useParams()
   const title = useSelector(state => selector(state, 'title'))
 
   return (
@@ -62,8 +61,6 @@ const DocumentSideBar = ({ step, toggleStep }) => {
           ))}
         </ul>
       </div>
-
-      {document_id && <DocHistory />}
 
       {step === 1
         ? <Link to={`/dashboard/projects/${project_id}/documents`} className='btn-back-to-prev-page'>
