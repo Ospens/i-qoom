@@ -10,7 +10,7 @@ module DocumentHelpers
       if field.select_field?
         value = field.document_field_values.first
         if field.can_limit_by_value?
-          field.document_rights.create!(user: user,
+          field.document_rights.create!(parent: user,
                                         limit_for: :value,
                                         document_field_value: value,
                                         enabled: true)
@@ -41,6 +41,7 @@ module DocumentHelpers
       doc_attrs = assign_attributes_suffix_to_document(doc_attrs)
     end
     doc_attrs['document_revision_id'] = rev.id
+    doc_attrs['contractor'] = Faker::Name.initials
     doc_attrs
   end
 

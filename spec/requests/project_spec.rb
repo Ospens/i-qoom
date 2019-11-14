@@ -106,7 +106,7 @@ describe "Project", type: :request do
             params: {
               project: FactoryBot.attributes_for(:project_company_data_step)
                         .merge(company_data: FactoryBot.attributes_for(:project_company_data,
-                                                                        same_for_billing_address: "1")
+                                               same_for_billing_address: "1")
                         .merge(company_address: FactoryBot.attributes_for(:address)))
             }.to_json,
             headers: headers
@@ -168,6 +168,33 @@ describe "Project", type: :request do
                                        .billing_address).not_to be_present
           expect(Project.find_by(id: project_without_billing_address.id)
                                 .creation_step).not_to eq("done")
+        end
+      end
+
+      context "logo" do
+        let(:completed_project) {
+          FactoryBot.create(:project, user_id: user.id)
+        }
+        it "should be added" do
+          patch "/api/v1/projects/#{completed_project.id}",
+            params: {
+              project: { company_data: { logo: fixture_file_upload('test.txt') } }
+            },
+            headers: headers
+          completed_project.reload
+          expect(response).to have_http_status(:success)
+          expect(completed_project.company_data.logo).to be_attached
+        end
+        it "should be removed" do
+          completed_project.company_data.logo.attach(fixture_file_upload('test.txt'))
+          patch "/api/v1/projects/#{completed_project.id}",
+            params: {
+              project: { company_data: { remove_logo: "1" } }
+            }.to_json,
+            headers: headers
+          completed_project.reload
+          expect(response).to have_http_status(:success)
+          expect(completed_project.company_data.logo).not_to be_attached
         end
       end
     end

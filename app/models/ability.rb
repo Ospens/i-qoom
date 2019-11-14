@@ -146,6 +146,9 @@ class Ability
       can :manage, DocumentReviewTag do |tag, project|
         project.members.find_by(user: user).try(:dms_module_master?)
       end
+      can :manage, DmsTeam do |team, project|
+        project.members.find_by(user: user).try(:dms_module_master?)
+      end
     end
   end
 end

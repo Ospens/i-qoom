@@ -20,7 +20,7 @@ import DmsSettings from './user/dmsSettings/index'
 import DocumentPlanning from './user/documentPlanning/index'
 
 const documentHeader = title => {
-  const current = useSelector(state => state.documents.documentFields)
+  const current = useSelector(state => state.documents.current)
   if (!current) return
   
   const ver = current.document_fields.find(el => el.codification_kind === 'document_number')
@@ -113,6 +113,7 @@ function DMS({ match, match: { params: { project_id } } }) {
       />
       <Page
         title='Add revision'
+        titleContent={documentHeader('Add revision')}
         path={`${match.path}/:document_id/add_revision/`}
         component={AddRevision}
       />

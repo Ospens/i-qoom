@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import classnames from 'classnames'
+import { fileNameReg } from '../components/dashboard/dms/initDocId.js'
 
 const fileProperties = [
   'lastModified',
@@ -21,9 +22,20 @@ export const fileToObject = fileBlob => {
   return newFile
 }
 
-function DropZoneField({ input, filename, label, disabled = false, meta: { touched, error } }) {
+function DropZoneField({ input, filename, label, disabled = false, renameFile = false, meta: { touched, error } }) {
 
   const onDrop = useCallback(acceptedFiles => {
+    if (renameFile) {
+      const docNameInfo = filename.match(fileNameReg)
+      const newFileWrong = acceptedFiles[0].name.match(fileNameReg)
+      
+      if (docNameInfo && !newFileWrong) {
+        docNameInfo[11] = (Number(docNameInfo[11]) + 1).toString().padStart(2, 0)
+        docNameInfo[13] = acceptedFiles[0].name
+        const value = docNameInfo.filter((_, i) => i < 14 && i > 0).join('')
+        Object.defineProperty(acceptedFiles[0], 'name', { writable: true, value })
+      }
+    }
     input.onChange(acceptedFiles)
   }, [])
 
@@ -40,7 +52,15 @@ function DropZoneField({ input, filename, label, disabled = false, meta: { touch
   })
 
   const isFileRejected = rejectedFiles.length !== 0
+  const sectionClass = classnames({ 'is-invalid': touched && error })
+  const currentFile = input.value ? input.value[0] : acceptedFiles[0]
+  const fileChanged = input.value ? input.value[0].name !== currentFile : false
+/* 
+  useEffect(() => {
+    if (!input.value) return
+    console.log(input.value[0].name, currentFile)
 
+  }, [input.value, currentFile]) */
   const mainClass = classnames(
     'drop-zone-area',
     {
@@ -49,13 +69,11 @@ function DropZoneField({ input, filename, label, disabled = false, meta: { touch
     }
   )
 
-  const sectionClass = classnames({ 'is-invalid': touched && error })
-  const currentFile = input.value ? input.value[0] : acceptedFiles[0]
-
   return (
     <section className={sectionClass}>
       {label && <label htmlFor={input.name}>{label}</label>}
       <div {...getRootProps()} className={mainClass}>
+        {fileChanged && <div className='new-file-label'>NEW</div>}
         <input {...getInputProps()}/>
         {(() => {
           if (currentFile || filename) {

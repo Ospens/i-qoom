@@ -392,10 +392,10 @@ footer:after,
     grid-template-columns: 100%;
     grid-gap: 100px;
     grid-gap: 10vh;
-    padding-left: 50px;
-    padding-left: 2.5%;
-    padding-right: 50px;
-    padding-right: 2.5%;
+    padding-left: 90px;
+    padding-left: 4.7%;
+    padding-right: 87px;
+    padding-right: 4.6%;
     transition: margin 300ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
     margin-left: 300px;
     animation-name: dashboardSidebar;
@@ -404,6 +404,12 @@ footer:after,
 
     &.sidebar-off {
       margin-left: 0px !important;
+      padding-left: 60px;
+      padding-left: 3.2%;
+
+      .content-column {
+        margin-left: 9.8% !important;
+      }
     }
   }
 }
@@ -2297,7 +2303,7 @@ input[type=checkbox] {
 // Notifications
 
 .notifications_block {
-  --right-position: calc(48px + 2.5%);
+  --right-position: calc(46px + 4.6%);
   --top-position: 105px;
 
   position: absolute;

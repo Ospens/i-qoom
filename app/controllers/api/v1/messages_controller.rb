@@ -38,6 +38,7 @@ class Api::V1::MessagesController < ApplicationController
     params.fetch(:message,
                  { }).permit(:subject,
                              :body,
+                             files: [],
                              message_recipients_attributes: [
                               :id,
                               :user_id ])

@@ -1,20 +1,23 @@
 class DocumentRight < ApplicationRecord
   enum limit_for: [ :field, :value ], _prefix: true
 
-  belongs_to :user
+  belongs_to :parent,
+             polymorphic: true
 
   belongs_to :document_field
 
-  belongs_to :document_field_value, optional: true
+  belongs_to :document_field_value,
+             optional: true
 
   has_one :convention,
           through: :document_field,
           source: :parent,
           source_type: 'Convention'
 
-  has_one :project, through: :convention
+  has_one :project,
+          through: :convention
 
-  validates :user,
+  validates :parent,
             :document_field,
             presence: true
 
@@ -30,7 +33,7 @@ class DocumentRight < ApplicationRecord
     fields =
       project.conventions.active.document_fields.where(codification_kind: kinds)
     user_ids =
-      DocumentRight.where(document_field: fields, enabled: true).pluck(:user_id).uniq
+      DocumentRight.where(document_field: fields, enabled: true, parent_type: 'User').pluck(:parent_id).uniq
     users =
       only_new_users ? User.where.not(id: user_ids) : User.where(id: user_ids)
     attrs = {
@@ -60,6 +63,47 @@ class DocumentRight < ApplicationRecord
         id: user.id,
         first_name: user.first_name,
         last_name: user.last_name,
+        document_rights: rights_attrs
+      }
+    end
+    attrs
+  end
+
+  def self.attributes_for_teams(project, only_new_teams = false)
+    kinds =
+      DocumentField.codification_kinds.slice(:originating_company, :discipline, :document_type).values
+    fields =
+      project.conventions.active.document_fields.where(codification_kind: kinds)
+    team_ids =
+      DocumentRight.where(document_field: fields, enabled: true, parent_type: 'DmsTeam').pluck(:parent_id).uniq
+    teams =
+      only_new_teams ? DmsTeam.where.not(id: team_ids) : DmsTeam.where(id: team_ids)
+    attrs = {
+      fields: {}, # used just for info
+      teams: []
+    }
+    fields.each do |field|
+      values = DocumentFieldValue.where(document_field: field).as_json(only: [:id, :value])
+      attrs[:fields][field.codification_kind] = { id: field.id, values: values }
+    end
+    teams.each do |team|
+      rights_attrs = []
+      fields.each do |field|
+        field.document_field_values.each do |value|
+          right =
+            team.document_rights.where(document_field: field,
+                                       document_field_value: value,
+                                       limit_for: :value).first_or_create
+          rights_attrs << right.attributes.slice('id',
+                                                 'document_field_id',
+                                                 'document_field_value_id',
+                                                 'enabled',
+                                                 'view_only')
+        end
+      end
+      attrs[:teams] << {
+        id: team.id,
+        name: team.name,
         document_rights: rights_attrs
       }
     end

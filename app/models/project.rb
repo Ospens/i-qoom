@@ -24,6 +24,8 @@ class Project < ApplicationRecord
 
   has_many :dms_settings
 
+  has_many :dms_teams
+
   has_many :document_review_owners
 
   has_many :document_review_tags
@@ -93,12 +95,22 @@ class Project < ApplicationRecord
     # user cannot create document if he has no access to at least one value
     # for each field that can be limited by value.
     # when creating document we check current active convention
-    !conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user,
+    fields = conventions.active.document_fields.limit_by_value
+    team = dms_teams.joins(:users).where(users: { id: user.id }).first
+    !fields.map do |field|
+      field.document_rights.where(parent: user,
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false) || dms_master?(user)
+    end.include?(false) ||
+      (team.present? &&
+        !fields.map do |field|
+          team.document_rights.where(document_field: field,
+                                     limit_for: :value,
+                                     enabled: true,
+                                     view_only: false).any?
+        end.include?(false)) ||
+      dms_master?(user)
   end
 
   def dms_users
@@ -132,47 +144,47 @@ class Project < ApplicationRecord
 
   def add_default_disciplines_and_roles
     [ "i-Qoom Admin",
-      "Management",
-      "Document Management",
-      "Human Ressources",
-      "Electrical",
-      "Mechanical",
       "Civil",
-      "Logistics",
+      "Commercial",
       "Construction",
       "Cross Discipline",
-      "Infrastructure",
+      "Document Management",
+      "Electrical",
       "Finance",
-      "Commercial" ].each do |title|
+      "Human Ressources",
+      "Infrastructure",
+      "Logistics",
+      "Management",
+      "Mechanical"].each do |title|
       self.disciplines.create(title: title)
     end
 
     [ "Project Administrator",
-      "Project Lead",
-      "Project Manager",
-      "Package Manager",
-      "Engineering Manager",
-      "Electrical Engineer",
-      "Mechanical Engineer",
+      "Accountant",
+      "Admin Support",
       "Civil Engineer",
-      "Process Manager",
-      "Interface Manager",
       "Commercial Manager",
       "Contract Manager",
-      "Logistics Manager",
-      "Legal Advisor",
-      "Scheduler",
-      "IT Expert",
-      "Admin Support",
-      "HR Manager",
-      "Secretary",
-      "Development Manager",
-      "Finance Manager",
       "Controller",
+      "Development Manager",
       "Document Manager",
-      "Procurement Manager",
+      "Electrical Engineer",
+      "Engineering Manager",
+      "Finance Manager",
+      "HR Manager",
+      "IT Expert",
+      "Interface Manager",
+      "Legal Advisor",
+      "Logistics Manager",
+      "Mechanical Engineer",
+      "Package Manager",
+      "Process Manager",
       "Procurement Lead",
-      "Accountant" ].each do |title|
+      "Procurement Manager",
+      "Project Lead",
+      "Project Manager",
+      "Scheduler",
+      "Secretary"] .each do |title|
       self.roles.create(title: title)
     end
   end

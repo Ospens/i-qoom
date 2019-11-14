@@ -113,12 +113,16 @@ class Api::V1::ProjectsController < ApplicationController
       params[:project].delete(:admins)
     end
     if params[:project][:company_data].present?
-      params[:project][:company_data][:company_address_attributes] =
-        params[:project][:company_data][:company_address]
-      params[:project][:company_data].delete(:company_address)
-      params[:project][:company_data][:billing_address_attributes] =
-        params[:project][:company_data][:billing_address]
-      params[:project][:company_data].delete(:billing_address)
+      if params[:project][:company_data][:company_address].present?
+        params[:project][:company_data][:company_address_attributes] =
+          params[:project][:company_data][:company_address]
+        params[:project][:company_data].delete(:company_address)
+      end
+      if params[:project][:company_data][:billing_address].present?
+        params[:project][:company_data][:billing_address_attributes] =
+          params[:project][:company_data][:billing_address]
+        params[:project][:company_data].delete(:billing_address)
+      end
       params[:project][:company_data_attributes] =
         params[:project][:company_data]
       params[:project].delete(:company_data)
@@ -140,6 +144,7 @@ class Api::V1::ProjectsController < ApplicationController
                              ],
                              company_data_attributes: [
                                :logo,
+                               :remove_logo,
                                :registration_number,
                                :vat_id,
                                :same_for_billing_address,
