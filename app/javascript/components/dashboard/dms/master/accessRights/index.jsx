@@ -1,6 +1,6 @@
 import React from 'react'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 import Tabs from '../../../../../elements/Tabs'
 import MembersTable from './MembersTable'
 

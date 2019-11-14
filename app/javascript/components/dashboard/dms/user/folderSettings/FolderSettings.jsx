@@ -4,7 +4,7 @@ import { getFormValues } from 'redux-form'
 import { withRouter } from 'react-router-dom'
 import { startEditFolder } from '../../../../../actions/foldersActions'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 import FolderForm from './FolderForm'
 
 const infoValue = (fields, kind) => fields ? fields.find(f => f.codification_kind === kind).value || '___' : '___'

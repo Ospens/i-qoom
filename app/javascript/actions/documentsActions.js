@@ -260,6 +260,32 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
   )
 }
 
+export const startCreateRevision = (documentId, values) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
+  let formData = new FormData()
+
+  const formValues = {
+    document: { ...values }
+  }
+
+  formData = paramsToFormData(formData, formValues, '')
+  return (
+    axios({
+      method: 'post',
+      url: `/api/v1/documents/${documentId}/create_revision`,
+      data: formData,
+      headers
+    }).then(() => {
+      dispatch(addNotification({ title: 'DMS', text: 'Revision successfully created!', type: 'success' }))
+    })
+      .catch(({ response: { data } }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(data)
+      })
+  )
+}
+
 export const startFetchDocument = documentId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }

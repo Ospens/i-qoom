@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { formValueSelector, Field, FieldArray, change } from 'redux-form'
-import SelectField from '../../../../elements/SelectField'
-import InputField from '../../../../elements/InputField'
-import CheckField from '../../../../elements/CheckField'
-import renderDocumentTextEditor from '../../../../elements/DocumentTextEditor'
-import { addNotification } from '../../../../actions/notificationsActions'
-import { required } from '../../../../elements/validations'
+import SelectField from '../../../../../elements/SelectField'
+import InputField from '../../../../../elements/InputField'
+import CheckField from '../../../../../elements/CheckField'
+import renderDocumentTextEditor from '../../../../../elements/DocumentTextEditor'
+import { addNotification } from '../../../../../actions/notificationsActions'
+import { required } from '../../../../../elements/validations'
 
 const selector = formValueSelector('document_form')
 
@@ -51,7 +51,7 @@ const EmailSubjects = ({ fields, discardValue }) => {
             />
             <button type='button' onClick={() => fields.remove(index)}>
               x
-          </button>
+            </button>
           </li>
         ))}
       </ul>
@@ -59,7 +59,7 @@ const EmailSubjects = ({ fields, discardValue }) => {
   )
 }
 
-const AccessAndCommunication = ({ backStep, revision }) => {
+const AccessAndCommunication = ({ backStep }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
@@ -118,7 +118,7 @@ const AccessAndCommunication = ({ backStep, revision }) => {
             </div>
           </div>
 
-          {!(conventionId || revision) &&
+          {!conventionId &&
           <div className='row'>
             <div className='col-6'>
               <Field
@@ -135,7 +135,7 @@ const AccessAndCommunication = ({ backStep, revision }) => {
             <div className='col-6' />
           </div>}
 
-          {!(conventionId || revision) &&
+          {!conventionId &&
           <div className='row'>
             <div className='col-6'>
               <Field
