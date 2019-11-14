@@ -62,11 +62,12 @@ const EmailSubjects = ({ fields, discardValue }) => {
 const AccessAndCommunication = ({ backStep }) => {
   const dispatch = useDispatch()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
+  const reviewStatus = useSelector(state => selector(state, 'review_status'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
   const reviewStatusValues = useSelector(state => state.documents.current.review_status_options)
   const title = useSelector(state => selector(state, 'title'))
   const users = useSelector(state => state.documents.users)
-
+  const IFI = reviewStatus === 'issued_for_information'
   useEffect(() => {
     if (!emailTitleLikeDocument) return
     
@@ -147,6 +148,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 label='Reviewers*'
                 placeholder='Select reviwers'
                 isMulti={true}
+                disabled={IFI}
               />
             </div>
             <div className='col-6'>
@@ -159,6 +161,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 label='Issuers review issuer*'
                 placeholder='Define Issuers review issuer'
                 isMulti={true}
+                disabled={IFI}
               />
             </div>  
           </div>}

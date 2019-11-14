@@ -211,9 +211,14 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
   const { user: { token } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
+  const IFI = values.review_status === 'issued_for_information'
 
   const formValues = {
-    document: { ...values }
+    document: {
+      ...values,
+      reviewers: IFI ? [] : values.reviewers,
+      review_issuers: IFI ? [] : values.review_issuers
+    }
   }
 
   formData = paramsToFormData(formData, formValues, '')

@@ -10,7 +10,7 @@ module DocumentHelpers
       if field.select_field?
         value = field.document_field_values.first
         if field.can_limit_by_value?
-          field.document_rights.create!(user: user,
+          field.document_rights.create!(parent: user,
                                         limit_for: :value,
                                         document_field_value: value,
                                         enabled: true)

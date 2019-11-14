@@ -24,6 +24,8 @@ class Project < ApplicationRecord
 
   has_many :dms_settings
 
+  has_many :dms_teams
+
   has_many :document_review_owners
 
   has_many :document_review_tags
@@ -93,12 +95,22 @@ class Project < ApplicationRecord
     # user cannot create document if he has no access to at least one value
     # for each field that can be limited by value.
     # when creating document we check current active convention
-    !conventions.active.document_fields.limit_by_value.map do |field|
-      field.document_rights.where(user: user,
+    fields = conventions.active.document_fields.limit_by_value
+    team = dms_teams.joins(:users).where(users: { id: user.id }).first
+    !fields.map do |field|
+      field.document_rights.where(parent: user,
                                   limit_for: :value,
                                   enabled: true,
                                   view_only: false).any?
-    end.include?(false) || dms_master?(user)
+    end.include?(false) ||
+      (team.present? &&
+        !fields.map do |field|
+          team.document_rights.where(document_field: field,
+                                     limit_for: :value,
+                                     enabled: true,
+                                     view_only: false).any?
+        end.include?(false)) ||
+      dms_master?(user)
   end
 
   def dms_users
