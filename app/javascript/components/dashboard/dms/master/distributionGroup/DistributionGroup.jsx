@@ -4,7 +4,7 @@ import { Table } from 'semantic-ui-react'
 import UserAvatar from 'react-user-avatar'
 import ModalCopyToDG from './ModalCopyToDG'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 import DropDown from '../../../../../elements/DropDown'
 import { RenderTeamlist } from '../accessRights/ShowMembersPopup'
 

@@ -4,8 +4,7 @@ import { Switch, withRouter } from 'react-router-dom'
 import './DMS.scss'
 import { startFetchFolders } from '../../../actions/foldersActions'
 import Page from '../../../elements/Page'
-import DocumentForm from './user/DocumentForm'
-import AddRevision from './user/addRevision/AddRevision'
+import DocumentForm from './user/documentForm/DocumentForm'
 import ShowDocument from '../dms/user/showDocument/ShowDocument'
 import IndexDMS from './user/index/IndexDMS'
 import EditConvention from './master/editConvention/EditConvention'
@@ -115,7 +114,7 @@ function DMS({ match, match: { params: { project_id } } }) {
         title='Add revision'
         titleContent={documentHeader('Add revision')}
         path={`${match.path}/:document_id/add_revision/`}
-        component={AddRevision}
+        component={DocumentForm}
       />
       <Page
         title='Documents managment system'

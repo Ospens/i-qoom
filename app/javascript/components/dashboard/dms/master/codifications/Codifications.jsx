@@ -1,6 +1,6 @@
 import React from 'react'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 import Content from './Content'
 
 function Codifications() {

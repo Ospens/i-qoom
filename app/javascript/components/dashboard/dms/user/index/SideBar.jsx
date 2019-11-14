@@ -4,8 +4,8 @@ import classnames from 'classnames'
 import DropDown from '../../../../../elements/DropDown'
 import DocumentPopup from '../../DocumentPopup'
 import { reviewStatuses } from '../../constants'
-import DmsSideBar from '../../DmsSideBar'
-import { Folders } from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
+import Folders from '../../sideBar/Folders'
 import { DropDownItems } from './elements'
 
 function SideBar({ projectId, checkedDocs, popup }) {

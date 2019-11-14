@@ -3000,11 +3000,8 @@ span.column-title {
     padding-bottom: 11px;
 
     &:hover {
-      input[type=checkbox]:not(:checked)+label {
-        background: url('../../../images/checked_checkbox.svg') no-repeat;
-        background-color: #e8f3f4;
-        background-size: 100%;
-        opacity: 0.5;
+      input[type=checkbox]+label {
+        border: 1px solid var(--color-blue);
       }
     }
 

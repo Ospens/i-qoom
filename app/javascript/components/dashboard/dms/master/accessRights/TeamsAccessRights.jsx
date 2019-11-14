@@ -10,7 +10,7 @@ import {
   getGrandedAccessMembers
 } from '../../../../../actions/accessRightsActions'
 import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 import Tabs from '../../../../../elements/Tabs'
 import DropDown from '../../../../../elements/DropDown'
 import ShowMembersPopup from './ShowMembersPopup'
