@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-editor-classic/src/classiceditor'
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials'
@@ -76,65 +76,55 @@ const fontColorConfig = {
   ]
 }
 
-class TextEditor extends Component {
+function Editor({ text }) {
+  <CKEditor
+    editor={ClassicEditor}
+    /*config={{
+      plugins: [Alignment, Bold, Italic, Heading],
+      toolbar: ['Heading', '|', 'Bold', 'Italic', 'Alignment'],
+      removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload']
+    }}*/
+    config={{
+      plugins: [Essentials, Autoformat, FontFamily, Heading, Bold, FontSize, Alignment, FontColor],
+      toolbar: [
+        'heading', 'fontFamily', 'fontSize', 'fontColor', 'bold', 'alignment'
+      ],
+      fontColor: fontColorConfig
+    }}
+    data={text}
+    onInit={editor => {
+      console.log('Editor is ready to use!', editor.config._config.plugins)
+      // You can store the "editor" and use when it is needed.
+      //console.log('Editor is ready to use!', editor.config._config.toolbar)
+    }}
+    onChange={(event, editor) => {
+      const data = editor.getData()
+      console.log({ event, editor, data })
+    }}
+    onBlur={editor => {
+      this.setState({ editor: false })
+      //console.log('Blur.', editor)
+    }}
+    onFocus={editor => {
+      //console.log('Focus.', editor)
+    }}
+  />
+}
 
-  state = {
-    editor: false
-  }
+function TextEditor({ text, className }) {
+  const [editor, setEditor] = useState(initialState)
 
-  renderEditor = (text) => (
-    <CKEditor
-      editor={ClassicEditor}
-      /*config={{
-        plugins: [Alignment, Bold, Italic, Heading],
-        toolbar: ['Heading', '|', 'Bold', 'Italic', 'Alignment'],
-        removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload']
-      }}*/
-      config={{
-        plugins: [Essentials, Autoformat, FontFamily, Heading, Bold, FontSize, Alignment, FontColor],
-        toolbar: [
-          'heading', 'fontFamily', 'fontSize', 'fontColor', 'bold', 'alignment'
-        ],
-        fontColor: fontColorConfig
-      }}
-      data={text}
-      onInit={editor => {
-        console.log('Editor is ready to use!', editor.config._config.plugins)
-        // You can store the "editor" and use when it is needed.
-        //console.log('Editor is ready to use!', editor.config._config.toolbar)
-      }}
-      onChange={(event, editor) => {
-        const data = editor.getData()
-        console.log({ event, editor, data })
-      }}
-      onBlur={editor => {
-        this.setState({ editor: false })
-        //console.log('Blur.', editor)
-      }}
-      onFocus={editor => {
-        //console.log('Focus.', editor)
-      }}
-    />
-  )
-
-  render() {
-    const { editor } = this.state
-    const { text, className } = this.props
-    return (
-      <React.Fragment>
-        {editor ?
-        (
-          this.renderEditor(text)
-        ) : (
-          <div
-            onClick={() => this.setState({ editor: true })}
+  return (
+    <React.Fragment>
+      {editor
+        ? <Editor text={text} />
+        : <div
+            onClick={() => setEditor(true)}
             dangerouslySetInnerHTML={{ __html: text }}
             className={className}
-          />
-        )}
-      </React.Fragment>
-    )
-  }
+          />}
+    </React.Fragment>
+  )
 }
- 
+
 export default TextEditor
