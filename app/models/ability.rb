@@ -99,6 +99,9 @@ class Ability
         member = project.members.find_by(user_id: user.id)
         member.try(:dms_module_access?) || member.try(:dms_module_master?)
       end
+      can :show_member, Document do |document, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
       # DmsSetting
       can [:edit, :update], DmsSetting
       # DocumentFolder
