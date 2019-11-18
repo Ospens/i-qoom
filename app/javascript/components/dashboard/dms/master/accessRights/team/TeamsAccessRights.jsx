@@ -1,22 +1,8 @@
-import React, { Component } from 'react'
-import { reduxForm } from 'redux-form'
-import { connect } from 'react-redux'
-import { Table } from 'semantic-ui-react'
-import UserAvatar from 'react-user-avatar'
-import classnames from 'classnames'
-import { withRouter } from 'react-router-dom'
-import {
-  getGrantAccessMembers,
-  getGrandedAccessMembers
-} from '../../../../../actions/accessRightsActions'
-import DMSLayout from '../../DMSLayout'
-import DmsSideBar from '../../sideBar/DmsSideBar'
-import Tabs from '../../../../../elements/Tabs'
-import DropDown from '../../../../../elements/DropDown'
-import ShowMembersPopup from './ShowMembersPopup'
-import NewTeamModal from './ModalTeamForm'
-import ModalBulkAccessRights from './ModalBulkAccessRights'
-import rightsDropDown from './RightsDropDown'
+import React from 'react'
+import DMSLayout from '../../../DMSLayout'
+import DmsSideBar from '../../../sideBar/DmsSideBar'
+import Tabs from '../../../../../../elements/Tabs'
+import TeamsTable from './TeamsTable'
 
 const columns = [
   { title: 'Name', divider: true },
@@ -43,6 +29,160 @@ const optionBtn = [
   }
 ]
 
+function Content() {
+  return (
+    <Tabs className='big-tabs'>
+      <div label='Teams'><TeamsTable type='newMembers' /></div>
+      <div label='New teams'><TeamsTable type='checkedNewTeams' /></div>
+    </Tabs>
+  )
+}
+
+function TeamsAccessRights() {
+  return (
+    <DMSLayout
+      sidebar={<DmsSideBar />}
+      content={<Content />}
+    />
+  )
+}
+
+export default TeamsAccessRights
+
+/* 
+function MemberTable(type, data, checked) {
+  const dispatch = useDispatch()
+  const members = useSelector(state => state.accessRights[type])
+  const [checkedMembers, changeChecked] = useState([])
+  const fields = useSelector(state => state.accessRights.fields)
+  
+  useEffect(() => {
+    changeChecked([])
+    if (type === 'newMembers') {
+      dispatch(getGrantAccessMembers(project_id))
+    } else if (type === 'oldMembers') {
+      dispatch(getGrandedAccessMembers(project_id))
+    }
+  }, [dispatch, type])
+
+  let optionsText = 'Options'
+
+  if (checked.length) {
+    optionsText += `: ${checked.length} teams selected`
+  }
+
+  return (
+    <React.Fragment>
+      <div className='d-flex my-4'>
+        <label>Select Access rights for teams</label>
+        <input
+          type='text'
+          className='search-input ml-auto'
+          placeholder='Search'
+        />
+      </div>
+      <div className='d-flex my-4'>
+        <DropDown btnName={optionsText}>
+          <ModalBulkAccessRights users={[]} />
+          {optionBtn.map(({ title, icon }, i) => (
+            <button type='button' className='dropdown-item btn' key={i}>
+              <div>
+                <span className={classnames('mr-2', icon)} />
+              </div>
+              <span className='item-text'>
+                {title}
+              </span>
+            </button>
+          ))}
+        </DropDown>
+        <NewTeamModal />
+      </div>
+      <div className='access-rights-table-block'>
+        <Table sortable striped className='main-table-block'>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell className='table-checkbox'>
+                <div className='d-flex'>
+                  <input
+                    type='checkbox'
+                    id='check_all'
+                  />
+                  <label htmlFor='check_all' />
+                </div>
+              </Table.HeaderCell>
+              {columns.map(({ title, divider }) => (
+                <Table.HeaderCell key={title} >
+                  {divider && <span className='divider' />}
+                  <span>{title}</span>
+                </Table.HeaderCell>
+              ))}
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {data.map((user, i) => (
+              <Table.Row key={i}>
+                <Table.Cell className='table-checkbox'>
+                  <div>
+                    <input
+                      type='checkbox'
+                      id={user.id}
+                      checked={checked.includes(user.id)}
+                      onChange={() => this.checkItem(type, user.id)}
+                    />
+                    <label htmlFor={user.id} />
+                  </div>
+                </Table.Cell>
+                <Table.Cell className='team-title-column user-info-avatar d-flex'>
+                  <div className='user-info-avatar'>
+                    <div className='team-icon'>
+                      <UserAvatar size='42' name='T' />
+                    </div>
+                  </div>
+                  <div className='user-and-company'>
+                    <span>{`${user.first_name} ${user.last_name}`}</span>
+                    <div className='d-flex'>
+                      <button type='button' className='btn pl-0'>Add new members</button>
+                      <ShowMembersPopup />
+                    </div>
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <span>{`${user.first_name} Member id`}</span>
+                </Table.Cell>
+                <Table.Cell>
+                  {rightsDropDown('FOU', 'Originating company')}
+                </Table.Cell>
+                <Table.Cell>
+                  {rightsDropDown('HSE', 'Discipline')}
+                </Table.Cell>
+                <Table.Cell>
+                  {rightsDropDown('LOG', 'Document type')}
+                </Table.Cell>
+                <Table.Cell>
+                  <span>{user.email}</span>
+                </Table.Cell>
+
+                <Table.Cell className='column-for-dropdown'>
+                  <DropDown
+                    dots={true}
+                    className='dropdown-with-icon'
+                    ulClass='left'
+                    defaultValues={optionBtn}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </div>
+
+    </React.Fragment>
+  )
+}
+*/
+
+
+/* 
 class TeamsAccessRights extends Component {
 
   state = {
@@ -237,3 +377,4 @@ export default connect(
   form: 'team_access_rights_form'
 })(withRouter(TeamsAccessRights)))
 
+ */

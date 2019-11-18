@@ -1,9 +1,15 @@
 import axios from 'axios'
 import {
+  GET_NEW_TEAMS_LIST,
   GET_NEW_MEMBERS_LIST,
   GET_CURRENT_MEMBERS_LIST
 } from './types'
 import { addNotification } from './notificationsActions'
+
+const newTeamsFetched = payload => ({
+  type: GET_NEW_TEAMS_LIST,
+  payload
+})
 
 const newMembersFetched = payload => ({
   type: GET_NEW_MEMBERS_LIST,
@@ -14,6 +20,21 @@ const currentMembersFetched = payload => ({
   type: GET_CURRENT_MEMBERS_LIST,
   payload
 })
+
+export const getGrantAccessTeams = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/dms_teams`, headers)
+      .then(response => {
+        dispatch(newTeamsFetched(response.data))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
 
 export const getGrantAccessMembers = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
