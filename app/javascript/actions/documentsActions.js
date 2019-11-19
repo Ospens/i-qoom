@@ -146,11 +146,11 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
       .then(response => {
         dispatch(documentsFetched(response.data))
         dispatch(sortTable())
+        dispatch(toggleLoading(false))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-      }).finally(() => {
         dispatch(toggleLoading(false))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -188,10 +188,10 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
       .then(response => {
         dispatch(documentsFetchedWithoutFilters(response.data))
         dispatch(sortTable())
+        dispatch(toggleLoading(false))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-      }).finally(() => {
         dispatch(toggleLoading(false))
       })
   )
