@@ -88,6 +88,7 @@ Rails.application.routes.draw do
             post :update_members
             post :update_rights
           end
+          get :index_for_documents, on: :collection
         end
         resources :project_administrators,
                   only: [ :show,

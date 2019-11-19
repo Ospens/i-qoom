@@ -21,6 +21,15 @@ class Api::V1::DmsTeamsController < ApplicationController
     render json: DocumentRight.attributes_for_teams(@project, params[:only_new] == 'true')
   end
 
+  def index_for_documents
+    render json: @project.dms_teams.as_json(only: [:id, :name],
+                                            include: { users: { only: [:id,
+                                                               :first_name,
+                                                               :last_name,
+                                                               :username,
+                                                               :email] } })
+  end
+
   def update_members
     @dms_team.users = []
     params[:users].each do |user|
