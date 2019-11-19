@@ -7,6 +7,7 @@ import Terms from './Terms'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import SignedUp from './SignedUp'
+import SignUpFromEmail from './SignUpFromEmail'
 import RestorePassword from './RestorePassword'
 import NewPassword from './NewPassword'
 
@@ -27,6 +28,7 @@ function LandingPage({ location }) {
         <Route path='/restore-password' render={props => <RestorePassword {...props} />} />
         <Route path='/new-password/:token/' render={props => <NewPassword {...props} />} />
         <Route path='/signedup' render={props => <SignedUp {...props} />} />
+        <Route path='/sign-up-from-email' render={props => <SignUpFromEmail {...props} />} />
       </Switch>
 
       <Footer />

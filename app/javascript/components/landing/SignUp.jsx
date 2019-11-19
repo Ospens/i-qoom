@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useState, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import classnames from 'classnames'
 import { signUpUser } from '../../actions/userActions'
 import SelectField from '../../elements/SelectField'
@@ -10,27 +10,8 @@ import InputField from '../../elements/InputField'
 import countryList from './countriesCodes'
 import { required, email, maxLength15 } from '../../elements/validations'
 
-class SignUp extends Component {
-  state = {
-    step: 1
-  }
-
-  handleSubmit = values => {
-    const { step } = this.state
-    const { signUpUser, history } = this.props
-    
-    if (step < 2) {
-      this.nextStep()
-      return
-    }
-    return signUpUser(values).then(() => history.push({ pathname: '/signedup' }))
-  }
-
-  nextStep = () => this.setState({step: 2})
-
-  prevStep = () => this.setState({step: 1})
-
-  renderFirstStep = () => (
+function FirstStep() {
+  return (
     <div id='first-step-form'>
       <div className='form-row'>
         <Field
@@ -93,8 +74,10 @@ class SignUp extends Component {
       </div>
     </div>
   )
+}
 
-  renderSecondStep = () => (
+function SecondStep({ prevStep }) {
+  return (
     <div id='second-step-form'>
       <div className='form-row'>
         <Field
@@ -149,7 +132,7 @@ class SignUp extends Component {
         />
       </div>
       <div className='form-buttons row text-center'>
-        <button type='button' className='col-2 btn btn-back' onClick={this.prevStep}>
+        <button type='button' className='col-2 btn btn-back' onClick={prevStep}>
           <span className='icon-arrow-button-left' />
           Back
         </button>
@@ -157,35 +140,37 @@ class SignUp extends Component {
       </div>
     </div>
   )
-
-  render() {
-    const { step } = this.state
-
-    return (
-      <div id='sign-up-form'>
-        <form noValidate={true} onSubmit={this.props.handleSubmit(this.handleSubmit)}>
-          <div className='steps row text-center'>
-            <div className='step active col-6'>Step 1</div>
-            <div className={classnames('step', 'col-6', { active: step === 2 })}>Step 2</div>
-          </div>
-          <h2 className='sign-up-form__header text-center'>
-            You are {step > 1 ? 'one step' : 'two steps'} away from getting things done. Register for free.
-          </h2>
-          <div className='form-fields'>
-            {step === 1
-              ? this.renderFirstStep()
-              : this.renderSecondStep()}
-          </div>
-        </form>
-      </div>
-    )
-  }
 }
 
-const mapDispatchToProps = dispatch => ({
-  signUpUser: (userFields) => dispatch(signUpUser(userFields))
-})
+function SignUp({ handleSubmit }) {
+  const dispatch = useDispatch()
+  const [step, setStep] = useState(1)
+  const history = useHistory()
 
-export default connect(null, mapDispatchToProps)
-  (reduxForm({ form: 'sign_up' })
-  (SignUp))
+  const submit = useCallback(values => {
+    if (step < 2) {
+      setStep(2)
+      return
+    }
+    return dispatch(signUpUser(values)).then(() => history.push({ pathname: '/signedup' }))
+  }, [dispatch, step])
+    
+  return (
+    <div id='sign-up-form'>
+      <form noValidate={true} onSubmit={handleSubmit(submit)}>
+        <div className='steps row text-center'>
+          <div className='step active col-6'>Step 1</div>
+          <div className={classnames('step', 'col-6', { active: step === 2 })}>Step 2</div>
+        </div>
+        <h2 className='sign-up-form__header text-center'>
+          You are {step > 1 ? 'one step' : 'two steps'} away from getting things done. Register for free.
+          </h2>
+        <div className='form-fields'>
+          {step === 1 ? <FirstStep /> : <SecondStep prevStep={() => setStep(1)}/>}
+        </div>
+      </form>
+    </div>
+  )
+}
+
+export default reduxForm({ form: 'sign_up' })(SignUp)

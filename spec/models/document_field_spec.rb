@@ -49,7 +49,7 @@ RSpec.describe DocumentField, type: :model do
       before do
         subject.document_rights.create(document_field: subject,
                                        limit_for: :field,
-                                       user: user,
+                                       parent: user,
                                        enabled: true)
       end
       # limitation by field is temporarily disabled
@@ -79,13 +79,13 @@ RSpec.describe DocumentField, type: :model do
 
       it do
         expect(subject.document_field_values).to be_any
-        subject.document_rights.create(limit_for: :field, user: user)
+        subject.document_rights.create(limit_for: :field, parent: user)
         expect(subject.can_build?(user)).to eql(false)
       end
 
       it do
         subject.document_rights.create(limit_for: :value,
-                                       user: user,
+                                       parent: user,
                                        document_field_value: subject.document_field_values.first)
         expect(subject.can_build?(user)).to eql(true)
       end
@@ -139,7 +139,8 @@ RSpec.describe DocumentField, type: :model do
     attrs = assign_attributes_suffix_to_document(doc1.reload.attributes_for_edit)
     rev2 = main.revisions.create
     doc2 = rev2.versions.new(attrs)
-    expect(doc2).to_not be_valid
+    expect(doc2).to be_valid
+    expect(doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value).to eql('01')
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '2'
     expect(doc2).to be_valid
     doc2.document_fields.detect{ |i| i['codification_kind'] == 'revision_number' }.value = '100'

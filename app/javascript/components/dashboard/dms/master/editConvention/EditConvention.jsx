@@ -2,7 +2,7 @@ import React from 'react'
 import DMSLayout from '../../DMSLayout'
 import DocFieldsTable from './DocFieldsTable'
 import Tabs from '../../../../../elements/Tabs'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 
 const renderTab = () => (
   <div className='dms-content bordered edit-convention'>

@@ -9,7 +9,7 @@ describe Document, type: :request do
     convention = project.conventions.active
     convention.document_fields.limit_by_value.each do |field|
       field.document_rights
-           .create(user: user,
+           .create(parent: user,
                    limit_for: :value,
                    document_field_value: field.document_field_values.first,
                    enabled: true)
@@ -153,6 +153,7 @@ describe Document, type: :request do
       let(:attrs) do
         attrs = document.attributes_for_edit
         attrs['email_title'] = title
+        attrs['contractor'] = title
         revision_number = attrs['document_fields'].detect{ |i| i['codification_kind'] == 'revision_number' }
         revision_number['value'] = '2'
         attrs
@@ -203,6 +204,13 @@ describe Document, type: :request do
         post "/api/v1/documents/#{document.id}/create_revision",\
           params: { document: attrs }, headers: credentials(owner)
         expect(response).to have_http_status(:success)
+      end
+
+      it 'contractor validation' do
+        attrs['contractor'] = nil
+        post "/api/v1/documents/#{document.id}/create_revision",\
+          params: { document: attrs }, headers: credentials(owner)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
 

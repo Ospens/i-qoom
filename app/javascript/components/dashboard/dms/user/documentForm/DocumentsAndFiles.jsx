@@ -8,17 +8,17 @@ import {
   initialize
 } from 'redux-form'
 import { Link, withRouter } from 'react-router-dom'
-import DocIdModal from '../DocIdModal'
-import SelectField from '../../../../elements/SelectField'
-import CheckboxField from '../../../../elements/CheckboxField'
-import DatePickerField from '../../../../elements/DatePickerField'
-import DropZoneField from '../../../../elements/DropZoneField'
-import InputField from '../../../../elements/InputField'
-import TextAreaField from '../../../../elements/TextAreaField'
-import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../elements/validations'
-import { initValues } from '../initDocId'
-import DocumentIdInputs from '../DocumentIdInputs'
-import { addNotification } from '../../../../actions/notificationsActions'
+import DocIdModal from '../../DocIdModal'
+import SelectField from '../../../../../elements/SelectField'
+import CheckboxField from '../../../../../elements/CheckboxField'
+import DatePickerField from '../../../../../elements/DatePickerField'
+import DropZoneField from '../../../../../elements/DropZoneField'
+import InputField from '../../../../../elements/InputField'
+import TextAreaField from '../../../../../elements/TextAreaField'
+import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../../elements/validations'
+import { initValues } from '../../initDocId'
+import DocumentIdInputs from '../../DocumentIdInputs'
+import { addNotification } from '../../../../../actions/notificationsActions'
 
 const codificationString = [
   'originating_company',

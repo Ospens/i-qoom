@@ -8,17 +8,19 @@ import { starUpdateAdmin } from '../../../../actions/projectActions'
 
 function ProjectDetails({ match: { params: { project_id } } }) {
   const admins = useSelector(state => state.projects.current.admins)
+  const companyData = useSelector(state => state.projects.current.company_data)
+  const id = useSelector(state => state.projects.current.id)
   const dispatch = useDispatch()
 
   const updateAdmin = useCallback(values =>
     dispatch(starUpdateAdmin(project_id, values))
-    [dispatch])
+  [dispatch])
 
   return (
     <div>
       <h5 className='tab-title'>Project details</h5>
       <div className='row'>
-        <CompanyBlock />
+        <CompanyBlock initialValues={{ company_data: companyData, id }}/>
         <div className='col-lg-6 admins-column'>
           {admins.map((admin, i) => (
             <AdminBlock

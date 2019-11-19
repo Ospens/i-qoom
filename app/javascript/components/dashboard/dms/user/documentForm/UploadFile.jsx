@@ -3,8 +3,11 @@ import { useSelector } from 'react-redux'
 import { formValueSelector, Field } from 'redux-form'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
+import { required } from '../../../../../elements/validations'
 
-const selector = formValueSelector('revision_form')
+export const changeFile = value => (value || typeof value === 'number' ? undefined : 'Please change the file')
+
+const selector = formValueSelector('document_form')
 
 function UploadFile() {
   const documentFields = useSelector(state => selector(state, 'document_fields'))
@@ -17,18 +20,19 @@ function UploadFile() {
     <div >
       <div className='dms-content__header'>
         <div className='d-flex'>
-          <h4>Add new revision:</h4>
+          <h4>Add new revision</h4>
         </div>
       </div>
 
       <div className='content-body bottom-padding'>
-        <div className='form-group col-6 pl-0 mt-4'>
+        <div className='form-group col-6 pl-0'>
           <Field
             component={InputField}
-            name='originator'
-            id='originator'
+            name='contractor'
+            id='contractor'
             placeholder='Originator'
             label='Type in originator*'
+            validate={[required]}
           />
         </div>
         <div className='row mt-5'>
@@ -37,7 +41,7 @@ function UploadFile() {
               label={docFile.title}
               name={`document_fields[${docIndex}].value`}
               id={`document_fields[${docIndex}].value`}
-              // validate={validationList(field)} 
+              validate={[changeFile]}
               placeholder={docFile.command}
               component={DropZoneField}
               renameFile={true}

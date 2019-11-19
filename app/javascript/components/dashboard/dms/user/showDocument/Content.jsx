@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { useSelector } from 'react-redux'
-import { withRouter, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 
 const renderBlock = field => {
   if (field.codification_kind === 'revision_number') {
@@ -41,27 +41,37 @@ const renderBlock = field => {
   }
 }
 
-const Content = ({ match: { params: { project_id, document_id } } }) => {
+function Content() {
+  const { project_id } = useParams()
   const document = useSelector(state => state.documents.current)
+  const revisionsWithVersions = useSelector(state => state.documents.revisions)
   const firstColumn = document.document_fields.filter(el => el.column == 1 )
   const secondColumn = document.document_fields.filter(el => el.column == 2)
   const fileFields = document.document_fields.filter(el => el.kind === 'upload_field')
+  const revisions = revisionsWithVersions[revisionsWithVersions.length - 1]
+  let lastDocID = undefined
+
+  if (revisions) {
+    const versions = revisions.versions
+    lastDocID = versions[versions.length - 1].id
+  }
 
   return (
     <div className='show-document bordered'>
       <div className='dms-content__header'>
         <div className='d-flex'>
           <h4>Document details</h4>
+          {lastDocID && 
           <div className='dms-content__header_links-block'>
             <Link
-              to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`}
+              to={`/dashboard/projects/${project_id}/documents/${lastDocID}/edit`}
               className='mx-4 link'
               data-title='Edit document'
             >
               Edit document
             </Link>
             <Link 
-              to={`/dashboard/projects/${project_id}/documents/${document_id}/add_revision`}
+              to={`/dashboard/projects/${project_id}/documents/${lastDocID}/add_revision`}
               className='mx-4 link'
               data-title='Add revision'
             >
@@ -74,7 +84,7 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
             >
               Review document
             </Link>
-          </div>
+          </div>}
         </div>
         <div className='dms-content__project-phases'>
           <span>Project phases</span>
@@ -249,11 +259,14 @@ const Content = ({ match: { params: { project_id, document_id } } }) => {
 
       <div className='dms-footer'>
         <Link className='btn btn-white' to={`/dashboard/projects/${project_id}/documents/`}>Back</Link>
-        <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${document_id}/edit`}>Edit</Link>
-        <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${document_id}/add_revision`}>Add revision</Link>
+        {lastDocID &&
+        <React.Fragment>
+          <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${lastDocID}/edit`}>Edit</Link>
+          <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${lastDocID}/add_revision`}>Add revision</Link>
+        </React.Fragment>}
       </div>
     </div>
   )
 }
 
-export default withRouter(Content)
+export default Content

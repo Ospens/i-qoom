@@ -43,6 +43,10 @@ class Document < ApplicationRecord
             length: { minimum: 1 },
             if: :reviewers_and_review_issuers_required?
 
+  validates :contractor,
+            presence: true,
+            if: -> { !first_document_in_chain? && !revision.versions.any? }
+
   validate :prevent_update_of_codification_string,
            on: :create
 
@@ -192,7 +196,9 @@ class Document < ApplicationRecord
     # user cannot view document if he has no access to all
     # selected values of document for each field that can be limited by value.
     # when viewing document we check saved convention
-    !convention.document_fields.limit_by_value.map do |field|
+    fields = convention.document_fields.limit_by_value
+    team = project.dms_teams.joins(:users).where(users: { id: user.id }).first
+    !fields.map do |field|
       selected_field =
         document_fields
           .find_by(codification_kind: field.codification_kind)
@@ -200,11 +206,25 @@ class Document < ApplicationRecord
         selected_field.document_field_values.find_by(selected: true)
       field.document_rights
            .joins(:document_field_value)
-           .where(user: user,
+           .where(parent: user,
                   limit_for: :value,
                   enabled: true,
                   document_field_values: { value: selected_value.value }).any?
-    end.include?(false) || project.dms_master?(user)
+    end.include?(false) ||
+      (team.present? && !fields.map do |field|
+        selected_field =
+          document_fields
+            .find_by(codification_kind: field.codification_kind)
+        selected_value =
+          selected_field.document_field_values.find_by(selected: true)
+        team.document_rights
+            .joins(:document_field_value)
+            .where(document_field: field,
+                   limit_for: :value,
+                   enabled: true,
+                   document_field_values: { value: selected_value.value }).any?
+      end.include?(false)) ||
+      project.dms_master?(user)
   end
 
   def attributes_for_edit

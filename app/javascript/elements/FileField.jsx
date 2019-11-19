@@ -1,74 +1,55 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { change } from 'redux-form'
+import React, { useState, useEffect, useCallback } from 'react'
 import classnames from 'classnames'
 
-const initState = {
-  file: '',
-  imagePreviewUrl: ''
+function Logo({ url, discardLogo }) {
+  return (
+    <div className='logo-container'>
+      <div className='trash-icon-container'>
+        <span
+          className='icon-bin-1 white'
+          onClick={discardLogo}
+        />
+      </div>
+      <img src={url} />
+    </div>
+  )
 }
 
-class FileField extends Component {
+function FileField({ dataAllowedFileExtensions, input }) {
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
-  state = initState
+  useEffect(() => {
+    if (typeof input.value !== 'string') return
 
-  UNSAFE_componentWillUpdate(nextProps) {
-    if (typeof nextProps.input.value === 'string') {
-      this.props.input.onChange(null)
-      this.setState({
-        imagePreviewUrl: nextProps.input.value
-      })
-    }
-  }
+    input.onChange(null)
+    setImagePreviewUrl(input.value)
+  }, [input])
+  
+  const discardLogo = useCallback(() => {
+    setImagePreviewUrl('')
+    input.onChange({})
+  }, [input])
 
-  discardLogo = () => {
-    this.setState(initState)
-    this.props.input.onChange({})
-  }
-
-  onInputChange = e => {
+  const onInputChange = useCallback(e => {
     e.preventDefault()
-
     let reader = new FileReader()
     let file = e.target.files[0]
-
     reader.onloadend = () => {
-      this.setState({
-        file: file,
-        imagePreviewUrl: reader.result
-      })
+      setImagePreviewUrl(reader.result)
     }
     reader.readAsDataURL(file)
-    this.props.input.onChange(file)
-  }
-
-  renderLogo = url => {
-    return (
-      <div className='logo-container'>
-        <div className='trash-icon-container'>
-          <span
-            className='icon-bin-1 white'
-            onClick={this.discardLogo}
-          />
-        </div>
-        <img src={url} /> 
-      </div>
-    )
-  }
-
-  render() {
-    const { imagePreviewUrl } = this.state
-    const { dataAllowedFileExtensions } = this.props
-    const imagePreview = imagePreviewUrl ? this.renderLogo(imagePreviewUrl) : null
-    const mainClass = classnames({'image-preview': imagePreview})
-    
-    return (
-      <div className={mainClass}>
-        {imagePreview}
-        {!imagePreview &&
+    input.onChange(file)
+  }, [input])
+  const imagePreview = imagePreviewUrl ? <Logo url={imagePreviewUrl} discardLogo={discardLogo} /> : null
+  const mainClass = classnames({ 'image-preview': imagePreview })
+  
+  return (
+    <div className={mainClass}>
+      {imagePreview}
+      {!imagePreview &&
         <div>
           <input
-            onChange={e => this.onInputChange(e)}
+            onChange={e => onInputChange(e)}
             id='file_logo'
             type='file'
             className='inputfile'
@@ -81,13 +62,8 @@ class FileField extends Component {
             <strong>Add a logo</strong>
           </label>
         </div>}
-      </div>
-    )
-  }
+    </div>
+  )
 }
 
-const mapDispatchToProps = dispatch => ({
-  discardLogo: () => dispatch(change('company_form', 'company_data.logo', null))
-})
-
-export default connect(null, mapDispatchToProps)(FileField)
+export default FileField

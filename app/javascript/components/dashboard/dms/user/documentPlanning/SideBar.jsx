@@ -1,6 +1,6 @@
 import React from 'react'
 import DropDown from '../../../../../elements/DropDown'
-import DmsSideBar from '../../DmsSideBar'
+import DmsSideBar from '../../sideBar/DmsSideBar'
 
 const options = [
   {

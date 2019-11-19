@@ -19,7 +19,7 @@ RSpec.describe DocumentRight, type: :model do
     it 'non codification_field' do
       expect(subject).to be_limit_for_field
       expect(subject.document_field.codification_kind).to be_nil
-      subject.user = nil
+      subject.parent = nil
       expect(subject).to_not be_valid
     end
   end
@@ -38,9 +38,9 @@ RSpec.describe DocumentRight, type: :model do
     subject.save
     convention = subject.convention
     project = convention.project
-    doc_right = FactoryBot.create(:document_right, convention: convention, user: subject.user)
-    FactoryBot.create(:document_right, user: subject.user)
-    rights = subject.user.document_rights
+    doc_right = FactoryBot.create(:document_right, convention: convention, parent: subject.parent)
+    FactoryBot.create(:document_right, parent: subject.parent)
+    rights = subject.parent.document_rights
     expect(subject.convention).to eql(doc_right.convention)
     expect(rights.count).to eql(3)
     # bug https://github.com/rails/rails/issues/33991
@@ -54,7 +54,7 @@ RSpec.describe DocumentRight, type: :model do
     expect(project.can_create_documents?(user)).to eql(false)
     originating_company =
       convention.document_fields.find_by(codification_kind: :originating_company)
-    originating_company.document_rights.create(user: user,
+    originating_company.document_rights.create(parent: user,
                                                limit_for: :value,
                                                document_field_value:
                                                 originating_company.document_field_values.first,
