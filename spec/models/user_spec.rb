@@ -64,4 +64,10 @@ describe User, type: :model do
     user = FactoryBot.create(:user, confirmed_at: nil)
     expect(user.confirmation_sent_at).to be_present
   end
+
+  it "should have valid member_id" do
+    user = FactoryBot.create(:user)
+    expect(user.member_id.last(5).to_i).to eq user.id
+    expect(user.member_id).to be_truthy
+  end
 end

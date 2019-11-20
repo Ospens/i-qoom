@@ -56,6 +56,7 @@ class User < ApplicationRecord
             length: { maximum: 18 },
             uniqueness: true
 
+  after_create :generate_member_id
   after_create :send_confirmation_email, unless: :confirmed?
 
   def confirmed?
@@ -83,5 +84,11 @@ class User < ApplicationRecord
   def reset_password
     generate_reset_password_token
     ApplicationMailer.reset_password_instructions(self).deliver_now
+  end
+
+  private
+
+  def generate_member_id
+    self.member_id = "i-" + (first_name.first + last_name.first).upcase + id.to_s.rjust(5, '0')
   end
 end
