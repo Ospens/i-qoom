@@ -105,6 +105,7 @@ Rails.application.routes.draw do
           collection do
             get  :active
             get  :pending
+            get  :check_if_present
           end
         end
         resources :disciplines,
