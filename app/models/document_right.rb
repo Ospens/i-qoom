@@ -104,6 +104,7 @@ class DocumentRight < ApplicationRecord
       attrs[:teams] << {
         id: team.id,
         name: team.name,
+        users: team.users.as_json(only: [:id, :first_name, :last_name]),
         document_rights: rights_attrs
       }
     end

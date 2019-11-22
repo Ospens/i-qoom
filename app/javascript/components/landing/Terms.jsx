@@ -1,35 +1,24 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import TextEditor from '../../elements/TextEditor'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-class Terms extends Component {
+function Terms({ editable }) {
+  const authed = useSelector(({ user }) => user.authStatus)
+  const content = useSelector(({ landing }) => landing.terms.content)
+  
+  useEffect(() => { window.scrollTo(0, 0) }, [])
 
-  componentDidMount() {
-    window.scrollTo(0, 0)
-  }
-
-  render() {
-    const { authed, content, editable } = this.props
-    return (
-      <div>
-        <section className='container info-container'>
-          <div className='text-center'>
-            {authed && editable ?
-              (
-                <TextEditor text={content} />
-              ) : (
-                <div dangerouslySetInnerHTML={{ __html: content }} />
-              )}
-          </div>
-        </section>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <section className='container info-container'>
+        <div className='text-center'>
+          {authed && editable
+            ? <TextEditor text={content} /> 
+            : <div dangerouslySetInnerHTML={{ __html: content }} />}
+        </div>
+      </section>
+    </div>
+  )
 }
 
-const mapStateToProps = ({ user, landing }) => ({
-  authed: user.authStatus,
-  content: landing.terms.content
-})
-
-export default connect(mapStateToProps)(Terms)
+export default Terms

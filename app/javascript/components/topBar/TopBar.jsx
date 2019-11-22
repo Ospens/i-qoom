@@ -3,30 +3,13 @@ import { useLocation } from 'react-router-dom'
 import DashboardBar from './DashboardBar'
 import LandingBar from './LandingBar'
 
-const landingBarPath = [
-  '/', 
-  '/terms', 
-  '/imprint', 
-  '/signin', 
-  '/signup', 
-  '/signedup', 
-  '/menu', 
-  '/restore-password', 
-  '/new-password'
-]
-
 function TopBar({ isOpen, toggle }) {
   const { pathname } = useLocation()
 
-  if (
-    landingBarPath.includes(pathname)
-    || pathname === '/admin_panel'
-    || pathname.includes('signin')
-    || pathname.includes('new-password'
-  )) {
-    return <LandingBar isOpen={isOpen} toggle={toggle} />
-  } else {
+  if (pathname.includes('dashboard')) {
     return <DashboardBar isOpen={isOpen} toggle={toggle} />
+  } else {
+    return <LandingBar isOpen={isOpen} toggle={toggle} />
   }
 }
 
