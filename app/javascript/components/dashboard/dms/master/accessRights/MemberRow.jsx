@@ -56,7 +56,7 @@ function MemberRow({
         <div className='member-id table__row-cell'>
           <span>{`${member.id} Member id`}</span>
         </div>
-        <div className='table__row-cell'>
+        <div className='table__row-cell access-rights-cell'>
           <RightsDropDown
             values={fields.originating_company}
             memberId={member.id}

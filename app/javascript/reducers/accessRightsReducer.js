@@ -31,13 +31,13 @@ const accessRightsReducer = (state = initialState, action) => {
   case GET_NEW_TEAMS_LIST:
     return {
       ...state,
-      newTeams: action.payload.users,
+      newTeams: action.payload.teams,
       fields: action.payload.fields
     }
   case GET_CURRENT_TEAMS_LIST:
     return {
       ...state,
-      oldTeams: action.payload.users,
+      oldTeams: action.payload.teams,
       fields: action.payload.fields
     }
   default:

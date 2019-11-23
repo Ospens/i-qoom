@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
-import ReactSVG from 'react-svg'
 import UserAvatar from 'react-user-avatar'
 import DropDown from '../../../../../elements/DropDown'
-import plusIcon from '../../../../../images/add_1'
 
 const ddOPtions = [
   {
@@ -25,7 +23,7 @@ const ddOPtions = [
   },
 ]
 
-export const RenderTeamlist = ({ users = [] }) => {
+export function Teamlist({ users = [] }) {
   const [showMore, toggleShowMore] = useState(false)
   const [checkedUser, toggleCheckedUser] = useState(0)
   const tmpUsers = showMore ? users : users.slice(0, 3)
@@ -42,11 +40,9 @@ export const RenderTeamlist = ({ users = [] }) => {
   return (
     <React.Fragment>
       <div className='opened-members-block'>
-        <ReactSVG
-          svgStyle={{ height: 25, width: 25 }}
-          src={plusIcon}
-          className='popup-add-team-member'
-        />
+        <button type='button' className='popup-add-team-member'>
+          <span className='icon-add_1 mr-2' />
+        </button>
         <React.Fragment>
           <div className={classnames('team-member-list', { 'opened': checkedUser })}>
             {tmpUsers.map((user, index) => (
@@ -79,23 +75,28 @@ export const RenderTeamlist = ({ users = [] }) => {
   )
 }
 
-const ShowMembersPopup = users => {
+function Trigger() {
+  return (
+    <button
+      type='button'
+      className='btn ml-auto'
+    // onClick={() => toggleShowMore(false)}
+    >
+      Show members
+    </button>
+  )
+}
 
+function ShowMembersPopup() {
+  const [open, setOpen] = useState(false)
   return (
     <Popup
-      trigger={
-        <button
-          type='button'
-          className='btn ml-auto'
-          // onClick={() => toggleShowMore(false)}
-        >
-          Show members
-        </button>
-      }
+      trigger={<Trigger/>}
       on='click'
+      open={true}
     >
       <div className='tooltip-block'>
-        {RenderTeamlist({})}
+        <Teamlist />
       </div>
     </Popup>
   )

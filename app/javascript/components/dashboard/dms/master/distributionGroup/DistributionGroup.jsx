@@ -6,7 +6,7 @@ import ModalCopyToDG from './ModalCopyToDG'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../sideBar/DmsSideBar'
 import DropDown from '../../../../../elements/DropDown'
-import { RenderTeamlist } from '../accessRights/ShowMembersPopup'
+import { Teamlist } from '../accessRights/ShowMembersPopup'
 
 export class DistributionGroup extends Component {
   
@@ -45,7 +45,7 @@ export class DistributionGroup extends Component {
                   </Table.Cell>
                   <Table.Cell>
                     <div className='dg-members'>
-                      <RenderTeamlist users={group.members}/>
+                      <Teamlist users={group.members}/>
                       <DropDown
                         dots={true}
                         className='dropdown-with-icon'

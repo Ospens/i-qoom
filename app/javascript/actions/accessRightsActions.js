@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { SubmissionError, initialize } from 'redux-form'
 import {
   GET_NEW_TEAMS_LIST,
   GET_NEW_MEMBERS_LIST,
@@ -21,12 +22,48 @@ const currentMembersFetched = payload => ({
   payload
 })
 
-export const getGrantAccessTeams = projectId => (dispatch, getState) => {
+export const createTeam = (projectId, request) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/dms_teams`, headers)
+    axios.post(`/api/v1/projects/${projectId}/dms_teams?name=${request.name}`, {}, headers)
+      .then(({ data }) => {
+        dispatch(initialize('team_form', data))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  console.log(values)
+  const request = {
+    ...values
+  }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_members`, request, headers)
+      .then(response => {
+        console.log(response)
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const getGrantAccessTeams = (projectId, isNew = false) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/dms_teams?only_new=${isNew}`, headers)
       .then(response => {
         dispatch(newTeamsFetched(response.data))
       })

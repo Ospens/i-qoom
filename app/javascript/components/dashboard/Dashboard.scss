@@ -868,52 +868,6 @@ input[type=checkbox]:checked+label {
       color: #0095f9;
     }
   }
-
-  .name-column, .team-title-column {
-    position: relative;
-    flex-direction: row;
-    display: flex;
-    width: 200px;
-
-    .user-and-company {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 10px;
-
-      .company-title {
-        color: var(--color-labels);
-      }
-
-      .user_names, .company-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .UserAvatar {
-      display: inline-block;
-      color: #fff;
-      margin-right: 5px;
-    }
-
-    .master-icon {
-      display: flex;
-      width: 25px;
-      height: 25px;
-      justify-content: center;
-      align-content: center;
-      align-items: center;
-      position: absolute;
-      border: 2px solid white;
-      background-color: #4b5b5d;
-      color: white;
-      border-radius: 100%;
-      left: 3px;
-      top: 33px;
-    }
-  }
 }
 
 span.divider {
@@ -1768,6 +1722,10 @@ i.arrow {
   grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
   
+  &.wide {
+    grid-template-columns: 1000px;
+  }
+
   &.select-codification {
     grid-template-columns: 775px;
 
@@ -1852,6 +1810,7 @@ i.arrow {
   border: none;
   font-size: 15px;
   border-collapse: collapse;
+  min-width: 100%;
 
   .Rtable-row {
     display: table-row;
@@ -1943,7 +1902,7 @@ i.arrow {
         border-top: 1px solid rgba(34, 36, 38, .1) !important;
       }
       
-      &:nth-child(even) {
+      &:not(.non-stripped):nth-child(even) {
         background-color: #F7FAFA;
       }
     }
@@ -2048,6 +2007,52 @@ i.arrow {
   }
 }
 
+.name-column, .team-title-column {
+  position: relative;
+  flex-direction: row;
+  display: flex;
+  width: 200px;
+
+  .user-and-company {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+
+    .company-title {
+      color: var(--color-labels);
+    }
+
+    .user_names, .company-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .UserAvatar {
+    display: inline-block;
+    color: #fff;
+    margin-right: 5px;
+  }
+
+  .master-icon {
+    display: flex;
+    width: 25px;
+    height: 25px;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    position: absolute;
+    border: 2px solid white;
+    background-color: #4b5b5d;
+    color: white;
+    border-radius: 100%;
+    left: 3px;
+    top: 33px;
+  }
+}
+
 .table-row {
   display: grid;
   padding-bottom: 10px;
@@ -2075,53 +2080,6 @@ i.arrow {
       display: flex;
       align-content: center;
       align-items: center;
-    }
-  }
-
-
-  .name-column, .team-title-column {
-    position: relative;
-    flex-direction: row;
-    display: flex;
-    width: 200px;
-
-    .user-and-company {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 10px;
-
-      .company-title {
-        color: var(--color-labels);
-      }
-
-      .user_names, .company-title {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .UserAvatar {
-      display: inline-block;
-      color: #fff;
-      margin-right: 5px;
-    }
-
-    .master-icon {
-      display: flex;
-      width: 25px;
-      height: 25px;
-      justify-content: center;
-      align-content: center;
-      align-items: center;
-      position: absolute;
-      border: 2px solid white;
-      background-color: #4b5b5d;
-      color: white;
-      border-radius: 100%;
-      left: 3px;
-      top: 33px;
     }
   }
 }

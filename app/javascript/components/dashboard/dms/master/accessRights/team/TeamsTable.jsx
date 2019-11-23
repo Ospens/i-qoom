@@ -9,16 +9,8 @@ import {
   getGrandedAccessMembers
 } from '../../../../../../actions/accessRightsActions'
 import toggleArray from '../../../../../../elements/toggleArray'
-import CreateTeam from './CreateTeam'
-
-const columns = [
-  { title: 'Name', divider: true },
-  { title: 'Member-ID', divider: true },
-  { title: 'Originating Company', divider: true },
-  { title: 'Discipline', divider: true },
-  { title: 'Document type', divider: true },
-  { title: 'Timelimit', divider: true }
-]
+import TeamForm from './TeamForm'
+import AccessTable from '../accessTable/AccessTable'
 
 const optionBtn = [
   {
@@ -53,19 +45,24 @@ function TeamsTable({ type }) {
   const members = useSelector(state => state.accessRights[type])
   const [checkedMembers, changeChecked] = useState([])
   const fields = useSelector(state => state.accessRights.fields)
-
+  const teams = useSelector(state => state.accessRights.newTeams)
+  
   useEffect(() => {
     changeChecked([])
-    if (type === 'newMembers') {
+    if (type === 'old') {
       dispatch(getGrantAccessTeams(project_id))
-    } else if (type === 'oldMembers') {
-      dispatch(getGrandedAccessMembers(project_id))
+    } else if (type === 'new') {
+      dispatch(getGrantAccessTeams(project_id, true))
     }
   }, [dispatch, type])
 
   const toggleMemeber = useCallback(value => {
     setCheckedDocs(toggleArray(checkedMembers, value))
   }, [checkedMembers])
+
+  const submitRow = useCallback(v => {
+    dispatch(startUpdateTeamAccess(project_id, v, type))
+  }, [dispatch])
 
   let optionsText = 'Options'
 
@@ -78,8 +75,9 @@ function TeamsTable({ type }) {
       <div><label>Select Access rights for members</label></div>
       <div className='d-flex my-4'>
         <DropDown btnName={optionsText} defaultValues={optionBtn} className='d-flex align-self-center' />
-        <CreateTeam />
+        <TeamForm />
       </div>
+      <AccessTable rows={teams} type={type} />
     </React.Fragment>
   )
 }

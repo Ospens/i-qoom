@@ -2,38 +2,14 @@ import React from 'react'
 import DMSLayout from '../../../DMSLayout'
 import DmsSideBar from '../../../sideBar/DmsSideBar'
 import Tabs from '../../../../../../elements/Tabs'
+import TeamForm from './TeamForm'
 import TeamsTable from './TeamsTable'
-
-const columns = [
-  { title: 'Name', divider: true },
-  { title: 'Member-ID', divider: true },
-  { title: 'Originating Company', divider: true },
-  { title: 'Discipline', divider: true },
-  { title: 'Document type', divider: true },
-  { title: 'Timelimit', divider: true },
-  { title: '', divider: true }
-]
-
-const optionBtn = [
-  {
-    title: 'Copy DG-members to team',
-    icon: 'review-icon'
-  },
-  {
-    title: 'Synchronize with distribution group',
-    icon: 'email-unread-icon'
-  },
-  {
-    title: 'Delete team',
-    icon: 'trash-icon'
-  }
-]
 
 function Content() {
   return (
     <Tabs className='big-tabs'>
-      <div label='Teams'><TeamsTable type='newMembers' /></div>
-      <div label='New teams'><TeamsTable type='checkedNewTeams' /></div>
+      <div label='New teams'><TeamsTable type='new' /></div>
+      <div label='Teams'><TeamsTable type='old' /></div>
     </Tabs>
   )
 }

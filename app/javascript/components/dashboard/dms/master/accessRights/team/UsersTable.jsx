@@ -1,20 +1,28 @@
-import React, { useState, useCallback } from 'react'
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import UserAvatar from 'react-user-avatar'
 import classnames from 'classnames'
+import { dmsUsers } from '../../../../../../actions/projectActions'
 
 const columns = [
   { title: 'Name' },
   { title: 'Member-ID' },
   { title: 'E-mail' },
-  { title: 'Company' },
+  { title: 'Company' }
 ]
 
-const users = [
-  { id: 1 }
-]
+function UsersTable({ fieldsArray }) {
+  const dispatch = useDispatch()
+  const { project_id } = useParams()
+  const users = useSelector(state => state.documents.users)
+  const all = fieldsArray.getAll() || []
+  
+  useEffect(() => {
+    dispatch(dmsUsers(project_id))
+  }, [dispatch, project_id])
 
-function UsersTable() {
   return (
-
     <div className='Rtable'>
       <div className='Rtable__header'>
         <div className='Rtable-row'>
@@ -54,31 +62,41 @@ function UsersTable() {
       </div>
       <div className='Rtable__body'>
         {users.map((user, i) => {
+          const index = all.findIndex(v => v === user.id)
+          const checked = index > -1
+
           return (
             <div key={i} className={classnames('Rtable-row', { 'Rtable-row__checked': 'checkedDocs.includes(user.id)' })}>
               <div className='Rtable__row-cell table-checkbox'>
                 <input
-                  type='checkbox' id={user.id}
-                  //onChange={() => checkItem(user.id)}
-                  //checked={checkedDocs.includes(user.id)}
+                  type='checkbox'
+                  id={user.id}
+                  onChange={() => { checked ? fieldsArray.remove(index) : fieldsArray.push(user.id) }}
+                  checked={checked}
                 />
                 <label htmlFor={user.id} />
               </div>
 
               <div className='Rtable__row-cell'>
-                name
+                <div className='d-flex'>
+                  <UserAvatar size='42' name='A B' />
+                  <div className='ml-2'>
+                    <div>{user.first_name} {user.last_name}</div>
+                    <div className='lightgrey'>Vestibulum</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className='Rtable__row-cell member-id'>
+                {user.username}
               </div>
 
               <div className='Rtable__row-cell'>
-                member id
+                qwe@gmail.com
               </div>
 
               <div className='Rtable__row-cell'>
-                email
-              </div>
-
-              <div className='Rtable__row-cell'>
-                company
+                Company
               </div>
 
             </div>
