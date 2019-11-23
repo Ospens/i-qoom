@@ -10,14 +10,6 @@ describe User, type: :model do
     it { is_expected.to validate_presence_of(value) }
   end
 
-  it { is_expected.to validate_length_of(:first_name)
-                        .is_at_least(2)
-                        .is_at_most(255) }
-
-  it { is_expected.to validate_length_of(:last_name)
-                        .is_at_least(2)
-                        .is_at_most(255) }
-
   it { is_expected.to have_many(:sent_messages)
                         .class_name("Message")
                         .with_foreign_key(:sender_id) }
@@ -25,6 +17,24 @@ describe User, type: :model do
   it { is_expected.to have_many(:received_messages)
                         .through(:message_recipients)
                         .source(:message) }
+
+  it { is_expected.to have_many(:project_administrators) }
+  it { is_expected.to have_many(:admin_projects)
+                        .through(:project_administrators)
+                        .source(:project) }
+
+  it { is_expected.to have_many(:project_members) }
+  it { is_expected.to have_many(:member_projects)
+                        .through(:project_members)
+                        .source(:project) }
+
+  it { is_expected.to validate_length_of(:first_name)
+                        .is_at_least(2)
+                        .is_at_most(255) }
+
+  it { is_expected.to validate_length_of(:last_name)
+                        .is_at_least(2)
+                        .is_at_most(255) }
 
   context "validates_presence_of password_confirmation" do
     subject { FactoryBot.create(:user) }

@@ -9,7 +9,17 @@ class User < ApplicationRecord
   attr_accessor :accept_terms_and_conditions
 
   has_many :projects
+
   has_many :project_administrators
+  has_many :admin_projects,
+           through: :project_administrators,
+           source: :project
+
+  has_many :project_members
+  has_many :member_projects,
+           through: :project_members,
+           source: :project
+
 
   has_many :documents, class_name: 'DocumentMain'
   has_many :document_rights,
