@@ -79,6 +79,9 @@ class Ability
       can [:new, :create], Document do |document, project|
         project.can_create_documents?(user)
       end
+      can :create_planned, Document do |document, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
       can [:show,
            :download_native_file,
            :download_details,

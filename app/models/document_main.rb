@@ -26,11 +26,11 @@ class DocumentMain < ApplicationRecord
   before_create :assign_project_code
 
   def self.documents_available_for(user)
-    return Document.none if !all.any?
+    return Document.none if !all.where(planned: false).any?
     docs =
       if all.first.project.dms_settings.show_all_revisions?(user)
         final_documents = []
-        all.each do |main|
+        all.where(planned: false).each do |main|
           documents = main.revisions.latest_version_of_each_revision
           documents.each do |document|
             if document.present? && document.can_view?(user)
@@ -46,7 +46,7 @@ class DocumentMain < ApplicationRecord
   end
 
   def self.last_versions(user)
-    all.map do |main|
+    all.where(planned: false).map do |main|
       document = main.revisions.last_revision.last_version
       document if document.present? && document.can_view?(user)
     end.compact

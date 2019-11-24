@@ -38,7 +38,10 @@ class Api::V1::DocumentsController < ApplicationController
   # creates new fresh document
   def create
     authorize! :create, Document.new, @project
-    main = @project.document_mains.create
+    if params[:planned] == 'true'
+      authorize! :create_planned, Document.new, @project
+    end
+    main = @project.document_mains.create(planned: params[:planned] == 'true')
     rev = main.revisions.create
     document = rev.versions.new(document_params(true))
     if document.save
