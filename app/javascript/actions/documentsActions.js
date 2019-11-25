@@ -41,11 +41,34 @@ export const paramsToFormData = (data, params, preceding = '') => {
 }
 
 const regexp = /(filename=")(.*)"/i
+const imgMIMEtypes = ['jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'ico', 'cur', 'gif', 'bmp', 'apng']
+const applicationMIMEtypes = ['pdf', 'json']
+const textMIMEtypes = ['csv', 'css', 'html', 'calendar']
 
-export const downloadFile = response => {
+export const downloadFile = (response, open = false) => {
   const disposition = response.headers['content-disposition'].match(regexp)
+  const type = disposition[2].match(/(\.)(.*)/i)
+  let MIMEtype = ''
+  let url = ''
+  if (type && open) {
+    if (imgMIMEtypes.includes(type[2])) {
+      MIMEtype = `image/${type[2]}`
+    } else if (applicationMIMEtypes.includes(type[2])) {
+      MIMEtype = `application/${type[2]}`
+    } else if (textMIMEtypes.includes(type[2])) {
+      MIMEtype = `text/${type[2]}`
+    }
+    if (MIMEtype) {
+      url = window.URL.createObjectURL(new Blob([response.data], { type: MIMEtype }))
+      const win = window.open(url, '_blank')
+      win.focus()
+      return
+    }
+  } else {
+    url = window.URL.createObjectURL(new Blob([response.data]))
+  }
+
   const title = disposition ? disposition[2] : 'file.pdf'
-  const url = window.URL.createObjectURL(new Blob([response.data]))
   const link = document.createElement('a')
   link.href = url
 
@@ -123,11 +146,11 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
       .then(response => {
         dispatch(documentsFetched(response.data))
         dispatch(sortTable())
+        dispatch(toggleLoading(false))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-      }).finally(() => {
         dispatch(toggleLoading(false))
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
@@ -165,10 +188,10 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
       .then(response => {
         dispatch(documentsFetchedWithoutFilters(response.data))
         dispatch(sortTable())
+        dispatch(toggleLoading(false))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-      }).finally(() => {
         dispatch(toggleLoading(false))
       })
   )
@@ -379,7 +402,7 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
   )
 }
 
-export const downloadNativeFile = docId => (dispatch, getState) => {
+export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
 
@@ -390,7 +413,7 @@ export const downloadNativeFile = docId => (dispatch, getState) => {
       headers,
       responseType: 'blob' // important
     }).then(response => {
-      downloadFile(response)
+      downloadFile(response, open)
     })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))

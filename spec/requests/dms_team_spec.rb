@@ -99,10 +99,48 @@ describe DmsTeam, type: :request do
     end
 
     it 'dms master' do
+      team.users << user
       get "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}",
         headers: credentials(team.project.user)
       expect(response).to have_http_status(:success)
       expect(json).to have_key('name')
+      expect(json['users'].length).to eql(1)
+      expect(json['document_rights'].length).to eql(3)
+      expect(json['fields'].length).to eql(3)
+    end
+  end
+
+  context '#index_for_documents' do
+    let(:team) { FactoryBot.create(:dms_team) }
+
+    it 'anon' do
+      get "/api/v1/projects/#{team.project.id}/dms_teams/index_for_documents"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{team.project.id}/dms_teams/index_for_documents",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms user' do
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      get "/api/v1/projects/#{team.project.id}/dms_teams/index_for_documents",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms master' do
+      team.users << user
+      get "/api/v1/projects/#{team.project.id}/dms_teams/index_for_documents",
+        headers: credentials(team.project.user)
+      expect(response).to have_http_status(:success)
+      expect(json.first).to have_key('name')
+      expect(json.first['users'].length).to eql(1)
+      expect(json.first['users'].first).to have_key('email')
     end
   end
 
@@ -130,11 +168,17 @@ describe DmsTeam, type: :request do
     end
 
     it 'dms master' do
+      team.users << user
       get "/api/v1/projects/#{team.project.id}/dms_teams",
         headers: credentials(team.project.user),
         params: { only_new: true }
       expect(response).to have_http_status(:success)
       expect(json['teams'].length).to eql(1)
+      expect(json['teams'].first['users'].length).to eql(1)
+      user_attrs = json['teams'].first['users'].first
+      expect(user_attrs).to have_key('id')
+      expect(user_attrs).to have_key('first_name')
+      expect(user_attrs).to have_key('last_name')
     end
   end
 

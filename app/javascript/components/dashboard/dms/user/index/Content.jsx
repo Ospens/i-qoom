@@ -8,6 +8,7 @@ import { columns } from '../../constants'
 import { DropDownItems } from './elements'
 import Filters from './Filters'
 import DownloadDocuments from './DownloadDocuments'
+import OpenDocument from './OpenDocument'
 import { downloadList, downloadDetailFile, downloadNativeFile } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
 import { toggleSearchFilters, sortTable } from '../../../../../actions/documentsActions'
@@ -154,14 +155,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
                   </div>
 
                   <div className='Rtable__row-cell td-files'>
-                    <div>
-                      <span className='icon-common-file-text_big'>
-                        <span className='path1' />
-                        <span className='path2' />
-                        <span className='path3' />
-                        <span className='path4' />
-                      </span>
-                    </div>
+                    <OpenDocument docId={doc.id} />
                   </div>
 
                   <div className='Rtable__row-cell td-files'>

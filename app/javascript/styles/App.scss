@@ -1592,6 +1592,16 @@ header {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+
+    .btn-primary {
+      margin-right: auto !important;
+      margin-left: 5px !important;
+    }
+
+    .btn-back {
+      margin-left: auto !important;
+      margin-right: 5px !important;
+    }
   }
 
   .next-row {
@@ -1636,11 +1646,6 @@ header {
     margin-right: auto;
   }
 
-  .btn-back {
-    margin-left: auto !important;
-    margin-right: 5px !important;
-  }
-
   .form-check {
     display: flex;
     align-items: center;
@@ -1654,11 +1659,6 @@ header {
     align-items: flex-end;
     justify-content: center;
     margin-top: 2em;
-    
-    .btn-primary {
-      margin-right: auto !important;
-      margin-left: 5px !important;
-    }
     
     button,
     a {
@@ -1677,6 +1677,24 @@ header {
       margin-left: 0;
       margin-right: 0;
     }
+  }
+
+  .sign-up-from-email {
+    width: 24%;
+    margin-left: auto;
+    margin-right: auto;
+
+    .sign-up-from-email__info,
+    .sign-up-from-email__member-id {
+      font-size: 20px;
+      color: var(--color-text)
+    }
+
+    .sign-up-from-email__id-for {
+      font-size: 20px;
+      color: var(--color-labels)
+    }
+
   }
 }
 
@@ -2506,7 +2524,7 @@ input[type=checkbox] {
               color: #E9F3F5;
             }
             .path2:before {
-              color: #8FB0B3;
+              color: var(--color-labels);
             }
           }
         }

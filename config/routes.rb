@@ -78,6 +78,7 @@ Rails.application.routes.draw do
             get :download_native_files
             get :download_list
             get :my_documents
+            resources :members, only: :show, module: :documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
@@ -87,6 +88,7 @@ Rails.application.routes.draw do
             post :update_members
             post :update_rights
           end
+          get :index_for_documents, on: :collection
         end
         resources :project_administrators,
                   only: [ :show,

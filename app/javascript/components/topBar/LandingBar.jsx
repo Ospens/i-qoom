@@ -6,20 +6,17 @@ import LandingLinks from './LandingLinks'
 import UserOptions from './UserOptions'
 import Bell from './Bell'
 
-const backPaths = ['signin', '/signup', '/signedup', '/terms', '/imprint', '/menu', '/restore-password', '/new-password']
-
 function LandingBar({ isOpen, toggle }) {
-  const authed = useSelector(state => state.user.authStatus)
   const isAdmin = false
+  const authed = useSelector(state => state.user.authStatus)
   const { pathname } = useLocation()
-
-  const nonMain = location.pathname !== '/'
-    && location.pathname !== '/admin_panel'
-    && location.pathname !== '/restore-password'
-    && location.pathname !== '/signedup'
-    && !location.pathname.includes('signin')
-  const navClass = classnames({ 'show-slider': backPaths.includes(pathname) || pathname.includes('signin') || pathname.includes('new-password') })
-  const headerClass = classnames({ 'colorful': nonMain })
+  const colorful = pathname !== '/'
+                && pathname !== '/admin_panel'
+                && pathname !== '/restore-password'
+                && pathname !== '/signedup'
+                && !pathname.includes('signin')
+  const navClass = classnames({ 'show-slider': pathname !== '/' })
+  const headerClass = classnames({ colorful })
 
   return (
     <header className={headerClass}>
