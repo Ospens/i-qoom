@@ -2130,3 +2130,14 @@ i.arrow {
     transform: rotate(360deg);
   }
 }
+
+.team-form-rights-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 50px;
+
+  .team-form-rights-row__column-title {
+    color: var(--color-labels);
+    margin-bottom: 10px;
+  }
+}

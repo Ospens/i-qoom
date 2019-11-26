@@ -13,7 +13,7 @@ const columns = [
   { title: 'Timelimit', divider: true }
 ]
 
-function AccessTable({ type, rows }) {
+function AccessTable({ type, rows, submitRow }) {
   const [checked, setChecked] = useState([])
   const fields = useSelector(state => state.accessRights.fields)
 
@@ -71,6 +71,7 @@ function AccessTable({ type, rows }) {
               fields={fields}
               initialValues={row}
               columnsLength={columns.length}
+              submitRow={submitRow}
               form={`access_rights_form_${row.id}`}
             />
         )})}

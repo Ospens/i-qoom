@@ -24,7 +24,7 @@ function DropDownRow({ index, valueTitle, id }) {
   )
 }
 
-function RightsDropDown({ id, columnTitle, values, rights, formName }) {
+function RightsDropDown({ rowId, columnTitle, values, rights, formName }) {
   const dispatch = useDispatch()
   const allOptions = rights.filter(r => r.document_field_id === values.id) || []
   const activeOption = allOptions.filter(o => o.enabled) || []
@@ -67,7 +67,7 @@ function RightsDropDown({ id, columnTitle, values, rights, formName }) {
           return (
             <DropDownRow
               key={index}
-              id={id}
+              id={rowId}
               rowId={values.id}
               index={currentRightIndex}
               valueTitle={value}

@@ -1,18 +1,16 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFormValues, reduxForm } from 'redux-form'
-import classnames from 'classnames' 
+import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import RightsDropDown from './RightsDropDown'
 import ShowMembersPopup from '../ShowMembersPopup'
-import { startUpdateAccessMembers } from '../../../../../../actions/accessRightsActions'
 
 function TeamName({ values }) {
-  console.log(values)
   return (
     <div className='user-info-avatar'>
-      <div className='user-info-avatar'>
+      <div className="user-info-avatar">
         <div className='team-icon'>
           <UserAvatar size='42' name='T' />
         </div>
@@ -20,7 +18,7 @@ function TeamName({ values }) {
       <div className='user-and-company'>
         <span className='user_names'>{values.name || 'Team without name'} </span>
         <button type='button' className='with-icon'><span>Add new members</span></button>
-        {values.users && <ShowMembersPopup users={values.users} />}
+        {values.users && values.users.length > 0 && <ShowMembersPopup users={values.users} />}
       </div>
     </div>
   )
@@ -44,24 +42,18 @@ function MemberName({ values }) {
 }
 
 function AccessRow({
+  submitRow,
   columnsLength,
   isMember,
   form,
   handleSubmit,
-  type,
   checkedValues,
   toggleValues,
   fields,
   pristine,
   reset
 }) {
-  const { project_id } = useParams()
-  const dispatch = useDispatch()
   const values = useSelector(state => getFormValues(`${form}`)(state))
-
-  const submitRow = useCallback(v => {
-    // return dispatch(startUpdateAccessMembers(project_id, v, type))
-  }, [dispatch])
 
   if (!values) return <React.Fragment />
 
@@ -86,7 +78,7 @@ function AccessRow({
         <td className='Rtable__row-cell'>
           <RightsDropDown
             values={fields.originating_company}
-            id={values.id}
+            rowId={values.id}
             rights={values.document_rights}
             columnTitle='Originating company'
           />
@@ -94,7 +86,7 @@ function AccessRow({
         <td className='Rtable__row-cell'>
           <RightsDropDown
             values={fields.discipline}
-            id={values.id}
+            rowId={values.id}
             rights={values.document_rights}
             columnTitle='Discipline'
           />
@@ -102,7 +94,7 @@ function AccessRow({
         <td className='Rtable__row-cell'>
           <RightsDropDown
             values={fields.document_type}
-            id={values.id}
+            rowId={values.id}
             rights={values.document_rights}
             columnTitle='Document type'
           />
@@ -111,7 +103,7 @@ function AccessRow({
       </tr>
       {!pristine &&
       <React.Fragment>
-        <tr className='Rtable-row '>
+        <tr className='Rtable-row'>
           <td className='Rtable__row-cell' />
           <td className='Rtable__row-cell' colSpan={columnsLength}>
             <form onSubmit={handleSubmit(submitRow)} className='d-flex align-items-center'>

@@ -93,7 +93,7 @@ function ShowMembersPopup() {
     <Popup
       trigger={<Trigger/>}
       on='click'
-      open={true}
+      open={open}
     >
       <div className='tooltip-block'>
         <Teamlist />

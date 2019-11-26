@@ -8,8 +8,8 @@ import TeamsTable from './TeamsTable'
 function Content() {
   return (
     <Tabs className='big-tabs'>
-      <div label='New teams'><TeamsTable type='new' /></div>
-      <div label='Teams'><TeamsTable type='old' /></div>
+      <div label='Teams'><TeamsTable type='oldTeams' /></div>
+      <div label='New teams'><TeamsTable type='newTeams' /></div>
     </Tabs>
   )
 }

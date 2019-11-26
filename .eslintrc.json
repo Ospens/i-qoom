@@ -20,6 +20,7 @@
         "react-hooks"
     ],
     "rules": {
+      "react/prop-types": 0,
       "indent": [
         "error", 2
       ],
@@ -41,7 +42,7 @@
         "error",
         "as-needed"
       ],
-      "react-hooks/rules-of-hooks": "error", 
+      "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
       "no-param-reassign": 0
     }

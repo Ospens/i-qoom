@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { initialize } from 'redux-form'
 import { useParams } from 'react-router-dom'
 import DropDown from '../../../../../../elements/DropDown'
-import MemberRow from '../MemberRow'
 import {
-  getGrantAccessTeams,
+  getTeams,
+  updateTeamRights,
   getGrandedAccessMembers
 } from '../../../../../../actions/accessRightsActions'
 import toggleArray from '../../../../../../elements/toggleArray'
@@ -42,17 +41,15 @@ const optionBtn = [
 function TeamsTable({ type }) {
   const { project_id } = useParams()
   const dispatch = useDispatch()
-  const members = useSelector(state => state.accessRights[type])
   const [checkedMembers, changeChecked] = useState([])
-  const fields = useSelector(state => state.accessRights.fields)
-  const teams = useSelector(state => state.accessRights.newTeams)
+  const teams = useSelector(state => state.accessRights[type])
   
   useEffect(() => {
     changeChecked([])
-    if (type === 'old') {
-      dispatch(getGrantAccessTeams(project_id))
-    } else if (type === 'new') {
-      dispatch(getGrantAccessTeams(project_id, true))
+    if (type === 'oldTeams') {
+      dispatch(getTeams(project_id))
+    } else if (type === 'newTeams') {
+      dispatch(getTeams(project_id, true))
     }
   }, [dispatch, type])
 
@@ -61,8 +58,8 @@ function TeamsTable({ type }) {
   }, [checkedMembers])
 
   const submitRow = useCallback(v => {
-    dispatch(startUpdateTeamAccess(project_id, v, type))
-  }, [dispatch])
+    dispatch(updateTeamRights(project_id, v, type))
+  }, [dispatch, project_id])
 
   let optionsText = 'Options'
 
@@ -75,9 +72,9 @@ function TeamsTable({ type }) {
       <div><label>Select Access rights for members</label></div>
       <div className='d-flex my-4'>
         <DropDown btnName={optionsText} defaultValues={optionBtn} className='d-flex align-self-center' />
-        <TeamForm />
+        <TeamForm submitRow={submitRow} />
       </div>
-      <AccessTable rows={teams} type={type} />
+      <AccessTable rows={teams} type={type} submitRow={submitRow} />
     </React.Fragment>
   )
 }

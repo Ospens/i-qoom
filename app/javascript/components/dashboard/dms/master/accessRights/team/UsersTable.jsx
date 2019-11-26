@@ -66,12 +66,15 @@ function UsersTable({ fieldsArray }) {
           const checked = index > -1
 
           return (
-            <div key={i} className={classnames('Rtable-row', { 'Rtable-row__checked': 'checkedDocs.includes(user.id)' })}>
+            <div 
+              key={i} 
+              className={classnames('Rtable-row', { 'Rtable-row__checked': checked })}
+            >
               <div className='Rtable__row-cell table-checkbox'>
                 <input
                   type='checkbox'
                   id={user.id}
-                  onChange={() => { checked ? fieldsArray.remove(index) : fieldsArray.push(user.id) }}
+                  onChange={() => { return checked ? fieldsArray.remove(index) : fieldsArray.push(user.id) }}
                   checked={checked}
                 />
                 <label htmlFor={user.id} />
