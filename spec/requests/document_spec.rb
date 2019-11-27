@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'zip'
+include DocumentConcern
 
 describe Document, type: :request do
   let(:json) { JSON(response.body) }
@@ -112,60 +113,6 @@ describe Document, type: :request do
       post "/api/v1/projects/#{@project_id}/documents",\
         params: @params.merge(planned: true), headers: credentials(FactoryBot.create(:user))
       expect(response).to have_http_status(:forbidden)
-    end
-  end
-
-  context '#create_planned' do
-    let(:title) { Faker::Lorem.sentence }
-
-    before do
-      @params = document_attributes(user, false)
-      project = get_project_from_document_attrs(@params)
-      @params = { documents: [ @params ] }
-      @project_id = project.id
-    end
-
-    it 'anon' do
-      post "/api/v1/projects/#{@project_id}/documents/create_planned", params: @params
-      expect(response).to have_http_status(:forbidden)
-    end
-
-    it 'user' do
-      post "/api/v1/projects/#{@project_id}/documents/create_planned",\
-        params: @params, headers: credentials(FactoryBot.create(:user))
-      expect(response).to have_http_status(:forbidden)
-    end
-
-    it 'user with rights' do
-      post "/api/v1/projects/#{@project_id}/documents/create_planned",\
-        params: @params, headers: credentials(user)
-      expect(response).to have_http_status(:forbidden)
-    end
-
-    context 'dms master' do
-      it 'create document' do
-        Project.find(@project_id).members.create!(user: user,
-                                                  dms_module_master: true,
-                                                  employment_type: :employee)
-        post "/api/v1/projects/#{@project_id}/documents/create_planned",\
-          params: @params, headers: credentials(user)
-        expect(response).to have_http_status(:success)
-        expect(DocumentMain.last).to be_planned
-      end
-
-      it 'update document' do
-        doc = FactoryBot.create(:document)
-        doc_attrs = doc.attributes_for_edit
-        doc_attrs['id'] = doc.id
-        doc_attrs['email_title'] = title
-        doc.project.members.create!(user: user,
-                                    dms_module_master: true,
-                                    employment_type: :employee)
-        post "/api/v1/projects/#{doc.project.id}/documents/create_planned",\
-          params: { documents: [doc_attrs] }, headers: credentials(user)
-        expect(response).to have_http_status(:success)
-        expect(doc.revision.last_version.email_title).to eql(title)
-      end
     end
   end
 
