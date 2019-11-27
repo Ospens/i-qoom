@@ -17,7 +17,6 @@ function TeamName({ values }) {
   const handleOpen = useCallback(() => {
     setOpenModal(true)
   }, [])
-  
   return (
     <div className="user-info-avatar">
       <div className="user-info-avatar">
@@ -34,11 +33,13 @@ function TeamName({ values }) {
           <ModalTrigger handleOpen={handleOpen} />
           {values.users
           && values.users.length > 0
-          && <ShowMembersPopup
+          && (
+            <ShowMembersPopup
               teamId={values.id}
               users={values.users}
               handleOpen={handleOpen}
-            />}
+            />
+          )}
         </div>
       </div>
     </div>

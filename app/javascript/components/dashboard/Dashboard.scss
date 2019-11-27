@@ -527,7 +527,7 @@ form {
       img {
         display: none;
       }
-      
+
     }
   }
 
@@ -686,7 +686,7 @@ form {
   ul {
     margin-bottom: 0;
   }
-  
+
   h5 {
     margin: 0;
   }
@@ -781,7 +781,7 @@ input[type=checkbox]:checked+label {
 
     &.table-checkbox {
       padding-left: 16.8px !important;
-      
+
       label {
         margin-bottom: 0;
       }
@@ -884,7 +884,7 @@ span.divider {
 .drop-down:not(.dropdown-with-icon):not(.dropdown-submenu):not(.dms-topbar-menu__dropdown) {
   button {
     padding-right: 24px;
-    
+
     span {
       font-weight: 400;
     }
@@ -1030,7 +1030,7 @@ span.divider {
 
 .with-icon {
   display: flex !important;
-  
+
   span {
     font-weight: 400;
     color: #0095f9;
@@ -1054,7 +1054,7 @@ span.divider {
 div.tab-description {
   display: flex;
   align-items: center;
-  
+
   span {
     color:#ced4da;
   }
@@ -1225,7 +1225,7 @@ div.tab-description {
 .btn-move-to-archive {
   display: flex !important;
   border: 1px solid #ccc !important;
-  
+
   .icon-common-file-lock:before {
     margin-right: 10px;
     color: #212529;
@@ -1234,11 +1234,11 @@ div.tab-description {
   &:hover, &:active {
     background-color: #daf0ff;
     color: #2fa7f9;
-  
+
     .icon-common-file-lock:before {
       color: #2fa7f9;
     }
-    
+
   }
 }
 
@@ -1276,7 +1276,7 @@ label.switch {
   transition: .4s;
   border-radius: 34px;
   border: 1px solid transparent;
-  
+
   &:before {
     position: absolute;
     content: "";
@@ -1691,7 +1691,7 @@ i.arrow {
 
 .item-block {
   border-bottom: 1px solid #B8D6D9;
-  
+
   & > div {
     display: flex;
     padding-top: 10px;
@@ -1721,7 +1721,7 @@ i.arrow {
   display: grid;
   grid-template-rows: auto minmax(auto, 1fr) 90px;
   grid-template-columns: 600px;
-  
+
   &.wide {
     grid-template-columns: 1000px;
   }
@@ -1894,11 +1894,11 @@ i.arrow {
 
   .Rtable__body {
     display: table-row-group;
-    
+
     .Rtable-row {
       border-radius: 5px;
       transition: all 200ms ease-in-out;
-      
+
       &.Rtable-row__checked {
         background-color: #dcfcfb !important;
       }
@@ -1906,7 +1906,7 @@ i.arrow {
       &:first-of-type {
         border-top: 1px solid rgba(34, 36, 38, .1) !important;
       }
-      
+
       &:not(.non-stripped):nth-child(even) {
         background-color: #F7FAFA;
       }
@@ -1918,17 +1918,17 @@ i.arrow {
       max-width: 300px;
       text-overflow: ellipsis;
       padding: 16px;
-      
+
       &:first-of-type {
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
       }
-      
+
       &:last-of-type {
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
       }
-      
+
       &.doc-id-cell {
         a {
           color: var(--color-black);

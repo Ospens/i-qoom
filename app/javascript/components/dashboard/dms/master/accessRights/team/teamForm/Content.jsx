@@ -12,7 +12,9 @@ import TeamName from './TeamName'
 import TeamMembers from './TeamMembers'
 import AccessRightsTeam from './AccessRightsTeam'
 
-function Content({ initialize, handleSubmit, handleClose, handleBack, handleNext, step, teamId }) {
+function Content({
+  initialize, handleSubmit, handleClose, handleBack, handleNext, step, teamId
+}) {
   const dispatch = useDispatch()
   const { project_id } = useParams()
   const teams = useSelector(state => state.accessRights.oldTeams)
@@ -36,27 +38,26 @@ function Content({ initialize, handleSubmit, handleClose, handleBack, handleNext
       if (values.skipAccess) {
         delete values.skipAccess
         return dispatch(updateTeamMembers(project_id, values)).then(handleClose)
-      } else {
-        return dispatch(updateTeamMembers(project_id, values)).then(handleNext)
       }
+      return dispatch(updateTeamMembers(project_id, values)).then(handleNext)
     } else if (step < 4) {
       dispatch(updateTeamRights(project_id, values)).then(handleClose)
     }
-  }, [dispatch, step, project_id])
+  }, [step, dispatch, project_id, handleNext, handleClose])
 
   useEffect(() => {
     if (!teamId) return
 
     const team = teams.find(t => t.id === teamId)
     initialize(team)
-  }, [teamId])
+  }, [initialize, teamId, teams])
 
   return (
-    <form noValidate={true} onSubmit={handleSubmit(onSubmit)} className='new-modal wide'>
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="new-modal wide">
       {(() => {
         if (step === 1) {
           return <TeamName handleClose={handleClose} />
-        } else if (step === 2) {
+        } if (step === 2) {
           return (
             <TeamMembers
               handleClose={handleClose}
@@ -64,8 +65,9 @@ function Content({ initialize, handleSubmit, handleClose, handleBack, handleNext
               onSubmit={onSubmit}
               handleBack={handleBack}
               step={step}
-            />)
-        } else if (step === 3) {
+            />
+          )
+        } if (step === 3) {
           return <AccessRightsTeam handleClose={handleClose} />
         }
       })()}
