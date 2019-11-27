@@ -17,7 +17,7 @@ function TeamName({ values }) {
   const handleOpen = useCallback(() => {
     setOpenModal(true)
   }, [])
-
+  
   return (
     <div className="user-info-avatar">
       <div className="user-info-avatar">
@@ -35,6 +35,7 @@ function TeamName({ values }) {
           {values.users
           && values.users.length > 0
           && <ShowMembersPopup
+              teamId={values.id}
               users={values.users}
               handleOpen={handleOpen}
             />}

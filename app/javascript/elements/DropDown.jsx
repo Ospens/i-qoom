@@ -2,25 +2,28 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 
-export const defaultItems = items => (
-  items.map(({ icon, title, onClick, link }, i) => (
-    link 
-      ? <li className='dropdown-item' onClick={onClick} key={i}>
-          <Link className='d-flex' to={link}>
+export function defaultItems(items) {
+  return (
+    items.map(({ icon, title, onClick, link }, i) => (
+      link
+        ? <li className='dropdown-item' onClick={onClick} key={i}>
+            <Link className='d-flex' to={link}>
+              <div className='icon-container'>
+                <span className={icon} />
+              </div>
+            <span className='item-text'>{title}</span>
+            </Link>
+          </li>
+        : <li className='dropdown-item' onClick={onClick} key={i}>
             <div className='icon-container'>
               <span className={icon} />
             </div>
-          <span className='item-text'>{title}</span>
-          </Link>
-        </li>
-      : <li className='dropdown-item' onClick={onClick} key={i}>
-          <div className='icon-container'>
-            <span className={icon} />
-          </div>
-          <span className='item-text'>{title}</span>
-        </li>
-  ))
-)
+            <span className='item-text'>{title}</span>
+          </li>
+    ))
+  )
+}
+
 class DropDown extends Component {
 
   state = {

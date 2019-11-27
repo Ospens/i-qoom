@@ -65,10 +65,9 @@ const accessRightsReducer = (state = initialState, action) => {
         oldTeams.findIndex(t => t.id === nt.id) > -1 ? oldTeams.find(t => t.id === nt.id) : nt)
     }
   case UPDATE_TEAM_MEMBERS:
-    const type = state.oldTeams.findIndex(t => t.id === action.payload.id) > -1 ? 'oldTeams' : 'newTeams'
     return {
       ...state,
-      [type]: state[type].filter(t => t.id !== action.payload.id).concat(action.payload)
+      ...action.payload
     }
   default:
     return state

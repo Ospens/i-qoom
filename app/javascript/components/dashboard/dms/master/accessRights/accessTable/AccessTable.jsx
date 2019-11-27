@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { initialize } from 'redux-form'
 import AccessRow from './AccessRow'
 import toggleArray from '../../../../../../elements/toggleArray'
@@ -14,6 +14,7 @@ const columns = [
 ]
 
 function AccessTable({ type, rows, submitRow }) {
+  const dispatch = useDispatch()
   const [checked, setChecked] = useState([])
   const fields = useSelector(state => state.accessRights.fields)
 
@@ -65,7 +66,7 @@ function AccessTable({ type, rows, submitRow }) {
         </thead>
         <tbody className='Rtable__body'>
           {rows.map(row => {
-            initialize(`access_rights_form_${row.id}`, row)
+            dispatch(initialize(`access_rights_form_${row.id}`, row))
             return (
               <AccessRow
                 key={row.id}
@@ -73,7 +74,6 @@ function AccessTable({ type, rows, submitRow }) {
                 checkedValues={checked}
                 toggleValues={setChecked}
                 fields={fields}
-                initialValues={row}
                 columnsLength={columns.length + 1}
                 submitRow={submitRow}
                 form={`access_rights_form_${row.id}`}
