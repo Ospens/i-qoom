@@ -1,9 +1,6 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
 import UserAvatar from 'react-user-avatar'
 import classnames from 'classnames'
-import { dmsUsers } from '../../../../../../actions/projectActions'
 
 const columns = [
   { title: 'Name' },
@@ -12,15 +9,8 @@ const columns = [
   { title: 'Company' }
 ]
 
-function UsersTable({ fieldsArray }) {
-  const dispatch = useDispatch()
-  const { project_id } = useParams()
-  const users = useSelector(state => state.documents.users)
-  const all = fieldsArray.getAll() || []
-  
-  useEffect(() => {
-    dispatch(dmsUsers(project_id))
-  }, [dispatch, project_id])
+function UsersTable({ fields, users }) {
+  const all = fields.getAll() || []
 
   return (
     <div className='Rtable'>
@@ -74,7 +64,7 @@ function UsersTable({ fieldsArray }) {
                 <input
                   type='checkbox'
                   id={user.id}
-                  onChange={() => { return checked ? fieldsArray.remove(index) : fieldsArray.push(user.id) }}
+                  onChange={() => { return checked ? fields.remove(index) : fields.push(user.id) }}
                   checked={checked}
                 />
                 <label htmlFor={user.id} />

@@ -6,12 +6,18 @@ import {
   GET_NEW_TEAMS_LIST,
   GET_OLD_TEAMS_LIST,
   GET_NEW_MEMBERS_LIST,
-  GET_CURRENT_MEMBERS_LIST
+  GET_CURRENT_MEMBERS_LIST,
+  UPDATE_TEAM_MEMBERS
 } from './types'
 import { addNotification } from './notificationsActions'
 
 const updateNewTeams = payload => ({
   type: UPDATE_NEW_TEAMS_LIST,
+  payload
+})
+
+const teamMembersUpdated = payload => ({
+  type: UPDATE_TEAM_MEMBERS,
   payload
 })
 
@@ -72,7 +78,6 @@ export const updateTeam = (projectId, request) => (dispatch, getState) => {
   )
 }
 
-
 export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
@@ -82,8 +87,8 @@ export const updateTeamMembers = (projectId, values) => (dispatch, getState) => 
 
   return (
     axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_members`, request, headers)
-      .then(response => {
-        console.log(response)
+      .then(({ data }) => {
+        dispatch(teamMembersUpdated(data))
       })
       .catch(({ response }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
@@ -92,7 +97,7 @@ export const updateTeamMembers = (projectId, values) => (dispatch, getState) => 
   )
 }
 
-export const updateTeamRights = (projectId, values, type) => (dispatch, getState) => {
+export const updateTeamRights = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
@@ -102,14 +107,8 @@ export const updateTeamRights = (projectId, values, type) => (dispatch, getState
   return (
     axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_rights`, request, headers)
       .then(() => {
-        if (type === 'newTeams') {
-          dispatch(updateNewTeams(request))
-        } else if (type === 'oldTeams') {
-          dispatch(updateOldTeams(request))
-        } else {
-          dispatch(updateOldTeams(request))
-          dispatch(updateNewTeams(request))
-        }
+        dispatch(getTeams(projectId))
+        dispatch(getTeams(projectId, true))
         dispatch(addNotification({ title: 'Teams', text: 'Access rights changed!', type: 'success' }))
       })
       .catch(({ response }) => {

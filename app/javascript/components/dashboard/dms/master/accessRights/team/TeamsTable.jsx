@@ -2,13 +2,9 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import DropDown from '../../../../../../elements/DropDown'
-import {
-  getTeams,
-  updateTeamRights,
-  getGrandedAccessMembers
-} from '../../../../../../actions/accessRightsActions'
+import { getTeams, updateTeamRights } from '../../../../../../actions/accessRightsActions'
 import toggleArray from '../../../../../../elements/toggleArray'
-import TeamForm from './TeamForm'
+import TeamForm from './teamForm/TeamForm'
 import AccessTable from '../accessTable/AccessTable'
 
 const optionBtn = [
@@ -38,10 +34,24 @@ const optionBtn = [
   }
 ]
 
+function ModalTrigger({ handleOpen }) {
+  return (
+    <ul className='buttons-with-icons-list ml-auto'>
+      <li className='p-0'>
+        <button className='d-flex align-items-center with-icon' onClick={handleOpen}>
+          <span className='icon-add_1 mr-2' />
+          <span data-title='Create new team'>Create new team</span>
+        </button>
+      </li>
+    </ul>
+  )
+}
+
 function TeamsTable({ type }) {
   const { project_id } = useParams()
   const dispatch = useDispatch()
   const [checkedMembers, changeChecked] = useState([])
+  const [openModal, setOpenModal] = useState(false)
   const teams = useSelector(state => state.accessRights[type])
   
   useEffect(() => {
@@ -58,7 +68,7 @@ function TeamsTable({ type }) {
   }, [checkedMembers])
 
   const submitRow = useCallback(v => {
-    dispatch(updateTeamRights(project_id, v, type))
+    dispatch(updateTeamRights(project_id, v))
   }, [dispatch, project_id])
 
   let optionsText = 'Options'
@@ -72,7 +82,8 @@ function TeamsTable({ type }) {
       <div><label>Select Access rights for members</label></div>
       <div className='d-flex my-4'>
         <DropDown btnName={optionsText} defaultValues={optionBtn} className='d-flex align-self-center' />
-        <TeamForm submitRow={submitRow} />
+        <ModalTrigger handleOpen={() => setOpenModal(true)} />
+        <TeamForm open={openModal} setOpen={setOpenModal} />
       </div>
       <AccessTable rows={teams} type={type} submitRow={submitRow} />
     </React.Fragment>

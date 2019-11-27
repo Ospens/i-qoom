@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Popup } from 'semantic-ui-react'
 import classnames from 'classnames'
 import UserAvatar from 'react-user-avatar'
@@ -23,7 +23,15 @@ const ddOPtions = [
   },
 ]
 
-export function Teamlist({ users = [] }) {
+function ModalTrigger({ handleOpen }) {
+  return (
+    <button type='button' className='popup-add-team-member' onClick={handleOpen}>
+      <span className='icon-add_1 mr-2' />
+    </button>
+  )
+}
+
+export function Teamlist({ users = [], handleOpen }) {
   const [showMore, toggleShowMore] = useState(false)
   const [checkedUser, toggleCheckedUser] = useState(0)
   const tmpUsers = showMore ? users : users.slice(0, 3)
@@ -40,7 +48,7 @@ export function Teamlist({ users = [] }) {
   return (
     <React.Fragment>
       <div className='opened-members-block'>
-        <button type='button' className='popup-add-team-member'>
+        <button type='button' className='popup-add-team-member' onClick={handleOpen}>
           <span className='icon-add_1 mr-2' />
         </button>
         <React.Fragment>
@@ -53,7 +61,7 @@ export function Teamlist({ users = [] }) {
                 defaultValues={ddOPtions}
                 btnComponent={
                   <div className='d-flex'>
-                    <UserAvatar size='42' name={user.name} />
+                    <UserAvatar size='42' name={`${user.first_name} ${user.last_name}`} />
                     {user.master && <span className="master-star-icon" />}
                   </div>
                 }
@@ -75,28 +83,39 @@ export function Teamlist({ users = [] }) {
   )
 }
 
-function Trigger() {
+function Trigger({ handleOpen }) {
   return (
     <button
       type='button'
-      className='btn ml-auto'
-    // onClick={() => toggleShowMore(false)}
+      className='with-icon ml-3'
+      onClick={handleOpen}
     >
-      Show members
+      <span>
+        Show members
+      </span>
     </button>
   )
 }
 
-function ShowMembersPopup() {
+function ShowMembersPopup({ users, handleOpen }) {
   const [open, setOpen] = useState(false)
+
+  const handleClose = useCallback(e => {
+    if (e.target.closest('.modals')) return
+
+    setOpen(false)
+  }, [])
+
   return (
     <Popup
-      trigger={<Trigger/>}
+      trigger={<Trigger handleOpen={() => setOpen(true)} />}
       on='click'
       open={open}
+      onClose={handleClose}
+      onOpen={() => setOpen(true)}
     >
       <div className='tooltip-block'>
-        <Teamlist />
+        <Teamlist users={users} handleOpen={handleOpen} />
       </div>
     </Popup>
   )

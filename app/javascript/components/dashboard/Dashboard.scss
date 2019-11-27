@@ -1805,6 +1805,11 @@ i.arrow {
   padding-right: 2.5vw;
 }
 
+.Rtable-container {
+  overflow: auto;
+  padding-bottom: 200px;
+}
+
 .Rtable {
   display: table;
   border: none;
@@ -1944,6 +1949,10 @@ i.arrow {
             color: var(--color-blue);
           }
         }
+      }
+
+      &.team-info-cell {
+        max-width: 100%;
       }
 
       &.table-checkbox {

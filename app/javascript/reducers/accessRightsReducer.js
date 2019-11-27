@@ -5,7 +5,8 @@ import {
   UPDATE_NEW_TEAMS_LIST,
   UPDATE_OLD_TEAMS_LIST,
   GET_CURRENT_TEAMS_LIST,
-  GET_CURRENT_MEMBERS_LIST
+  GET_CURRENT_MEMBERS_LIST,
+  UPDATE_TEAM_MEMBERS
 } from '../actions/types'
 
 const initialState = {
@@ -62,6 +63,12 @@ const accessRightsReducer = (state = initialState, action) => {
       ...state,
       oldTeams: state.oldTeams.map(nt =>
         oldTeams.findIndex(t => t.id === nt.id) > -1 ? oldTeams.find(t => t.id === nt.id) : nt)
+    }
+  case UPDATE_TEAM_MEMBERS:
+    const type = state.oldTeams.findIndex(t => t.id === action.payload.id) > -1 ? 'oldTeams' : 'newTeams'
+    return {
+      ...state,
+      [type]: state[type].filter(t => t.id !== action.payload.id).concat(action.payload)
     }
   default:
     return state
