@@ -222,12 +222,12 @@ describe DmsTeam, type: :request do
     let(:team) { FactoryBot.create(:dms_team) }
 
     it 'anon' do
-      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights"
+      post "/api/v1/projects/#{team.project.id}/dms_teams/update_rights"
       expect(response).to have_http_status(:forbidden)
     end
 
     it 'user' do
-      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+      post "/api/v1/projects/#{team.project.id}/dms_teams/update_rights",
         headers: credentials(user)
       expect(response).to have_http_status(:forbidden)
     end
@@ -236,7 +236,7 @@ describe DmsTeam, type: :request do
       project.members.create!(user: user,
                               dms_module_access: true,
                               employment_type: :employee)
-      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+      post "/api/v1/projects/#{team.project.id}/dms_teams/update_rights",
         headers: credentials(user)
       expect(response).to have_http_status(:forbidden)
     end
@@ -244,7 +244,7 @@ describe DmsTeam, type: :request do
     it 'dms master' do
       attrs = DocumentRight.attributes_for_teams(team.project, true)
       attrs[:teams].first[:document_rights].first['enabled'] = true
-      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_rights",
+      post "/api/v1/projects/#{team.project.id}/dms_teams/update_rights",
         headers: credentials(team.project.user),
         params: attrs
       expect(response).to have_http_status(:success)
