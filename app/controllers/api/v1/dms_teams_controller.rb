@@ -13,6 +13,11 @@ class Api::V1::DmsTeamsController < ApplicationController
     render json: @dms_team
   end
 
+  def destroy
+    @dms_team.destroy
+    head 200
+  end
+
   def show
     render json: @dms_team
   end
