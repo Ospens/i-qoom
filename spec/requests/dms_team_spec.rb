@@ -110,6 +110,38 @@ describe DmsTeam, type: :request do
     end
   end
 
+  context '#destroy' do
+    let(:team) { FactoryBot.create(:dms_team) }
+
+    it 'anon' do
+      delete "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      delete "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms user' do
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      delete "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms master' do
+      team.users << user
+      delete "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}",
+        headers: credentials(team.project.user)
+      expect(response).to have_http_status(:success)
+      expect(DmsTeam.count).to eql(0)
+    end
+  end
+
   context '#index_for_documents' do
     let(:team) { FactoryBot.create(:dms_team) }
 
