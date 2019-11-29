@@ -907,19 +907,28 @@ span.divider {
   width: 100%;
   margin-top: -1px;
   z-index: 9;
-  padding: 0;
   padding: 10px !important;
   border-radius: 5px;
   border-color: #E9F3F5;
   margin-bottom: 30px;
 
   .dropdown-item {
-    color: var(--color-labels);
     display: flex;
     align-items: center;
     padding: 7px;
     cursor: pointer;
     border-radius: 5px;
+
+    &.active, &:active {
+      background-color: #f8f9fa;
+    }
+
+    button {
+      padding: 0 !important;
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
 
     &:not(:last-of-type) {
       margin-bottom: 9px;
@@ -947,6 +956,17 @@ span.divider {
       padding: 0;
       height: 100%;
     }
+
+    &.disabledItem {
+      cursor: not-allowed !important;
+
+      button:disabled {
+        cursor: not-allowed;
+        span {
+          color: var(--color-disabled);
+        }
+      }
+    }
   }
 
   &.left {
@@ -955,7 +975,7 @@ span.divider {
     margin-right: 15px;
   }
 
-  .dropdown-item:not(.dropdown-submenu) {
+  .dropdown-item:not(.dropdown-submenu.disabledItem) {
     &:hover,
     &:active {
       background-color: #f5fcfc;
@@ -1622,7 +1642,7 @@ i.arrow {
   color: var(--color-blue) !important;
 }
 
-.acceess-rights__drop-down {
+.access-rights__drop-down {
   .dropdown-menu {
     min-width: 350px;
   }
@@ -1631,12 +1651,12 @@ i.arrow {
     color: var(--color-text);
   }
 
-  .acceess-rights__drop-down-content {
+  .access-rights__drop-down-content {
     display: flex;
     flex-direction: column;
     padding: 7px;
 
-    .acceess-rights__drop-down-row {
+    .access-rights__drop-down-row {
       padding-bottom: 10px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr ;
@@ -1836,6 +1856,7 @@ i.arrow {
           font-size: 7px;
           cursor: pointer;
           margin-left: auto;
+          color: var(--color-labels);
 
           &.desc {
             &:before {
@@ -1899,16 +1920,30 @@ i.arrow {
       border-radius: 5px;
       transition: all 200ms ease-in-out;
 
+      &:nth-child(even) {
+        background-color: #F7FAFA;
+      }
+
       &.Rtable-row__checked {
-        background-color: #dcfcfb !important;
+        background-color: #dcfcfb;
       }
 
       &:first-of-type {
         border-top: 1px solid rgba(34, 36, 38, .1) !important;
       }
+    }
 
-      &:not(.non-stripped):nth-child(even) {
-        background-color: #F7FAFA;
+    &.non-stripped {
+      .Rtable-row {
+        border-bottom: 1px solid #F0F0F0;
+
+        &:nth-child(even) {
+          background-color: #fff;
+        }
+
+        &.Rtable-row__checked {
+          background-color: #F9F9F9;
+        }
       }
     }
 

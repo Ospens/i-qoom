@@ -1,26 +1,21 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { initialize } from 'redux-form'
 import AccessRow from './AccessRow'
-// import toggleArray from '../../../../../../elements/toggleArray'
 
 const columns = [
   { title: 'Name', divider: true },
-  { title: 'Member-ID', divider: true },
   { title: 'Originating Company', divider: true },
   { title: 'Discipline', divider: true },
   { title: 'Document type', divider: true },
   { title: 'Timelimit', divider: true }
 ]
 
-function AccessTable({ type, rows, submitRow }) {
+function AccessTable({
+  type, rows, submitRow, toggleMembers, checkedValues
+}) {
   const dispatch = useDispatch()
-  const [checked, setChecked] = useState([])
   const fields = useSelector(state => state.accessRights.fields)
-
-  // const toggleMemeber = useCallback(value => {
-  //   setChecked(toggleArray(checked, value))
-  // }, [checked])
 
   return (
     <div className="Rtable-container">
@@ -46,15 +41,15 @@ function AccessTable({ type, rows, submitRow }) {
             ))}
           </tr>
         </thead>
-        <tbody className="Rtable__body">
+        <tbody className="Rtable__body non-stripped">
           {rows.map(row => {
             dispatch(initialize(`access_rights_form_${row.id}`, row))
             return (
               <AccessRow
                 key={row.id}
                 type={type}
-                checkedValues={checked}
-                toggleValues={setChecked}
+                toggleMembers={toggleMembers}
+                checkedValues={checkedValues}
                 fields={fields}
                 columnsLength={columns.length + 1}
                 submitRow={submitRow}

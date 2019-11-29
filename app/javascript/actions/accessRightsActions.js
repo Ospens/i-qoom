@@ -130,6 +130,7 @@ export const updateTeamRights = (projectId, values) => (dispatch, getState) => {
       })
   )
 }
+
 export const getTeams = (projectId, isNew = false) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import NewModal from '../../../../../../../elements/Modal'
 import Content from './Content'
 
@@ -6,6 +6,9 @@ function TeamForm({
   initStep = 1, teamId, open, setOpen
 }) {
   const [step, setStep] = useState(initStep)
+  useEffect(() => {
+    setStep(initStep)
+  }, [initStep])
 
   const handleClose = useCallback(() => {
     setOpen(false)

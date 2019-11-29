@@ -4,9 +4,9 @@ import classnames from 'classnames'
 
 export function defaultItems(items) {
   return (
-    items.map(({ icon, title, onClick, link }, i) => (
+    items.map(({ icon, title, onClick, link, disabled }, i) => (
       link
-        ? <li className='dropdown-item' onClick={onClick} key={i}>
+        ? <li className={classnames('dropdown-item', { disabled } )} key={i}>
             <Link className='d-flex' to={link}>
               <div className='icon-container'>
                 <span className={icon} />
@@ -14,11 +14,13 @@ export function defaultItems(items) {
             <span className='item-text'>{title}</span>
             </Link>
           </li>
-        : <li className='dropdown-item' onClick={onClick} key={i}>
+        : <li className={classnames('dropdown-item', { "disabledItem": disabled } )} key={i}>
+          <button type="button" disabled={disabled} onClick={onClick}>
             <div className='icon-container'>
               <span className={icon} />
             </div>
             <span className='item-text'>{title}</span>
+          </button>
           </li>
     ))
   )

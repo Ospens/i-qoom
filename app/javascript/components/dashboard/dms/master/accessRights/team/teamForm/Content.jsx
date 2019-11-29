@@ -17,12 +17,17 @@ function Content({
 }) {
   const dispatch = useDispatch()
   const { project_id } = useParams()
-  const teams = useSelector(state => state.accessRights.oldTeams)
+  const oldTeams = useSelector(state => state.accessRights.oldTeams)
+  const newTeams = useSelector(state => state.accessRights.newTeams)
+  const teams = oldTeams.concat(newTeams)
+
   const onSubmit = useCallback(values => {
     if (step < 2) {
-      values.id
-        ? dispatch(updateTeam(project_id, values)).then(handleNext)
-        : dispatch(createTeam(project_id, values)).then(handleNext)
+      if (values.id) {
+        dispatch(updateTeam(project_id, values)).then(handleNext)
+      } else {
+        dispatch(createTeam(project_id, values)).then(handleNext)
+      }
     } else if (step < 3) {
       values.users = values.users.map(({ id }) => id)
 
@@ -37,9 +42,10 @@ function Content({
 
       if (values.skipAccess) {
         delete values.skipAccess
-        return dispatch(updateTeamMembers(project_id, values)).then(handleClose)
+        dispatch(updateTeamMembers(project_id, values)).then(handleClose)
+      } else {
+        dispatch(updateTeamMembers(project_id, values)).then(handleNext)
       }
-      return dispatch(updateTeamMembers(project_id, values)).then(handleNext)
     } else if (step < 4) {
       dispatch(updateTeamRights(project_id, values)).then(handleClose)
     }
@@ -50,7 +56,7 @@ function Content({
 
     const team = teams.find(t => t.id === teamId)
     initialize(team)
-  }, [initialize, teamId, teams])
+  }, [teamId])
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="new-modal wide">
@@ -64,12 +70,10 @@ function Content({
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
               handleBack={handleBack}
-              step={step}
             />
           )
-        } if (step === 3) {
-          return <AccessRightsTeam handleClose={handleClose} />
         }
+        return <AccessRightsTeam handleClose={handleClose} />
       })()}
     </form>
   )

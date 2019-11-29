@@ -123,7 +123,7 @@ a {
       text-decoration: none;
     }
   }
-  
+
   &::-webkit-input-placeholder {
     color: var(--color-grey);
     font-size: 17px;
@@ -449,7 +449,7 @@ footer:after,
   margin-right: auto !important;
   align-items: center !important;
   color: #a5adad;
-  
+
   .icon-arrow-button-left {
     font-size: 11px;
 
@@ -482,7 +482,7 @@ header {
   top: 0;
   left: 0;
   z-index: 999;
-  
+
   &.colorful {
     position: relative;
     background: transparent linear-gradient(93deg, #1852B5 0%, #221F6D 57%, #221F6D 100%) 0% 0% no-repeat padding-box;
@@ -657,7 +657,7 @@ header {
   .btn-group {
     width: 50%;
     color: #fff;
-    
+
     .btn {
       color: #fff;
     }
@@ -719,7 +719,7 @@ header {
   .svg-line {
     position: relative;
     top: 10px;
-    
+
     path {
       stroke: #fff;
     }
@@ -859,7 +859,7 @@ header {
       display: none !important;
     }
   }
-  
+
   span {
     display: flex;
     width: max-content;
@@ -958,7 +958,7 @@ header {
   position: relative;
   color: #fff;
   right: 0;
-  
+
   &.show-slider {
     right: 2000px;
   }
@@ -969,7 +969,7 @@ header {
     font-weight: 400;
     line-height: 1.5;
   }
-  
+
   h3 {
     font-family: 'aktiv-grotesk-extended', sans-serif;
     font-size: 85px;
@@ -982,7 +982,7 @@ header {
     h2 {
       font-size: 3em;
     }
-    
+
     h3 {
       font-size: 4em;
     }
@@ -1018,7 +1018,7 @@ header {
       fill: white;
     }
   }
-  
+
   &.show-slider {
     left: 0;
   }
@@ -1103,10 +1103,10 @@ header {
     .card {
       border-radius: 5px;
     }
-    
+
     .card-body {
-      padding-left: 5px; 
-      padding-right: 5px; 
+      padding-left: 5px;
+      padding-right: 5px;
       padding-bottom: 30px;
     }
 
@@ -1162,7 +1162,7 @@ header {
     background-color: transparent;
     border: 1px solid transparent;
     color: var(--color-blue);
-    
+
     path {
       fill: var(--color-blue);
     }
@@ -1255,9 +1255,9 @@ header {
   padding-bottom: 70px;
   background: #f8f8f8;
   border-bottom: 1px solid #eaebeb;
-  
+
   .btn-primary {
-    margin-top: 120px; 
+    margin-top: 120px;
   }
 
   .reviews-card__title {
@@ -1398,7 +1398,7 @@ header {
     .contact-us-form, .send-card {
       transition: all 500ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
     }
-    
+
     .btn-primary {
       margin-top: 70px;
     }
@@ -1456,7 +1456,7 @@ header {
     display: inline-block;
     min-width: 400px;
     color: #fff;
-    
+
     .text-center {
       font-size: 17px;
       width: 50%;
@@ -1610,8 +1610,8 @@ header {
 
   label {
     color: var(--color-labels);
-    
-    &::placeholder { 
+
+    &::placeholder {
       color: #E9F3F5;
     }
   }
@@ -1620,7 +1620,7 @@ header {
     width: 88%;
     margin-left: auto;
     margin-right: auto;
-    
+
     .step {
       padding-bottom: 30px;
       font-size: 20px;
@@ -1659,7 +1659,7 @@ header {
     align-items: flex-end;
     justify-content: center;
     margin-top: 2em;
-    
+
     button,
     a {
       display: flex;
@@ -1671,7 +1671,7 @@ header {
   @media only screen and (max-width: 768px) {
     padding-left: 2em;
     padding-right: 2em;
-    
+
     .sign-up-form__header {
       width: 100%;
       margin-left: 0;
@@ -2208,7 +2208,7 @@ input[type=checkbox] {
     display: flex;
     align-items: center;
     align-content: center;
-    
+
     &.logout {
       color: #B1CDD0;
       line-height: 1;
@@ -2370,7 +2370,7 @@ input[type=checkbox] {
     bottom: auto;
     left: 88%;
     margin-top: -0.30714286em;
-    transition: all 200ms ease-in;  
+    transition: all 200ms ease-in;
   }
 
   &.errors {
@@ -2493,7 +2493,7 @@ input[type=checkbox] {
       border-bottom: 1px solid transparent;
       transition: all 200ms cubic-bezier(0.17, 0.04, 0.03, 0.94);
     }
-    
+
     .notifications_content__element-content {
       width: 90%;
     }
@@ -2507,7 +2507,7 @@ input[type=checkbox] {
       *:before {
         transition: all 0.15s ease-in-out;
       }
-      
+
       .icon-delete_2 {
         .path1:before {
           color: #FAFAFA;
@@ -2539,11 +2539,11 @@ input[type=checkbox] {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    
+
       &.success {
         color: #00B340;
       }
-    
+
       &.error {
         color: #E30941;
       }

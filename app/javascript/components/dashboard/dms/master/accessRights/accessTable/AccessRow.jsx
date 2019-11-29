@@ -6,17 +6,34 @@ import UserAvatar from 'react-user-avatar'
 import RightsDropDown from './RightsDropDown'
 import ShowMembersPopup from '../ShowMembersPopup'
 import TeamForm from '../team/teamForm/TeamForm'
+import DropDown from '../../../../../../elements/DropDown'
 
-function ModalTrigger({ handleOpen }) {
-  return <button type="button" className="with-icon" onClick={handleOpen}><span>Add new members</span></button>
-}
+const actions = (edit, copyDGToTeam, desyncDG, deleteMember) => (
+  [
+    {
+      title: 'Edit team',
+      icon: 'icon-business-team-goal',
+      onClick: edit
+    },
+    {
+      title: 'Copy DG-members to team',
+      icon: 'icon-team-exchange-chat',
+      onClick: copyDGToTeam
+    },
+    {
+      title: 'Desynchronize with DG',
+      icon: 'icon-synchronize-arrows',
+      onClick: desyncDG
+    },
+    {
+      title: 'Delete team',
+      icon: 'icon-bin-1',
+      onClick: deleteMember
+    }
+  ]
+)
 
-function TeamName({ values }) {
-  const [openModal, setOpenModal] = useState(false)
-
-  const handleOpen = useCallback(() => {
-    setOpenModal(true)
-  }, [])
+function TeamName({ values, handleOpen }) {
   return (
     <div className="user-info-avatar">
       <div className="user-info-avatar">
@@ -29,8 +46,9 @@ function TeamName({ values }) {
           {values.name || 'Team without name'}
         </span>
         <div className="d-flex">
-          <TeamForm initStep={2} open={openModal} setOpen={setOpenModal} teamId={values.id} />
-          <ModalTrigger handleOpen={handleOpen} />
+          <button type="button" className="with-icon" onClick={handleOpen}>
+            <span>Add new members</span>
+          </button>
           {values.users
           && values.users.length > 0
           && (
@@ -46,56 +64,65 @@ function TeamName({ values }) {
   )
 }
 
-function MemberName({ values }) {
-  return (
-    <div className="user-info-avatar">
-      {values.team
-      && (
-        <div className="team-icon with-avatar">
-          <UserAvatar size="42" name="T" />
-          <span className="team-length">{values.team.members || 0}</span>
-        </div>
-      )}
-      <UserAvatar size="42" name={`${values.first_name} ${values.last_name}`} />
-      <div className="user-and-company">
-        <span className="user_names">{`${values.name}`}</span>
-        <span className="text-secondary">Company</span>
-      </div>
-    </div>
-  )
-}
-
 function AccessRow({
+  toggleMembers,
+  checkedValues,
   submitRow,
   columnsLength,
-  isMember,
   form,
   handleSubmit,
   fields,
   pristine,
   reset
 }) {
+  const [openModal, setOpenModal] = useState(false)
+  const [initStep, setInitStep] = useState(1)
+  const handleOpen = useCallback(step => {
+    setInitStep(step)
+    setOpenModal(true)
+  }, [])
+
+  const deleteTeam = useCallback(() => {
+    alert('No action for delete')
+  }, [])
+
+  const copyDGToTeam = useCallback(() => {
+    alert("DG isn't realized")
+  }, [])
+
+  const desyncDG = useCallback(() => {
+    alert("DG isn't realized")
+  }, [])
   const values = useSelector(state => getFormValues(`${form}`)(state))
   if (!values) return <React.Fragment />
-
+  const checked = checkedValues.includes(values.id)
   return (
     <React.Fragment>
-      <tr className={classnames('Rtable-row non-stripped', { 'row-changed': !pristine })}>
-        <td className="Rtable__row-cell" />
+      <tr className={classnames('Rtable-row', { 'row-changed': !pristine }, { 'Rtable-row__checked': checked })}>
+        <td className="Rtable__row-cell">
+          <DropDown
+            dots
+            className="dropdown-with-icon"
+            defaultValues={actions(() => handleOpen(1), copyDGToTeam, desyncDG, deleteTeam)}
+          />
+        </td>
         <td className="Rtable__row-cell table-checkbox">
           <input
             type="checkbox"
-            id={values.id}
-            // checked={checkedValues.includes(values.id)}
-            // onChange={() => toggleValues(values.id)}
+            id={`accessRow${values.id}`}
+            checked={checked}
+            onChange={() => toggleMembers(values.id)}
           />
-          <label htmlFor={values.id} />
+          <label htmlFor={`accessRow${values.id}`} />
         </td>
         <td className="Rtable__row-cell name-column team-info-cell">
-          {isMember ? <MemberName values={values} /> : <TeamName values={values} />}
-        </td>
-        <td className="member-id Rtable__row-cell">
-          <span>{`${values.id} Member id`}</span>
+          <TeamForm
+            initStep={initStep}
+            open={openModal}
+            setOpen={setOpenModal}
+            teamId={values.id}
+          />
+          <TeamName values={values} handleOpen={() => handleOpen(2)} />
         </td>
         <td className="Rtable__row-cell">
           <RightsDropDown
@@ -121,7 +148,11 @@ function AccessRow({
             columnTitle="Document type"
           />
         </td>
-        <td className="Rtable__row-cell" />
+        <td className="Rtable__row-cell">
+          <div className="lightgrey">
+            Undefined
+          </div>
+        </td>
       </tr>
       {!pristine
       && (
@@ -140,11 +171,10 @@ function AccessRow({
               </form>
             </td>
           </tr>
-          <tr />
         </React.Fragment>
       )}
     </React.Fragment>
   )
 }
 
-export default reduxForm({ enableReinitialize: true })(AccessRow)
+export default reduxForm()(AccessRow)
