@@ -21,14 +21,15 @@ class Api::V1::Documents::PlannedController < ApplicationController
 
   def create
     authorize! :create_planned, Document.new, @project
-    params[:documents].each do |doc_params|
-      document = Document.find_by(id: doc_params[:id])
-      if document.present?
-        document.revision.versions.create!(document_params(doc_params, true))
+    params[:document_mains].each do |main_params|
+      main = DocumentMain.find_by(id: main_params[:id])
+      if main.present?
+        document = main.revisions.last_revision.last_version
+        document.revision.versions.create!(document_params(main_params[:document], true))
       else
         main = @project.document_mains.create(planned: true)
         rev = main.revisions.create
-        document = rev.versions.create(document_params(doc_params, true))
+        document = rev.versions.create(document_params(main_params[:document], true))
       end
     end
   end

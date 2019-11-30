@@ -55,7 +55,7 @@ describe Document, type: :request do
     before do
       @params = document_attributes(user, false)
       project = get_project_from_document_attrs(@params)
-      @params = { documents: [ @params ] }
+      @params = { document_mains: [{ id: '', document: @params }] }
       @project_id = project.id
     end
 
@@ -95,8 +95,10 @@ describe Document, type: :request do
         doc.project.members.create!(user: user,
                                     dms_module_master: true,
                                     employment_type: :employee)
-        post "/api/v1/projects/#{doc.project.id}/documents/planned",\
-          params: { documents: [doc_attrs] }, headers: credentials(user)
+        post "/api/v1/projects/#{doc.project.id}/documents/planned",
+          params: { document_mains: [ { id: doc.document_main.id,
+                                        document: doc_attrs } ] },
+          headers: credentials(user)
         expect(response).to have_http_status(:success)
         expect(doc.revision.last_version.email_title).to eql(title)
       end
