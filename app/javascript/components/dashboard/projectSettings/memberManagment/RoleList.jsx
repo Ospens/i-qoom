@@ -6,17 +6,17 @@ import { fetchRoleList, deleteRole, startUpdateRole, startCreateRole } from '../
 import FieldForm from './FieldForm'
 import ModalList from './ModalList'
 
-function RoleList({ closeModal, match: { params: { project_id } } }) {
+function RoleList({ closeModal, match: { params: { projectId } } }) {
   const [inputForm, toggleForm] = useState(false)
 
   const dispatch = useDispatch()
 
   const getRoleList = useCallback(() =>
-    dispatch(fetchRoleList(project_id)),
+    dispatch(fetchRoleList(projectId)),
     [dispatch])
 
   const removeRole = useCallback(id =>
-    dispatch(deleteRole(id, project_id)),
+    dispatch(deleteRole(id, projectId)),
     [dispatch])
 
   const openForm = useCallback(values => {
@@ -26,11 +26,11 @@ function RoleList({ closeModal, match: { params: { project_id } } }) {
 
   const submitForm = useCallback(values => {
     values.id
-      ? dispatch(startUpdateRole(values, project_id)).then(() => toggleForm(false))
-      : dispatch(startCreateRole(values, project_id)).then(() => toggleForm(false))
+      ? dispatch(startUpdateRole(values, projectId)).then(() => toggleForm(false))
+      : dispatch(startCreateRole(values, projectId)).then(() => toggleForm(false))
   }, [dispatch])
 
-  useEffect(() => { getRoleList(project_id) }, [])
+  useEffect(() => { getRoleList(projectId) }, [])
 
   const roles = useSelector(state => state.projectMembers.roles)
 

@@ -21,7 +21,7 @@ import DocumentPlanning from './user/documentPlanning/index'
 const documentHeader = title => {
   const current = useSelector(state => state.documents.current)
   if (!current) return
-  
+
   const ver = current.document_fields.find(el => el.codification_kind === 'document_number')
   const rev = current.document_fields.find(el => el.codification_kind === 'revision_number')
 
@@ -40,11 +40,11 @@ const documentHeader = title => {
   )
 }
 
-function DMS({ match, match: { params: { project_id } } }) {
+function DMS({ match, match: { params: { projectId } } }) {
   const codificationId = 1
 
   const dispatch = useDispatch()
-  useEffect(() => { dispatch(startFetchFolders(project_id)) }, [dispatch])
+  useEffect(() => { dispatch(startFetchFolders(projectId)) }, [dispatch])
 
   return (
     <Switch>

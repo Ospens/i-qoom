@@ -60,7 +60,7 @@ function ModalTrigger({ handleOpen }) {
 }
 
 function TeamsTable({ type }) {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const dispatch = useDispatch()
   const [checkedMembers, changeChecked] = useState([])
   const [openModal, setOpenModal] = useState(false)
@@ -70,11 +70,11 @@ function TeamsTable({ type }) {
   useEffect(() => {
     changeChecked([])
     if (type === 'oldTeams') {
-      dispatch(getTeams(project_id))
+      dispatch(getTeams(projectId))
     } else if (type === 'newTeams') {
-      dispatch(getTeams(project_id, true))
+      dispatch(getTeams(projectId, true))
     }
-  }, [dispatch, project_id, type])
+  }, [dispatch, projectId, type])
 
   useEffect(() => {
     if (checkedMembers < 1 || !openBulkEdit) return
@@ -89,14 +89,14 @@ function TeamsTable({ type }) {
   }, [checkedMembers])
 
   const submitRow = useCallback(v => {
-    dispatch(updateTeamRights(project_id, [v]))
-  }, [dispatch, project_id])
+    dispatch(updateTeamRights(projectId, [v]))
+  }, [dispatch, projectId])
 
   const handleDelete = useCallback(() => {
     if (checkedMembers.length > 1) return alert("Multiple delete isn't ready")
 
-    return dispatch(deleteTeam(project_id, checkedMembers[0]))
-  }, [dispatch, project_id, checkedMembers])
+    return dispatch(deleteTeam(projectId, checkedMembers[0]))
+  }, [dispatch, projectId, checkedMembers])
 
   const handleOpenBulkEdit = useCallback(() => {
     setOpenBulkEdit(true)

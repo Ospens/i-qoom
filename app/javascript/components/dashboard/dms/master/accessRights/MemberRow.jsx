@@ -18,10 +18,10 @@ function MemberRow({
   reset
 }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const submitMember = useCallback(values => {
-    dispatch(startUpdateAccessMembers(project_id, values, type))
-  }, [dispatch, project_id, type])
+    dispatch(startUpdateAccessMembers(projectId, values, type))
+  }, [dispatch, projectId, type])
 
   if (!member) return <React.Fragment />
 

@@ -8,14 +8,14 @@ import { startEditConvention } from '../../actions/conventionActions'
 import Page from '../../elements/Page'
 
 function Projects() {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const { path } = useRouteMatch()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(startFetchProject(project_id))
-    dispatch(startEditConvention(project_id))
-  }, [dispatch, project_id])
+    dispatch(startFetchProject(projectId))
+    dispatch(startEditConvention(projectId))
+  }, [dispatch, projectId])
 
   return (
     <Switch>

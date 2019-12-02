@@ -48,7 +48,7 @@ class MemberManagment extends Component {
     const {
       startCreateProjectMember,
       startUpdateProjectMember,
-      match: { params: { project_id } }
+      match: { params: { projectId } }
     } = this.props
 
     switch (step) {
@@ -69,21 +69,21 @@ class MemberManagment extends Component {
     }
 
     if (!values.id) {
-      return startCreateProjectMember(values, project_id).then(this.nextStep())
+      return startCreateProjectMember(values, projectId).then(this.nextStep())
     } else if (step === 4) {
-      return startUpdateProjectMember(values, project_id).then(this.closeModal)
+      return startUpdateProjectMember(values, projectId).then(this.closeModal)
     } else {
-      return startUpdateProjectMember(values, project_id).then(this.nextStep())
+      return startUpdateProjectMember(values, projectId).then(this.nextStep())
     }
   }
 
   renderNewMemberModal = () => {
     const { step } = this.state
-    const { match: { params: { project_id } } } = this.props
+    const { match: { params: { projectId } } } = this.props
     return (
       <AddMember
         closeModal={this.closeModal}
-        projectId={project_id}
+        projectId={projectId}
         onSubmit={this.handleSubmitMember}
         step={step}
         changeStep={this.changeStep}
@@ -92,23 +92,23 @@ class MemberManagment extends Component {
   }
 
   renderDisciplineModal = () => {
-    const { match: { params: { project_id } } } = this.props
+    const { match: { params: { projectId } } } = this.props
 
     return (
       <DisciplineList
         closeModal={this.closeModal}
-        projectId={project_id}
+        projectId={projectId}
       />
     )
   }
 
   renderRoleModal = () => {
-    const { match: { params: { project_id } } } = this.props
+    const { match: { params: { projectId } } } = this.props
 
     return (
       <RoleList
         closeModal={this.closeModal}
-        projectId={project_id}
+        projectId={projectId}
       />
     )
   }
@@ -126,7 +126,7 @@ class MemberManagment extends Component {
 
   render() {
     const { modal } = this.state
-    const { match: { params: { project_id } } } = this.props
+    const { match: { params: { projectId } } } = this.props
 
     return (
       <div id='member-managment'>
@@ -134,7 +134,7 @@ class MemberManagment extends Component {
           <h5 className='tab-title'>Define default filters</h5>
           <ul className='member-managment-buttons buttons-with-icons-list'>
             <li>
-              <button 
+              <button
                 type='button'
                 className='with-icon'
                 onClick={this.openModal('role')}
@@ -144,7 +144,7 @@ class MemberManagment extends Component {
               </button>
             </li>
             <li>
-              <button 
+              <button
                 type='button'
                 className='with-icon'
                 onClick={this.openModal('discipline')}
@@ -167,10 +167,10 @@ class MemberManagment extends Component {
         </div>
         <Tabs>
           <div label='Active members'>
-            <ActiveMembers projectId={project_id} />
+            <ActiveMembers projectId={projectId} />
           </div>
           <div label='Pending members'>
-            <PendingMembers projectId={project_id} />
+            <PendingMembers projectId={projectId} />
           </div>
         </Tabs>
         <NewModal

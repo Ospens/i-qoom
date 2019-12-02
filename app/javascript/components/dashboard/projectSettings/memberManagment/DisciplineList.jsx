@@ -11,17 +11,17 @@ import {
 import FieldForm from './FieldForm'
 import ModalList from './ModalList'
 
-function DisciplineList({ closeModal, match: { params: { project_id } } }) {
+function DisciplineList({ closeModal, match: { params: { projectId } } }) {
   const [inputForm, toggleForm] = useState(false)
 
   const dispatch = useDispatch()
 
   const getDisciplineList = useCallback(() =>
-    dispatch(fetchDisciplineList(project_id)),
+    dispatch(fetchDisciplineList(projectId)),
     [dispatch])
 
   const removeDiscipline = useCallback(id =>
-    dispatch(deleteDiscipline(id, project_id)),
+    dispatch(deleteDiscipline(id, projectId)),
     [dispatch])
 
   const openForm = useCallback(values => {
@@ -31,14 +31,14 @@ function DisciplineList({ closeModal, match: { params: { project_id } } }) {
 
   const submitForm = useCallback(values => {
     values.id
-      ? dispatch(startUpdateDiscipline(values, project_id)).then(() => toggleForm(false))
-      : dispatch(startCreateDiscipline(values, project_id)).then(() => toggleForm(false))
+      ? dispatch(startUpdateDiscipline(values, projectId)).then(() => toggleForm(false))
+      : dispatch(startCreateDiscipline(values, projectId)).then(() => toggleForm(false))
   }, [dispatch])
 
-  useEffect(() => { getDisciplineList(project_id) }, [])
+  useEffect(() => { getDisciplineList(projectId) }, [])
 
   const disciplines = useSelector(state => state.projectMembers.disciplines)
-  
+
   if (inputForm) {
     return <FieldForm submitForm={submitForm} type='discipline'/>
   } else {

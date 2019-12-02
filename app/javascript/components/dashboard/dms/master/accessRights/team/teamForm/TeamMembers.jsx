@@ -13,7 +13,7 @@ function TeamMembers({
 }) {
   const dispatch = useDispatch()
   const [freeUsers, setFreeUsers] = useState([])
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const name = useSelector(state => selector(state, 'name'))
   const teamMembers = useSelector(state => selector(state, 'users')) || []
   const newMembers = useSelector(state => selector(state, 'added_users')) || []
@@ -25,8 +25,8 @@ function TeamMembers({
     setFreeUsers(fu)
   }, [allUsers])
   useEffect(() => {
-    dispatch(dmsUsers(project_id))
-  }, [dispatch, project_id])
+    dispatch(dmsUsers(projectId))
+  }, [dispatch, projectId])
 
   let submitText
   if (newMembers.length && removedUsers.length) {

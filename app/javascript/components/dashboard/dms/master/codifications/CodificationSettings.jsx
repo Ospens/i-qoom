@@ -70,13 +70,13 @@ function Content({ projectId }) {
   )
 }
 
-function CodificationSettings({ match: { params: { project_id } } }) {
+function CodificationSettings({ match: { params: { projectId } } }) {
   return (
     <DMSLayout
       sidebar={<DmsSideBar />}
-      content={<Content projectId={project_id} />}
+      content={<Content projectId={projectId} />}
     />
   )
-} 
+}
 
 export default withRouter(CodificationSettings)

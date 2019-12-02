@@ -16,7 +16,7 @@ function Content({
   initialize, handleSubmit, handleClose, handleBack, handleNext, step, teamId
 }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const oldTeams = useSelector(state => state.accessRights.oldTeams)
   const newTeams = useSelector(state => state.accessRights.newTeams)
   const teams = oldTeams.concat(newTeams)
@@ -24,9 +24,9 @@ function Content({
   const onSubmit = useCallback(values => {
     if (step < 2) {
       if (values.id) {
-        dispatch(updateTeam(project_id, values)).then(handleNext)
+        dispatch(updateTeam(projectId, values)).then(handleNext)
       } else {
-        dispatch(createTeam(project_id, values)).then(handleNext)
+        dispatch(createTeam(projectId, values)).then(handleNext)
       }
     } else if (step < 3) {
       values.users = values.users.map(({ id }) => id)
@@ -42,14 +42,14 @@ function Content({
 
       if (values.skipAccess) {
         delete values.skipAccess
-        dispatch(updateTeamMembers(project_id, values)).then(handleClose)
+        dispatch(updateTeamMembers(projectId, values)).then(handleClose)
       } else {
-        dispatch(updateTeamMembers(project_id, values)).then(handleNext)
+        dispatch(updateTeamMembers(projectId, values)).then(handleNext)
       }
     } else if (step < 4) {
-      dispatch(updateTeamRights(project_id, [values])).then(handleClose)
+      dispatch(updateTeamRights(projectId, [values])).then(handleClose)
     }
-  }, [step, dispatch, project_id, handleNext, handleClose])
+  }, [step, dispatch, projectId, handleNext, handleClose])
 
   useEffect(() => {
     if (!teamId) return

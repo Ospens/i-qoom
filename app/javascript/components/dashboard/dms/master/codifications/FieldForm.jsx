@@ -20,7 +20,7 @@ const uniq = (_, allValues) => {
     if (!(element === undefined || element === null)) return
     codes.splice(i, 1)
   })
-  
+
   return (new Set(codes)).size !== codes.length ? 'Please use unique values' : undefined
 }
 
@@ -56,7 +56,7 @@ export const InputField = ({
   }, [openSB])
 
   useEffect(() => {
-    const condition = projectCode && startPositions && (!!(touched && error) || (!touched && !!error)) 
+    const condition = projectCode && startPositions && (!!(touched && error) || (!touched && !!error))
     setOpen(condition)
   }, [projectCode, startPositions, touched, error])
 
@@ -78,7 +78,7 @@ export const InputField = ({
       pattern=".*\S.*"
     />
   )
-  
+
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -170,7 +170,7 @@ const CodeList = ({ fields, title, isForm, projectCode }) => {
 }
 
 function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, initialize }) {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const [isForm, toggleIsForm] = useState(false)
   const dispatch = useDispatch()
   const documentFields = useSelector(state => state.conventions.current.document_fields)
@@ -185,7 +185,7 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, initi
 
   const submitCodification = useCallback(values => {
     const fieldIndex = documentFields.findIndex(el => el.codification_kind === form)
-    
+
     const v = documentFields.map((item, i) => {
       item.document_field_values = item.document_field_values.filter(({ title, value, position }) => title && value && position)
       if (i !== fieldIndex) return item
@@ -195,7 +195,7 @@ function FieldForm({ title, form, handleSubmit, viewOnly, reset, pristine, initi
       return item
     })
 
-    dispatch(startUpdateCodification(project_id, v)).then(() => {
+    dispatch(startUpdateCodification(projectId, v)).then(() => {
       initialize(values)
       toggleIsForm(false)
     })

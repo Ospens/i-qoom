@@ -78,7 +78,7 @@ function AccessRow({
   reset
 }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const [openModal, setOpenModal] = useState(false)
   const [initStep, setInitStep] = useState(1)
   const values = useSelector(state => getFormValues(`${form}`)(state))
@@ -88,8 +88,8 @@ function AccessRow({
   }, [])
 
   const destroyTeam = useCallback(() => {
-    dispatch(deleteTeam(project_id, values.id))
-  }, [project_id, values.id])
+    dispatch(deleteTeam(projectId, values.id))
+  }, [projectId, values.id])
 
   const copyDGToTeam = useCallback(() => {
     alert("DG isn't realized")

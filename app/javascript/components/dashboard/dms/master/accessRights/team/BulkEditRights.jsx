@@ -7,7 +7,7 @@ import { updateTeamRights } from '../../../../../../actions/accessRightsActions'
 
 function BulkEditRights({ handleSubmit, handleClose, members }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const fields = useSelector(state => state.accessRights.fields)
   const formValues = useSelector(state => getFormValues('team_bulk_edit')(state))
   const oldTeams = useSelector(state => state.accessRights.oldTeams)
@@ -24,8 +24,8 @@ function BulkEditRights({ handleSubmit, handleClose, members }) {
         }))
       }
     }))
-    dispatch(updateTeamRights(project_id, updatedMembers)).then(handleClose)
-  }, [dispatch, handleClose, project_id, teams])
+    dispatch(updateTeamRights(projectId, updatedMembers)).then(handleClose)
+  }, [dispatch, handleClose, projectId, teams])
 
   if ((Object.entries(fields).length === 0 && fields.constructor === Object) || !formValues) {
     return <React.Fragment />

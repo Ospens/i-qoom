@@ -25,7 +25,7 @@ const ddOPtions = remove => [
 
 export function Teamlist({ users = [], handleOpen, teamId }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const [showMore, toggleShowMore] = useState(false)
   const [checkedUser, toggleCheckedUser] = useState(0)
   const tmpUsers = showMore ? users : users.slice(0, 3)
@@ -40,8 +40,8 @@ export function Teamlist({ users = [], handleOpen, teamId }) {
   }, [checkedUser])
 
   const removeFromTeam = useCallback(id => {
-    dispatch(deleteTeamMembers(project_id, teamId, id))
-  }, [dispatch, project_id, teamId])
+    dispatch(deleteTeamMembers(projectId, teamId, id))
+  }, [dispatch, projectId, teamId])
 
 
   return (
