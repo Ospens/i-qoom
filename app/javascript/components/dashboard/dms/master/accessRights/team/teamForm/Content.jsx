@@ -47,7 +47,7 @@ function Content({
         dispatch(updateTeamMembers(project_id, values)).then(handleNext)
       }
     } else if (step < 4) {
-      dispatch(updateTeamRights(project_id, values)).then(handleClose)
+      dispatch(updateTeamRights(project_id, [values])).then(handleClose)
     }
   }, [step, dispatch, project_id, handleNext, handleClose])
 

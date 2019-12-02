@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { getFormValues, reduxForm } from 'redux-form'
 import classnames from 'classnames'
 import UserAvatar from 'react-user-avatar'
@@ -7,8 +8,9 @@ import RightsDropDown from './RightsDropDown'
 import ShowMembersPopup from '../ShowMembersPopup'
 import TeamForm from '../team/teamForm/TeamForm'
 import DropDown from '../../../../../../elements/DropDown'
+import { deleteTeam } from '../../../../../../actions/accessRightsActions'
 
-const actions = (edit, copyDGToTeam, desyncDG, deleteMember) => (
+const actions = (edit, copyDGToTeam, desyncDG, destroyTeam) => (
   [
     {
       title: 'Edit team',
@@ -28,7 +30,7 @@ const actions = (edit, copyDGToTeam, desyncDG, deleteMember) => (
     {
       title: 'Delete team',
       icon: 'icon-bin-1',
-      onClick: deleteMember
+      onClick: destroyTeam
     }
   ]
 )
@@ -75,16 +77,19 @@ function AccessRow({
   pristine,
   reset
 }) {
+  const dispatch = useDispatch()
+  const { project_id } = useParams()
   const [openModal, setOpenModal] = useState(false)
   const [initStep, setInitStep] = useState(1)
+  const values = useSelector(state => getFormValues(`${form}`)(state))
   const handleOpen = useCallback(step => {
     setInitStep(step)
     setOpenModal(true)
   }, [])
 
-  const deleteTeam = useCallback(() => {
-    alert('No action for delete')
-  }, [])
+  const destroyTeam = useCallback(() => {
+    dispatch(deleteTeam(project_id, values.id))
+  }, [project_id, values.id])
 
   const copyDGToTeam = useCallback(() => {
     alert("DG isn't realized")
@@ -93,8 +98,8 @@ function AccessRow({
   const desyncDG = useCallback(() => {
     alert("DG isn't realized")
   }, [])
-  const values = useSelector(state => getFormValues(`${form}`)(state))
   if (!values) return <React.Fragment />
+
   const checked = checkedValues.includes(values.id)
   return (
     <React.Fragment>
@@ -103,7 +108,7 @@ function AccessRow({
           <DropDown
             dots
             className="dropdown-with-icon"
-            defaultValues={actions(() => handleOpen(1), copyDGToTeam, desyncDG, deleteTeam)}
+            defaultValues={actions(() => handleOpen(1), copyDGToTeam, desyncDG, destroyTeam)}
           />
         </td>
         <td className="Rtable__row-cell table-checkbox">

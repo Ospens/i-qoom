@@ -1,4 +1,5 @@
 import {
+  DELETE_TEAM,
   GET_NEW_MEMBERS_LIST,
   GET_NEW_TEAMS_LIST,
   GET_OLD_TEAMS_LIST,
@@ -49,7 +50,7 @@ const accessRightsReducer = (state = initialState, action) => {
       ...state,
       oldTeams: action.payload.teams,
       fields: action.payload.fields
-      }
+    }
   case UPDATE_NEW_TEAMS_LIST:
     const newTeams = action.payload.teams
     return {
@@ -68,6 +69,12 @@ const accessRightsReducer = (state = initialState, action) => {
     return {
       ...state,
       ...action.payload
+    }
+  case DELETE_TEAM:
+    return {
+      ...state,
+      oldTeams: state.oldTeams.filter(({ id }) => id !== action.payload.teamId),
+      newTeams: state.newTeams.filter(({ id }) => id !== action.payload.teamId)
     }
   default:
     return state

@@ -84,7 +84,7 @@ function TeamsTable({ type }) {
   }, [checkedMembers])
 
   const submitRow = useCallback(v => {
-    dispatch(updateTeamRights(project_id, v))
+    dispatch(updateTeamRights(project_id, [v]))
   }, [dispatch, project_id])
 
   const handleOpenBulkEdit = useCallback(() => {

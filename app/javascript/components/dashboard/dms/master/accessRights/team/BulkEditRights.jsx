@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import UserAvatar from 'react-user-avatar'
+import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getFormValues, reduxForm } from 'redux-form'
 import RightsDropDown from '../accessTable/RightsDropDown'
@@ -7,15 +7,25 @@ import { updateTeamRights } from '../../../../../../actions/accessRightsActions'
 
 function BulkEditRights({ handleSubmit, handleClose, members }) {
   const dispatch = useDispatch()
+  const { project_id } = useParams()
   const fields = useSelector(state => state.accessRights.fields)
   const formValues = useSelector(state => getFormValues('team_bulk_edit')(state))
   const oldTeams = useSelector(state => state.accessRights.oldTeams)
   const newTeams = useSelector(state => state.accessRights.newTeams)
   const teams = oldTeams.concat(newTeams).filter(t => members.includes(t.id))
-  const onSubmit = useCallback(values => {
-    const updatedMembers = teams.map(m => ({ ...m, ...values }))
-    dispatch(updateTeamRights(updatedMembers))
-  }, [dispatch, teams])
+  const onSubmit = useCallback(({ document_rights: documentRights }) => {
+    const updatedMembers = teams.map(m => ({
+      ...m,
+      document_rights: {
+        ...m.document_rights.map(dr => ({
+          ...documentRights.find(v => v.document_field_id === dr.document_field_id
+            && v.document_field_value_id === dr.document_field_value_id),
+          id: dr.id
+        }))
+      }
+    }))
+    dispatch(updateTeamRights(project_id, updatedMembers)).then(handleClose)
+  }, [dispatch, handleClose, project_id, teams])
 
   if ((Object.entries(fields).length === 0 && fields.constructor === Object) || !formValues) {
     return <React.Fragment />

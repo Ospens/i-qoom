@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError, initialize } from 'redux-form'
 import {
+  DELETE_TEAM,
   UPDATE_NEW_TEAMS_LIST,
   UPDATE_OLD_TEAMS_LIST,
   GET_NEW_TEAMS_LIST,
@@ -10,6 +11,11 @@ import {
   UPDATE_TEAM_MEMBERS
 } from './types'
 import { addNotification } from './notificationsActions'
+
+const teamDeleted = payload => ({
+  type: DELETE_TEAM,
+  payload
+})
 
 const updateNewTeams = payload => ({
   type: UPDATE_NEW_TEAMS_LIST,
@@ -78,6 +84,23 @@ export const updateTeam = (projectId, request) => (dispatch, getState) => {
   )
 }
 
+export const deleteTeam = (projectId, teamId) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.delete(`/api/v1/projects/${projectId}/dms_teams/${teamId}`, headers)
+      .then(() => {
+        dispatch(teamDeleted({ teamId }))
+        dispatch(addNotification({ title: 'Teams', text: 'Team was deleted!', type: 'success' }))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
 export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
   const { user: { token }, accessRights: { oldTeams } } = getState()
   const headers = { headers: { Authorization: token } }
@@ -110,15 +133,12 @@ export const deleteTeamMembers = (projectId, teamId, userId) => (dispatch, getSt
   dispatch(updateTeamMembers(projectId, values))
 }
 
-export const updateTeamRights = (projectId, values) => (dispatch, getState) => {
+export const updateTeamRights = (projectId, teams) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-  const request = {
-    teams: [values]
-  }
-
+  const request = { teams }
   return (
-    axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_rights`, request, headers)
+    axios.post(`/api/v1/projects/${projectId}/dms_teams//update_rights`, request, headers)
       .then(() => {
         dispatch(getTeams(projectId))
         dispatch(getTeams(projectId, true))
