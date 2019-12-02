@@ -3,14 +3,18 @@ import { useSelector, useDispatch } from 'react-redux'
 import { initialize } from 'redux-form'
 import { useParams } from 'react-router-dom'
 import DropDown from '../../../../../../elements/DropDown'
-import { getTeams, updateTeamRights } from '../../../../../../actions/accessRightsActions'
+import {
+  deleteTeam,
+  getTeams,
+  updateTeamRights
+} from '../../../../../../actions/accessRightsActions'
 import toggleArray from '../../../../../../elements/toggleArray'
 import TeamForm from './teamForm/TeamForm'
 import AccessTable from '../accessTable/AccessTable'
 import BulkEditRights from './BulkEditRights'
 import NewModal from '../../../../../../elements/Modal'
 
-const actions = (checkedLength, handleOpenBulkEdit) => {
+const actions = (checkedLength, handleOpenBulkEdit, handleDelete) => {
   const disabled = checkedLength === 0
   const multiple = checkedLength > 1
 
@@ -35,6 +39,7 @@ const actions = (checkedLength, handleOpenBulkEdit) => {
       {
         title: 'Delete team',
         icon: 'icon-bin-1',
+        onClick: handleDelete,
         disabled
       }
     ]
@@ -87,6 +92,12 @@ function TeamsTable({ type }) {
     dispatch(updateTeamRights(project_id, [v]))
   }, [dispatch, project_id])
 
+  const handleDelete = useCallback(() => {
+    if (checkedMembers.length > 1) return alert("Multiple delete isn't ready")
+
+    return dispatch(deleteTeam(project_id, checkedMembers[0]))
+  }, [dispatch, project_id, checkedMembers])
+
   const handleOpenBulkEdit = useCallback(() => {
     setOpenBulkEdit(true)
   }, [])
@@ -109,7 +120,7 @@ function TeamsTable({ type }) {
       <div className="d-flex my-4">
         <DropDown
           btnName={optionsText}
-          defaultValues={actions(checkedMembers.length, handleOpenBulkEdit)}
+          defaultValues={actions(checkedMembers.length, handleOpenBulkEdit, handleDelete)}
           className="d-flex align-self-center"
         />
         <ModalTrigger handleOpen={() => setOpenModal(true)} />
