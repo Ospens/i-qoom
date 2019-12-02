@@ -39,7 +39,7 @@
     "react-slick": "^0.23.2",
     "react-svg": "^8.0.3",
     "react-svg-loader": "^2.1.0",
-    "react-transition-group": "1.x",
+    "react-transition-group": "^4.3.0",
     "react-user-avatar": "^1.10.0",
     "react_ujs": "^2.4.4",
     "redux": "^4.0.1",
@@ -48,7 +48,7 @@
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.1.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.86.0",
+    "semantic-ui-react": "^0.88.0",
     "slick-carousel": "^1.8.1",
     "style-loader": "^0.23.1"
   },
