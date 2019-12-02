@@ -24,7 +24,7 @@ function Projects() {
         component={DMS}
       />
       <Page
-        title='Project settings'
+        title="Project settings"
         path={path}
         component={ProjectSettings}
       />
