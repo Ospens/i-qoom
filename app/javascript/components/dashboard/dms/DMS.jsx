@@ -117,12 +117,12 @@ function DMS({ match, match: { params: { projectId } } }) {
         component={DocumentForm}
       />
       <Page
-        title='Documents managment system'
+        title='Documents management system'
         path={`${match.path}/:document_id/`}
         component={ShowDocument}
       />
       <Page
-        title='Documents managment system'
+        title='Documents management system'
         path={`${match.path}`}
         component={IndexDMS}
       />

@@ -85,7 +85,7 @@ const masterMenu = masterPath => [
     path: `${masterPath}/distribution_group/`
   },
   {
-    title: 'Review managment',
+    title: 'Review management',
     icon: 'icon-task-list-settings',
     path: '#' // `${masterPath}/planning/`
   }
