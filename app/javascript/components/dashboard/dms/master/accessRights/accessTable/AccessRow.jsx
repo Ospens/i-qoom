@@ -88,7 +88,7 @@ function AccessRow({
   }, [])
 
   const destroyTeam = useCallback(() => {
-    dispatch(deleteTeam(projectId, values.id))
+    dispatch(deleteTeam(projectId, [values.id]))
   }, [projectId, values.id])
 
   const copyDGToTeam = useCallback(() => {

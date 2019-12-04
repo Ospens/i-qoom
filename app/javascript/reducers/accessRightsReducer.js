@@ -80,8 +80,8 @@ const accessRightsReducer = (state = initialState, action) => {
   case DELETE_TEAM:
     return {
       ...state,
-      oldTeams: state.oldTeams.filter(({ id }) => id !== action.payload.teamId),
-      newTeams: state.newTeams.filter(({ id }) => id !== action.payload.teamId)
+      oldTeams: state.oldTeams.filter(({ id }) => !action.payload.teamIds.includes(id)),
+      newTeams: state.newTeams.filter(({ id }) => !action.payload.teamIds.includes(id))
     }
   default:
     return state

@@ -93,9 +93,7 @@ function TeamsTable({ type }) {
   }, [dispatch, projectId])
 
   const handleDelete = useCallback(() => {
-    if (checkedMembers.length > 1) return alert("Multiple delete isn't ready")
-
-    return dispatch(deleteTeam(projectId, checkedMembers[0]))
+    dispatch(deleteTeam(projectId, checkedMembers))
   }, [dispatch, projectId, checkedMembers])
 
   const handleOpenBulkEdit = useCallback(() => {

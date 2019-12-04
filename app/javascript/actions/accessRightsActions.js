@@ -58,6 +58,25 @@ const memberFetched = payload => ({
   payload
 })
 
+export const getTeams = (projectId, isNew = false) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/dms_teams?only_new=${isNew}`, headers)
+      .then(({ data }) => {
+        if (isNew) {
+          dispatch(newTeamsFetched(data))
+        } else {
+          dispatch(teamsFetched(data))
+        }
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
 export const createTeam = (projectId, request) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
@@ -90,15 +109,16 @@ export const updateTeam = (projectId, request) => (dispatch, getState) => {
   )
 }
 
-export const deleteTeam = (projectId, teamId) => (dispatch, getState) => {
+export const deleteTeam = (projectId, teamIds) => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { headers: { Authorization: token } }
+  const headers = { Authorization: token }
+  const data = { dms_teams: teamIds }
 
   return (
-    axios.delete(`/api/v1/projects/${projectId}/dms_teams/${teamId}`, headers)
+    axios.delete(`/api/v1/projects/${projectId}/dms_teams/`, { data, headers })
       .then(() => {
-        dispatch(teamDeleted({ teamId }))
-        dispatch(addNotification({ title: 'Teams', text: 'Team was deleted!', type: 'success' }))
+        dispatch(teamDeleted({ teamIds }))
+        dispatch(addNotification({ title: 'Teams', text: 'Team(s) was deleted!', type: 'success' }))
       })
       .catch(({ response }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
@@ -153,26 +173,6 @@ export const updateTeamRights = (projectId, teams) => (dispatch, getState) => {
       .catch(({ response }) => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
         throw new SubmissionError(response.data)
-      })
-  )
-}
-
-export const getTeams = (projectId, isNew = false) => (dispatch, getState) => {
-  const { user: { token } } = getState()
-  const headers = { headers: { Authorization: token } }
-
-  return (
-    axios.get(`/api/v1/projects/${projectId}/dms_teams?only_new=${isNew}`, headers)
-      .then(({ data }) => {
-
-        if (isNew) {
-          dispatch(newTeamsFetched(data))
-        } else {
-          dispatch(teamsFetched(data))
-        }
-      })
-      .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
       })
   )
 }
