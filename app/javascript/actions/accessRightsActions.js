@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError, initialize } from 'redux-form'
 import {
+  GET_CURRENT_MEMBER,
   DELETE_TEAM,
   UPDATE_NEW_TEAMS_LIST,
   UPDATE_OLD_TEAMS_LIST,
@@ -49,6 +50,11 @@ const newMembersFetched = payload => ({
 
 const currentMembersFetched = payload => ({
   type: GET_CURRENT_MEMBERS_LIST,
+  payload
+})
+
+const memberFetched = payload => ({
+  type: GET_CURRENT_MEMBER,
   payload
 })
 
@@ -204,7 +210,6 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
 export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-
   const request = { users: [values] }
 
   return (
@@ -215,7 +220,22 @@ export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, 
         } else if (type === 'oldMembers') {
           dispatch(getGrandedAccessMembers(projectId))
         }
-        dispatch(addNotification({ title: 'Access rights', text: 'Rights succcessfully updated', type: 'success' }))
+        dispatch(addNotification({ title: 'Access rights', text: 'Rights successfully updated', type: 'success' }))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
+export const showMemberProfile = (projectId, memberId) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/documents/members/${memberId}`, headers)
+      .then(({ data }) => {
+        dispatch(memberFetched(data))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))

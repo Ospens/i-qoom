@@ -47,9 +47,10 @@ export function Teamlist({ users = [], handleOpen, teamId }) {
   return (
     <React.Fragment>
       <div className="opened-members-block">
+        {handleOpen &&
         <button type="button" className="popup-add-team-member" onClick={handleOpen}>
           <span className="icon-add_1 mr-2" />
-        </button>
+        </button>}
         <React.Fragment>
           <div className={classnames('team-member-list', { opened: checkedUser })}>
             {tmpUsers.map(user => {

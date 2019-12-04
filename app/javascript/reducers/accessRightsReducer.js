@@ -1,4 +1,5 @@
 import {
+  GET_CURRENT_MEMBER,
   DELETE_TEAM,
   GET_NEW_MEMBERS_LIST,
   GET_NEW_TEAMS_LIST,
@@ -16,11 +17,17 @@ const initialState = {
   newTeams: [],
   oldTeams: [],
   newMembers: [],
-  oldMembers: []
+  oldMembers: [],
+  currentMember: {}
 }
 
 const accessRightsReducer = (state = initialState, action) => {
   switch (action.type) {
+  case GET_CURRENT_MEMBER:
+    return {
+      ...state,
+      currentMember: action.payload
+    }
   case GET_NEW_MEMBERS_LIST:
     return {
       ...state,
