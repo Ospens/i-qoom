@@ -14,7 +14,9 @@ class Api::V1::DmsTeamsController < ApplicationController
   end
 
   def destroy
-    @dms_team.destroy
+    params[:dms_teams].each do |team_id|
+      DmsTeam.find_by(id: team_id).destroy
+    end
     head 200
   end
 
