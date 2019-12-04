@@ -19,19 +19,19 @@ const checkingFolder = (checked, value) => {
   return newVal
 }
 
-function FolderInfo({ match: { params: { document_id, project_id } } }) {
+function FolderInfo({ match: { params: { document_id, projectId } } }) {
   if (!document_id) return <div />
 
   const folders = useSelector(state => state.folders.allFolders)
   const [checkedFolders, setFolders] = useState([null])
 
   const dispatch = useDispatch()
-  const addDocToFolders = useCallback(() => 
+  const addDocToFolders = useCallback(() =>
     dispatch(addDocumentToFolders(document_id, checkedFolders)),
     [dispatch, checkedFolders])
 
-  const fetchFolders = useCallback(() => 
-    dispatch(startFetchFolders(project_id, document_id)),
+  const fetchFolders = useCallback(() =>
+    dispatch(startFetchFolders(projectId, document_id)),
     [dispatch])
 
   useEffect(() => { fetchFolders() }, [])

@@ -7,59 +7,56 @@ import { startFetchProjects, exitProject } from '../../../actions/projectActions
 
 const ProjectOverview = () => {
   const dispatch = useDispatch()
-  const fetchProjects = useCallback(() => 
-    dispatch(startFetchProjects()),
-    [dispatch]
-  )
-  const exit = useCallback(() =>
-    dispatch(exitProject()),
-    [dispatch],
-  )
-  
+  const fetchProjects = useCallback(() => dispatch(startFetchProjects()),
+    [dispatch])
+  const exit = useCallback(() => dispatch(exitProject()),
+    [dispatch],)
+
   useEffect(() => {
     fetchProjects()
     exit()
-  }, [])
+  }, [exit, fetchProjects])
   const allProjects = useSelector(state => state.projects.allProjects)
-  
+
   return (
     <div>
-      <div className='row-projects'>
+      <div className="row-projects">
         {allProjects.map(project => (
-          <div className='project-card in-preparation' key={project.id}>
+          <div className="project-card in-preparation" key={project.id}>
             <Link to={`/dashboard/projects/${project.id}`}>
-              <span className='icon-cog-double-2' />
+              <span className="icon-cog-double-2" />
             </Link>
             <label>{project.name}</label>
-            <div className='row project-card__bottom'>
-              <div className='col-3'>
+            <div className="row project-card__bottom">
+              <div className="col-3">
                 Planning
-                </div>
-              <div className='col-3'>
+              </div>
+              <div className="col-3">
                 Development
-                </div>
-              <div className='col-3'>
+              </div>
+              <div className="col-3">
                 Execution
-                </div>
-              <div className='col-3'>
+              </div>
+              <div className="col-3">
                 Operation
-                </div>
+              </div>
             </div>
           </div>
         ))}
         {allProjects.length < 4 && [...Array(3 - allProjects.length)].map((_, i) => (
+          // eslint-disable-next-line react/no-array-index-key
           <ModalCreateProject key={i} />
         ))}
       </div>
-      <div className='statuses'>
+      <div className="statuses">
         <label>Status</label>
         <ul>
           <li>
-            <span className='green-dot' />
+            <span className="green-dot" />
             <span>Active</span>
           </li>
           <li>
-            <span className='yellow-dot' />
+            <span className="yellow-dot" />
             <span>In Preparation</span>
           </li>
         </ul>

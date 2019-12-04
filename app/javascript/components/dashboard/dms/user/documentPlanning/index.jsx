@@ -8,16 +8,16 @@ import Header from './Header'
 import { startFetchDocuments } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
 
-function DocumentPlanning({ history, match: { params: { project_id } } }) {
+function DocumentPlanning({ history, match: { params: { projectId } } }) {
   const [checkedDocs, setCheckedDocs] = useState([])
   const documents = useSelector(state => state.documents.allDocuments)
   const dispatch = useDispatch()
-  useEffect(() => { dispatch(startFetchDocuments(project_id, history)) }, [dispatch])
+  useEffect(() => { dispatch(startFetchDocuments(projectId, history)) }, [dispatch])
 
   const toggleDocs = useCallback((checked, value) => {
     setCheckedDocs(toggleArray(checked, value))
   }, [])
-  
+
   return (
     <DMSLayout
       header={<Header checkedDocs={checkedDocs} />}

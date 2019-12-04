@@ -13,7 +13,7 @@ function Content({ close }) {
       <div className='new-modal__body'>
         <div><span className='icon-d-print-warning2' /></div>
         <div>
-          <div>Please do these task in order to use i-Qoom document managment.</div>
+          <div>Please do these task in order to use i-Qoom document management.</div>
           <div>You can still change the project code later.</div>
         </div>
       </div>
@@ -33,7 +33,7 @@ function WellDone({ projectCode }) {
   const [open, toggleModal] = useState(false)
   useEffect(() => {
     if (projectCode === null) {
-      toggleModal(true) 
+      toggleModal(true)
     }
   }, [projectCode])
 
