@@ -84,11 +84,12 @@ Rails.application.routes.draw do
         end
         resource :dms_settings, only: [:edit, :update]
         resource :document_rights, only: [:new, :edit, :update]
-        resources :dms_teams, only: [:create, :update, :show, :index, :destroy] do
+        resources :dms_teams, only: [:create, :update, :show, :index] do
           post :update_members, on: :member
           collection do
             post :update_rights
             get :index_for_documents
+            delete :destroy
           end
         end
         resources :project_administrators,

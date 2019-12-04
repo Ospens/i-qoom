@@ -30,7 +30,7 @@ function Filter({ mainTitle, values, change }) {
     >
       {values.map(({ title, value, checked }, i) => {
         const liClass = classnames('dms-topbar-menu__li-item', { checked })
-        const text = 
+        const text =
           <label className='dms-topbar-menu__label-text' htmlFor={`${value}_${i}_${title}`}>
             {title}
           </label>
@@ -54,15 +54,15 @@ function Filter({ mainTitle, values, change }) {
 
 function Filters() {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const discipline = useSelector(state => state.documents.discipline)
   const document_types = useSelector(state => state.documents.document_types)
   const originating_companies = useSelector(state => state.documents.originating_companies)
 
   const changeFilter = useCallback((type, value) => {
-    dispatch(toggleFilters(project_id, { type, value }))
-  }, [dispatch, project_id])
-  
+    dispatch(toggleFilters(projectId, { type, value }))
+  }, [dispatch, projectId])
+
   return (
     <div className='dms-container__table-header'>
       <span className='mr-4 grey'>Show</span>

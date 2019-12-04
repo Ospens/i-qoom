@@ -6,7 +6,7 @@ import FolderInfo from '../FolderInfo'
 import { getRevisionsAndVersions } from '../../../../../actions/documentsActions'
 
 export function DocHistory() {
-  const { project_id, document_id } = useParams()
+  const { projectId, document_id } = useParams()
   const { path } = useRouteMatch()
   const dispatch = useDispatch()
   const document = useSelector(state => state.documents.current)
@@ -32,11 +32,11 @@ export function DocHistory() {
           <ul className='dms-sidebar-menu__ul-list'>
             {revisions.map(({ revision_number, versions }, i) => (
               <li className={classnames({ 'active': revision_number === revision })} key={i}>
-                <Link to={path.replace(':project_id', project_id).replace(':document_id', versions[versions.length - 1].id)}>
+                <Link to={path.replace(':projectId', projectId).replace(':document_id', versions[versions.length - 1].id)}>
                   {revision_number.padStart(2, 0)}
                 </Link>
               </li>
-            ))} 
+            ))}
           </ul>
         </div>
       </div>
@@ -49,7 +49,7 @@ export function DocHistory() {
           <ul className='dms-sidebar-menu__ul-list'>
             {versionsList.map(({ id, revision_version }, i) => (
               <li key={i} className={classnames({ 'active': id === Number(document_id) })}>
-                <Link to={path.replace(':project_id', project_id).replace(':document_id', id)}>
+                <Link to={path.replace(':projectId', projectId).replace(':document_id', id)}>
                   {revision_version}
                 </Link>
               </li>
@@ -62,7 +62,7 @@ export function DocHistory() {
 }
 
 function SideBar() {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const document = useSelector(state => state.documents.current)
 
   return (
@@ -87,7 +87,7 @@ function SideBar() {
 
       <DocHistory />
 
-      <Link to={`/dashboard/projects/${project_id}/documents`} className='btn-back-to-prev-page'>
+      <Link to={`/dashboard/projects/${projectId}/documents`} className='btn-back-to-prev-page'>
         <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
         BACK
       </Link>

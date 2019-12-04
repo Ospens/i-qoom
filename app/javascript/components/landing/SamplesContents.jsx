@@ -167,8 +167,8 @@ class SamplesContents extends Component {
               <div dangerouslySetInnerHTML={{ __html: title }} />
             )*/}
           <div className='samples-card__title'  dangerouslySetInnerHTML={{ __html: title }} />
-          <div className='managment'>
-            <ul className='managment-buttons col-4'>
+          <div className='management'>
+            <ul className='management-buttons col-4'>
               <li>
                 {/*authed && editable ?
                   (

@@ -29,7 +29,7 @@ function Content({ handleSubmit, step, backStep, revision }) {
 }
 
 function DocumentForm({ initialize, handleSubmit }) {
-  const { document_id, project_id } = useParams()
+  const { document_id, projectId } = useParams()
   const dispatch = useDispatch()
   const history = useHistory()
   const { path } = useRouteMatch()
@@ -39,25 +39,25 @@ function DocumentForm({ initialize, handleSubmit }) {
 
   const submitDocument = useCallback(values => {
     if (step === 1) return toggleStep(2)
-    
+
     if (revision) {
       return dispatch(startCreateRevision(document_id, values))
-        .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` })) 
+        .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
     }
 
     return document_id
       ? dispatch(startUpdateDocument(document_id, values))
-        .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` })) 
-      : dispatch(startCreateDocument(project_id, values))
-        .then(() => history.push({ pathname: `/dashboard/projects/${project_id}/documents/` }))
+        .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
+      : dispatch(startCreateDocument(projectId, values))
+        .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
   }, [dispatch, step, revision])
 
   useEffect(() => {
     document_id
       ? dispatch(startEditDocument(document_id))
-      : dispatch(newDocument(project_id))
-    dispatch(dmsUsers(project_id))
-  }, [dispatch, project_id, document_id])
+      : dispatch(newDocument(projectId))
+    dispatch(dmsUsers(projectId))
+  }, [dispatch, projectId, document_id])
 
   useEffect(() => {
     if (document_id) {
@@ -80,8 +80,8 @@ function DocumentForm({ initialize, handleSubmit }) {
       sidebar={<DocumentSideBar {...{ step, toggleStep }} />}
       content={<Content
         handleSubmit={handleSubmit(submitDocument)}
-        step={step} 
-        revision={revision} 
+        step={step}
+        revision={revision}
         backStep={() => toggleStep(1)}
       />}
     />

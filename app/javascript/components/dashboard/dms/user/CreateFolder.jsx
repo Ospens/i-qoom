@@ -52,7 +52,7 @@ function Content({ handleSubmit, handleClose }) {
 function CreateFolder({ trigger, handleSubmit }) {
   const ref = useRef()
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const [open, setOpen] = useState(false)
 
   const handleClickOpenBtn = useCallback(event => {
@@ -61,14 +61,14 @@ function CreateFolder({ trigger, handleSubmit }) {
       setOpen(true)
     }
   }, [ref])
-  
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOpenBtn)
     return () => { document.removeEventListener('mousedown', handleClickOpenBtn) }
   }, [])
-  
+
   const submit = useCallback(values => {
-    return dispatch(startCreateFolder(project_id, values)).then(() => setOpen(false))
+    return dispatch(startCreateFolder(projectId, values)).then(() => setOpen(false))
   }, [dispatch])
 
   return (
