@@ -9,7 +9,8 @@ class DocumentMain < ApplicationRecord
 
   has_many :revisions,
            class_name: 'DocumentRevision',
-           foreign_key: 'document_main_id'
+           foreign_key: 'document_main_id',
+           dependent: :destroy
 
   has_and_belongs_to_many :reviewers,
                           class_name: 'User',

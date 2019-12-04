@@ -35,4 +35,11 @@ RSpec.describe DocumentMain, type: :model do
     docs = doc1.project.document_mains.documents_available_for(user)
     expect(docs.count).to eql(2)
   end
+
+  it 'destroy' do
+    doc = FactoryBot.create(:document)
+    doc.document_main.destroy
+    expect(Document.count).to eql(0)
+    expect(DocumentMain.count).to eql(0)
+  end
 end

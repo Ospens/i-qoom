@@ -1,6 +1,9 @@
 class Api::V1::Documents::PlannedController < ApplicationController
   include DocumentConcern
   load_resource :project
+  load_resource :document_main,
+                only: :destroy,
+                id_param: :id
 
   def index
     authorize! :index_planned, Document.new, @project
@@ -31,6 +34,16 @@ class Api::V1::Documents::PlannedController < ApplicationController
         rev = main.revisions.create
         document = rev.versions.create(document_params(main_params[:document], true))
       end
+    end
+  end
+
+  def destroy
+    authorize! :destroy_planned, Document.new, @project
+    if @document_main.planned?
+      @document_main.destroy
+      head 200
+    else
+      head 403
     end
   end
 

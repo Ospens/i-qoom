@@ -79,7 +79,7 @@ Rails.application.routes.draw do
             get :download_list
             get :my_documents
             resources :members, only: :show, module: :documents
-            resources :planned, only: [:index, :create], module: :documents
+            resources :planned, only: [:index, :create, :destroy], module: :documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
