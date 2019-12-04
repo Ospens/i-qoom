@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_24_083318) do
+ActiveRecord::Schema.define(version: 2019_12_04_154239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,6 +137,7 @@ ActiveRecord::Schema.define(version: 2019_11_24_083318) do
     t.integer "document_review_status", default: 0
     t.string "project_code"
     t.boolean "planned", default: false
+    t.integer "position"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 

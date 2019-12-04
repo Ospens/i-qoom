@@ -7,8 +7,8 @@ class Api::V1::Documents::PlannedController < ApplicationController
     result = { document_mains: [], new: {} }
     result[:new] =
       Document.build_from_convention(@project.conventions.active, signed_in_user)
-    @project.document_mains.where(planned: true).each do |main|
-      main_attrs = { id: main.id }
+    @project.document_mains.where(planned: true).order(position: :asc).each do |main|
+      main_attrs = main.as_json(only: [:id, :position])
       document = main.revisions.last_revision.last_version
       main_attrs[:document] =
         main.revisions.last_revision.last_version.attributes_for_edit
@@ -27,7 +27,7 @@ class Api::V1::Documents::PlannedController < ApplicationController
         document = main.revisions.last_revision.last_version
         document.revision.versions.create!(document_params(main_params[:document], true))
       else
-        main = @project.document_mains.create(planned: true)
+        main = @project.document_mains.create(planned: true, position: main_params[:position])
         rev = main.revisions.create
         document = rev.versions.create(document_params(main_params[:document], true))
       end

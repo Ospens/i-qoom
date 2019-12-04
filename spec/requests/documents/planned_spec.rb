@@ -14,7 +14,7 @@ describe Document, type: :request do
     let(:project) { document.project }
 
     before do
-      document.document_main.update(planned: true)
+      document.document_main.update(planned: true, position: 3)
     end
 
     it 'anon' do
@@ -46,6 +46,7 @@ describe Document, type: :request do
       main = json['document_mains'].first
       expect(main['edit']['document_fields'].length).to eql(8)
       expect(main['document']['document_fields'].length).to eql(8)
+      expect(main['position']).to eql(3)
     end
   end
 
@@ -55,7 +56,7 @@ describe Document, type: :request do
     before do
       @params = document_attributes(user, false)
       project = get_project_from_document_attrs(@params)
-      @params = { document_mains: [{ id: '', document: @params }] }
+      @params = { document_mains: [{ id: '', position: 2, document: @params }] }
       @project_id = project.id
     end
 
@@ -85,6 +86,7 @@ describe Document, type: :request do
           params: @params, headers: credentials(user)
         expect(response).to have_http_status(:success)
         expect(DocumentMain.last).to be_planned
+        expect(DocumentMain.last.position).to eql(2)
       end
 
       it 'update document' do
