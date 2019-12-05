@@ -40,6 +40,7 @@ class Api::V1::DmsTeamsController < ApplicationController
   def update_members
     @dms_team.users = []
     params[:users].each do |user|
+      next if @project.dms_teams.joins(:users).where(users: { id: User.find(user).id }).any?
       @dms_team.users << User.find(user)
     end
     render json: @dms_team
