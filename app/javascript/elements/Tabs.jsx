@@ -25,7 +25,7 @@ export default function Tabs({ children, className, scrollable, oneTab }) {
     }
     const tab = children[0].props.label
     toggleTab(tab)
-  }, [children])
+  }, [])
   
   if (oneTab) {
     return (

@@ -85,27 +85,27 @@ const masterMenu = masterPath => [
     path: `${masterPath}/distribution_group/`
   },
   {
-    title: 'Review managment',
+    title: 'Review management',
     icon: 'icon-task-list-settings',
     path: '#' // `${masterPath}/planning/`
   }
 ]
 
 function MainItems() {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const { path } = useRouteMatch()
   const projectCode = useSelector(({ projects }) => projects.current.project_code)
   const dmsSections = useSelector(({ projects }) => projects.current.dmsSections)
   const folders = useSelector(({ folders }) => folders.allFolders)
 
   // TODO: Need check for master's permit
-  const masterPath = `/dashboard/projects/${project_id}/documents/master`
+  const masterPath = `/dashboard/projects/${projectId}/documents/master`
 
   return (
     <div className='dms-sidebar-menu__block'>
       <h4>DMS menu</h4>
       <ul className='dms-sidebar-menu__list'>
-        {menuItems(project_id, dmsSections, project_id, masterPath).map(({ path, title, icon, root }, i) => (
+        {menuItems(projectId, dmsSections, projectId, masterPath).map(({ path, title, icon, root }, i) => (
           <React.Fragment key={i}>
             <DmsSideBarItem
               path={path}
@@ -117,8 +117,8 @@ function MainItems() {
         ))}
       </ul>
       {(() => {
-        if (path.includes('dashboard/projects/:project_id/documents/folders')) {
-          return <Folders folders={folders} projectId={project_id} />
+        if (path.includes('dashboard/projects/:projectId/documents/folders')) {
+          return <Folders folders={folders} projectId={projectId} />
         } else if (path.includes('/master/')) {
           return (
             <React.Fragment>

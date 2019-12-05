@@ -7,17 +7,17 @@ import useDebounce from '../../../../../elements/useDebounce'
 
 function Header({ checkedDocs }) {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const checkedLength = checkedDocs.length
   const btnClass = classnames('with-icon', { 'disable': checkedLength === 0 })
   const [searchTerm, setSearchTerm] = useState(undefined)
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
-  
+
   useEffect(() => {
     if (debouncedSearchTerm !== undefined) {
-      dispatch(toggleSearchFilters(project_id, { search: debouncedSearchTerm }))
+      dispatch(toggleSearchFilters(projectId, { search: debouncedSearchTerm }))
     }
-  }, [dispatch, debouncedSearchTerm, project_id])
+  }, [dispatch, debouncedSearchTerm, projectId])
 
   return (
     <div className='dms-header'>
@@ -25,7 +25,7 @@ function Header({ checkedDocs }) {
         <li>
           <Link
             className='d-flex align-items-center'
-            to={`/dashboard/projects/${project_id}/documents/new/`}
+            to={`/dashboard/projects/${projectId}/documents/new/`}
           >
             <span className='icon-add_1 mr-2' />
             <span data-title='Create new Document'>Create new Document</span>

@@ -9,18 +9,18 @@ import Page from '../../elements/Page'
 
 function Dashboard() {
   return (
-    <div className='dashboard-container'>
-      <div className='main-content'>
-        <main role='main' className='dashboard-content'>
+    <div className="dashboard-container">
+      <div className="main-content">
+        <main role="main" className="dashboard-content">
           <Switch>
             <Route
-              path='/dashboard/projects/:project_id'
+              path="/dashboard/projects/:projectId"
               component={Projects}
             />
             <Page
               exact
-              title='Project overview'
-              path='/dashboard/'
+              title="Project overview"
+              path="/dashboard/"
               component={ProjectOverview}
             />
           </Switch>

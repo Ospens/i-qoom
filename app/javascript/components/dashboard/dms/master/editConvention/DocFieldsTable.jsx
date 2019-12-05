@@ -21,17 +21,17 @@ class DocFieldsTable extends Component {
   state = initState
 
   UNSAFE_componentWillMount() {
-    const { editConvention, match: { params: { project_id } } } = this.props
-    editConvention(project_id)
+    const { editConvention, match: { params: { projectId } } } = this.props
+    editConvention(projectId)
   }
-  
+
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => this.setState({ ...initState })
 
   handleSubmit = values => {
-    const { startUpdateConvention, match: { params: { project_id } }  } = this.props
-    return startUpdateConvention(project_id, values)
+    const { startUpdateConvention, match: { params: { projectId } }  } = this.props
+    return startUpdateConvention(projectId, values)
   }
 
   onDragEnd = result => {
@@ -56,7 +56,7 @@ class DocFieldsTable extends Component {
       column: 2,
       row: fields ? fields.column_2.length : {}
     }
-    
+
     return (
       <ModalCreateField
         modalOpen={modalOpen}
@@ -95,7 +95,7 @@ class DocFieldsTable extends Component {
 
   renerFooter = () => {
     const { reset, version } = this.props
-    
+
     return (
       <div className='dms-footer edit-convetion-footer'>
         <div className='changes-description'>
@@ -175,7 +175,7 @@ class DocFieldsTable extends Component {
         {fields && this.renderModalCreateField()}
         <DragDropContext onDragEnd={this.onDragEnd}>
           <form
-            noValidate={true} 
+            noValidate={true}
             className='form-body'
             onSubmit={handleSubmit(this.handleSubmit)}
           >

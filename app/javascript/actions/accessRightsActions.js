@@ -1,9 +1,47 @@
 import axios from 'axios'
+import { SubmissionError, initialize } from 'redux-form'
 import {
+  GET_CURRENT_MEMBER,
+  DELETE_TEAM,
+  UPDATE_NEW_TEAMS_LIST,
+  UPDATE_OLD_TEAMS_LIST,
+  GET_NEW_TEAMS_LIST,
+  GET_OLD_TEAMS_LIST,
   GET_NEW_MEMBERS_LIST,
-  GET_CURRENT_MEMBERS_LIST
+  GET_CURRENT_MEMBERS_LIST,
+  UPDATE_TEAM_MEMBERS
 } from './types'
 import { addNotification } from './notificationsActions'
+
+const teamDeleted = payload => ({
+  type: DELETE_TEAM,
+  payload
+})
+
+const updateNewTeams = payload => ({
+  type: UPDATE_NEW_TEAMS_LIST,
+  payload
+})
+
+const teamMembersUpdated = payload => ({
+  type: UPDATE_TEAM_MEMBERS,
+  payload
+})
+
+const updateOldTeams = payload => ({
+  type: UPDATE_OLD_TEAMS_LIST,
+  payload
+})
+
+const teamsFetched = payload => ({
+  type: GET_OLD_TEAMS_LIST,
+  payload
+})
+
+const newTeamsFetched = payload => ({
+  type: GET_NEW_TEAMS_LIST,
+  payload
+})
 
 const newMembersFetched = payload => ({
   type: GET_NEW_MEMBERS_LIST,
@@ -14,6 +52,130 @@ const currentMembersFetched = payload => ({
   type: GET_CURRENT_MEMBERS_LIST,
   payload
 })
+
+const memberFetched = payload => ({
+  type: GET_CURRENT_MEMBER,
+  payload
+})
+
+export const getTeams = (projectId, isNew = false) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/dms_teams?only_new=${isNew}`, headers)
+      .then(({ data }) => {
+        if (isNew) {
+          dispatch(newTeamsFetched(data))
+        } else {
+          dispatch(teamsFetched(data))
+        }
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
+export const createTeam = (projectId, request) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_teams?name=${request.name}`, {}, headers)
+      .then(({ data }) => {
+        dispatch(initialize('team_form', data))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const updateTeam = (projectId, request) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.put(`/api/v1/projects/${projectId}/dms_teams/${request.id}?name=${request.name}`, {}, headers)
+      .then(({ data }) => {
+        dispatch(initialize('team_form', data))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const deleteTeam = (projectId, teamIds) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token }
+  const data = { dms_teams: teamIds }
+
+  return (
+    axios.delete(`/api/v1/projects/${projectId}/dms_teams/`, { data, headers })
+      .then(() => {
+        dispatch(teamDeleted({ teamIds }))
+        dispatch(addNotification({ title: 'Teams', text: 'Team(s) was deleted!', type: 'success' }))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
+  const { user: { token }, accessRights: { oldTeams } } = getState()
+  const headers = { headers: { Authorization: token } }
+  const request = {
+    ...values
+  }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_members`, request, headers)
+      .then(({ data }) => {
+        const type = oldTeams.findIndex(t => t.id === data.id) > -1 ? 'oldTeams' : 'newTeams'
+        const value = { [type]: oldTeams.filter(t => t.id !== data.id).concat(data) }
+        dispatch(teamMembersUpdated(value))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const deleteTeamMembers = (projectId, teamId, userId) => (dispatch, getState) => {
+  const { accessRights: { oldTeams } } = getState()
+  const team = oldTeams.find(({ id }) => id === teamId)
+  team.users = team.users.filter(({ id }) => id !== userId)
+  const values = {
+    id: teamId,
+    users: team.users.filter(({ id }) => id !== userId)
+  }
+  dispatch(updateTeamMembers(projectId, values))
+}
+
+export const updateTeamRights = (projectId, teams) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  const request = { teams }
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_teams//update_rights`, request, headers)
+      .then(() => {
+        dispatch(getTeams(projectId))
+        dispatch(getTeams(projectId, true))
+        dispatch(addNotification({ title: 'Teams', text: 'Access rights changed!', type: 'success' }))
+      })
+      .catch(({ response }) => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        throw new SubmissionError(response.data)
+      })
+  )
+}
 
 export const getGrantAccessMembers = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
@@ -48,7 +210,6 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
 export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-
   const request = { users: [values] }
 
   return (
@@ -59,7 +220,22 @@ export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, 
         } else if (type === 'oldMembers') {
           dispatch(getGrandedAccessMembers(projectId))
         }
-        dispatch(addNotification({ title: 'Access rights', text: 'Rights succcessfully updated', type: 'success' }))
+        dispatch(addNotification({ title: 'Access rights', text: 'Rights successfully updated', type: 'success' }))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
+
+export const showMemberProfile = (projectId, memberId) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/documents/members/${memberId}`, headers)
+      .then(({ data }) => {
+        dispatch(memberFetched(data))
       })
       .catch(() => {
         dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))

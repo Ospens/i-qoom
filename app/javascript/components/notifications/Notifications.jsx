@@ -1,25 +1,23 @@
-import React, { useRef, useLayoutEffect, useState, useCallback } from 'react'
+import React, {
+  useRef, useLayoutEffect, useState, useCallback
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
-import { CSSTransitionGroup } from 'react-transition-group'
-import { removeNotification } from '../../actions/notificationsActions'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import moment from 'moment'
+import { removeNotification } from '../../actions/notificationsActions'
 
 function Notifications() {
-  const ref = useRef()
+  const ref = useRef(null)
   const dispatch = useDispatch()
   const [fixed, setFixed] = useState(false)
-  const [scrollTop, setScrollTop] = useState(0)
   const notifications = useSelector(state => state.notifications.all)
-  const state = useSelector(state => state.notifications.open)
+  const state = useSelector(s => s.notifications.open)
   const removeItem = useCallback(id => dispatch(removeNotification(id)), [dispatch])
   const withErrors = notifications.filter(el => el.type === 'error').length > 0
 
   useLayoutEffect(() => {
-    if (!document.body) return
-    // const posTopRef = ref.current.getBoundingClientRect()
     const onScroll = () => {
-      setScrollTop(window.scrollY)
       if (window.scrollY > 0) {
         setFixed(true)
       } else {
@@ -29,57 +27,64 @@ function Notifications() {
     document.addEventListener('scroll', onScroll)
 
     return () => document.removeEventListener('scroll', onScroll)
-  }, [scrollTop, fixed])
+  }, [])
 
   const multi = notifications.length > 1
 
   return (
-    <CSSTransitionGroup
-      transitionName='notifications_block'
-      transitionEnterTimeout={300}
-      transitionLeaveTimeout={300}
-    >
-      {notifications.length > 0 && state &&
-      <div 
-        className={classnames('notifications_block', { fixed }, { 'errors': withErrors })}
-        ref={ref}
-        key='notifications_block'
-      >
-        <div className={classnames('notifications_header', { 'one-child': !multi })}>
-          <div>Notifications</div>
-          <div>{notifications.length}</div>
-        </div>
-        <div className='notifications_content'>
-          <CSSTransitionGroup
-            transitionName='notifications_content__element'
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={300}
-          >
-            {notifications.map(({ title, text, time, type, id }, i) => {
-              return (
-                <div className='notifications_content__element' key={id}>
-                  <div className='notifications_content__element-content'>
-                    <div className='notifications_content__element-title'>
-                      {title}
+    <TransitionGroup>
+      {notifications.length > 0 && state
+      && (
+        <CSSTransition
+          classNames="notifications_block"
+          ref={ref}
+          key="notifications_block"
+          timeout={300}
+        >
+          <div className={classnames({ fixed }, { errors: withErrors }, 'notifications_block')}>
+            <div className={classnames('notifications_header', { 'one-child': !multi })}>
+              <div>Notifications</div>
+              <div>{notifications.length}</div>
+            </div>
+            <div className="notifications_content">
+              <TransitionGroup>
+                {notifications.map(({
+                  title, text, time, type, id
+                }) => (
+                  <CSSTransition
+                    key={id}
+                    classNames="notifications_content__element"
+                    timeout={300}
+                  >
+                    <div className="notifications_content__element" key={id}>
+                      <div className="notifications_content__element-content">
+                        <div className="notifications_content__element-title">
+                          {title}
+                        </div>
+                        <div className={classnames('notifications_content__element-msg', type)}>
+                          {text}
+                        </div>
+                        <div className="notifications_content__element-time">
+                          {moment(time).fromNow()}
+                        </div>
+                      </div>
+                      <div className="notifications_content__element-close-button">
+                        <button type="button" onClick={() => removeItem(id)}>
+                          <span className="icon-delete_2">
+                            <span className="path1" />
+                            <span className="path2" />
+                          </span>
+                        </button>
+                      </div>
                     </div>
-                    <div className={classnames('notifications_content__element-msg', type)}>
-                      {text}
-                    </div>
-                    <div className='notifications_content__element-time'>
-                      {moment(time).fromNow()}
-                    </div>
-                  </div>
-                  <div className='notifications_content__element-close-button'>
-                    <button type='button' onClick={() => removeItem(id)}>
-                      <span className='icon-delete_2'><span className='path1'></span><span className='path2'></span></span>
-                    </button>
-                  </div>
-                </div>)
-            })}
-          </CSSTransitionGroup>
-        </div>
-      </div>}
-    </CSSTransitionGroup>
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </div>
+          </div>
+        </CSSTransition>
+      )}
+    </TransitionGroup>
   )
 }
 

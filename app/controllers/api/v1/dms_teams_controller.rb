@@ -13,6 +13,13 @@ class Api::V1::DmsTeamsController < ApplicationController
     render json: @dms_team
   end
 
+  def destroy
+    params[:dms_teams].each do |team_id|
+      DmsTeam.find_by(id: team_id).destroy
+    end
+    head 200
+  end
+
   def show
     render json: @dms_team
   end

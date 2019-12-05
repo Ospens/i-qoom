@@ -10,19 +10,31 @@ import Header from './Header'
 
 function IndexDMS() {
   const dispatch = useDispatch()
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const [checkedDocs, setСheckedDocs] = useState([])
   const documents = useSelector(state => state.documents.allDocuments)
-  const toggleСheckedDocs = useCallback(value => { setСheckedDocs(toggleArray(checkedDocs, value)) }, [checkedDocs])
-  useEffect(() => { dispatch(startFetchDocuments(project_id)) }, [dispatch, project_id])
+  const toggleСheckedDocs = useCallback(value => {
+    setСheckedDocs(toggleArray(checkedDocs, value))
+  }, [checkedDocs])
+  useEffect(() => { dispatch(startFetchDocuments(projectId)) }, [dispatch, projectId])
   useEffect(() => { setСheckedDocs([]) }, [documents])
+
+  const header = <Header checkedDocs={checkedDocs} />
+  const sidebar = <Sidebar projectId={projectId} checkedDocs={checkedDocs} />
+  const content = (
+    <Content
+      projectId={projectId}
+      checkItem={toggleСheckedDocs}
+      checkedDocs={checkedDocs}
+    />
+  )
 
   return (
     <DMSLayout
-      header={<Header checkedDocs={checkedDocs} />}
-      sidebar={<Sidebar projectId={project_id} checkedDocs={checkedDocs} />}
-      content={<Content projectId={project_id} checkItem={toggleСheckedDocs} checkedDocs={checkedDocs} />}
-      classNames='with-header'
+      header={header}
+      sidebar={sidebar}
+      content={content}
+      classNames="with-header"
     />
   )
 }

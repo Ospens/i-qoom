@@ -9,9 +9,11 @@ import { DropDownItems } from './elements'
 import Filters from './Filters'
 import DownloadDocuments from './DownloadDocuments'
 import OpenDocument from './OpenDocument'
-import { downloadList, downloadDetailFile, downloadNativeFile } from '../../../../../actions/documentsActions'
+import {
+  downloadList, downloadDetailFile, downloadNativeFile, toggleSearchFilters, sortTable
+} from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
-import { toggleSearchFilters, sortTable } from '../../../../../actions/documentsActions'
+
 import useDebounce from '../../../../../elements/useDebounce'
 
 function Content({ projectId, checkedDocs, checkItem }) {
@@ -22,7 +24,9 @@ function Content({ projectId, checkedDocs, checkItem }) {
   const sortBy = useSelector(state => state.documents.sortBy)
   const filters = useSelector(state => state.documents.searchFilters)
   const loading = useSelector(state => state.documents.loading)
-  const downloadFiles = useCallback(docId => { dispatch(downloadList(projectId, docId, formats)) }, [dispatch, formats])
+  const downloadFiles = useCallback(docId => {
+    dispatch(downloadList(projectId, docId, formats))
+  }, [dispatch, formats, projectId])
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
   const downloadByOption = useCallback((docId, types) => {
@@ -32,9 +36,11 @@ function Content({ projectId, checkedDocs, checkItem }) {
     if (types.includes('details')) {
       dispatch(downloadDetailFile(docId))
     }
-  } , [dispatch])
+  }, [dispatch])
 
-  const toggleFormats = useCallback((checked, value) => { changeFormats(toggleArray(checked, value)) }, [formats])
+  const toggleFormats = useCallback((checked, value) => {
+    changeFormats(toggleArray(checked, value))
+  }, [])
 
   const toggleSort = useCallback(column => { dispatch(sortTable(column)) }, [dispatch])
 
@@ -60,132 +66,146 @@ function Content({ projectId, checkedDocs, checkItem }) {
   }, [dispatch, debouncedSearchTerm, projectId])
 
   return (
-    <div className='dms-content'>
+    <div className="dms-content">
       <Filters />
-      <div className='overview-table-contaniner'>
-        {loading &&
-        <div className='loader-container'>
-          <div className='lds-ring'><div></div><div></div><div></div><div></div></div>
-        </div>}
-        <div className='Rtable'>
-          <div className='Rtable__header'>
-            <div className='Rtable-row'>
-              <div className='Rtable__row-cell' />
-              <div className='Rtable__row-cell table-checkbox'>
-                <div className='d-flex'>
+      <div className="overview-table-contaniner">
+        {loading
+        && (
+          <div className="loader-container">
+            <div className="lds-ring">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          </div>
+        )}
+        <div className="Rtable">
+          <div className="Rtable__header">
+            <div className="Rtable-row">
+              <div className="Rtable__row-cell" />
+              <div className="Rtable__row-cell table-checkbox">
+                <div className="d-flex">
                   <input
-                    type='checkbox'
-                    id='check_all'
+                    type="checkbox"
+                    id="check_all"
                   />
-                  <label htmlFor='check_all' />
+                  <label htmlFor="check_all" />
                 </div>
               </div>
               {columns.map(({ title, searchable, sortable }) => (
-                <div className='Rtable__row-cell' key={title}>
-                  <div className='Rtable__row-cell__header' >
+                <div className="Rtable__row-cell" key={title}>
+                  <div className="Rtable__row-cell__header">
                     <div>
                       {searchable
-                        ? <input
-                          type='text'
-                          className='searchable-title' placeholder={title}
-                          onChange={({ target }) => changeFilters(title, target.value)}
-                        />
+                        ? (
+                          <input
+                            type="text"
+                            className="searchable-title"
+                            placeholder={title}
+                            onChange={({ target }) => changeFilters(title, target.value)}
+                          />
+                        )
                         : <span>{title}</span>}
                     </div>
-                    {sortable &&
-                      <div
-                        className={classnames(
-                          'icon-arrow-button-down order-arrow',
-                          { [sortBy.order]: sortBy.column === sortable })
-                        }
-                        onClick={() => toggleSort(sortable)}
-                      />}
+                    {sortable
+                      && (
+                        <button
+                          type="button"
+                          className={classnames('icon-arrow-button-down order-arrow', { [sortBy.order]: sortBy.column === sortable })}
+                          onClick={() => toggleSort(sortable)}
+                        />
+                      )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className='Rtable__body'>
-            {documents.map((doc, i) => {
-              return (
-                <div key={i} className={classnames('Rtable-row', { 'Rtable-row__checked': checkedDocs.includes(doc.id) })}>
-                  <div className='Rtable__row-cell table-checkbox'>
-                    <DropDown
-                      dots={true}
-                      className='dropdown-with-icon'
-                    >
-                      <DropDownItems
-                        key='DropDownItems__Content'
-                        id={doc.id}
-                        projectId={projectId}
-                        downloadFiles={() => downloadFiles(doc.id)}
-                        formats={formats}
-                        toggleFormats={v => toggleFormats(formats, v)}
-                      />
-                    </DropDown>
-                  </div>
-
-                  <div className='Rtable__row-cell table-checkbox'>
-                    <input
-                      type='checkbox' id={doc.id}
-                      onChange={() => checkItem(doc.id)}
-                      checked={checkedDocs.includes(doc.id)}
+          <div className="Rtable__body">
+            {documents.map(doc => (
+              <div
+                key={doc.id}
+                className={classnames('Rtable-row', { 'Rtable-row__checked': checkedDocs.includes(doc.id) })}
+              >
+                <div className="Rtable__row-cell table-checkbox">
+                  <DropDown
+                    dots
+                    className="dropdown-with-icon"
+                  >
+                    <DropDownItems
+                      key="DropDownItems__Content"
+                      id={doc.id}
+                      projectId={projectId}
+                      downloadFiles={() => downloadFiles(doc.id)}
+                      formats={formats}
+                      toggleFormats={v => toggleFormats(formats, v)}
                     />
-                    <label htmlFor={doc.id} />
-                  </div>
+                  </DropDown>
+                </div>
 
-                  <div className='Rtable__row-cell doc-id-cell'>
-                    <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
-                      {doc.doc_id}
-                    </Link>
-                  </div>
+                <div className="Rtable__row-cell table-checkbox">
+                  <input
+                    type="checkbox"
+                    id={doc.id}
+                    onChange={() => checkItem(doc.id)}
+                    checked={checkedDocs.includes(doc.id)}
+                  />
+                  <label htmlFor={doc.id} />
+                </div>
 
-                  <div className='Rtable__row-cell title-cell'>
-                    <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
-                      {doc.title}
-                    </Link>
-                  </div>
+                <div className="Rtable__row-cell doc-id-cell">
+                  <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
+                    {doc.doc_id}
+                  </Link>
+                </div>
 
-                  <div className='Rtable__row-cell td-files'>
-                    <DownloadDocuments
-                      downloadFiles={downloadFiles}
-                      docId={doc.id}
-                      downloadByOption={types => downloadByOption(doc.id, types)}
-                    />
-                  </div>
+                <div className="Rtable__row-cell title-cell">
+                  <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
+                    {doc.title}
+                  </Link>
+                </div>
 
-                  <div className='Rtable__row-cell td-files'>
-                    <OpenDocument docId={doc.id} />
-                  </div>
+                <div className="Rtable__row-cell td-files">
+                  <DownloadDocuments
+                    downloadFiles={downloadFiles}
+                    docId={doc.id}
+                    downloadByOption={types => downloadByOption(doc.id, types)}
+                  />
+                </div>
 
-                  <div className='Rtable__row-cell td-files'>
-                    {/* <div>
+                <div className="Rtable__row-cell td-files">
+                  <OpenDocument docId={doc.id} />
+                </div>
+
+                <div className="Rtable__row-cell td-files">
+                  {/* <div>
                     <span className='icon-Work-Office-Companies---Office-Files---office-file-pdf' />
                     </div> */}
-                  </div>
-
-                  <div className='Rtable__row-cell td-date'>
-                    {moment(doc.revision_date).format('M.D.YYYY')}
-                  </div>
-
-                  <div className='Rtable__row-cell'>
-                    {doc.discipline}
-                  </div>
-
-                  <div className='Rtable__row-cell'>
-                    {doc.document_type}
-                  </div>
-
-                  <div className='Rtable__row-cell'>
-                    {doc.originating_company}
-                  </div>
                 </div>
-              )
-            })}
+
+                <div className="Rtable__row-cell td-date">
+                  {moment(doc.revision_date).format('M.D.YYYY')}
+                </div>
+
+                <div className="Rtable__row-cell">
+                  {doc.discipline}
+                </div>
+
+                <div className="Rtable__row-cell">
+                  {doc.document_type}
+                </div>
+
+                <div className="Rtable__row-cell">
+                  {doc.originating_company}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <div className='d-flex'>
-          <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>{documents.length} total documents</span>
+        <div className="d-flex">
+          <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>
+            {`${documents.length} total documents`}
+          </span>
         </div>
       </div>
     </div>

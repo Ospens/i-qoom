@@ -21,7 +21,7 @@ function CodeStructure({
   pristine,
   reset,
   handleSubmit,
-  match: { params: { project_id } }
+  match: { params: { projectId } }
 }) {
   const [open, setOpen] = useState(false)
   const [oldnSBState, setoldnSBState] = useState(true)
@@ -37,19 +37,19 @@ function CodeStructure({
       setoldnSBState(openSB)
     }, 500)
   }, [openSB])
-  
+
   useEffect(() => {
     if (dmsSections == undefined) return
 
     setOpen(!dmsSections)
-    if (!project_code) return 
+    if (!project_code) return
 
     initialize({ project_code: [project_code[0], project_code[1], project_code[2]] })
   }, [project_code, dmsSections])
-  
+
   const submitCodification = useCallback(values => {
     const code = values.project_code.join('').toUpperCase()
-    dispatch(updateProjectCode(project_id, code))
+    dispatch(updateProjectCode(projectId, code))
   }, [dispatch])
 
   const popUpClassnames = classnames(
@@ -129,7 +129,7 @@ function CodeStructure({
                     </div>
                   </div>
                 </Popup>}
-                {i !== 0 && 
+                {i !== 0 &&
                 <div className='codification-codes-title-column__code'>
                   {(() => {
                     if (disabled) {
