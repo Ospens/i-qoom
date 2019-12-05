@@ -70,9 +70,14 @@ function AccessRights({ rights = {} }) {
 
   return (
     <div className="user-profile__info-container">
-      <div className="user-profile__info-container_title">
-        <span> Access rights</span>
-        <span> Access rights</span>
+      <div className="user-profile__info-container_title d-flex">
+        <div>Access rights</div>
+        <div className="green ml-5">Access limit: 12.10.2021</div>
+        <div className="ml-auto">
+          <button type="button" className="with-icon">
+            <span>Edit</span>
+          </button>
+        </div>
       </div>
       <div className="user-profile__user-base-info">
         <div className="user-profile__user_block">
@@ -162,8 +167,8 @@ function Content() {
         />
         <Bio />
         <AccessRights rights={member.rights} />
-        <Teams groups={member.teams} />
-        <DistributionGroup groups={member.teams} />
+        <Teams teams={member.teams} />
+        {/* <DistributionGroup groups={member.teams} /> */}
       </div>
     </div>
   )
@@ -171,9 +176,9 @@ function Content() {
 
 function Index() {
   const dispatch = useDispatch()
-  const { projectId } = useParams()
+  const { projectId, memberId } = useParams()
   useEffect(() => {
-    dispatch(showMemberProfile(projectId, 1))
+    dispatch(showMemberProfile(projectId, memberId))
   }, [dispatch])
 
   const sidebar = <DmsSideBar />
