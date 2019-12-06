@@ -6,7 +6,7 @@ import CheckField from '../../../../../elements/CheckField'
 
 function DropDownRow({ index, valueTitle, memberId }) {
   return (
-    <div className='acceess-rights__drop-down-row'>
+    <div className='access-rights__drop-down-row'>
       <span>{valueTitle}</span>
       <Field
         component={CheckField}
@@ -38,12 +38,12 @@ function RightsDropDown({ memberId, columnTitle, values, rights, formName }) {
 
   return (
     <DropDown
-      className='dropdown-with-switch acceess-rights__drop-down'
+      className='dropdown-with-switch access-rights__drop-down'
       btnName={title.join(', ')}
       btnClass='btn btn-for-switch'
     >
-      <div className='acceess-rights__drop-down-content'>
-        <div className='acceess-rights__drop-down-row'>
+      <div className='access-rights__drop-down-content'>
+        <div className='access-rights__drop-down-row'>
           <label>{columnTitle}</label>
           {/* <div className='form-group'>
             <input

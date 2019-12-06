@@ -56,7 +56,7 @@ const initialState = {
       {
         title: 'Relevance II',
         enabled: true,
-        position: 2
+        position: 3
       }
     ]
   }

@@ -47,7 +47,7 @@ const optionBtn = [
   }
 ]
 
-function MembersTable({ type, match: { params: { project_id } } }) {
+function MembersTable({ type, match: { params: { projectId } } }) {
   const dispatch = useDispatch()
   const members = useSelector(state => state.accessRights[type])
   const [checkedMembers, changeChecked] = useState([])
@@ -55,9 +55,9 @@ function MembersTable({ type, match: { params: { project_id } } }) {
   useEffect(() => {
     changeChecked([])
     if (type === 'newMembers') {
-      dispatch(getGrantAccessMembers(project_id))
+      dispatch(getGrantAccessMembers(projectId))
     } else if (type === 'oldMembers') {
-      dispatch(getGrandedAccessMembers(project_id))
+      dispatch(getGrandedAccessMembers(projectId))
     }
   }, [dispatch, type])
 
@@ -107,7 +107,7 @@ function MembersTable({ type, match: { params: { project_id } } }) {
             {members.map((member, i) => {
               initialize(`members_access_rights_form_${member.id}`, member)
               return (
-                <MemberRow 
+                <MemberRow
                   key={member.id}
                   type={type}
                   checkedMembers={checkedMembers}

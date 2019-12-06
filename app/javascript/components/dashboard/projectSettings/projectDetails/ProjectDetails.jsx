@@ -6,14 +6,14 @@ import AdminBlock from './AdminBlock'
 import NewAdmin from './NewAdmin'
 import { starUpdateAdmin } from '../../../../actions/projectActions'
 
-function ProjectDetails({ match: { params: { project_id } } }) {
+function ProjectDetails({ match: { params: { projectId } } }) {
   const admins = useSelector(state => state.projects.current.admins)
   const companyData = useSelector(state => state.projects.current.company_data)
   const id = useSelector(state => state.projects.current.id)
   const dispatch = useDispatch()
 
   const updateAdmin = useCallback(values =>
-    dispatch(starUpdateAdmin(project_id, values))
+    dispatch(starUpdateAdmin(projectId, values))
   [dispatch])
 
   return (
@@ -29,7 +29,7 @@ function ProjectDetails({ match: { params: { project_id } } }) {
               admin={admin}
               initialValues={admin}
               form={`admin_form_${i}`}
-              projectId={project_id}
+              projectId={projectId}
               updateAdmin={updateAdmin}
             />
           ))}
@@ -37,7 +37,7 @@ function ProjectDetails({ match: { params: { project_id } } }) {
             index={admins.length + 1}
             form={`admin_form_${admins.length + 1}`}
             updateAdmin={updateAdmin}
-            projectId={project_id}
+            projectId={projectId}
           />
         </div>
       </div>

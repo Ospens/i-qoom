@@ -2,6 +2,7 @@ import React from 'react'
 import avatar from '../../images/tmp_avatar'
 import UserAvatar from 'react-user-avatar'
 
+// Moved to app/javascript/components/dashboard/dms/master/userProfile/index.jsx
 function UserProfile() {
   return (
     <div className='user-profile'>

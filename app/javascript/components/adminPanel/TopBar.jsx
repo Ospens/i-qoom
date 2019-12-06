@@ -1,10 +1,9 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import UserAvatar from 'react-user-avatar'
-import logo from '../../images/i-Qoom_Brand_Logo_Gradient'
 import { signOutUser } from '../../actions/userActions'
 
-function TopBar({ signOut }) {
+function TopBar() {
   const firstName = useSelector(state => state.user.first_name)
   const lastName = useSelector(state => state.user.last_name)
 
@@ -15,33 +14,33 @@ function TopBar({ signOut }) {
   }, [dispatch])
 
   return (
-    <div className='top-bar-user-info'>
-      <h2 className='logo-png' >
-        <img src={logo} />
+    <div className="top-bar-user-info">
+      <h2 className="logo-png">
+        logo
       </h2>
-      <ul className=''>
-        <li className='nav-item'>
+      <ul className="">
+        <li className="nav-item">
           <button
-            type='button'
-            className='nav-link btn-transparent text-dark'
+            type="button"
+            className="nav-link btn-transparent text-dark"
             onClick={signOut}
           >
             Logout
           </button>
         </li>
-        <li className='nav-item'>
-          <button type='button' className='btn'>
-            <span className='icon-email-action-unread' />
+        <li className="nav-item">
+          <button type="button" className="btn">
+            <span className="icon-email-action-unread" />
           </button>
         </li>
-        <li className='nav-item'>
-          <button type='button' className='btn'>
-            <span className='icon-alarm-bell' />
+        <li className="nav-item">
+          <button type="button" className="btn">
+            <span className="icon-alarm-bell" />
           </button>
         </li>
-        <li className='nav-item'>
-          <button type='button' className='nav-link btn-transparent user-info-avatar'>
-            <UserAvatar size='42' name={`${firstName} ${lastName}`} />
+        <li className="nav-item">
+          <button type="button" className="nav-link btn-transparent user-info-avatar">
+            <UserAvatar size="42" name={`${firstName} ${lastName}`} />
           </button>
         </li>
       </ul>

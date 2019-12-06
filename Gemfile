@@ -55,6 +55,8 @@ gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
 gem 'axlsx_rails'
 gem 'premailer-rails'
 gem 'unread'
+gem 'ed25519', '>= 1.2', '< 2.0'
+gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -77,7 +79,7 @@ group :development do
   gem "capistrano-rails", "~> 1.4", require: false
   gem 'capistrano-webpacker-precompile', require: false
   gem 'capistrano3-puma', require: false
-
+  gem 'capistrano-ssh-doctor', git: 'https://github.com/capistrano-plugins/capistrano-ssh-doctor.git'
   gem 'guard-rspec', require: false
   gem 'letter_opener'
 end

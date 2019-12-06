@@ -2,18 +2,19 @@ import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import MainItems from './MainItems'
 
-export const DmsSideBar = ({ children }) => {
-  const { project_id } = useParams()
-  
+const DmsSideBar = ({ children }) => {
+  const { projectId } = useParams()
+
   return (
     <React.Fragment>
-      <div className='dms-sidebar-menu'>
+      <div className="dms-sidebar-menu">
         <MainItems />
-
         {children}
-
-        <Link to={`/dashboard/projects/${project_id}`} className='btn-back-to-prev-page'>
-          <span className='icon-Arrow_2_left mr-2'><span className='path1'></span><span className='path2'></span></span>
+        <Link to={`/dashboard/projects/${projectId}`} className="btn-back-to-prev-page">
+          <span className="icon-Arrow_2_left mr-2">
+            <span className="path1" />
+            <span className="path2" />
+          </span>
           BACK
         </Link>
       </div>

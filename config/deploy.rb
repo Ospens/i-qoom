@@ -47,7 +47,7 @@ append :linked_dirs, "log",
 # set :ssh_options, verify_host_key: :secure
 
 namespace :deploy do
-  after :finished, :clear_cache do
+  after :finishing, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       within release_path do
         with rails_env: fetch(:rails_env) do

@@ -42,7 +42,7 @@ const renderBlock = field => {
 }
 
 function Content() {
-  const { project_id } = useParams()
+  const { projectId } = useParams()
   const document = useSelector(state => state.documents.current)
   const revisionsWithVersions = useSelector(state => state.documents.revisions)
   const firstColumn = document.document_fields.filter(el => el.column == 1 )
@@ -61,17 +61,17 @@ function Content() {
       <div className='dms-content__header'>
         <div className='d-flex'>
           <h4>Document details</h4>
-          {lastDocID && 
+          {lastDocID &&
           <div className='dms-content__header_links-block'>
             <Link
-              to={`/dashboard/projects/${project_id}/documents/${lastDocID}/edit`}
+              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}
               className='mx-4 link'
               data-title='Edit document'
             >
               Edit document
             </Link>
-            <Link 
-              to={`/dashboard/projects/${project_id}/documents/${lastDocID}/add_revision`}
+            <Link
+              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}
               className='mx-4 link'
               data-title='Add revision'
             >
@@ -258,11 +258,11 @@ function Content() {
       </div>
 
       <div className='dms-footer'>
-        <Link className='btn btn-white' to={`/dashboard/projects/${project_id}/documents/`}>Back</Link>
+        <Link className='btn btn-white' to={`/dashboard/projects/${projectId}/documents/`}>Back</Link>
         {lastDocID &&
         <React.Fragment>
-          <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${lastDocID}/edit`}>Edit</Link>
-          <Link className='btn btn-purple' to={`/dashboard/projects/${project_id}/documents/${lastDocID}/add_revision`}>Add revision</Link>
+          <Link className='btn btn-purple' to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}>Edit</Link>
+          <Link className='btn btn-purple' to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}>Add revision</Link>
         </React.Fragment>}
       </div>
     </div>

@@ -133,7 +133,7 @@ export const formvalue = (fields = [], codKind) => {
   return field.value
 }
 
-function DocumentsAndFiles({ match: { params: { project_id } } }) {
+function DocumentsAndFiles({ match: { params: { projectId } } }) {
   const [modal, toggleModal] = useState(false)
   const groupedFields = useSelector(state => state.documents.current.grouped_fields)
   const documentFields = useSelector(state => selector(state, 'document_fields'))
@@ -180,11 +180,11 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
     if (!generateId) return
 
     const infoMsg = title => dispatch(addNotification({
-      title: 'Documents', 
-      text: `Can not get data from title ${title}`, 
-      type: 'info' 
+      title: 'Documents',
+      text: `Can not get data from title ${title}`,
+      type: 'info'
     }))
-    
+
     const values = initValues(documentFields, (title) => infoMsg(title))
     if (!values) return
 
@@ -283,7 +283,7 @@ function DocumentsAndFiles({ match: { params: { project_id } } }) {
 
       </div>
       <div className='dms-footer'>
-        <Link className='btn btn-white' to={`/dashboard/projects/${project_id}/documents/`}>Cancel</Link>
+        <Link className='btn btn-white' to={`/dashboard/projects/${projectId}/documents/`}>Cancel</Link>
         <button type='submit' className='btn btn-purple'>Next</button>
       </div>
     </React.Fragment>
