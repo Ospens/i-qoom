@@ -70,14 +70,61 @@ describe User, type: :model do
   it { is_expected.not_to allow_value(Faker::Name.name)
                         .for(:username) }
 
-  it "sends confirmation email" do
-    user = FactoryBot.create(:user, confirmed_at: nil)
-    expect(user.confirmation_sent_at).to be_present
+  context "sends confirmation email" do
+    it "should be sent" do
+      user = FactoryBot.create(:user, confirmed_at: nil)
+      expect(user.confirmation_sent_at).to be_present
+      expect(user.confirmed?).not_to be_truthy
+    end
+    it "shouldn't be sent" do
+      project_member = FactoryBot.create(:project_member_pending)
+      user = FactoryBot.create(:user,
+                               confirmed_at: nil,
+                               project_member_id: project_member.id)
+      expect(user.confirmation_sent_at).to be_nil
+      expect(user.confirmed?).to be_truthy
+    end
   end
 
   it "should have valid member_id" do
     user = FactoryBot.create(:user)
     expect(user.member_id.last(5).to_i).to eq user.id
     expect(user.member_id).to be_truthy
+  end
+
+  context "add_data_from_project_member" do
+    it "on create with project_member_id" do
+      project_member = FactoryBot.create(:project_member_pending)
+      user = FactoryBot.create(:user,
+                               project_member_id: project_member.id)
+      expect(user.first_name).to eq(project_member.first_name)
+    end
+    it "on update with project_member_id" do
+      user = FactoryBot.create(:user)
+      project_member = FactoryBot.create(:project_member_pending)
+      user.update(project_member_id: project_member.id)
+      expect(user.first_name).not_to eq(project_member.first_name)
+    end
+  end
+
+  context "add_user_id_to_project_member" do
+    it "after create with project_member_id" do
+      project_member = FactoryBot.create(:project_member_pending)
+      user = FactoryBot.create(:user,
+                               project_member_id: project_member.id)
+      expect(project_member.reload.user).to be_present
+      expect(user.reload.project_members).not_to be_empty
+    end
+    it "after create without project_member_id" do
+      user = FactoryBot.create(:user)
+      expect(user.reload.project_members).to be_empty
+    end
+    it "after update with project_member_id" do
+      user = FactoryBot.create(:user)
+      project_member = FactoryBot.create(:project_member_pending)
+      user.update(project_member_id: project_member.id)
+      expect(project_member.reload.user).not_to be_present
+      expect(user.reload.project_members).to be_empty
+    end
   end
 end

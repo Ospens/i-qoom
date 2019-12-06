@@ -84,23 +84,19 @@ RSpec.describe ProjectMember, type: :model do
   end
 
   context "add_user" do
-    it 'should be added on details step' do
+    it 'should work when email is present' do
       user = FactoryBot.create(:user)
       project_member =
         FactoryBot.create(:project_member_details, email: user.email)
       expect(project_member.user).to eq(user)
     end
-    it "shouldn't be added on earlier steps" do
+    it "shouldn't work without email" do
       user = FactoryBot.create(:user)
       project_member =
-        FactoryBot.create(:project_member_details,
-                          creation_step: [ :employment_type,
-                                           :company_type,
-                                           :company_data ].sample,
-                          email: user.email)
+        FactoryBot.create(:project_member_company_data)
       expect(project_member.user).not_to eq(user)
     end
-    it "shouldn't be replaced after updating email" do
+    it "shouldn't work after updating email" do
       user = FactoryBot.create(:user)
       second_user = FactoryBot.create(:user)
       project_member =

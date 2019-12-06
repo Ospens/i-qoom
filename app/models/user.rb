@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   acts_as_reader
 
-  attr_accessor :accept_terms_and_conditions
+  attr_accessor :accept_terms_and_conditions, :project_member_id
 
   has_many :projects
 
@@ -66,8 +66,13 @@ class User < ApplicationRecord
             length: { maximum: 18 },
             uniqueness: true
 
+  before_validation :add_data_from_project_member,
+                    on: :create,
+                    if: -> { project_member_id.present? }
   after_create :generate_member_id
-  after_create :send_confirmation_email, unless: :confirmed?
+  after_create :send_confirmation_email,
+               unless: -> { confirmed? || project_member_id.present? }
+  after_create :add_user_id_to_project_member, if: -> { project_member_id.present? } 
 
   def confirmed?
     confirmed_at.present?
@@ -100,5 +105,22 @@ class User < ApplicationRecord
 
   def generate_member_id
     self.member_id = "i-" + (first_name.first + last_name.first).upcase + id.to_s.rjust(5, '0')
+  end
+
+  def add_data_from_project_member
+    project_member = ProjectMember.find_by(id: project_member_id)
+    assign_attributes(
+      first_name: project_member.first_name,
+      last_name: project_member.last_name,
+      country: project_member.company_address.country,
+      city: project_member.company_address.city,
+      username: (project_member.email.split("@").first.sub(".", "_") + project_member.id.to_s)[0..17],
+      email: project_member.email,
+      confirmed_at: Time.now
+    )
+  end
+
+  def add_user_id_to_project_member
+    ProjectMember.find_by(id: project_member_id).update(user_id: id)
   end
 end

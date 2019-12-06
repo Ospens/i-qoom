@@ -81,8 +81,11 @@ class Api::V1::ProjectsController < ApplicationController
     project_member_confirmation =
       ProjectMemberConfirmation.new(token: params[:token],
                                     signed_in_user: signed_in_user)
-    if project_member_confirmation.save
+    if project_member_confirmation.accept
       head :ok
+    elsif project_member_confirmation.registration_required?
+      render json: { project_member_id: project_member_confirmation.project_member.id },
+             status: :not_found
     else
       render json: project_member_confirmation.errors,
              status: :unprocessable_entity

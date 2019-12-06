@@ -12,6 +12,7 @@ describe "Project", type: :request do
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
+    let(:headers_without_user) { { "CONTENT_TYPE" => "application/json" } }
     context "index" do
       it 'should get a status "success" and render projects' do
         get "/api/v1/projects",
@@ -240,15 +241,25 @@ describe "Project", type: :request do
         expect(response).to have_http_status(:success)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
       end
-      it "shouldn't confirm a member with wrong user" do
+      it "shouldn't confirm a member with a wrong user" do
         project_member =
           FactoryBot.create(:project_member_pending)
         get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
           headers: headers_for_second_user
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:not_found)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+        expect(json["project_member_id"]).to eq project_member.id
       end
-      it "should't confirm a member with different signed_in_user" do
+      it "shouldn't confirm a member without a user" do
+        project_member =
+          FactoryBot.create(:project_member_pending)
+        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+          headers: headers_without_user
+        expect(response).to have_http_status(:not_found)
+        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+        expect(json["project_member_id"]).to eq project_member.id
+      end
+      it "should't confirm a member with a different signed_in_user" do
         project_member =
           FactoryBot.create(:project_member_pending)
         project_member.update(email: second_user.email)
@@ -256,6 +267,14 @@ describe "Project", type: :request do
           headers: headers
         expect(response).to have_http_status(:unprocessable_entity)
         expect(ProjectMember.find_by(id: project_member.id).user).not_to eq(user)
+      end
+      it "shouldn't confirm a member with a wrong token" do
+        project_member =
+          FactoryBot.create(:project_member_pending)
+        get "/api/v1/projects/confirm_member?token=54353454",
+          headers: headers_without_user
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
       end
     end
 
@@ -270,7 +289,7 @@ describe "Project", type: :request do
              headers: headers
         expect(response).to have_http_status(:ok)
         expect(ActionMailer::Base.deliveries.map(&:to).map(&:first)).to\
-          eq(project.members.map(&:email) - [project.members.first.email])
+          eq(project.members.map(&:email) - [project.members.where(creation_step: "active").first.email])
         expect(ProjectMember.where(id: member_ids).first.inviter_id).to eq(user.id)
       end
       it "shouldn't invite members" do
@@ -358,11 +377,11 @@ describe "Project", type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'confirm_member' do
+    it 'confirm_member (exclusion) should be accessing anyway' do
       project_member = FactoryBot.create(:project_member)
-      get "/api/v1/projects/confirm_admin?token=#{project_member.confirmation_token}",
+      get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
           headers: headers
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(422)
     end
 
     it 'invite' do
