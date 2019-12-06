@@ -1,70 +1,34 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import {
-  getFormSubmitErrors,
-  reduxForm,
-  formValueSelector,
-  Field,
-  FieldArray,
-  destroy,
-  arraySplice,
-  arrayPush
-} from 'redux-form'
-import DraggableDropDown from './DraggableDropDown'
-import InputField from '../../../../../elements/InputField'
+import React from 'react'
 import NewModal from '../../../../../elements/Modal'
-import SelectField from '../../../../../elements/SelectField'
-import CheckboxField from '../../../../../elements/CheckboxField'
-import dropdownIcon from '../../../../../images/form_1'
-import textIcon from '../../../../../images/form_2'
-import textareaIcon from '../../../../../images/form_3'
-import uploadIcon from '../../../../../images/form_4'
-import dateIcon from '../../../../../images/form_5'
-import ModalLimitAccess from './ModalLimitAccess'
-import { required } from '../../../../../elements/validations'
+import CreateFieldForm from './CreateFieldForm'
 
-const typeVariants = [
-  {
-    value: 'text_field',
-    title: 'Textbox (one row)',
-    icon: textIcon
-  },
-  {
-    value: 'select_field',
-    title: 'Dropdown',
-    icon: dropdownIcon
-  },
-  {
-    value: 'textarea_field',
-    title: 'Textbox (Comment)',
-    icon: textareaIcon
-  },
-  {
-    value: 'upload_field',
-    title: 'Upload field',
-    icon: uploadIcon
-  },
-  {
-    value: 'date_field',
-    title: 'Date field',
-    icon: dateIcon
-  }
-]
+const modalContent = (handleClose, initialValues) => (
+  <CreateFieldForm initialValues={initialValues} handleClose={handleClose} />
+)
+// const title = useSelector(state => selector(state, 'title'))
+/* if (limitAccess) {
+    return (
+      <ModalLimitAccess
+        handleBack={() => this.setState({ limitAccess: false })}
+        handleClose={handleClose}
+        title={title}
+      />
+    )
+  } */
 
-const initState = {
-  limitAccess: false,
+
+function ModalCreateField({ modalOpen, handleClose, initialValues }) {
+  return (
+    <NewModal
+      content={modalContent(handleClose, initialValues)}
+      open={modalOpen}
+      onClose={handleClose}
+      className="modal-create-field"
+      closeOnDimmerClick={false}
+    />
+  )
 }
-
-const validate = values => {
-  const errors = {}
-  if (values.kind === 'select_field'
-    && values.document_field_values
-    && values.document_field_values.length < 1
-  ) {
-    errors.new_section = 'Add some value'
-  }
-  return errors
-}
+/*
 
 class ModalCreateField extends Component {
 
@@ -77,30 +41,6 @@ class ModalCreateField extends Component {
     destroyForm()
   }
 
-  handleSubmit = field => {
-    const { column = '2', row, spliceToConvention, pushToConvention, created_at } = this.props
-
-    let newSections = []
-    if (field.kind === 'select_field') {
-      newSections = field.document_field_values.map((el, i) => {
-        const newEl = {
-          ...el,
-          'position': i
-        }
-        return newEl
-      })
-    }
-    field['document_field_values'] = newSections
-    field['column'] = column
-    field['row'] = row || 0
-    field['created_at'] = new Date()
-    
-    const removeNum = created_at === undefined ? 0 : 1
-    created_at === undefined
-      ? pushToConvention(`column_${column}`, field)
-      : spliceToConvention(`column_${column}`, row || 0, removeNum, field)
-    this.handleClose()
-  }
 
   renderFieldForm = () => {
     const {
@@ -112,7 +52,7 @@ class ModalCreateField extends Component {
     } = this.props
 
     // TODO: Change limit access for new field to
-    
+
     return (
       <form noValidate={true} className='new-modal' onSubmit={handleSubmit(this.handleSubmit)}>
         <div className='new-modal__header'>
@@ -144,7 +84,7 @@ class ModalCreateField extends Component {
                 validate={[required]}
               />
             </div>
-            
+
             <div className='form-group'>
               <Field
                 name='kind'
@@ -165,7 +105,7 @@ class ModalCreateField extends Component {
                   labelClass='form-check-label mr-2'
                   text='Required field'
                   disabled={codification_kind}
-                />  
+                />
                 {field_type === 'select_field' &&
                   <CheckboxField
                     name='enable_multi_selections'
@@ -214,46 +154,12 @@ class ModalCreateField extends Component {
         />
       )
     }
-    
+
     return this.renderFieldForm()
   }
 
-  render() {
-    const { modalOpen } = this.props
-
-    return (
-      <NewModal
-        content={this.renderModalContent()}
-        open={modalOpen}
-        onClose={this.handleClose}
-        className='modal-create-field'
-        closeOnDimmerClick={false}
-      />
-    )
-  }
 }
+*/
 
-const selector = formValueSelector('convention_input_form')
 
-const mapStateToProps = state => ({
-  submitErrors: getFormSubmitErrors('convention_input_form')(state),
-  field_type: selector(state, 'kind'),
-  column: selector(state, 'column'),
-  row: selector(state, 'row'),
-  created_at: selector(state, 'created_at'),
-  title: selector(state, 'title'),
-  codification_kind: selector(state, 'codification_kind'),
-})
-
-const mapDispatchToProps = dispatch => ({
-  destroyForm: () => dispatch(destroy('convention_input_form')),
-  spliceToConvention: (field, index, removeNum, val) => dispatch(arraySplice('convention_form', field, index, removeNum, val)),
-  pushToConvention: (field, val) => dispatch(arrayPush('convention_form', field, val)),
-})
-
-export default connect(
-  mapStateToProps, mapDispatchToProps
-  )(reduxForm({
-    form: 'convention_input_form',
-    validate
-  })(ModalCreateField))
+export default ModalCreateField
