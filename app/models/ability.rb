@@ -163,6 +163,7 @@ class Ability
       end
       can [:update,
            :update_users,
+           :edit_documents,
            :update_documents], DmsPlannedList do |list|
         list.project.members.find_by(user: user).try(:dms_module_master?)
       end
