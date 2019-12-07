@@ -14,6 +14,15 @@ class Api::V1::DmsPlannedListsController < ApplicationController
     head 200
   end
 
+  def show
+    documents = { name: @dms_planned_list.name, documents: [] }
+    @dms_planned_list.document_mains.order(position: :asc).each do |main|
+      document = main.revisions.last_revision.last_version
+      documents[:documents] << document.as_json(include: { document_fields: { include: :document_field_values } })
+    end
+    render json: documents
+  end
+
   def update_users
     @dms_planned_list.users = []
     params[:users].each do |user_id|

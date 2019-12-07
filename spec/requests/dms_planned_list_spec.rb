@@ -44,6 +44,58 @@ describe DmsPlannedList, type: :request do
     end
   end
 
+  context '#show' do
+    let(:list) { FactoryBot.create(:dms_planned_list) }
+    let(:document) do
+      attrs = document_attributes(user)
+      Document.create(attrs)
+    end
+    let(:project) { document.project }
+
+    before do
+      list.update(project: project)
+      list.document_mains << document.document_main
+    end
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/dms_planned_lists/#{list.id}"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/dms_planned_lists/#{list.id}",
+        headers: credentials(FactoryBot.create(:user))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms user' do
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
+      get "/api/v1/projects/#{project.id}/dms_planned_lists/#{list.id}",
+        headers: credentials(user)
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'list user' do
+      list.users << user
+      get "/api/v1/projects/#{project.id}/dms_planned_lists/#{list.id}",
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'dms master' do
+      project.members.create!(user: user,
+                              dms_module_master: true,
+                              employment_type: :employee)
+      get "/api/v1/projects/#{project.id}/dms_planned_lists/#{list.id}",
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json['name']).to eql(list.name)
+      expect(json['documents'].length).to eql(1)
+    end
+  end
+
   context '#update' do
     let(:title) { Faker::Lorem.sentence }
     let(:list) { FactoryBot.create(:dms_planned_list) }
