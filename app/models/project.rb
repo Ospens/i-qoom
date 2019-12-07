@@ -26,6 +26,8 @@ class Project < ApplicationRecord
 
   has_many :dms_teams
 
+  has_many :dms_planned_lists
+
   has_many :document_review_owners
 
   has_many :document_review_tags

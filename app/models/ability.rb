@@ -157,6 +157,13 @@ class Ability
       can :manage, DmsTeam do |team, project|
         project.members.find_by(user: user).try(:dms_module_master?)
       end
+      # DmsPlannedList
+      can :create, DmsPlannedList do |list, project|
+        project.members.find_by(user: user).try(:dms_module_master?)
+      end
+      can [:update, :update_users], DmsPlannedList do |list|
+        list.project.members.find_by(user: user).try(:dms_module_master?)
+      end
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_04_154239) do
+ActiveRecord::Schema.define(version: 2019_12_06_203204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,28 @@ ActiveRecord::Schema.define(version: 2019_12_04_154239) do
   create_table "disciplines", force: :cascade do |t|
     t.string "title"
     t.integer "project_id"
+  end
+
+  create_table "dms_planned_lists", force: :cascade do |t|
+    t.string "name"
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_dms_planned_lists_on_project_id"
+  end
+
+  create_table "dms_planned_lists_document_mains", id: false, force: :cascade do |t|
+    t.bigint "dms_planned_list_id", null: false
+    t.bigint "document_main_id", null: false
+    t.index ["dms_planned_list_id", "document_main_id"], name: "index_dms_planned_lists_document_mains"
+    t.index ["document_main_id", "dms_planned_list_id"], name: "index_document_mains_dms_planned_lists"
+  end
+
+  create_table "dms_planned_lists_users", id: false, force: :cascade do |t|
+    t.bigint "dms_planned_list_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["dms_planned_list_id", "user_id"], name: "index_dms_planned_lists_users"
+    t.index ["user_id", "dms_planned_list_id"], name: "index_users_dms_planned_lists"
   end
 
   create_table "dms_settings", force: :cascade do |t|
@@ -375,6 +397,7 @@ ActiveRecord::Schema.define(version: 2019_12_04_154239) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conventions", "projects"
+  add_foreign_key "dms_planned_lists", "projects"
   add_foreign_key "dms_settings", "projects"
   add_foreign_key "dms_settings", "users"
   add_foreign_key "dms_teams", "projects"
