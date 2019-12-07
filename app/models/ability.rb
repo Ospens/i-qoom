@@ -161,7 +161,9 @@ class Ability
       can :create, DmsPlannedList do |list, project|
         project.members.find_by(user: user).try(:dms_module_master?)
       end
-      can [:update, :update_users], DmsPlannedList do |list|
+      can [:update,
+           :update_users,
+           :update_documents], DmsPlannedList do |list|
         list.project.members.find_by(user: user).try(:dms_module_master?)
       end
     end

@@ -22,21 +22,6 @@ class Api::V1::Documents::PlannedController < ApplicationController
     render json: result
   end
 
-  def create
-    authorize! :create_planned, Document.new, @project
-    params[:document_mains].each do |main_params|
-      main = DocumentMain.find_by(id: main_params[:id])
-      if main.present?
-        document = main.revisions.last_revision.last_version
-        document.revision.versions.create!(document_params(main_params[:document], true))
-      else
-        main = @project.document_mains.create(planned: true, position: main_params[:position])
-        rev = main.revisions.create
-        document = rev.versions.create(document_params(main_params[:document], true))
-      end
-    end
-  end
-
   def destroy
     authorize! :destroy_planned, Document.new, @project
     if @document_main.planned?

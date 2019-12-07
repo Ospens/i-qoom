@@ -126,7 +126,10 @@ Rails.application.routes.draw do
         end
         resources :document_review_tags, except: [:new, :edit, :show]
         resources :dms_planned_lists, only: [:create, :update] do
-          post :update_users, on: :member
+          member do
+            post :update_users
+            post :update_documents
+          end
         end
       end
       resources :messages, only: [:create, :show] do
