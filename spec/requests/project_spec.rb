@@ -318,6 +318,25 @@ describe "Project", type: :request do
         expect(json.length).to eql(2)
         expect(json.first).to have_key('id')
       end
+
+      it 'scope teams' do
+        team = FactoryBot.create(:dms_team)
+        team.update!(project: project)
+        get "/api/v1/projects/#{project.id}/dms_users?scope=teams",
+           headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+      end
+
+      it 'scope teams' do
+        team = FactoryBot.create(:dms_team)
+        team.update!(project: project)
+        team.users << User.last
+        get "/api/v1/projects/#{project.id}/dms_users?scope=teams",
+           headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(0)
+      end
     end
   end
 

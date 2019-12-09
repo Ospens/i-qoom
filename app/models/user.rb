@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_many :document_review_subjects
   has_many :document_review_comments
   has_many :document_review_owners
+  has_and_belongs_to_many :dms_teams
 
   has_many :sent_messages,
            class_name: "Message",
