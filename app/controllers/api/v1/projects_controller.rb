@@ -101,10 +101,16 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def dms_users
-    render json: @project.dms_users.as_json(only: [:id,
-                                                   :first_name,
-                                                   :last_name,
-                                                   :username])
+    users = @project.dms_users
+    if params[:scope] == 'teams'
+      ids = @project.dms_teams.pluck(:id)
+      users_in_teams = users.joins(:dms_teams).where(dms_teams: { id: ids })
+      users = users.where.not(id: users_in_teams.pluck(:id))
+    end
+    render json: users.as_json(only: [:id,
+                                      :first_name,
+                                      :last_name,
+                                      :username])
   end
 
   private

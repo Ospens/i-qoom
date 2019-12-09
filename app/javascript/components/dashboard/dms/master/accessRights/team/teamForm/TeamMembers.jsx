@@ -25,7 +25,7 @@ function TeamMembers({
     setFreeUsers(fu)
   }, [allUsers])
   useEffect(() => {
-    dispatch(dmsUsers(projectId))
+    dispatch(dmsUsers(projectId, true))
   }, [dispatch, projectId])
 
   let submitText

@@ -6,7 +6,7 @@ import ModalCopyToDG from './ModalCopyToDG'
 import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../sideBar/DmsSideBar'
 import DropDown from '../../../../../elements/DropDown'
-import { Teamlist } from '../accessRights/ShowMembersPopup'
+import { TeamList } from '../accessRights/ShowMembersPopup'
 
 function Content() {
   const groups = useSelector(({ distributionGroups }) => distributionGroups.dgGroups)
@@ -43,7 +43,7 @@ function Content() {
                 </Table.Cell>
                 <Table.Cell>
                   <div className="dg-members">
-                    <Teamlist users={group.members} />
+                    <TeamList users={group.members} />
                     <DropDown
                       dots
                       className="dropdown-with-icon"

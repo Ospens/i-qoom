@@ -220,6 +220,7 @@ describe DmsTeam, type: :request do
 
   context '#update_members' do
     let(:team) { FactoryBot.create(:dms_team) }
+    let(:team2) { FactoryBot.create(:dms_team) }
     let(:user2) { FactoryBot.create(:user) }
 
     it 'anon' do
@@ -251,6 +252,17 @@ describe DmsTeam, type: :request do
       expect(response).to have_http_status(:success)
       expect(team.users.count).to eql(1)
       expect(team.users.first.id).to eql(user.id)
+    end
+
+    it 'skip user which already in team' do
+      team2.update!(project: team.project)
+      team2.users << user
+      expect(team.users.count).to eql(0)
+      post "/api/v1/projects/#{team.project.id}/dms_teams/#{team.id}/update_members",
+        headers: credentials(team.project.user),
+        params: { users: [user.id] }
+      expect(response).to have_http_status(:success)
+      expect(team.users.count).to eql(0)
     end
   end
 
