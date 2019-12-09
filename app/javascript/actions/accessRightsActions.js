@@ -128,7 +128,7 @@ export const deleteTeam = (projectId, teamIds) => (dispatch, getState) => {
 }
 
 export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
-  const { user: { token }, accessRights: { oldTeams } } = getState()
+  const { user: { token }, accessRights: { oldTeams, newTeams } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     ...values
@@ -138,7 +138,12 @@ export const updateTeamMembers = (projectId, values) => (dispatch, getState) => 
     axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_members`, request, headers)
       .then(({ data }) => {
         const type = oldTeams.findIndex(t => t.id === data.id) > -1 ? 'oldTeams' : 'newTeams'
-        const value = { [type]: oldTeams.filter(t => t.id !== data.id).concat(data) }
+        let value = {}
+        if (type === 'oldTeams') {
+          value = { oldTeams: oldTeams.map(t => (t.id === data.id ? data : t)) }
+        } else {
+          value = { newTeams: newTeams.map(t => (t.id === data.id ? data : t)) }
+        }
         dispatch(teamMembersUpdated(value))
       })
       .catch(({ response }) => {
@@ -149,8 +154,8 @@ export const updateTeamMembers = (projectId, values) => (dispatch, getState) => 
 }
 
 export const deleteTeamMembers = (projectId, teamId, userId) => (dispatch, getState) => {
-  const { accessRights: { oldTeams } } = getState()
-  const team = oldTeams.find(({ id }) => id === teamId)
+  const { accessRights: { oldTeams, newTeams } } = getState()
+  const team = oldTeams.concat(newTeams).find(({ id }) => id === teamId)
   team.users = team.users.filter(({ id }) => id !== userId)
   const values = {
     id: teamId,
