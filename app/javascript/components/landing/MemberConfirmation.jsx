@@ -14,11 +14,12 @@ import { addNotification } from '../../actions/notificationsActions'
 import { startConfirmMember } from '../../actions/projectMembersActions'
 
 const linkText = <Link to="/terms" target="_blank">I accept Terms & Conditions</Link>
-function firstStep(onSubmit) {
+
+function firstStep(onSubmit, memberName) {
   return (
     <form noValidate onSubmit={onSubmit}>
       <h2 className="sign-up-form__header text-center">
-        Welcome to i-Qoom John Doe, Please define a Password!
+        {`Welcome to i-Qoom ${memberName}, Please define a Password!`}
       </h2>
       <div>
         <div className="sign-up-from-email">
@@ -63,11 +64,9 @@ function firstStep(onSubmit) {
   )
 }
 
-function SecondStep() {
+function SecondStep({ memberName }) {
   const dispatch = useDispatch()
   const newMemberId = useSelector(state => state.user.newUser.member_id)
-  const firstName = useSelector(state => state.user.newUser.first_name)
-  const lastName = useSelector(state => state.user.newUser.last_name)
 
   useEffect(() => {
     localStorage.setItem('newUserMemberId', newMemberId)
@@ -81,7 +80,7 @@ function SecondStep() {
       </h2>
       <div className="sign-up-from-email text-center">
         <div className="sign-up-from-email__info">Don’t worry, it will be sent via email, too.</div>
-        <div className="sign-up-from-email__id-for">{`MemberId of ${firstName} ${lastName}`}</div>
+        <div className="sign-up-from-email__id-for">{`MemberId of ${memberName}`}</div>
         <div className="sign-up-from-email__member-id">{newMemberId}</div>
         <div className="form-buttons text-center">
           <Link to="/signin" className="btn btn-primary">OK</Link>
@@ -96,7 +95,7 @@ function MemberConfirmation({ handleSubmit, initialize }) {
   const history = useHistory()
   const { token } = useParams()
   const [step, setStep] = useState(1)
-
+  const [memberName, setMemberName] = useState('')
   const submit = useCallback(values => {
     dispatch(signUpUser(values)).then(() => setStep(2))
   }, [dispatch])
@@ -104,26 +103,31 @@ function MemberConfirmation({ handleSubmit, initialize }) {
   useEffect(() => {
     dispatch(startConfirmMember(token))
       .then((r => {
-        localStorage.setItem('newUserToken', token)
-        if (r.data && r.data.project_member_id) {
-          initialize({ project_member_id: r.data.project_member_id })
+        if (r.data && r.data.project_member) {
+          localStorage.setItem('newUserToken', token)
+          const { data: { project_member: { full_name: fullName, id } } } = r
+          setMemberName(fullName)
+          initialize({ project_member_id: id })
         } else if (r.status === 422) {
+          const text = r.data && r.data.token
+            ? r.data.token.map(p => p.replace('problem:', '')).join(',')
+            : 'Please login with the correct memberID'
           history.push({ pathname: '/signin' })
-          dispatch(addNotification({ title: 'System', text: 'Please login with the correct memberID', type: 'error' }))
+          dispatch(addNotification({ title: 'System', text, type: 'error' }))
         } else if (r.status === 200) {
           history.push({ pathname: '/menu' })
-          dispatch(addNotification({ title: 'System', text: 'You successfully accepted the invite!', type: 'success' }))
+          dispatch(addNotification({ title: 'System', text: 'You are successfully accepted the invite!', type: 'success' }))
         }
       }))
   }, [dispatch, history, initialize, token])
 
-  if (!token) return <Fragment />
+  if (!token || memberName.length < 1) return <Fragment />
 
   return (
     <div id="sign-up-form">
       {step < 2
-        ? firstStep(handleSubmit(submit))
-        : <SecondStep />}
+        ? firstStep(handleSubmit(submit), memberName)
+        : <SecondStep memberName={memberName} />}
     </div>
   )
 }

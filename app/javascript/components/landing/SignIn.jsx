@@ -33,6 +33,8 @@ function SignIn({ handleSubmit }) {
         const user = localStorage.getItem('i-qoom-user')
         if (token && JSON.parse(user).member_id === newUserMemberId) {
           dispatch(startConfirmMember(token)).then(() => {
+            localStorage.removeItem('newUserToken')
+            localStorage.removeItem('newUserMemberId')
             dispatch(addNotification({ title: 'System', text: 'You successfully accepted the invite!', type: 'success' }))
           })
         }

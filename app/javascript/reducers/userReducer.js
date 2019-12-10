@@ -35,7 +35,10 @@ const userReducer = (state = initialState, action) => {
       newUser: action.payload
     }
   case SIGN_OUT_USER:
-    return initialState
+    return {
+      ...initialState,
+      newUser: state.newUser
+    }
   default:
     return state
   }
