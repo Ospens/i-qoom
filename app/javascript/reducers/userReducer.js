@@ -17,7 +17,8 @@ const initialState = {
   state: null,
   updated_at: null,
   username: null,
-  isAdmin: false
+  isAdmin: false,
+  newUser: {}
 }
 
 const userReducer = (state = initialState, action) => {
@@ -30,7 +31,8 @@ const userReducer = (state = initialState, action) => {
     }
   case SIGN_UP_USER:
     return {
-      ...state
+      ...state,
+      newUser: action.payload
     }
   case SIGN_OUT_USER:
     return initialState

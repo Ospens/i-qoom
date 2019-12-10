@@ -136,3 +136,14 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
       })
   )
 }
+
+export const startConfirmMember = memberToken => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/confirm_member?token=${memberToken}`, headers)
+      .then(response => response)
+      .catch(({ response }) => response)
+  )
+}
