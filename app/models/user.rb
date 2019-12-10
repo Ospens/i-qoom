@@ -105,6 +105,7 @@ class User < ApplicationRecord
 
   def generate_member_id
     self.member_id = "i-" + (first_name.first + last_name.first).upcase + id.to_s.rjust(5, '0')
+    self.save
   end
 
   def add_data_from_project_member
