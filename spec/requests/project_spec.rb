@@ -248,7 +248,7 @@ describe "Project", type: :request do
           headers: headers_for_second_user
         expect(response).to have_http_status(:not_found)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
-        expect(json["project_member_id"]).to eq project_member.id
+        expect(json["project_member"]["id"]).to eq project_member.id
       end
       it "shouldn't confirm a member without a user" do
         project_member =
@@ -257,7 +257,7 @@ describe "Project", type: :request do
           headers: headers_without_user
         expect(response).to have_http_status(:not_found)
         expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
-        expect(json["project_member_id"]).to eq project_member.id
+        expect(json["project_member"]["id"]).to eq project_member.id
       end
       it "should't confirm a member with a different signed_in_user" do
         project_member =
