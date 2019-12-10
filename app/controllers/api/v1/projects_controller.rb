@@ -84,8 +84,13 @@ class Api::V1::ProjectsController < ApplicationController
     if project_member_confirmation.accept
       head :ok
     elsif project_member_confirmation.registration_required?
-      render json: { project_member_id: project_member_confirmation.project_member.id },
-             status: :not_found
+      render json: {
+        project_member: {
+          id: project_member_confirmation.project_member.id,
+          full_name: project_member_confirmation.project_member.full_name
+        }
+      },
+      status: :not_found
     else
       render json: project_member_confirmation.errors,
              status: :unprocessable_entity

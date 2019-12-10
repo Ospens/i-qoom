@@ -115,6 +115,10 @@ class ProjectMember < ApplicationRecord
     creator == true || project.try(:user) == user
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def update_creation_step_to_pending
