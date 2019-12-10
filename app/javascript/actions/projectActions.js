@@ -240,12 +240,15 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
   )
 }
 
-export const dmsUsers = projectId => (dispatch, getState) => {
+export const dmsUsers = (projectId, teams = false) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-
+  let url = `/api/v1/projects/${projectId}/dms_users`
+  if (teams) {
+    url += '?scope=teams'
+  }
   return (
-    axios.get(`/api/v1/projects/${projectId}/dms_users`, headers)
+    axios.get(url, headers)
       .then(({ data }) => {
         dispatch({ type: DMS_USERS_FETCHED, payload: data })
       })

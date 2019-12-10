@@ -1115,6 +1115,10 @@ div.tab-description {
     white-space: normal;
     line-height: 1.2;
 
+    span {
+      color: #fff;
+    }
+
     &::before {
       right: -.30714286em;
       left: auto;
