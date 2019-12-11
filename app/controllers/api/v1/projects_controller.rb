@@ -91,6 +91,9 @@ class Api::V1::ProjectsController < ApplicationController
         }
       },
       status: :not_found
+    elsif project_member_confirmation.unauthorized?
+      render json: project_member_confirmation.errors,
+             status: :unauthorized
     else
       render json: project_member_confirmation.errors,
              status: :unprocessable_entity

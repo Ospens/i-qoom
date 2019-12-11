@@ -28,6 +28,12 @@ class ProjectMemberConfirmation
       project_member.try(:user).nil?
   end
 
+  def unauthorized?
+    errors.count == 1 &&
+      !emails_matching? &&
+      project_member.try(:user).present?
+  end
+
   validates_presence_of :token
 
   validate :token_validity,

@@ -95,7 +95,6 @@ describe ProjectMemberConfirmation, type: :model do
         ProjectMemberConfirmation.new(token: project_member.confirmation_token,
                                       signed_in_user: [ nil, user ].sample)
       project_member_confirmation.accept
-      puts project_member_confirmation.errors.count
       expect(project_member_confirmation.registration_required?).to be_truthy
     end
     it "should be false" do
@@ -106,5 +105,25 @@ describe ProjectMemberConfirmation, type: :model do
       project_member_confirmation.accept
       expect(project_member_confirmation.registration_required?).to be_falsy
     end
+  end
+
+  context "unauthorized?" do
+    it "should be true" do
+      different_user = FactoryBot.create(:user)
+      project_member.update(email: user.email)
+      project_member_confirmation =
+        ProjectMemberConfirmation.new(token: project_member.confirmation_token,
+                                      signed_in_user: [ nil, different_user ].sample)
+      project_member_confirmation.accept
+      expect(project_member_confirmation.unauthorized?).to be_truthy
+    end
+    it "should be false" do
+      project_member.update(email: user.email)
+      project_member_confirmation =
+        ProjectMemberConfirmation.new(token: project_member.confirmation_token,
+                                      signed_in_user: user)
+      project_member_confirmation.accept
+      expect(project_member_confirmation.unauthorized?).to be_falsy
+    end 
   end
 end

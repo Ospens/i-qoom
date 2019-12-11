@@ -232,49 +232,43 @@ describe "Project", type: :request do
     end
 
     context "confirm_member" do
-      it "should confirm a member" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        project_member.update(email: second_user.email)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers_for_second_user
-        expect(response).to have_http_status(:success)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
+      context "when project member doesn't have a user" do 
+        it "shouldn't confirm a member with a wrong or without a user" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: [ headers_for_second_user, headers_without_user ].sample
+          expect(response).to have_http_status(:not_found)
+          expect(project_member.reload.creation_step_active?).to be_falsy
+          expect(json["project_member"]["id"]).to eq project_member.id
+        end
+        it "shouldn't confirm a member with a wrong token" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          get "/api/v1/projects/confirm_member?token=54353454",
+            headers: headers_without_user
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+        end
       end
-      it "shouldn't confirm a member with a wrong user" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers_for_second_user
-        expect(response).to have_http_status(:not_found)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
-        expect(json["project_member"]["id"]).to eq project_member.id
-      end
-      it "shouldn't confirm a member without a user" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers_without_user
-        expect(response).to have_http_status(:not_found)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
-        expect(json["project_member"]["id"]).to eq project_member.id
-      end
-      it "should't confirm a member with a different signed_in_user" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        project_member.update(email: second_user.email)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectMember.find_by(id: project_member.id).user).not_to eq(user)
-      end
-      it "shouldn't confirm a member with a wrong token" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        get "/api/v1/projects/confirm_member?token=54353454",
-          headers: headers_without_user
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+      context "when project member has a user" do
+        it "should confirm a member" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          project_member.update(email: second_user.email)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
+        end
+        it "should't confirm a member with a different or without a signed_in_user" do
+          project_member =
+            FactoryBot.create(:project_member_pending, email: user.email)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: [ headers_for_second_user, headers_without_user ].sample
+          expect(response).to have_http_status(:unauthorized)
+          expect(project_member.reload.creation_step_active?).to be_falsy
+        end
       end
     end
 
