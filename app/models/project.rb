@@ -31,6 +31,12 @@ class Project < ApplicationRecord
   has_many :document_review_tags
 
   has_many :admins, class_name: "ProjectAdministrator", index_errors: true
+  has_many :member_admins,
+           -> {
+             joins(:role)
+             .where(roles: { title: "Project Administrator" })
+           },
+           class_name: "ProjectMember"
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
   has_many :disciplines
@@ -184,7 +190,7 @@ class Project < ApplicationRecord
       "Project Lead",
       "Project Manager",
       "Scheduler",
-      "Secretary"] .each do |title|
+      "Secretary"].each do |title|
       self.roles.create(title: title)
     end
   end

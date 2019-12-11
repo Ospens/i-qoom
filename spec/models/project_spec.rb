@@ -96,6 +96,11 @@ RSpec.describe Project, type: :model do
   it { is_expected.to accept_nested_attributes_for(:admins) }
   it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
+
+  it { is_expected.to have_many(:member_admins)
+                        .class_name('ProjectMember')}
+    # not working and syntax for testing conditions for nested records with joins is not clear
+    #                     .conditions(roles: { title: "Project Administrator" })
   it { is_expected.to have_many(:disciplines) }
 
   context "update_creation_step_to_done" do
