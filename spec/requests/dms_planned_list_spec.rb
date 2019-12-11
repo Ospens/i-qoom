@@ -96,6 +96,48 @@ describe DmsPlannedList, type: :request do
     end
   end
 
+  context '#index' do
+    let(:list) { FactoryBot.create(:dms_planned_list) }
+    let(:project) { list.project }
+
+    it 'anon' do
+      get "/api/v1/projects/#{project.id}/dms_planned_lists"
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'user' do
+      get "/api/v1/projects/#{project.id}/dms_planned_lists",
+        headers: credentials(FactoryBot.create(:user))
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    context 'dms user' do
+      before do
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+
+      end
+
+      it 'no lists' do
+        get "/api/v1/projects/#{project.id}/dms_planned_lists",
+          headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(0)
+      end
+
+      it 'with lists' do
+        list.users << user
+        get "/api/v1/projects/#{project.id}/dms_planned_lists",
+          headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        expect(json.first['id']).to eql(list.id)
+        expect(json.first['name']).to eql(list.name)
+      end
+    end
+  end
+
   context '#update' do
     let(:title) { Faker::Lorem.sentence }
     let(:list) { FactoryBot.create(:dms_planned_list) }

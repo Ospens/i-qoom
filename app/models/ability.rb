@@ -165,6 +165,9 @@ class Ability
         list.users.include?(user) ||
           list.project.members.find_by(user: user).try(:dms_module_master?)
       end
+      can :index, DmsPlannedList do |list, project|
+        project.members.find_by(user: user).try(:dms_module_access?)
+      end
       can [:update,
            :update_users,
            :edit_documents,

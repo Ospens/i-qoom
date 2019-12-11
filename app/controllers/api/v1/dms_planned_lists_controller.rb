@@ -1,7 +1,7 @@
 class Api::V1::DmsPlannedListsController < ApplicationController
   include DocumentConcern
   load_resource :project, id_param: :project_id
-  load_and_authorize_resource :dms_planned_list, except: :create
+  load_and_authorize_resource :dms_planned_list, except: [:create, :index]
 
   def create
     authorize! :create, DmsPlannedList.new, @project
@@ -21,6 +21,14 @@ class Api::V1::DmsPlannedListsController < ApplicationController
       documents[:documents] << document.as_json(include: { document_fields: { include: :document_field_values } })
     end
     render json: documents
+  end
+
+  def index
+    authorize! :index, DmsPlannedList.new, @project
+    render json: @project.dms_planned_lists
+                         .joins(:users)
+                         .where(users: { id: signed_in_user.id })
+                         .as_json(only: [:id, :name])
   end
 
   def update_users
