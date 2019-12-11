@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Switch, useRouteMatch, useParams } from 'react-router-dom'
+import { Switch, useRouteMatch, useParams, useHistory } from 'react-router-dom'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import { startFetchProject } from '../../actions/projectActions'
@@ -9,12 +9,18 @@ import Page from '../../elements/Page'
 
 function Projects() {
   const { projectId } = useParams()
+  const history = useHistory()
   const { path } = useRouteMatch()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(startFetchProject(projectId))
-    dispatch(startEditConvention(projectId))
+    dispatch(startFetchProject(projectId)).then(response => {
+      if (response.status === 403) {
+        history.push({ pathname: '/menu' })
+      } else {
+        dispatch(startEditConvention(projectId))
+      }
+    })
   }, [dispatch, projectId])
 
   return (

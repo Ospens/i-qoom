@@ -144,14 +144,19 @@ export const startFetchProjects = () => (dispatch, getState) => {
 export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { headers: { Authorization: token } }
-
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
         dispatch(projectFetched(response.data))
+        return response
       })
-      .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      .catch(({ response }) => {
+        if (response.status === 403) {
+          dispatch(addNotification({ title: 'Problem', text: 'Access denied!', type: 'error' }, true))
+        } else {
+          dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        }
+        return response
       })
   )
 }

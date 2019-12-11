@@ -29,14 +29,8 @@ function SignIn({ handleSubmit }) {
     dispatch(signInUser(values))
       .then(() => {
         const token = localStorage.getItem('newUserToken')
-        const newUserMemberId = localStorage.getItem('newUserMemberId')
-        const user = localStorage.getItem('i-qoom-user')
-        if (token && JSON.parse(user).member_id === newUserMemberId) {
-          dispatch(startConfirmMember(token)).then(() => {
-            localStorage.removeItem('newUserToken')
-            localStorage.removeItem('newUserMemberId')
-            dispatch(addNotification({ title: 'System', text: 'You successfully accepted the invite!', type: 'success' }))
-          })
+        if (token) {
+          dispatch(startConfirmMember(token))
         }
         history.push({ pathname: '/menu' })
       })
