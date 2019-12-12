@@ -16,6 +16,7 @@ module DocumentConcern
                  :email_title_like_document,
                  :email_text,
                  :contractor,
+                 :unplan_document,
                  emails: [],
                  reviewers: [],
                  review_issuers: [],

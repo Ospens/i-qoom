@@ -571,4 +571,40 @@ RSpec.describe Document, type: :model do
     ids = Document.all.search('333').pluck(:id)
     expect(ids).to eql([doc1.id])
   end
+
+  it 'planned' do
+    user = FactoryBot.create(:user)
+    attrs = document_attributes(user)
+    attrs['review_status'] = 'issued_for_review'
+    expect(Document.new(attrs)).to_not be_valid
+    rev = DocumentRevision.find(attrs['document_revision_id'])
+    rev.document_main.update(planned: true)
+    expect(Document.new(attrs)).to be_valid
+  end
+
+  it 'unplan document_main' do
+    doc = FactoryBot.create(:document)
+    user = FactoryBot.create(:user)
+    doc.document_main.update!(planned: true)
+    edit_attrs = assign_attributes_suffix_to_document(doc.attributes_for_edit)
+    edit_attrs['unplan_document'] = true
+    edit_attrs['reviewers'] = [user.id]
+    edit_attrs['review_issuers'] = [user.id]
+    doc.revision.versions.create!(edit_attrs)
+    expect(doc.document_main.reload).to_not be_planned
+  end
+
+  it 'validate_reviewers and review issuers when unplan document' do
+    doc = FactoryBot.create(:document)
+    user = FactoryBot.create(:user)
+    doc.document_main.update!(planned: true)
+    edit_attrs = assign_attributes_suffix_to_document(doc.attributes_for_edit)
+    edit_attrs['unplan_document'] = true
+    doc2 = doc.revision.versions.new(edit_attrs)
+    expect(doc2).to_not be_valid
+    edit_attrs['reviewers'] = [user.id]
+    edit_attrs['review_issuers'] = [user.id]
+    doc2 = doc.revision.versions.new(edit_attrs)
+    expect(doc2).to be_valid
+  end
 end

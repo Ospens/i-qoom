@@ -44,7 +44,7 @@ class Api::V1::DmsPlannedListsController < ApplicationController
     result[:new] =
       Document.build_from_convention(@project.conventions.active, signed_in_user)
     @dms_planned_list.document_mains.order(position: :asc).each do |main|
-      main_attrs = main.as_json(only: [:id, :position])
+      main_attrs = main.as_json(only: [:id, :position, :planned])
       document = main.revisions.last_revision.last_version
       main_attrs[:document] =
         main.revisions.last_revision.last_version.attributes_for_edit
