@@ -21,6 +21,9 @@
     ],
     "rules": {
       "react/prop-types": 0,
+      "max-len": [
+        "error", { "code": 100 }
+      ],
       "indent": [
         "error", 2
       ],
