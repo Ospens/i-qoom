@@ -122,7 +122,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
   return (
     axios.patch(`/api/v1/projects/${projectId}/members/${values.id}`, request, headers)
       .then(response => {
-        if (type === 'activeMemebers') {
+        if (type === 'activeMembers') {
           dispatch(updateActiveMembers(response.data))
         } else if (type === 'pendingMemebers') {
           dispatch(updatePendingMembers(response.data))
@@ -143,7 +143,29 @@ export const startConfirmMember = memberToken => (dispatch, getState) => {
 
   return (
     axios.get(`/api/v1/projects/confirm_member?token=${memberToken}`, headers)
-      .then(response => response)
-      .catch(({ response }) => response)
+      .then(response => {
+        if (response.status === 200) {
+          localStorage.removeItem('newUserToken')
+          dispatch(addNotification(
+            { title: 'System', text: 'You successfully accepted the invite!', type: 'success' }
+          ))
+        }
+        return response
+      })
+      .catch(({ response }) => {
+        if (response.status === 422) {
+          const text = response.data && response.data.token
+            ? response.data.token.map(p => p.replace('problem:', '')).join(',')
+            : 'Something went wrong!'
+          dispatch(addNotification({ title: 'Problem', text, type: 'error' }, true))
+        } else if (response.status === 401) {
+          localStorage.setItem('newUserToken', memberToken)
+          const text = response.data && response.data.token
+            ? response.data.token.map(p => p.replace('problem:', '')).join(',')
+            : 'Please login with the correct memberID'
+          dispatch(addNotification({ title: 'System', text, type: 'error' }))
+        }
+        return response
+      })
   )
 }

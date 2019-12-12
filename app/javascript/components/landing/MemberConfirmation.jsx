@@ -9,7 +9,7 @@ import {
 import { signUpUser } from '../../actions/userActions'
 import CheckField from '../../elements/CheckField'
 import InputField from '../../elements/InputField'
-import { required } from '../../elements/validations'
+import { required, passwordsMatch } from '../../elements/validations'
 import { addNotification } from '../../actions/notificationsActions'
 import { startConfirmMember } from '../../actions/projectMembersActions'
 
@@ -40,7 +40,7 @@ function firstStep(onSubmit, memberName) {
             id="password_confirmation"
             label="Confirm password*"
             placeholder="Password"
-            validate={[required]}
+            validate={[required, passwordsMatch]}
             type="password"
           />
           <div className="form-check col-12 text-center">
@@ -69,8 +69,9 @@ function SecondStep({ memberName }) {
   const newMemberId = useSelector(state => state.user.newUser.member_id)
 
   useEffect(() => {
-    localStorage.setItem('newUserMemberId', newMemberId)
-    dispatch(addNotification({ title: 'System', text: `Please login with ${newMemberId} memberID`, type: 'info' }))
+    dispatch(addNotification(
+      { title: 'System', text: `Please login with ${newMemberId} memberID`, type: 'info' }
+    ))
   }, [dispatch, newMemberId])
 
   return (
@@ -108,15 +109,15 @@ function MemberConfirmation({ handleSubmit, initialize }) {
           const { data: { project_member: { full_name: fullName, id } } } = r
           setMemberName(fullName)
           initialize({ project_member_id: id })
-        } else if (r.status === 422) {
-          const text = r.data && r.data.token
-            ? r.data.token.map(p => p.replace('problem:', '')).join(',')
-            : 'Please login with the correct memberID'
+        } else if (r.status === 401) {
           history.push({ pathname: '/signin' })
-          dispatch(addNotification({ title: 'System', text, type: 'error' }))
         } else if (r.status === 200) {
           history.push({ pathname: '/menu' })
-          dispatch(addNotification({ title: 'System', text: 'You are successfully accepted the invite!', type: 'success' }))
+          dispatch(addNotification(
+            { title: 'System', text: 'You are successfully accepted the invite!', type: 'success' }
+          ))
+        } else if (r.status === 422) {
+          history.push({ pathname: '/menu' })
         }
       }))
   }, [dispatch, history, initialize, token])
