@@ -5,7 +5,7 @@ import SelectField from '../../../../../elements/SelectField'
 import InputField from '../../../../../elements/InputField'
 import CheckField from '../../../../../elements/CheckField'
 import renderDocumentTextEditor from '../../../../../elements/DocumentTextEditor'
-import { addNotification } from '../../../../../actions/notificationsActions'
+import { errorNotify } from '../../../../../actions/notificationsActions'
 import { required } from '../../../../../elements/validations'
 
 const selector = formValueSelector('document_form')
@@ -25,7 +25,7 @@ const EmailSubjects = ({ fields, discardValue }) => {
     if (e.charCode === 13) {
       e.preventDefault()
       const error = email(e.target.value)
-      if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
+      if (error) return dispatch(errorNotify('Problem', error))
 
       fields.push(e.target.value)
       discardValue()
@@ -70,7 +70,7 @@ const AccessAndCommunication = ({ backStep }) => {
   const IFI = reviewStatus === 'issued_for_information'
   useEffect(() => {
     if (!emailTitleLikeDocument) return
-    
+
     dispatch(change('document_form', 'mail_subject', title))
   }, [dispatch, title, emailTitleLikeDocument])
 
@@ -163,7 +163,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 isMulti={true}
                 disabled={IFI}
               />
-            </div>  
+            </div>
           </div>}
         </div>
 

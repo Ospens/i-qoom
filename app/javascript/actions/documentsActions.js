@@ -14,7 +14,7 @@ import {
   DOCUMENTS_SORTED
 } from './types'
 import { fieldByColumn } from './conventionActions'
-import { addNotification } from './notificationsActions'
+import { errorNotify, successNotify } from './notificationsActions'
 
 export const paramsToFormData = (data, params, preceding = '') => {
   let newData = data
@@ -150,7 +150,7 @@ export const startFetchDocuments = projectId => (dispatch, getState) => {
       })
       .catch(() => {
         dispatch(toggleLoading(false))
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -166,9 +166,9 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
     }
   } = getState()
   const headers = { Authorization: token }
-  const { document_title, ...filters } = searchFilters
+  const { document_title: documentTitle, ...filters } = searchFilters
   const params = {
-    document_title,
+    document_title: documentTitle,
     discipline: discipline.filter(el => el.checked).map(v => v.value),
     originating_companies: originatingCompanies.filter(el => el.checked).map(v => v.value),
     document_types: documentTypes.filter(el => el.checked).map(v => v.value),
@@ -191,7 +191,7 @@ const fetchDocumentsWithFilters = projectId => (dispatch, getState) => {
         dispatch(toggleLoading(false))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         dispatch(toggleLoading(false))
       })
   )
@@ -225,7 +225,7 @@ export const newDocument = projectId => (dispatch, getState) => {
         dispatch(creatingDocument(sortedData))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -253,10 +253,10 @@ export const startCreateDocument = (projectId, values) => (dispatch, getState) =
       data: formData,
       headers
     }).then(() => {
-      dispatch(addNotification({ title: 'DMS', text: 'Document successfully created!', type: 'success' }))
+      dispatch(successNotify('DMS', 'Document successfully created!'))
     })
       .catch(({ response: { data } }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(data)
       })
   )
@@ -279,10 +279,10 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
       data: formData,
       headers
     }).then(() => {
-      dispatch(addNotification({ title: 'DMS', text: 'Document successfully updated!', type: 'success' }))
+      dispatch(successNotify('DMS', 'Document successfully updated!'))
     })
       .catch(({ response: { data } }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(data)
       })
   )
@@ -305,10 +305,10 @@ export const startCreateRevision = (documentId, values) => (dispatch, getState) 
       data: formData,
       headers
     }).then(() => {
-      dispatch(addNotification({ title: 'DMS', text: 'Revision successfully created!', type: 'success' }))
+      dispatch(successNotify('DMS', 'Revision successfully created!'))
     })
       .catch(({ response: { data } }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(data)
       })
   )
@@ -324,7 +324,7 @@ export const startFetchDocument = documentId => (dispatch, getState) => {
         dispatch(documentFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -341,7 +341,7 @@ export const startEditDocument = documentId => (dispatch, getState) => {
         dispatch(editDocument(sortedData))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -356,7 +356,7 @@ export const getRevisionsAndVersions = docId => (dispatch, getState) => {
         dispatch(getRevAndVer(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -378,7 +378,7 @@ export const downloadList = (projectId, docIds, types) => (dispatch, getState) =
         downloadFile(response)
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   ))
 }
@@ -397,7 +397,7 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
       downloadFile(response)
     })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -416,7 +416,7 @@ export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
       downloadFile(response, open)
     })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }

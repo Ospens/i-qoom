@@ -12,7 +12,7 @@ import { formvalue } from './user/documentForm/DocumentsAndFiles'
 import NewModal from '../../../elements/Modal'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'
-import { addNotification } from '../../../actions/notificationsActions'
+import { errorNotify, infoNotify } from '../../../actions/notificationsActions'
 import DocumentIdInputs from './DocumentIdInputs'
 import { fileNameReg, initValues } from './initDocId'
 
@@ -22,12 +22,12 @@ class DocIdModal extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    const { info, addNotification } = this.props
+    const { info, errorNotify } = this.props
     if (!info) return
 
-    info.forEach(el => addNotification(el.message))
+    info.forEach(el => errorNotify(el.message))
   }
-  
+
   hadlePopup = () => this.setState(prevState => ({ popup: !prevState.popup }))
 
   updateForm = (index, files) => {
@@ -64,7 +64,7 @@ class DocIdModal extends Component {
           <div className='ml-2'>
             {/*value.value.map((el, i) => {
               if (false) {
-                
+
                 TODO: Disabled and can be removed soon
 
                 return (
@@ -128,7 +128,7 @@ class DocIdModal extends Component {
     const docTypeValue = formvalue(documentFields, 'document_type')
     const docNumberValue = formvalue(documentFields, 'document_number')
     const disciplineValue = formvalue(documentFields, 'discipline')
-    
+
     return (
       <div className='form-group'>
         <label>Define a Document-ID to add information</label>
@@ -152,7 +152,7 @@ class DocIdModal extends Component {
 
       return field
     })
-    
+
     const newValues = {
       document_fields: newFields,
       title: values.title,
@@ -202,7 +202,7 @@ class DocIdModal extends Component {
               'originating_company',
               'discipline'
             ].includes(el.codification_kind)) return
-            
+
             return (
               <div className='form-group' key={i}>
                 {this.selectField(i, el)}
@@ -277,8 +277,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   initMainForm: values => dispatch(initialize('document_form', values)),
-  errorNotify: text => addNotification({ title: 'Filename is not valid', text, type: 'info' }),
-  infoNotify: title => dispatch(addNotification({ title: 'Documents', text: `Can not get data from title ${title}`, type: 'info' }))
+  errorNotify: text => dispatch(errorNotify('Filename is not valid', text)),
+  infoNotify: title => dispatch(infoNotify('Documents', `Can not get data from title ${title}`))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({ form: 'doc_id_form' })(DocIdModal))

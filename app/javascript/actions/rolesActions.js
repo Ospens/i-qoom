@@ -6,7 +6,7 @@ import {
   ROLE_UPDATED,
   ROLE_CREATED
 } from './types'
-import { addNotification } from './notificationsActions'
+import { errorNotify } from './notificationsActions'
 
 const rolesFetched = payload => ({
   type: ROLES_FETCHED,
@@ -44,7 +44,7 @@ export const startCreateRole = (values, projectId) => (dispatch, getState) => {
         dispatch(roleCreated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -66,7 +66,7 @@ export const startUpdateRole = (values, projectId) => (dispatch, getState) => {
         dispatch(roleUpdated(response.data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -82,7 +82,7 @@ export const deleteRole = (id, projectId) => (dispatch, getState) => {
         dispatch(roleDeleted({ id }))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -98,7 +98,7 @@ export const fetchRoleList = projectId => (dispatch, getState) => {
         dispatch(rolesFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }

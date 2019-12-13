@@ -5,7 +5,7 @@ import CompanyFields from '../../../../elements/forms/CompanyFields'
 import NewModal from '../../../../elements/Modal'
 import BillingAddress from '../../projectOverview/BillingAddress'
 import { startUpdateProject } from '../../../../actions/projectActions'
-import { addNotification } from '../../../../actions/notificationsActions'
+import { successNotify } from '../../../../actions/notificationsActions'
 
 function ModalButtons({ closeForm }) {
   const dispatch = useDispatch()
@@ -73,11 +73,11 @@ function CompanyBlock({ handleSubmit, pristine }) {
 
   const submit = useCallback(values => {
     return dispatch(startUpdateProject(values)).then(() => {
-      dispatch(addNotification({ title: 'Projects', text: 'The changes were successfully saved!', type: 'success' }))
+      dispatch(successNotify('Projects', 'The changes were successfully saved!'))
       setBillingForm(false)
     })
   }, [dispatch])
-  
+
   return (
     <form
       noValidate={true}

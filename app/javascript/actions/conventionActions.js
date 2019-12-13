@@ -1,16 +1,9 @@
 import axios from 'axios'
 import {
-  SubmissionError,
-  initialize,
-  arraySplice,
-  arrayMove
+  arrayMove, arraySplice, initialize, SubmissionError
 } from 'redux-form'
-import {
-  EDITING_CONVENTION,
-  CHECK_MAIN_SECTION_DMS,
-  CONVENTION_UPDATED
-} from './types'
-import { addNotification } from './notificationsActions'
+import { CHECK_MAIN_SECTION_DMS, CONVENTION_UPDATED, EDITING_CONVENTION } from './types'
+import { errorNotify, successNotify } from './notificationsActions'
 
 export const checkMainSections = documentFields => dispatch => {
   if (!documentFields) return
@@ -43,13 +36,12 @@ export const fieldByColumn = data => {
 
   sorted.column_1.sort((a, b) => a.row - b.row)
   sorted.column_2.sort((a, b) => a.row - b.row)
-  const newData = {
+  return {
     ...data,
     grouped_fields: {
       ...sorted
     }
   }
-  return newData
 }
 
 const editingConvention = payload => ({
@@ -89,13 +81,13 @@ export const startUpdateConvention = (projectId, values) => (dispatch, getState)
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-        dispatch(addNotification({ title: 'Convention', text: 'The convention was updated!', type: 'success' }))
+        dispatch(successNotify('Convention', 'The convention was updated!'))
         dispatch(conventionUpdated(sortedData))
         dispatch(initialize('convention_form', sortedData.grouped_fields))
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(err => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(err)
       })
   )
@@ -116,12 +108,12 @@ export const startUpdateCodification = (projectId, values) => (dispatch, getStat
       .then(response => {
         const { data } = response
         const sortedData = fieldByColumn(data)
-        dispatch(addNotification({ title: 'Codification', text: 'The values was updated!', type: 'success' }))
+        dispatch(successNotify('Codification', 'The values was updated!'))
         dispatch(conventionUpdated(sortedData))
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(({ err }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(err)
       })
   )
@@ -141,7 +133,7 @@ export const startEditConvention = projectId => (dispatch, getState) => {
         dispatch(checkMainSections(data.document_fields))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }

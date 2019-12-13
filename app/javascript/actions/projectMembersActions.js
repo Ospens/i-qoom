@@ -11,7 +11,7 @@ import {
   PROJECT_MEMBER_CREATED,
   CREATING_PROJECT_MEMBER
 } from './types'
-import { addNotification } from './notificationsActions'
+import { errorNotify } from './notificationsActions'
 
 const projectMembersFetched = payload => ({
   type: ACTIVE_MEMBERS_FETCHED_SUCCESS,
@@ -52,7 +52,7 @@ export const startFetchActiveProjectMembers = id => (dispatch, getState) => {
         dispatch(projectMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -66,7 +66,7 @@ export const startFetchPendingProjectMembers = id => (dispatch, getState) => {
         dispatch(pendingMembersFetched({ ...response.data }))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -81,7 +81,7 @@ export const startCreatingProjectMember = id => (dispatch, getState) => {
         dispatch(projectMemberCreating(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -103,7 +103,7 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
         dispatch(initialize('project_member_form', response.data))
       })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -131,7 +131,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
         }
       })
       .catch(response => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )

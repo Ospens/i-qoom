@@ -7,18 +7,18 @@ import { withRouter } from 'react-router-dom'
 import { signInUser } from '../../actions/userActions'
 import InputField from '../../elements/InputField'
 import { required } from '../../elements/validations'
-import { addNotification } from '../../actions/notificationsActions'
+import { errorNotify, successNotify } from '../../actions/notificationsActions'
 
 function SignIn({ handleSubmit, history, ...props }) {
   const dispatch = useDispatch()
-  
+
   // TODO: It is a hotfix and should be changed
   useEffect(() => {
     if (!props.match.params.msg) return
-    
+
     props.match.params.type === 'error'
-      ? dispatch(addNotification({ title: 'Problem', text: props.match.params.msg, type: 'error' }))
-      : dispatch(addNotification({ title: 'System', text: props.match.params.msg, type: 'success' }))
+      ? dispatch(errorNotify('System', props.match.params.msg))
+      : dispatch(successNotify('System', props.match.params.msg))
   }, [])
 
   const submit = useCallback((values) => {
