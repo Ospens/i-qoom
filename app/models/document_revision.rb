@@ -1,7 +1,10 @@
 class DocumentRevision < ApplicationRecord
   belongs_to :document_main
 
-  has_many :versions, class_name: 'Document', foreign_key: 'document_revision_id'
+  has_many :versions,
+           class_name: 'Document',
+           foreign_key: 'document_revision_id',
+           dependent: :destroy
 
   has_many :document_review_subjects
 

@@ -79,6 +79,7 @@ Rails.application.routes.draw do
             get :download_list
             get :my_documents
             resources :members, only: :show, module: :documents
+            resources :planned, only: :destroy, module: :documents
           end
         end
         resource :dms_settings, only: [:edit, :update]
@@ -124,6 +125,13 @@ Rails.application.routes.draw do
           end
         end
         resources :document_review_tags, except: [:new, :edit, :show]
+        resources :dms_planned_lists, only: [:create, :update, :show, :index] do
+          member do
+            get :edit_documents
+            post :update_users
+            post :update_documents
+          end
+        end
       end
       resources :messages, only: [:create, :show] do
         collection do
