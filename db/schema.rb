@@ -391,7 +391,9 @@ ActiveRecord::Schema.define(version: 2019_12_06_203204) do
     t.datetime "updated_at", null: false
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
+    t.string "member_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["member_id"], name: "index_users_on_member_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
