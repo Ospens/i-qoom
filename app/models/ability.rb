@@ -40,9 +40,6 @@ class Ability
       end
       can :manage, Project,
           id: user.project_administrators.map(&:project_id)
-      # ProjectAdministrator
-      can :manage, ProjectAdministrator,
-          project: { id: user.project_administrators.map(&:project_id) }
       # ProjectMember
       can :manage, ProjectMember,
           project: { id: user.project_administrators.map(&:project_id) }

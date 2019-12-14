@@ -18,10 +18,10 @@ describe User, type: :model do
                         .through(:message_recipients)
                         .source(:message) }
 
-  it { is_expected.to have_many(:project_administrators) }
+  it { is_expected.to have_many(:project_administrators)
+                        .class_name("ProjectMember") }
   it { is_expected.to have_many(:admin_projects)
-                        .through(:project_administrators)
-                        .source(:project) }
+                        .class_name("Project") }
 
   it { is_expected.to have_many(:project_members) }
   it { is_expected.to have_many(:member_projects)

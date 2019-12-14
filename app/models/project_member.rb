@@ -100,6 +100,12 @@ class ProjectMember < ApplicationRecord
              unless: -> { creation_step_active? ||
                           creation_step_pending? }
 
+  scope :admins,
+        -> {
+          joins(:role)
+          .where(roles: { title: "Project Administrator" })
+        }
+
   def send_confirmation_email
     self.inviter_id = new_inviter_id if invite && new_inviter_id.present?
     self.confirmation_sent_at = Time.now
@@ -117,6 +123,10 @@ class ProjectMember < ApplicationRecord
 
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def admin?
+    role.try(:title) == "Project Administrator"
   end
 
   private

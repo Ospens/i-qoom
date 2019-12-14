@@ -10,10 +10,17 @@ class User < ApplicationRecord
 
   has_many :projects
 
-  has_many :project_administrators
+  has_many :project_administrators,
+           -> { admins },
+           class_name: "ProjectMember"
+
   has_many :admin_projects,
-           through: :project_administrators,
-           source: :project
+           ->(user) {
+             joins(members: :role)
+             .where(project_members: { user_id: user.id })
+             .where(roles: { title: "Project Administrator" })
+           },
+           class_name: "Project"
 
   has_many :project_members
   has_many :member_projects,

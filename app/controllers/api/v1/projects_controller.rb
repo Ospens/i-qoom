@@ -9,27 +9,6 @@ class Api::V1::ProjectsController < ApplicationController
     render json: @project, user: signed_in_user
   end
 
-  # the first step of creating the project
-  # is "create" method,
-  # the other steps are "update" method
-  # on the create step you don't need to send anything
-  # and on admins step it is better to have request like this:
-  # { "project" :
-  #   { "admins":
-  #     {
-  #       "id": "#{project.id}",
-  #       "email": "someemailaddress@gmail.com"
-  #     }
-  #   }
-  # }
-  # Also when the project creation_step is not done
-  # it is mandatory to send :creation_step with a value,
-  # to apply the correspondent validations
-
-  # "same_for_billing_address" checkbox case
-  # if this checkbox is checked company address will be copied
-  # to billing address
-
   def create
     if @project.save
       render json: @project
@@ -41,7 +20,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update(project_params.merge(admins_inviter_id: signed_in_user.id))
+    if @project.update(project_params)
       render json: @project
     else
       render json: @project.errors,
@@ -52,21 +31,6 @@ class Api::V1::ProjectsController < ApplicationController
   def destroy
     @project.destroy
     head :no_content
-  end
-
-  # if user is not logged in, on frontend side he is supposed to be
-  # redirected to the login page, and after log in this action
-  # must be run again to confirm his account as an admin
-  def confirm_admin
-    project_admin_confirmation =
-      ProjectAdministratorConfirmation.new(token: params[:token],
-                                           signed_in_user: signed_in_user)
-    if project_admin_confirmation.save
-      head :ok
-    else
-      render json: project_admin_confirmation.errors,
-             status: :unprocessable_entity
-    end
   end
 
   def invite
@@ -124,11 +88,6 @@ class Api::V1::ProjectsController < ApplicationController
   private
 
   def project_params
-    if params[:project][:admins].present?
-      params[:project][:admins_attributes] =
-        params[:project][:admins]
-      params[:project].delete(:admins)
-    end
     if params[:project][:company_data].present?
       if params[:project][:company_data][:company_address].present?
         params[:project][:company_data][:company_address_attributes] =
@@ -150,15 +109,6 @@ class Api::V1::ProjectsController < ApplicationController
                              :status,
                              :start_date,
                              :archived,
-                             admins_attributes: [
-                               :id,
-                               :username,
-                               :first_name,
-                               :last_name,
-                               :email,
-                               :phone_code,
-                               :phone_number
-                             ],
                              company_data_attributes: [
                                :logo,
                                :remove_logo,

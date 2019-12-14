@@ -4,27 +4,23 @@ RSpec.describe Project, type: :model do
   context "creation_step" do
     subject { FactoryBot.build(:project) }
     it { is_expected.to define_enum_for(:creation_step)
-            .with_values([ :admins,
-                           :name,
+            .with_values([ :name,
                            :company_data,
                            :billing_address,
                            :done ])
             .with_prefix(:creation_step) }
   end
 
-  context "creation step is admins" do
-    subject { FactoryBot.build(:project_admins_step) }
-    it { is_expected.not_to validate_presence_of(:name) }
-    it { is_expected.not_to validate_length_of(:name).is_at_least(3).is_at_most(255) }
-  end
+  it { is_expected.to validate_presence_of(:name) }
+  it { is_expected.to validate_length_of(:name).is_at_least(3).is_at_most(255) }
 
-  context "created on admins creation step" do
-    subject { FactoryBot.create(:project_admins_step) }
+  context "created" do
+    subject { FactoryBot.create(:project_name_step) }
     it "should add a project creator as an admin and member" do
-      expect(subject.admins.find_by(email: subject.user.email)).to be_present
-      expect(subject.admins.find_by(email: subject.user.email).status).to eq("active")
-      expect(subject.members.find_by(email: subject.user.email)).to be_present
-      expect(subject.members.find_by(email: subject.user.email).creation_step).to eq("active")
+      expect(subject.admins.first).to eq(subject.members.first)
+      expect(subject.admins.count).to eq 1
+      expect(subject.members.count).to eq 1
+      expect(subject.members.first.creation_step_active?).to be_truthy
     end
     it "should have default roles and disciplines" do
       expect(subject.roles.map(&:title)).to\
@@ -71,17 +67,6 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  context "creation step is not admins" do
-    subject { FactoryBot.build(:project_admins_step,
-                               creation_step: [ :name,
-                                                :company_data,
-                                                :billing_address,
-                                                :done ].sample) }
-    it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_length_of(:name).is_at_least(3)
-                                                 .is_at_most(255) }
-  end
-
   context "creation_step is company_data" do
     subject { FactoryBot.build(:project_company_data_step) }
     it { is_expected.to validate_presence_of(:company_data) }
@@ -90,14 +75,12 @@ RSpec.describe Project, type: :model do
   context "properly created project" do
     subject { FactoryBot.create(:project) }
     it { is_expected.to belong_to(:user) }
-    it { is_expected.to validate_presence_of(:admins) }
+    it { is_expected.to validate_presence_of(:admins).on(:update) }
   end
-  it { is_expected.to have_many(:admins).class_name('ProjectAdministrator') }
-  it { is_expected.to accept_nested_attributes_for(:admins) }
   it { is_expected.to accept_nested_attributes_for(:company_data)
                         .update_only(true) }
 
-  it { is_expected.to have_many(:member_admins)
+  it { is_expected.to have_many(:admins)
                         .class_name('ProjectMember')}
     # not working and syntax for testing conditions for nested records with joins is not clear
     #                     .conditions(roles: { title: "Project Administrator" })
@@ -112,10 +95,10 @@ RSpec.describe Project, type: :model do
     context "when is ready" do
       subject { FactoryBot.create(:project_company_data_step) }
 
-      it { expect(subject.creation_step).to eq("done") }
-      it { expect(subject.admins
-                         .find_by(email: subject.user.email)
-                         .first_confirmation_sent_at).to be_nil }
+      it do
+        subject.update(name: "test")
+        expect(subject.creation_step).to eq("done")
+      end
     end
   end
 
@@ -136,7 +119,7 @@ RSpec.describe Project, type: :model do
 
   context 'validate project_code' do
     let(:project) { FactoryBot.create(:project) }
-
+    before(:each) { project.reload }
     it 'valid' do
       project.project_code = 'AAA'
       expect(project).to be_valid

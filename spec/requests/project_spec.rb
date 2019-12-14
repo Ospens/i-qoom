@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Project", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_admins_step, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_name_step, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_user) { FactoryBot.create(:user) }
   let(:different_project) { FactoryBot.create(:project,
@@ -30,44 +30,18 @@ describe "Project", type: :request do
         expect(json.values).to include(project.name)
       end
     end
-    context  "create (creation_step 'admins')" do
-      it 'should get a status "success"' do
+    context  "create (creation_step 'name')" do
+      it 'should get a status "success" and add the name to the project' do
         post "/api/v1/projects",
-          params: { }.to_json,
+          params: { project:
+                    { name: "some name",
+                      creation_step: "name" } }.to_json,
           headers: headers
         expect(response).to have_http_status(:success)
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
+        expect(Project.last.name).to eq("some name")
       end
     end
     context "update" do
-      context "creation_step 'admins'" do
-        it 'should get a status "success" and add new admin to the project' do
-          patch "/api/v1/projects/#{project.id}",
-            params: { project:
-                      { admins:
-                        { id: "",
-                          email: "someemail@gmail.com" } } }.to_json,
-            headers: headers
-          expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).admins.count).to eq(2)
-          expect(Project.find_by(id: project.id).admins.last.email).to\
-            eq("someemail@gmail.com")
-        end
-        it 'should get a status "error" and don\'t
-            add an admin' do
-          patch "/api/v1/projects/#{project.id}",
-            params: { project:
-                      { admins:
-                        { id: "",
-                          email: "notemail" } } }.to_json,
-            headers: headers
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
-          expect(Project.find_by(id: project.id).admins.last.email).not_to\
-            eq("notemail")
-        end
-      end
-
       context "creation_step 'name'" do
         it 'should get a status "success" and change the name of the project' do
           patch "/api/v1/projects/#{project.id}",
@@ -202,32 +176,11 @@ describe "Project", type: :request do
 
     context "destroy" do
       it "should be destroyed" do
-        third_project = FactoryBot.create(:project_admins_step, user_id: user.id)
+        third_project = FactoryBot.create(:project_name_step, user_id: user.id)
         delete "/api/v1/projects/#{third_project.id}",
               headers: headers
         expect(response).to have_http_status(:success)
         expect(Project.find_by(id: third_project.id)).to be_falsy
-      end
-    end
-
-    context "confirm_admin" do
-      it "should confirm an admin" do
-        project_admin =
-          FactoryBot.create(:admin_with_project, status: "unconfirmed")
-        project_admin.update(email: user.email)
-        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:ok)
-        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(user)
-      end
-      it "shouldn't confirm an admin with wrong user" do
-        project_admin =
-          FactoryBot.create(:admin_with_project, status: "unconfirmed")
-
-        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(nil)
       end
     end
 
@@ -380,13 +333,6 @@ describe "Project", type: :request do
     it 'destroy' do
       delete "/api/v1/projects/#{project.id}",
            headers: headers
-      expect(response).to have_http_status(:forbidden)
-    end
-
-    it 'confirm_admin' do
-      project_admin = FactoryBot.create(:project).admins.last
-      get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
       expect(response).to have_http_status(:forbidden)
     end
 

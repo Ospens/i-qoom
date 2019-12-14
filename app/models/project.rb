@@ -1,6 +1,5 @@
 class Project < ApplicationRecord
-  enum creation_step: [ :admins,
-                        :name,
+  enum creation_step: [ :name,
                         :company_data,
                         :billing_address,
                         :done ],
@@ -10,8 +9,6 @@ class Project < ApplicationRecord
                  :development,
                  :execution,
                  :operation ]
-
-  attr_accessor :admins_inviter_id
 
   belongs_to :user
 
@@ -30,12 +27,8 @@ class Project < ApplicationRecord
 
   has_many :document_review_tags
 
-  has_many :admins, class_name: "ProjectAdministrator", index_errors: true
-  has_many :member_admins,
-           -> {
-             joins(:role)
-             .where(roles: { title: "Project Administrator" })
-           },
+  has_many :admins,
+           -> { admins },
            class_name: "ProjectMember"
   has_many :members, class_name: "ProjectMember"
   has_one :company_data, class_name: "ProjectCompanyData"
@@ -43,29 +36,25 @@ class Project < ApplicationRecord
   has_many :roles
 
   accepts_nested_attributes_for :dms_settings
-  accepts_nested_attributes_for :admins
   accepts_nested_attributes_for :company_data,
                                 update_only: true
 
-  validates_presence_of :admins
+  validates_presence_of :admins, on: :update
 
   validates_presence_of :company_data,
-    unless: -> { creation_step_admins? || creation_step_name? }
+    unless: :creation_step_name?
 
   validates_associated :company_data
 
   validates :name,
             presence: true,
             length: { minimum: 3,
-                      maximum: 255 },
-            unless: :creation_step_admins?
+                      maximum: 255 }
 
   validates :project_code,
             length: { is: 3 },
             format: { with: /\A[A-Z]+\z/ },
             if: -> { !project_code.nil? || !project_code_was.nil? }
-
-  before_validation :add_creator_as_admin, on: :create
 
   after_save :update_creation_step_to_done, unless: :creation_step_done?
 
@@ -125,18 +114,6 @@ class Project < ApplicationRecord
   end
 
   private
-
-  def add_creator_as_admin
-    first_admins = admins.map { |a| a }
-    admins.clear
-    admins.build(email: user.email,
-                 first_name: user.first_name,
-                 last_name: user.last_name,
-                 username: user.username,
-                 user_id: user.id,
-                 status: "active")
-    admins << first_admins
-  end
 
   def update_creation_step_to_done
     update(creation_step: "done")
