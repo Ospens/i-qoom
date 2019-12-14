@@ -12,6 +12,11 @@ import {
   CREATING_PROJECT_MEMBER
 } from './types'
 import { addNotification } from './notificationsActions'
+import {
+  CREATING_MEMBER,
+  ACTIVE_MEMBERS,
+  PENDING_MEMBERS
+} from '../components/dashboard/projectSettings/memberManagment/membersTypes'
 
 const projectMembersFetched = payload => ({
   type: ACTIVE_MEMBERS_FETCHED_SUCCESS,
@@ -122,11 +127,11 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
   return (
     axios.patch(`/api/v1/projects/${projectId}/members/${values.id}`, request, headers)
       .then(response => {
-        if (type === 'activeMembers') {
+        if (type === ACTIVE_MEMBERS) {
           dispatch(updateActiveMembers(response.data))
-        } else if (type === 'pendingMemebers') {
+        } else if (type === PENDING_MEMBERS) {
           dispatch(updatePendingMembers(response.data))
-        } else if (type === 'creating') {
+        } else if (type === CREATING_MEMBER) {
           dispatch(initialize('project_member_form', response.data))
         }
       })

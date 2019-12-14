@@ -262,3 +262,18 @@ export const dmsUsers = (projectId, teams = false) => (dispatch, getState) => {
       })
   )
 }
+
+export const inviteMembers = (projectId, memberIds) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/invite`, { project_member_ids: memberIds }, headers)
+      .then(() => {
+        dispatch(addNotification({ title: 'Projects', text: 'The invites was sent!', type: 'success' }))
+      })
+      .catch(() => {
+        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      })
+  )
+}
