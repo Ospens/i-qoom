@@ -110,7 +110,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   const request = {
     project: {
       ...values,
-      creation_step: 'admins'
+      creation_step: 'name'
     }
   }
 
