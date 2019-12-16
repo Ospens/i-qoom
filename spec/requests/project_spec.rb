@@ -9,6 +9,7 @@ describe "Project", type: :request do
                                               user_id: second_user.id) }
   let(:json) { JSON(response.body) }
 
+  
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
@@ -18,9 +19,18 @@ describe "Project", type: :request do
         get "/api/v1/projects",
              headers: headers
         expect(response).to have_http_status(:success)
-        expect(json
-                .map { |h| h["id"] }).to include(*user.projects.map(&:id))
+        expect(json.map { |h| h["id"] }).to include(*user.projects.map(&:id))
       end
+      it 'should get a status "success" and render projects if signed in as an invited member' do
+        project_member =
+          FactoryBot.create(:project_member,
+                            project_id: project.id,
+                            user: second_user)
+        get "/api/v1/projects",
+             headers: headers_for_second_user
+        expect(response).to have_http_status(:success)
+        expect(json.map { |h| h["id"] }).to include(*project_member.project_id)
+      end 
     end
     context "show" do
       it 'should get a status "success" and render the project' do
@@ -28,7 +38,7 @@ describe "Project", type: :request do
              headers: headers
         expect(response).to have_http_status(:success)
         expect(json.values).to include(project.name)
-      end
+      end     
     end
     context  "create (creation_step 'name')" do
       it 'should get a status "success" and add the name to the project' do
