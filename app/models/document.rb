@@ -4,7 +4,8 @@ class Document < ApplicationRecord
   attr_accessor :review_status,
                 :review_status_options,
                 :reviewers,
-                :review_issuers
+                :review_issuers,
+                :unplan_document
 
   serialize :emails
 
@@ -84,6 +85,9 @@ class Document < ApplicationRecord
                 if: :reviewers_and_review_issuers_required?
 
   before_create :assign_doc_id
+
+  before_create :unplan_document_main,
+                if: -> { document_main.planned? && unplan_document }
 
   after_create :send_emails, if: -> { emails.try(:any?) }
 
@@ -325,7 +329,11 @@ class Document < ApplicationRecord
   end
 
   def reviewers_and_review_issuers_required?
-    review_status != 'issued_for_information' && first_document_in_chain?
+    if document_main.planned?
+      unplan_document && review_status != 'issued_for_information'
+    else
+      review_status != 'issued_for_information' && first_document_in_chain?
+    end
   end
 
   private
@@ -495,5 +503,9 @@ class Document < ApplicationRecord
 
   def assign_doc_id
     self.doc_id = codification_string
+  end
+
+  def unplan_document_main
+    document_main.update(planned: false)
   end
 end

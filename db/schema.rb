@@ -61,6 +61,28 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
     t.integer "project_id"
   end
 
+  create_table "dms_planned_lists", force: :cascade do |t|
+    t.string "name"
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_dms_planned_lists_on_project_id"
+  end
+
+  create_table "dms_planned_lists_document_mains", id: false, force: :cascade do |t|
+    t.bigint "dms_planned_list_id", null: false
+    t.bigint "document_main_id", null: false
+    t.index ["dms_planned_list_id", "document_main_id"], name: "index_dms_planned_lists_document_mains"
+    t.index ["document_main_id", "dms_planned_list_id"], name: "index_document_mains_dms_planned_lists"
+  end
+
+  create_table "dms_planned_lists_users", id: false, force: :cascade do |t|
+    t.bigint "dms_planned_list_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["dms_planned_list_id", "user_id"], name: "index_dms_planned_lists_users"
+    t.index ["user_id", "dms_planned_list_id"], name: "index_users_dms_planned_lists"
+  end
+
   create_table "dms_settings", force: :cascade do |t|
     t.string "name"
     t.string "value"
@@ -135,7 +157,8 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
     t.string "project_code"
-    t.integer "document_review_status", default: 0
+    t.boolean "planned", default: false
+    t.integer "position"
     t.index ["project_id"], name: "index_document_mains_on_project_id"
   end
 
@@ -360,6 +383,7 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "conventions", "projects"
+  add_foreign_key "dms_planned_lists", "projects"
   add_foreign_key "dms_settings", "projects"
   add_foreign_key "dms_settings", "users"
   add_foreign_key "dms_teams", "projects"

@@ -82,6 +82,9 @@ class Ability
       can [:new, :create], Document do |document, project|
         project.can_create_documents?(user)
       end
+      can :destroy_planned, Document do |document, project|
+        project.members.find_by(user_id: user.id).try(:dms_module_master?)
+      end
       can [:show,
            :download_native_file,
            :download_details,
@@ -154,6 +157,23 @@ class Ability
       end
       can :manage, DmsTeam do |team, project|
         project.members.find_by(user: user).try(:dms_module_master?)
+      end
+      # DmsPlannedList
+      can :create, DmsPlannedList do |list, project|
+        project.members.find_by(user: user).try(:dms_module_master?)
+      end
+      can :show, DmsPlannedList do |list|
+        list.users.include?(user) ||
+          list.project.members.find_by(user: user).try(:dms_module_master?)
+      end
+      can :index, DmsPlannedList do |list, project|
+        project.members.find_by(user: user).try(:dms_module_access?)
+      end
+      can [:update,
+           :update_users,
+           :edit_documents,
+           :update_documents], DmsPlannedList do |list|
+        list.project.members.find_by(user: user).try(:dms_module_master?)
       end
     end
   end

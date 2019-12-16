@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'zip'
+include DocumentConcern
 
 describe Document, type: :request do
   let(:json) { JSON(response.body) }
