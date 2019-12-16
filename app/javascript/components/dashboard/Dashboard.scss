@@ -497,6 +497,7 @@ form {
   border-radius: 5px;
   text-align: center !important;
   cursor: pointer;
+  overflow: hidden;
 
   label {
     margin: 0 !important;
@@ -1114,6 +1115,10 @@ div.tab-description {
     width: 150px;
     white-space: normal;
     line-height: 1.2;
+
+    span {
+      color: #fff;
+    }
 
     &::before {
       right: -.30714286em;

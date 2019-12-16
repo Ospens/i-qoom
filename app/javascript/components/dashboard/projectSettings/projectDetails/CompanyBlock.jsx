@@ -82,7 +82,7 @@ function CompanyBlock({ handleSubmit, pristine }) {
     <form
       noValidate={true}
       onSubmit={handleSubmit(submit)}
-      className='col-lg-6 company-data-form'
+      className='col-lg-12 company-data-form'
       ref={ref}
     >
       <FormSection name='company_data'>

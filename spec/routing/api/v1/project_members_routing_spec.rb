@@ -47,6 +47,12 @@ RSpec.describe Api::V1::ProjectMembersController, type: :routing do
                  id: "1")
     end
 
+    it "routes to #check_if_present" do
+      expect(get: "/api/v1/projects/1/members/check_if_present").to\
+        route_to("api/v1/project_members#check_if_present",
+                 project_id: "1")
+    end
+
     it "routes to #destroy" do
       expect(delete: "/api/v1/projects/1/members/1").to\
         route_to("api/v1/project_members#destroy",

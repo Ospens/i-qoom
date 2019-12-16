@@ -67,7 +67,7 @@ en:
             token:
               project_member_is_not_found:
                 "problem: the member is not found"
-              emails_do_not_match: "problem: Emails do not match"
+              emails_do_not_match: "You are not logged in in the invited account"
               project_member_cant_be_confirmed:
                 "problem: the member cant be confirmed because his
                 data is not filled properly"

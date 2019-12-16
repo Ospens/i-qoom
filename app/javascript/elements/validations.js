@@ -16,3 +16,5 @@ export const minLength4 = value => (value && value.length < 4 ? 'Must have at le
 export const maxLength15 = value => (value && value.length > 15 ? 'Must be 15 characters or less' : undefined)
 export const maxLength4 = value => (value && value.length > 4 ? 'Must be 4 characters' : undefined)
 export const maxLength2 = value => (value && value.length > 2 ? 'Must be 2 characters' : undefined)
+
+export const passwordsMatch = (value, allValues) => (value !== allValues.password ? "Passwords don't match" : undefined)

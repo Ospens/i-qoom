@@ -110,7 +110,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   const request = {
     project: {
       ...values,
-      creation_step: 'admins'
+      creation_step: 'name'
     }
   }
 
@@ -144,14 +144,19 @@ export const startFetchProjects = () => (dispatch, getState) => {
 export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { headers: { Authorization: token } }
-
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
         dispatch(projectFetched(response.data))
+        return response
       })
-      .catch(() => {
-        dispatch(errorNotify('Problem'))
+      .catch(({ response }) => {
+        if (response.status === 403) {
+          dispatch(errorNotify('Problem', 'Access denied!'))
+        } else {
+          dispatch(errorNotify('Problem'))
+        }
+        return response
       })
   )
 }
@@ -229,7 +234,8 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.post(`/api/v1/projects/${projectId}/update_project_code`, { project_code: projectCode }, headers)
+    axios.post(`/api/v1/projects/${projectId}/update_project_code`,
+      { project_code: projectCode }, headers)
       .then(() => {
         dispatch(projectCodeUpdated(projectCode))
         dispatch(successNotify('Projects', 'Project code was updated!'))
@@ -251,6 +257,21 @@ export const dmsUsers = (projectId, teams = false) => (dispatch, getState) => {
     axios.get(url, headers)
       .then(({ data }) => {
         dispatch({ type: DMS_USERS_FETCHED, payload: data })
+      })
+      .catch(() => {
+        dispatch(errorNotify('Problem'))
+      })
+  )
+}
+
+export const inviteMembers = (projectId, memberIds) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/invite`, { project_member_ids: memberIds }, headers)
+      .then(() => {
+        dispatch(successNotify('Projects', 'The invites was sent!'))
       })
       .catch(() => {
         dispatch(errorNotify('Problem'))

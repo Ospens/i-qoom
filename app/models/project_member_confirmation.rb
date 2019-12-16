@@ -2,7 +2,7 @@ class ProjectMemberConfirmation
   include ActiveModel::Model
   include ActiveModel::Validations
 
-  attr_accessor :token, :signed_in_user
+  attr_accessor :token, :signed_in_user, :project_member
 
   def initialize(attributes = {})
     attributes.each do |name, value|
@@ -10,22 +10,31 @@ class ProjectMemberConfirmation
     end
 
     @data = ::JsonWebToken.decode(token) || {}
-    @project_member =
+    self.project_member =
       ProjectMember.find_by(id: @data["member_id"])
   end
 
-  def save
+  def accept
     if valid?
-      if @project_member.update(user: signed_in_user)
-        @project_member.creation_step_active!
-      end
+      @project_member.creation_step_active!
     else
       false
     end
   end
 
-  validates_presence_of :token,
-                        :signed_in_user
+  def registration_required?
+    errors.count == 1 &&
+      !emails_matching? &&
+      project_member.try(:user).nil?
+  end
+
+  def unauthorized?
+    errors.count == 1 &&
+      !emails_matching? &&
+      project_member.try(:user).present?
+  end
+
+  validates_presence_of :token
 
   validate :token_validity,
            :project_member_exists,
@@ -35,6 +44,10 @@ class ProjectMemberConfirmation
 
   def persisted?
     false
+  end
+
+  def emails_matching?
+    project_member.try(:email) == signed_in_user.try(:email)
   end
 
   private
@@ -48,7 +61,7 @@ class ProjectMemberConfirmation
   end
 
   def emails_match
-    unless @data["email"] == signed_in_user.try(:email)
+    unless emails_matching?
       errors.add(:token, :emails_do_not_match)
     end
   end

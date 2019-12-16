@@ -2,71 +2,137 @@ require 'rails_helper'
 
 describe "Project", type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let(:project) { FactoryBot.create(:project_admins_step, user_id: user.id) }
+  let(:project) { FactoryBot.create(:project_name_step, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_user) { FactoryBot.create(:user) }
-  let(:different_project) { FactoryBot.create(:project,
-                                              user_id: second_user.id) }
+  let(:third_project) { FactoryBot.create(:project,
+                                          user_id: second_user.id) }
+  let(:project_member) { 
+    FactoryBot.create(:project_member,
+                      project_id: second_project.id,
+                      user: second_user)
+  }
+
+  let(:pending_project_member) {
+    FactoryBot.create(:project_member_pending,
+                      project_id: second_project.id,
+                      user: FactoryBot.create(:user))
+  }
+
+  let(:project_admin) {
+    FactoryBot.create(:project_member,
+                      project_id: third_project.id,
+                      user: user)    
+  }
+
   let(:json) { JSON(response.body) }
 
+  
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
+    let(:headers_without_user) { { "CONTENT_TYPE" => "application/json" } }
     context "index" do
-      it 'should get a status "success" and render projects' do
-        get "/api/v1/projects",
-             headers: headers
-        expect(response).to have_http_status(:success)
-        expect(json
-                .map { |h| h["id"] }).to include(*user.projects.map(&:id))
+      context "should get a status 'success' and render projects" do
+        it "if signed in as a creator" do
+          get "/api/v1/projects",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).to include(*user.projects.map(&:id))
+        end
+        it "signed in as an invited project member" do
+          project_member.reload
+          third_project.reload
+          get "/api/v1/projects",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }.sort).to\
+            include(*[project_member.project_id,
+                      third_project.id].sort)
+        end
+        it "signed in as an invited project admin" do
+          project_admin.reload
+          get "/api/v1/projects",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).to\
+            eq([third_project.id])
+        end
+        it "signed in as invited project member who didn't accept invitation" do
+          pending_project_member.reload
+          second_project.reload
+          get "/api/v1/projects",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).not_to\
+            include(pending_project_member.project_id)
+        end
       end
     end
     context "show" do
-      it 'should get a status "success" and render the project' do
-        get "/api/v1/projects/#{project.id}",
-             headers: headers
-        expect(response).to have_http_status(:success)
-        expect(json.values).to include(project.name)
+      context "should get a status 'success' and render the project" do
+        it 'if signed in as a creator' do
+          get "/api/v1/projects/#{project.id}",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(project.name)
+        end
+        it 'if signed in as an invited member' do
+          project_member.reload
+          get "/api/v1/projects/#{second_project.id}",
+              headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(second_project.name)
+        end
+        it "if signed in as an invited admin" do
+          project_admin.reload
+          get "/api/v1/projects/#{third_project.id}",
+              headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(third_project.name)    
+        end
+      end
+      context "should get a status forbidden" do
+        it "if signed in as member, but project is not completed" do
+          new_project_member =
+            FactoryBot.create(:project_member,
+                              project_id: project.id,
+                              user: second_user)
+          get "/api/v1/projects/#{project.id}",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(project.name)
+        end
+        it "if a signed in user haven't accept the invitation" do
+          pending_project_member.reload
+          second_project.reload
+          get "/api/v1/projects/#{second_project.id}",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(second_project.name)
+        end
+        it "if a signed in user doesn't have the membership" do
+          new_project = FactoryBot.create(:project)
+          new_project.reload
+          get "/api/v1/projects/#{new_project.id}",
+               headers: headers
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(new_project.name)          
+        end
       end
     end
-    context  "create (creation_step 'admins')" do
-      it 'should get a status "success"' do
+    context  "create (creation_step 'name')" do
+      it 'should get a status "success" and add the name to the project' do
         post "/api/v1/projects",
-          params: { }.to_json,
+          params: { project:
+                    { name: "some name",
+                      creation_step: "name" } }.to_json,
           headers: headers
         expect(response).to have_http_status(:success)
-        expect(ActionMailer::Base.deliveries.count).to eq(0)
+        expect(Project.last.name).to eq("some name")
       end
     end
     context "update" do
-      context "creation_step 'admins'" do
-        it 'should get a status "success" and add new admin to the project' do
-          patch "/api/v1/projects/#{project.id}",
-            params: { project:
-                      { admins:
-                        { id: "",
-                          email: "someemail@gmail.com" } } }.to_json,
-            headers: headers
-          expect(response).to have_http_status(:success)
-          expect(Project.find_by(id: project.id).admins.count).to eq(2)
-          expect(Project.find_by(id: project.id).admins.last.email).to\
-            eq("someemail@gmail.com")
-        end
-        it 'should get a status "error" and don\'t
-            add an admin' do
-          patch "/api/v1/projects/#{project.id}",
-            params: { project:
-                      { admins:
-                        { id: "",
-                          email: "notemail" } } }.to_json,
-            headers: headers
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(Project.find_by(id: project.id).admins.count).not_to eq(2)
-          expect(Project.find_by(id: project.id).admins.last.email).not_to\
-            eq("notemail")
-        end
-      end
-
       context "creation_step 'name'" do
         it 'should get a status "success" and change the name of the project' do
           patch "/api/v1/projects/#{project.id}",
@@ -201,7 +267,7 @@ describe "Project", type: :request do
 
     context "destroy" do
       it "should be destroyed" do
-        third_project = FactoryBot.create(:project_admins_step, user_id: user.id)
+        third_project = FactoryBot.create(:project_name_step, user_id: user.id)
         delete "/api/v1/projects/#{third_project.id}",
               headers: headers
         expect(response).to have_http_status(:success)
@@ -209,53 +275,44 @@ describe "Project", type: :request do
       end
     end
 
-    context "confirm_admin" do
-      it "should confirm an admin" do
-        project_admin =
-          FactoryBot.create(:admin_with_project, status: "unconfirmed")
-        project_admin.update(email: user.email)
-        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:ok)
-        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(user)
-      end
-      it "shouldn't confirm an admin with wrong user" do
-        project_admin =
-          FactoryBot.create(:admin_with_project, status: "unconfirmed")
-
-        get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectAdministrator.find_by(id: project_admin.id).user).to eq(nil)
-      end
-    end
-
     context "confirm_member" do
-      it "should confirm a member" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        project_member.update(email: second_user.email)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers_for_second_user
-        expect(response).to have_http_status(:success)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
+      context "when project member doesn't have a user" do 
+        it "shouldn't confirm a member with a wrong or without a user" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: [ headers_for_second_user, headers_without_user ].sample
+          expect(response).to have_http_status(:not_found)
+          expect(project_member.reload.creation_step_active?).to be_falsy
+          expect(json["project_member"]["id"]).to eq project_member.id
+        end
+        it "shouldn't confirm a member with a wrong token" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          get "/api/v1/projects/confirm_member?token=54353454",
+            headers: headers_without_user
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
+        end
       end
-      it "shouldn't confirm a member with wrong user" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers_for_second_user
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectMember.find_by(id: project_member.id).user).to eq(nil)
-      end
-      it "should't confirm a member with different signed_in_user" do
-        project_member =
-          FactoryBot.create(:project_member_pending)
-        project_member.update(email: second_user.email)
-        get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
-          headers: headers
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(ProjectMember.find_by(id: project_member.id).user).not_to eq(user)
+      context "when project member has a user" do
+        it "should confirm a member" do
+          project_member =
+            FactoryBot.create(:project_member_pending)
+          project_member.update(email: second_user.email)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(ProjectMember.find_by(id: project_member.id).user).to eq(second_user)
+        end
+        it "should't confirm a member with a different or without a signed_in_user" do
+          project_member =
+            FactoryBot.create(:project_member_pending, email: user.email)
+          get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
+            headers: [ headers_for_second_user, headers_without_user ].sample
+          expect(response).to have_http_status(:unauthorized)
+          expect(project_member.reload.creation_step_active?).to be_falsy
+        end
       end
     end
 
@@ -269,8 +326,8 @@ describe "Project", type: :request do
              params: { project_member_ids: member_ids }.to_json,
              headers: headers
         expect(response).to have_http_status(:ok)
-        expect(ActionMailer::Base.deliveries.map(&:to).map(&:first)).to\
-          eq(project.members.map(&:email) - [project.members.first.email])
+        expect(ActionMailer::Base.deliveries.map(&:to).map(&:first).sort).to\
+          eq((project.members.map(&:email) - [project.members.where(creation_step: "active").first.email]).sort)
         expect(ProjectMember.where(id: member_ids).first.inviter_id).to eq(user.id)
       end
       it "shouldn't invite members" do
@@ -370,18 +427,11 @@ describe "Project", type: :request do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'confirm_admin' do
-      project_admin = FactoryBot.create(:project).admins.last
-      get "/api/v1/projects/confirm_admin?token=#{project_admin.confirmation_token}",
-          headers: headers
-      expect(response).to have_http_status(:forbidden)
-    end
-
-    it 'confirm_member' do
+    it 'confirm_member (exclusion) should be accessing anyway' do
       project_member = FactoryBot.create(:project_member)
-      get "/api/v1/projects/confirm_admin?token=#{project_member.confirmation_token}",
+      get "/api/v1/projects/confirm_member?token=#{project_member.confirmation_token}",
           headers: headers
-      expect(response).to have_http_status(:forbidden)
+      expect(response).to have_http_status(422)
     end
 
     it 'invite' do

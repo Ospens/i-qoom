@@ -16,12 +16,6 @@ class ApplicationMailer < ActionMailer::Base
          subject: t(".title")
   end
 
-  def project_admin_confirmation(project_admin)
-    @project_admin = project_admin
-    mail to: @project_admin.email,
-         subject: t(".title")
-  end
-
   def project_member_confirmation(project_member)
     @project_member = project_member
     mail to: @project_member.email,

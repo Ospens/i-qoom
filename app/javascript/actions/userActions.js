@@ -13,12 +13,9 @@ const signIn = payload => ({
   payload
 })
 
-const signUp = (token, headers) => ({
+const signUp = payload => ({
   type: SIGN_UP_USER,
-  payload: {
-    token,
-    headers
-  }
+  payload
 })
 
 export const signOutUser = () => {
@@ -62,8 +59,8 @@ export const signUpUser = userFields => dispatch => {
     }
   }
   return axios.post('/api/v1/users', request)
-    .then(response => {
-      dispatch(signUp(response.data, response.headers))
+    .then(({ data }) => {
+      dispatch(signUp(data))
     })
     .catch(({ response }) => {
       dispatch(errorNotify('Problem'))

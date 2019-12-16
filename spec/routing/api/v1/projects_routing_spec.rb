@@ -32,11 +32,6 @@ RSpec.describe Api::V1::ProjectsController, type: :routing do
         route_to("api/v1/projects#destroy", id: "1")
     end
 
-    it "routes to #confirm_admin" do
-      expect(get: "/api/v1/projects/confirm_admin").to\
-        route_to("api/v1/projects#confirm_admin")
-    end
-
     it "routes to #confirm_member" do
       expect(get: "/api/v1/projects/confirm_member").to\
         route_to("api/v1/projects#confirm_member")

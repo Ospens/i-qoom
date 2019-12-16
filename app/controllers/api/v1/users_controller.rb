@@ -4,7 +4,8 @@ class Api::V1::UsersController < ApplicationController
   def create
     user = User.new(user_params)
     if user.save
-      head :created
+      render json: user,
+             status: :created
     else
       render json: user.errors,
              status: :unprocessable_entity
@@ -75,7 +76,8 @@ class Api::V1::UsersController < ApplicationController
                                  :email,
                                  :password,
                                  :password_confirmation,
-                                 :accept_terms_and_conditions)
+                                 :accept_terms_and_conditions,
+                                 :project_member_id)
   end
 
   def user_password_params

@@ -6,10 +6,15 @@ class User < ApplicationRecord
 
   acts_as_reader
 
-  attr_accessor :accept_terms_and_conditions
+  attr_accessor :accept_terms_and_conditions, :project_member_id
 
   has_many :projects
-  has_many :project_administrators
+
+  has_many :project_members
+
+  has_many :project_administrators,
+           -> { admins },
+           class_name: "ProjectMember"
 
   has_many :documents, class_name: 'DocumentMain'
   has_many :document_rights,
@@ -57,7 +62,28 @@ class User < ApplicationRecord
             length: { maximum: 18 },
             uniqueness: true
 
-  after_create :send_confirmation_email, unless: :confirmed?
+  before_validation :add_data_from_project_member,
+                    on: :create,
+                    if: -> { project_member_id.present? }
+  after_create :generate_member_id
+  after_create :send_confirmation_email,
+               unless: -> { confirmed? || project_member_id.present? }
+  after_create :add_user_id_to_project_member, if: -> { project_member_id.present? } 
+
+  def member_projects
+    Project.joins(:members)
+           .where(project_members: {
+             user_id: self.id,
+             creation_step: ProjectMember.creation_steps["active"]
+           })
+  end
+
+  def admin_projects
+    member_projects.joins(members: :role)
+                   .where(roles: { 
+                     title: "Project Administrator"
+                   })
+  end
 
   def confirmed?
     confirmed_at.present?
@@ -84,5 +110,29 @@ class User < ApplicationRecord
   def reset_password
     generate_reset_password_token
     ApplicationMailer.reset_password_instructions(self).deliver_now
+  end
+
+  private
+
+  def generate_member_id
+    self.member_id = "i-" + (first_name.first + last_name.first).upcase + id.to_s.rjust(5, '0')
+    self.save
+  end
+
+  def add_data_from_project_member
+    project_member = ProjectMember.find_by(id: project_member_id)
+    assign_attributes(
+      first_name: project_member.first_name,
+      last_name: project_member.last_name,
+      country: project_member.company_address.country,
+      city: project_member.company_address.city,
+      username: (project_member.email.split("@").first.sub(".", "_") + project_member.id.to_s)[0..17],
+      email: project_member.email,
+      confirmed_at: Time.now
+    )
+  end
+
+  def add_user_id_to_project_member
+    ProjectMember.find_by(id: project_member_id).update(user_id: id)
   end
 end

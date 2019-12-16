@@ -11,7 +11,12 @@ import {
   PROJECT_MEMBER_CREATED,
   CREATING_PROJECT_MEMBER
 } from './types'
-import { errorNotify } from './notificationsActions'
+import { errorNotify, successNotify } from './notificationsActions'
+import {
+  CREATING_MEMBER,
+  ACTIVE_MEMBERS,
+  PENDING_MEMBERS
+} from '../components/dashboard/projectSettings/memberManagment/membersTypes'
 
 const projectMembersFetched = payload => ({
   type: ACTIVE_MEMBERS_FETCHED_SUCCESS,
@@ -122,17 +127,48 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
   return (
     axios.patch(`/api/v1/projects/${projectId}/members/${values.id}`, request, headers)
       .then(response => {
-        if (type === 'activeMemebers') {
+        if (type === ACTIVE_MEMBERS) {
           dispatch(updateActiveMembers(response.data))
-        } else if (type === 'pendingMemebers') {
+        } else if (type === PENDING_MEMBERS) {
           dispatch(updatePendingMembers(response.data))
-        } else if (type === 'creating') {
+        } else if (type === CREATING_MEMBER) {
           dispatch(initialize('project_member_form', response.data))
         }
       })
       .catch(response => {
         dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
+      })
+  )
+}
+
+export const startConfirmMember = memberToken => (dispatch, getState) => {
+  const { token } = getState().user
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.get(`/api/v1/projects/confirm_member?token=${memberToken}`, headers)
+      .then(response => {
+        if (response.status === 200) {
+          localStorage.removeItem('newUserToken')
+          dispatch(successNotify('System', 'You successfully accepted the invite!'))
+        }
+        return response
+      })
+      .catch(({ response }) => {
+        if (response.status === 422) {
+          const text = response.data && response.data.token
+            ? response.data.token.map(p => p.replace('problem:', '')).join(',')
+            : 'Something went wrong!'
+          dispatch(errorNotify('Problem', text))
+        } else if (response.status === 401) {
+          localStorage.setItem('newUserToken', memberToken)
+          const text = response.data && response.data.token
+            ? response.data.token.map(p => p.replace('problem:', '')).join(',')
+            : 'Please login with the correct memberID'
+          dispatch(errorNotify('Problem', text))
+        }
+        return response
       })
   )
 }
