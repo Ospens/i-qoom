@@ -4,13 +4,13 @@ import classnames from 'classnames'
 import {
   reduxForm, formValueSelector, FormSection
 } from 'redux-form'
-import Terms from './Terms'
+import termsAndConditions from './Terms'
 import { startCreateProject, startUpdateProject } from '../../../actions/projectActions'
 // import FirstAdmin from './FirstAdmin'
 // import SecondAdmin from './SecondAdmin'
-import ProjectName from './ProjectName'
-import CompanyData from './CompanyData'
-import Successfull from './Successfull'
+import projectName from './ProjectName'
+import companyData from './CompanyData'
+import successfull from './Successfull'
 import BillingAddress from './BillingAddress'
 
 const selector = formValueSelector('project_form')
@@ -74,19 +74,13 @@ function ModalContent({
       {!infoModals && <div className="new-modal__header"><h4>Create New Project</h4></div>}
       {(() => {
         if (step === 1) {
-          return (
-            <Terms
-              closeModal={handleClose}
-              termsAccepted={terms}
-              nextStep={() => changeStep(1)}
-            />
-          )
+          return termsAndConditions(handleClose, terms, () => changeStep(1))
         } if (step === 2) {
-          return <ProjectName closeModal={handleClose} backStep={val => backStep(val)} />
+          return projectName(handleClose, val => backStep(val))
         } if (step === 3) {
           return (
             <FormSection name="company_data">
-              <CompanyData closeModal={handleClose} backStep={val => backStep(val)} />
+              {companyData(handleClose, val => backStep(val))}
             </FormSection>
           )
         } if (step === 4) {
@@ -96,7 +90,7 @@ function ModalContent({
             </FormSection>
           )
         } if (step === 5) {
-          return <Successfull closeModal={handleClose} />
+          return successfull(handleClose)
         }
         return <Fragment />
       })()}
