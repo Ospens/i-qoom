@@ -10,23 +10,11 @@ class User < ApplicationRecord
 
   has_many :projects
 
+  has_many :project_members
+
   has_many :project_administrators,
            -> { admins },
            class_name: "ProjectMember"
-
-  has_many :admin_projects,
-           ->(user) {
-             joins(members: :role)
-             .where(project_members: { user_id: user.id })
-             .where(roles: { title: "Project Administrator" })
-           },
-           class_name: "Project"
-
-  has_many :project_members
-  has_many :member_projects,
-           through: :project_members,
-           source: :project
-
 
   has_many :documents, class_name: 'DocumentMain'
   has_many :document_rights,
@@ -81,6 +69,21 @@ class User < ApplicationRecord
   after_create :send_confirmation_email,
                unless: -> { confirmed? || project_member_id.present? }
   after_create :add_user_id_to_project_member, if: -> { project_member_id.present? } 
+
+  def member_projects
+    Project.joins(:members)
+           .where(project_members: {
+             user_id: self.id,
+             creation_step: ProjectMember.creation_steps["active"]
+           })
+  end
+
+  def admin_projects
+    member_projects.joins(members: :role)
+                   .where(roles: { 
+                     title: "Project Administrator"
+                   })
+  end
 
   def confirmed?
     confirmed_at.present?

@@ -5,8 +5,26 @@ describe "Project", type: :request do
   let(:project) { FactoryBot.create(:project_name_step, user_id: user.id) }
   let(:second_project) { FactoryBot.create(:project, user_id: user.id) }
   let(:second_user) { FactoryBot.create(:user) }
-  let(:different_project) { FactoryBot.create(:project,
-                                              user_id: second_user.id) }
+  let(:third_project) { FactoryBot.create(:project,
+                                          user_id: second_user.id) }
+  let(:project_member) { 
+    FactoryBot.create(:project_member,
+                      project_id: second_project.id,
+                      user: second_user)
+  }
+
+  let(:pending_project_member) {
+    FactoryBot.create(:project_member_pending,
+                      project_id: second_project.id,
+                      user: FactoryBot.create(:user))
+  }
+
+  let(:project_admin) {
+    FactoryBot.create(:project_member,
+                      project_id: third_project.id,
+                      user: user)    
+  }
+
   let(:json) { JSON(response.body) }
 
   
@@ -15,30 +33,93 @@ describe "Project", type: :request do
     let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_without_user) { { "CONTENT_TYPE" => "application/json" } }
     context "index" do
-      it 'should get a status "success" and render projects' do
-        get "/api/v1/projects",
-             headers: headers
-        expect(response).to have_http_status(:success)
-        expect(json.map { |h| h["id"] }).to include(*user.projects.map(&:id))
+      context "should get a status 'success' and render projects" do
+        it "if signed in as a creator" do
+          get "/api/v1/projects",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).to include(*user.projects.map(&:id))
+        end
+        it "signed in as an invited project member" do
+          project_member.reload
+          third_project.reload
+          get "/api/v1/projects",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }.sort).to\
+            include(*[project_member.project_id,
+                      third_project.id].sort)
+        end
+        it "signed in as an invited project admin" do
+          project_admin.reload
+          get "/api/v1/projects",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).to\
+            eq([third_project.id])
+        end
+        it "signed in as invited project member who didn't accept invitation" do
+          pending_project_member.reload
+          second_project.reload
+          get "/api/v1/projects",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.map { |h| h["id"] }).not_to\
+            include(pending_project_member.project_id)
+        end
       end
-      it 'should get a status "success" and render projects if signed in as an invited member' do
-        project_member =
-          FactoryBot.create(:project_member,
-                            project_id: project.id,
-                            user: second_user)
-        get "/api/v1/projects",
-             headers: headers_for_second_user
-        expect(response).to have_http_status(:success)
-        expect(json.map { |h| h["id"] }).to include(*project_member.project_id)
-      end 
     end
     context "show" do
-      it 'should get a status "success" and render the project' do
-        get "/api/v1/projects/#{project.id}",
-             headers: headers
-        expect(response).to have_http_status(:success)
-        expect(json.values).to include(project.name)
-      end     
+      context "should get a status 'success' and render the project" do
+        it 'if signed in as a creator' do
+          get "/api/v1/projects/#{project.id}",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(project.name)
+        end
+        it 'if signed in as an invited member' do
+          project_member.reload
+          get "/api/v1/projects/#{second_project.id}",
+              headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(second_project.name)
+        end
+        it "if signed in as an invited admin" do
+          project_admin.reload
+          get "/api/v1/projects/#{third_project.id}",
+              headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(third_project.name)    
+        end
+      end
+      context "should get a status forbidden" do
+        it "if signed in as member, but project is not completed" do
+          new_project_member =
+            FactoryBot.create(:project_member,
+                              project_id: project.id,
+                              user: second_user)
+          get "/api/v1/projects/#{project.id}",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(project.name)
+        end
+        it "if a signed in user haven't accept the invitation" do
+          pending_project_member.reload
+          second_project.reload
+          get "/api/v1/projects/#{second_project.id}",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(second_project.name)
+        end
+        it "if a signed in user doesn't have the membership" do
+          new_project = FactoryBot.create(:project)
+          new_project.reload
+          get "/api/v1/projects/#{new_project.id}",
+               headers: headers
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(new_project.name)          
+        end
+      end
     end
     context  "create (creation_step 'name')" do
       it 'should get a status "success" and add the name to the project' do
@@ -245,8 +326,8 @@ describe "Project", type: :request do
              params: { project_member_ids: member_ids }.to_json,
              headers: headers
         expect(response).to have_http_status(:ok)
-        expect(ActionMailer::Base.deliveries.map(&:to).map(&:first)).to\
-          eq(project.members.map(&:email) - [project.members.where(creation_step: "active").first.email])
+        expect(ActionMailer::Base.deliveries.map(&:to).map(&:first).sort).to\
+          eq((project.members.map(&:email) - [project.members.where(creation_step: "active").first.email]).sort)
         expect(ProjectMember.where(id: member_ids).first.inviter_id).to eq(user.id)
       end
       it "shouldn't invite members" do
