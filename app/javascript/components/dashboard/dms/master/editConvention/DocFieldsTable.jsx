@@ -78,7 +78,7 @@ class DocFieldsTable extends Component {
       </div>
       <div className='draggable-container undraggable'>
         <div className='form-group'>
-          <div className='checkbox-field justify-content-center'>
+          <div className='d-flex align-items-center justify-content-center'>
             <input
               name='generate_id'
               id='generate_id'

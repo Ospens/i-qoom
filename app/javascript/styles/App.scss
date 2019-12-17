@@ -441,7 +441,11 @@ footer:after,
 
 .checkbox-field {
   display: flex;
-  align-items: center;
+
+  .text-label {
+    line-height: 1;
+    color: var(--color-black);
+  }
 }
 
 .btn-back {

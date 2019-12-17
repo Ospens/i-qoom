@@ -10,7 +10,6 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import DocIdModal from '../../DocIdModal'
 import SelectField from '../../../../../elements/SelectField'
-import CheckboxField from '../../../../../elements/CheckboxField'
 import DatePickerField from '../../../../../elements/DatePickerField'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
@@ -19,6 +18,7 @@ import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../
 import { initValues } from '../../initDocId'
 import DocumentIdInputs from '../../DocumentIdInputs'
 import { infoNotify } from '../../../../../actions/notificationsActions'
+import CheckBoxField from '../../../../../elements/CheckBoxField'
 
 const codificationString = [
   'originating_company',
@@ -232,11 +232,13 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
               docNumberValue={docNumberValue}
             />
             <div className='form-group'>
-              <CheckboxField
-                name='generate_id'
-                checkBoxId='generate_id'
+              <Field
+                component={CheckBoxField}
+                id="generate_id"
+                name="generate_id"
                 labelClass='form-check-label mr-2'
                 text='Generate Document ID through file code'
+                className="d-flex justify-content-center"
               />
             </div>
             {groupedFields[columns[0]].map((field, index) => (

@@ -1,6 +1,7 @@
 import React from 'react'
 import CompanyFields from '../../../elements/forms/CompanyFields'
-import CheckboxField from '../../../elements/CheckboxField'
+import { Field } from 'redux-form'
+import CheckBoxField from '../../../elements/CheckBoxField'
 
 function companyData(closeModal, backStep) {
   return (
@@ -10,12 +11,14 @@ function companyData(closeModal, backStep) {
           Please enter company data
         </h6>
         <CompanyFields />
-        <div className="form-group text-left rect-checkbox">
-          <CheckboxField
+        <div className="form-group">
+          <Field
+            component={CheckBoxField}
+            id="same_for_billing_address"
             name="same_for_billing_address"
-            checkBoxId="billing_address"
-            labelClass="form-check-label mr-2"
+            labelClass="mr-2"
             text="This is also the billing address"
+            className="d-flex justify-content-center"
           />
         </div>
       </div>

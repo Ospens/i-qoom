@@ -103,8 +103,6 @@ export const startCreateProjectMember = (values, projectId) => (dispatch, getSta
   return (
     axios.post(`/api/v1/projects/${projectId}/members/`, request, headers)
       .then(response => {
-        dispatch(createProjectMember(response.data))
-        // dispatch(startFetchActiveProjectMembers(projectId))
         dispatch(initialize('project_member_form', response.data))
       })
       .catch(response => {
@@ -131,6 +129,8 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
           dispatch(updateActiveMembers(response.data))
         } else if (type === PENDING_MEMBERS) {
           dispatch(updatePendingMembers(response.data))
+        } else if (response.data.creation_step === 'pending' && type === CREATING_MEMBER) {
+          dispatch(createProjectMember(response.data))
         } else if (type === CREATING_MEMBER) {
           dispatch(initialize('project_member_form', response.data))
         }
