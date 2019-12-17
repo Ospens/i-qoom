@@ -1,20 +1,20 @@
 import React from 'react'
 import { Field } from 'redux-form'
 import DropDown from '../../../../../../elements/DropDown'
-import CheckField from '../../../../../../elements/CheckField'
+import CheckBoxField from '../../../../../../elements/CheckBoxField'
 
 function DropDownRow({ index, valueTitle, id }) {
   return (
     <div className="access-rights__drop-down-row">
       <span>{valueTitle}</span>
       <Field
-        component={CheckField}
+        component={CheckBoxField}
         id={`document_rights[${index}].enabled${id}`}
         name={`document_rights[${index}].enabled`}
         className="form-group"
       />
       <Field
-        component={CheckField}
+        component={CheckBoxField}
         id={`document_rights[${index}].view_only${id}`}
         name={`document_rights[${index}].view_only`}
         className="form-group"

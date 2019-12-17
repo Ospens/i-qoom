@@ -12,13 +12,13 @@ import {
 import DraggableDropDown from './DraggableDropDown'
 import InputField from '../../../../../elements/InputField'
 import SelectField from '../../../../../elements/SelectField'
-import CheckboxField from '../../../../../elements/CheckboxField'
 import dropdownIcon from '../../../../../images/form_1.svg'
 import textIcon from '../../../../../images/form_2.svg'
 import textareaIcon from '../../../../../images/form_3.svg'
 import uploadIcon from '../../../../../images/form_4.svg'
 import dateIcon from '../../../../../images/form_5.svg'
 import { required } from '../../../../../elements/validations'
+import CheckBoxField from '../../../../../elements/CheckBoxField'
 
 const selector = formValueSelector('convention_input_form')
 
@@ -140,20 +140,25 @@ function CreateFieldForm({ handleSubmit, initialized, handleClose }) {
               validate={[required]}
             />
             <div className="d-flex checkboxes-row">
-              <CheckboxField
+              <Field
+                component={CheckBoxField}
+                id="required"
                 name="required"
-                checkBoxId="required"
                 labelClass="form-check-label mr-2"
                 text="Required field"
+                className="d-flex justify-content-center"
                 disabled={codificationKind}
               />
               {fieldType === 'select_field'
               && (
-                <CheckboxField
+                <Field
+                  component={CheckBoxField}
+                  id="enable_multi_selections"
                   name="enable_multi_selections"
-                  checkBoxId="enable_multi_selections"
                   labelClass="form-check-label mx-2"
                   text="Enable multi selections"
+                  className="d-flex justify-content-center"
+                  disabled={codificationKind}
                 />
               )
               }
