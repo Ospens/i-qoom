@@ -116,11 +116,11 @@ function DMS() {
         path={`${path}/master/codifications/settings/`}
         component={CodificationSettings}
       />
-      <Page
+      {/*<Page
         title="Distribution group"
         path={`${path}/master/distribution_group/`}
         component={DistributionGroup}
-      />
+      />*/}
       <Page
         title="Add revision"
         titleContent={documentHeader('Add revision', doc)}

@@ -59,7 +59,6 @@ Rails.application.routes.draw do
 
       resources :projects, except: [:new, :edit] do
         collection do
-          get :confirm_admin
           get :confirm_member
         end
         member do
@@ -107,6 +106,7 @@ Rails.application.routes.draw do
           collection do
             get  :active
             get  :pending
+            get  :check_if_present
           end
         end
         resources :disciplines,

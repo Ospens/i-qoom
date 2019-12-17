@@ -8,12 +8,8 @@ describe Session, type: :model do
       session = Session.new(login: user.email, password: "password1")
       expect(session.valid?).to be_truthy
     end
-    it "with a username" do
-      session = Session.new(login: user.username, password: "password1")
-      expect(session.valid?).to be_truthy
-    end
-    it "with confirmation" do
-      session = Session.new(login: user.email, password: "password1")
+    it "with a member_id" do
+      session = Session.new(login: user.reload.member_id, password: "password1")
       expect(session.valid?).to be_truthy
     end
   end
@@ -25,7 +21,7 @@ describe Session, type: :model do
         expect(session.auth_token).to be_falsy
       end
       it "password" do
-        session = Session.new(login: [ user.username,
+        session = Session.new(login: [ user.member_id,
                                        user.email ].sample)
         expect(session.valid?).to be_falsy
       end
@@ -40,7 +36,7 @@ describe Session, type: :model do
       end
       it "password" do
         session =
-          Session.new(login: [ user.username,
+          Session.new(login: [ user.member_id,
                                user.email ].sample,
                       password: "password2")
         expect(session.valid?).to be_falsy
@@ -48,7 +44,9 @@ describe Session, type: :model do
     end
     it "without confirmation" do
       user.update_column(:confirmed_at, nil)
-      session = Session.new(login: user.email, password: "password1")
+      session = Session.new(login: [ user.email,
+                                     user.member_id ].sample,
+                            password: "password1")
       expect(session.valid?).to be_falsy
     end
   end

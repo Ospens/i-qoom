@@ -187,7 +187,7 @@
   &:not(.with-header) {
     padding-top: 125px;
   }
-  
+
   @media only screen and (max-width: 1400px) {
     button, a {
       font-size: 0.8em;
@@ -197,7 +197,7 @@
   .bordered {
     border-radius: 5px;
     border: 1px solid var(--color-grey);
-    
+
     .dms-content__header {
       padding-top: 45px;
       padding-top: 2.3vw;
@@ -238,7 +238,7 @@
     }
 
     .dms-content__header {
-      
+
       h4 {
         font-weight: 500;
         font-size: 1.5em;
@@ -265,7 +265,7 @@
 
   .dms-sidebar-menu {
     color: var(--color-text);
-    
+
     h4 {
       color: var(--color-labels);
       font-size: 14px;
@@ -320,14 +320,14 @@
           line-height: 1.1;
         }
 
-        .dms-sidebar-menu__sublitem {
+        .dms-sidebar-menu__subitem {
           padding: 10px;
           margin-left: 30px;
 
           .dms-sidebar-menu__sublink {
             padding-top: 5px;
             padding-bottom: 5px;
-            
+
             a {
               font-size: 15px;
               color: var(--color-blue);
@@ -353,7 +353,7 @@
 
     .dms-sidebar-menu__reviews-list {
       padding-left: 10px;
-      
+
       .dms-sidebar-menu__item {
         display: flex;
         align-content: center;
@@ -457,7 +457,7 @@
 
       .copy-to-folder-block {
         position: relative;
-  
+
         .btn-copy-to-folder {
           text-align: left;
           padding-left: 10px;
@@ -644,7 +644,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  
+
   h5 {
     margin-right: 15px;
   }
@@ -656,7 +656,7 @@
 
 .dms-content__project-phases {
   margin-top: 35px;
-  
+
   span {
     color: var(--color-labels);
   }
@@ -795,7 +795,7 @@ label.rounded-label {
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   span {
     font-size: 16px;
   }
@@ -809,7 +809,7 @@ label.rounded-label {
     color: yellow !important;
     background: lightyellow;
   }
-  
+
   &.coral {
     color: coral !important;
     background: lightcoral;
@@ -844,14 +844,14 @@ label.rounded-label {
     grid-gap: 3em;
     grid-template-rows: 3em;
   }
-  
+
   .document-show__info-row {
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 4em;
     grid-gap: 2em;
     align-items: center;
-    
+
     label, span {
       align-items: center;
       display: flex;
@@ -1076,7 +1076,7 @@ input.search-input {
           color: var(--color-blue);
         }
       }
-      
+
       .review-subject__rows {
         width: 100%;
 
@@ -1093,7 +1093,7 @@ input.search-input {
         .review-subject__second-row {
           display: flex;
           min-height: 40px;
-          
+
           span.status, span.row-info {
             -webkit-box-flex: 0;
             flex: 0 0 30%;
@@ -1102,7 +1102,7 @@ input.search-input {
             align-items: center;
             align-content: center;
             justify-content: center;
-            
+
             &.row-info {
               color: var(--color-labels);
             }
@@ -1135,7 +1135,7 @@ input.search-input {
 
     .review-subject__user-avatar-block {
       position: relative;
-      
+
       .member-count {
         display: flex;
         width: 21px;
@@ -1214,7 +1214,7 @@ input.search-input {
       float: right;
     }
   }
-  
+
   .incoming-message {
     height: 100%;
     display: flex;
@@ -1546,11 +1546,11 @@ input.search-input {
   &.for-project-code {
     margin-top: 10px !important;
   }
-  
+
   .tooltip-text-block {
     color: #fff;
   }
-  
+
   &:before {
     background-color: var(--color-text) !important;
     border-color: var(--color-text) !important;
@@ -1575,11 +1575,11 @@ input.search-input {
   box-shadow: 1px 1px 0px 0px #FF0042 !important;
   margin-right: 30px !important;
   z-index: 999 !important;
-  
+
   .tooltip-text-block {
     color: #fff;
   }
-  
+
   &.for-project-code {
     margin-right: 0 !important;
     margin-top: 10px !important;
@@ -1789,7 +1789,7 @@ input.search-input {
   flex-wrap: wrap;
   justify-content: flex-start;
   min-width: 340px;
-  
+
   .UserAvatar--inner {
     margin-right: -10px;
   }
@@ -1816,7 +1816,7 @@ input.search-input {
       padding-top: 20px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--color-grey);
-      
+
       &:last-of-type {
         border-bottom: none;
       }
@@ -1835,7 +1835,7 @@ input.search-input {
         max-height: 0;
         overflow: hidden;
         margin-bottom: 0;
-        
+
         .filter-grid-subrow {
           display: flex;
           padding-top: 0.5em;
@@ -1923,7 +1923,7 @@ input.search-input {
     justify-content: center;
     padding-bottom: 20px;
     margin-bottom: 23px;
-    
+
     span {
       max-width: 50%;
     }
@@ -1938,7 +1938,7 @@ input.search-input {
   align-items: center;
   justify-items: center;
   padding-top: 22px;
-  
+
   .form-control {
     padding-right: 0;
     padding-left: 0;
@@ -1963,7 +1963,7 @@ input.search-input {
   padding-bottom: 43px;
   padding-top: 43px;
   border-radius: 5px;
-  
+
   .codification-codes-title-column {
     display: grid;
     grid-template-rows: 40px 36px 1fr;
@@ -1984,7 +1984,7 @@ input.search-input {
       text-overflow: ellipsis;
       overflow: hidden;
     }
-    
+
     .codification-codes-title-column__title {
       border-bottom: 1px solid #F2F3F3;
       white-space: nowrap;
@@ -2098,7 +2098,7 @@ input.search-input {
 }
 
 .modal-conventions-list {
-  
+
   .conv-info {
     margin-left: 91px;
     color: var(--color-text);
@@ -2337,7 +2337,7 @@ input.search-input {
 
   .new-modal__footer {
     justify-content: center;
-    
+
     .btn-purple {
       width: 400px;
     }
@@ -2454,7 +2454,7 @@ input.search-input {
             border-color: #ced4da;
           }
         }
-        
+
         .add-button {
           margin-bottom: 50px;
         }
@@ -2480,7 +2480,7 @@ input.search-input {
         }
       }
     }
-    
+
     .codification-codes-values-row {
       display: grid;
       grid-template-rows: 1fr 1fr 1fr;
@@ -2727,7 +2727,7 @@ input.search-input {
     border-radius: 10px;
     margin-top: 1rem;
     color: #fff;
-    
+
     span {
       line-height: 1;
     }
@@ -2845,7 +2845,7 @@ span.column-title {
         flex-direction: column;
         padding-top: 10px;
         padding-bottom: 10px;
-        
+
         .common-row {
           display: flex;
           margin-right: 30px;
@@ -2861,7 +2861,7 @@ span.column-title {
   padding-bottom: 1.5rem !important;
   grid-template-columns: 1fr 1fr;
   grid-gap: 5vw;
-  
+
   label {
     margin: 0;
   }

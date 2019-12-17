@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import ActiveMembers from './memberManagment/ActiveMembers'
-import PendingMembers from './memberManagment/PendingMembers'
 import NewModal from '../../../elements/Modal'
 import Tabs from '../../../elements/Tabs'
 import AddMember from './memberManagment/AddMember'
 import DisciplineList from './memberManagment/DisciplineList'
 import RoleList from './memberManagment/RoleList'
+import MembersBlock from './memberManagment/MembersBlock'
+import { ACTIVE_MEMBERS, PENDING_MEMBERS } from './memberManagment/membersTypes'
 
 const modalContent = (type, closeModal) => {
   if (type === 'addMember') {
@@ -71,10 +71,10 @@ function MemberManagement() {
       </div>
       <Tabs>
         <div label="Active members">
-          <ActiveMembers projectId={projectId} />
+          <MembersBlock projectId={projectId} type={ACTIVE_MEMBERS} />
         </div>
         <div label="Pending members">
-          <PendingMembers projectId={projectId} />
+          <MembersBlock projectId={projectId} type={PENDING_MEMBERS} />
         </div>
       </Tabs>
       <NewModal

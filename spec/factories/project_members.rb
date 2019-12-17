@@ -1,6 +1,5 @@
 FactoryBot.define do
-  factory :project_member_employment_type,
-      class: "ProjectMember" do
+  factory :project_member_employment_type, class: "ProjectMember" do
     project
     creation_step { "employment_type" }
     employment_type { ProjectMember.employment_types.keys.sample }
@@ -21,6 +20,13 @@ FactoryBot.define do
             factory :project_member do
               creation_step { "active" }
               user
+              factory :project_admin do
+                after(:create) do |project_member|
+                  project_member.role =
+                    project_member.project.roles.find_by(title: "Project Administrator")
+                  project_member.save
+                end
+              end
             end
           end
         end

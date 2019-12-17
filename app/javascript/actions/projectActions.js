@@ -13,7 +13,7 @@ import {
   PROJECT_FETCH_SUCCESS,
   DMS_USERS_FETCHED
 } from './types'
-import { addNotification } from './notificationsActions'
+import { errorNotify, successNotify } from './notificationsActions'
 import { paramsToFormData } from './documentsActions'
 
 const projectCreated = payload => ({
@@ -96,7 +96,7 @@ export const startUpdateProject = (values, afterUpdate) => (dispatch, getState) 
         if (afterUpdate) afterUpdate(response.data)
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -110,7 +110,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   const request = {
     project: {
       ...values,
-      creation_step: 'admins'
+      creation_step: 'name'
     }
   }
 
@@ -121,7 +121,7 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
         afterCreate(response.data)
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -136,7 +136,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
         dispatch(projectsFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -144,14 +144,19 @@ export const startFetchProjects = () => (dispatch, getState) => {
 export const startFetchProject = id => (dispatch, getState) => {
   const { token } = getState().user
   const headers = { headers: { Authorization: token } }
-
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
         dispatch(projectFetched(response.data))
+        return response
       })
-      .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      .catch(({ response }) => {
+        if (response.status === 403) {
+          dispatch(errorNotify('Problem', 'Access denied!'))
+        } else {
+          dispatch(errorNotify('Problem'))
+        }
+        return response
       })
   )
 }
@@ -163,11 +168,11 @@ export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => 
   return (
     axios.delete(`/api/v1/projects/${projectId}/admins/${adminId}`, headers)
       .then(response => {
-        dispatch(addNotification({ title: 'Projects', text: response.data.message, type: 'success' }))
+        dispatch(successNotify('Projects', response.data.message))
         dispatch(adminDeleted(adminId))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -185,10 +190,10 @@ export const starUpdateAdmin = (projectId, values) => (dispatch, getState) => {
     axios.put(`/api/v1/projects/${projectId}`, request, headers)
       .then(response => {
         dispatch(projectUpdated(response.data))
-        dispatch(addNotification({ title: 'Projects', text: 'The project admin were successfully saved!', type: 'success' }))
+        dispatch(successNotify('Projects', 'The project admin were successfully saved!'))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -201,10 +206,10 @@ export const startResendConfirmAdmin = (projectId, adminId) => (dispatch, getSta
   return (
     axios.get(`/api/v1/projects/${projectId}/admins/${adminId}/resend_confirmation`, headers)
       .then(() => {
-        dispatch(addNotification({ title: 'Projects', text: 'A new invitation has been sent to this address!', type: 'success' }))
+        dispatch(successNotify('Projects', 'A new invitation has been sent to this address!'))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -219,7 +224,7 @@ export const getAdminInfo = (projectId, adminId) => (dispatch, getState) => {
         dispatch(adminUpdated(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -229,28 +234,47 @@ export const updateProjectCode = (projectId, projectCode) => (dispatch, getState
   const headers = { headers: { Authorization: token } }
 
   return (
-    axios.post(`/api/v1/projects/${projectId}/update_project_code`, { project_code: projectCode }, headers)
+    axios.post(`/api/v1/projects/${projectId}/update_project_code`,
+      { project_code: projectCode }, headers)
       .then(() => {
         dispatch(projectCodeUpdated(projectCode))
-        dispatch(addNotification({ title: 'Projects', text: 'Project code was updated!', type: 'success' }))
+        dispatch(successNotify('Projects', 'Project code was updated!'))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
 
-export const dmsUsers = projectId => (dispatch, getState) => {
+export const dmsUsers = (projectId, teams = false) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
-
+  let url = `/api/v1/projects/${projectId}/dms_users`
+  if (teams) {
+    url += '?scope=teams'
+  }
   return (
-    axios.get(`/api/v1/projects/${projectId}/dms_users`, headers)
+    axios.get(url, headers)
       .then(({ data }) => {
         dispatch({ type: DMS_USERS_FETCHED, payload: data })
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
+      })
+  )
+}
+
+export const inviteMembers = (projectId, memberIds) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/invite`, { project_member_ids: memberIds }, headers)
+      .then(() => {
+        dispatch(successNotify('Projects', 'The invites was sent!'))
+      })
+      .catch(() => {
+        dispatch(errorNotify('Problem'))
       })
   )
 }

@@ -47,6 +47,15 @@ class Api::V1::ProjectMembersController < ApplicationController
     end
   end
 
+  def check_if_present
+    @user = User.find_by(email: params[:email])
+    if @user.present?
+      head :ok
+    else
+      head :not_found
+    end
+  end
+
   private
 
   def project_member_params

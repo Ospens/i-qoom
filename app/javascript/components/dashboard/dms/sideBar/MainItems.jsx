@@ -1,10 +1,17 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams, useRouteMatch } from 'react-router-dom'
 import DmsSideBarItem from './DmsSideBarItem'
 import Folders from './Folders'
 
-const menuItems = (projectCode, dmsSections, projectId, masterPath) =>[
+const codificationTitle = (
+  <div>
+    <span>Codification 1</span>
+    <span className="icon-check_1 ml-2" />
+  </div>
+)
+
+const menuItems = (projectCode, dmsSections, projectId, masterPath) => [
   {
     title: 'Overview',
     icon: 'icon-task-checklist-check',
@@ -47,7 +54,7 @@ const masterMenu = masterPath => [
       {
         title: 'Teams',
         path: `${masterPath}/access_rights/teams/`
-      },
+      }
     ]
   },
   {
@@ -62,7 +69,7 @@ const masterMenu = masterPath => [
     root: `${masterPath}/codifications/`,
     nested: [
       {
-        title: <div>Codification 1 < span className='icon-check_1 ml-2' /></div>,
+        title: codificationTitle,
         path: `${masterPath}/codifications/1/`
       },
       {
@@ -76,14 +83,14 @@ const masterMenu = masterPath => [
       {
         title: 'Settings',
         path: `${masterPath}/codifications/settings/`
-      },
+      }
     ]
   },
-  {
-    title: 'Distribution groups',
-    icon: 'icon-business-team-goal',
-    path: `${masterPath}/distribution_group/`
-  },
+  // {
+  //   title: 'Distribution groups',
+  //   icon: 'icon-business-team-goal',
+  //   path: `${masterPath}/distribution_group/`
+  // },
   {
     title: 'Review management',
     icon: 'icon-task-list-settings',
@@ -96,19 +103,20 @@ function MainItems() {
   const { path } = useRouteMatch()
   const projectCode = useSelector(({ projects }) => projects.current.project_code)
   const dmsSections = useSelector(({ projects }) => projects.current.dmsSections)
-  const folders = useSelector(({ folders }) => folders.allFolders)
 
   // TODO: Need check for master's permit
   const masterPath = `/dashboard/projects/${projectId}/documents/master`
 
   return (
-    <div className='dms-sidebar-menu__block'>
+    <div className="dms-sidebar-menu__block">
       <h4>DMS menu</h4>
-      <ul className='dms-sidebar-menu__list'>
-        {menuItems(projectId, dmsSections, projectId, masterPath).map(({ path, title, icon, root }, i) => (
-          <React.Fragment key={i}>
+      <ul className="dms-sidebar-menu__list">
+        {menuItems(projectId, dmsSections, projectId, masterPath).map(({
+          path: menuPath, title, icon, root
+        }) => (
+          <React.Fragment key={`${menuPath}${title}`}>
             <DmsSideBarItem
-              path={path}
+              path={menuPath}
               label={title}
               icon={icon}
               root={root}
@@ -118,16 +126,18 @@ function MainItems() {
       </ul>
       {(() => {
         if (path.includes('dashboard/projects/:projectId/documents/folders')) {
-          return <Folders folders={folders} projectId={projectId} />
-        } else if (path.includes('/master/')) {
+          return <Folders />
+        } if (path.includes('/master/')) {
           return (
             <React.Fragment>
               <h4>Master settings</h4>
-              <ul className='dms-sidebar-menu__list'>
-                {masterMenu(masterPath).map(({ path, title, icon, root, nested }, i) => (
-                  <React.Fragment key={i}>
+              <ul className="dms-sidebar-menu__list">
+                {masterMenu(masterPath).map(({
+                  path: menuPath, title, icon, root, nested
+                }) => (
+                  <React.Fragment key={`${menuPath}${title}`}>
                     <DmsSideBarItem
-                      path={projectCode ? path : `#`}
+                      path={projectCode ? menuPath : '#'}
                       label={title}
                       icon={icon}
                       root={root}
@@ -136,8 +146,10 @@ function MainItems() {
                   </React.Fragment>
                 ))}
               </ul>
-            </React.Fragment>)
+            </React.Fragment>
+          )
         }
+        return <Fragment />
       })()}
     </div>
   )

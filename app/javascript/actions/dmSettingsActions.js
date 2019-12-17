@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { addNotification } from './notificationsActions'
+import { errorNotify } from './notificationsActions'
 
 const getAttributes = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
@@ -10,7 +10,7 @@ const getAttributes = projectId => (dispatch, getState) => {
       .then(() => {
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'DMS', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('DMS'))
       })
   )
 }

@@ -7,28 +7,27 @@ import Terms from './Terms'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import SignedUp from './SignedUp'
-import SignUpFromEmail from './SignUpFromEmail'
+import MemberConfirmation from './MemberConfirmation'
 import RestorePassword from './RestorePassword'
 import NewPassword from './NewPassword'
 
 function LandingPage({ location }) {
-  const [showExamples, setshowExamples] = useState(false)
-  const toggleExamples = useCallback(() => { setshowExamples(!showExamples) }, [showExamples])
-  const mainProps = { showExamples, toggleExamples: toggleExamples }
-
+  const [examples, setExamples] = useState(false)
+  const toggleExamples = useCallback(() => { setExamples(!examples) }, [examples])
+  const mainProps = { showExamples: examples, toggleExamples }
   const editable = location.pathname === '/admin_panel'
   return (
-    <div className='landing-page'>
+    <div className="landing-page">
       <Switch>
         <Route exact path={['/', '/admin_panel']} render={() => <MainContent {...mainProps} editable={editable} />} />
-        <Route path='/imprint' component={Imprint} />
-        <Route path='/terms' component={Terms} />
+        <Route path="/imprint" component={Imprint} />
+        <Route path="/terms" component={Terms} />
         <Route exact={false} path={['/signin/:type/:msg', '/signin']} render={props => <SignIn {...props} />} />
-        <Route path='/signup' render={props => <SignUp {...props} />} />
-        <Route path='/restore-password' render={props => <RestorePassword {...props} />} />
-        <Route path='/new-password/:token/' render={props => <NewPassword {...props} />} />
-        <Route path='/signedup' render={props => <SignedUp {...props} />} />
-        <Route path='/sign-up-from-email' render={props => <SignUpFromEmail {...props} />} />
+        <Route path="/signup" render={props => <SignUp {...props} />} />
+        <Route path="/restore-password" render={props => <RestorePassword {...props} />} />
+        <Route path="/new-password/:token/" render={props => <NewPassword {...props} />} />
+        <Route path="/signedup" render={props => <SignedUp {...props} />} />
+        <Route path="/member-confirmation/:token/" render={props => <MemberConfirmation {...props} />} />
       </Switch>
 
       <Footer />

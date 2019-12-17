@@ -15,6 +15,7 @@ import {
   startUpdateProjectMember
 } from '../../../../actions/projectMembersActions'
 import { required, email } from '../../../../elements/validations'
+import { CREATING_MEMBER } from './membersTypes'
 
 function Footer({
   handleSubmit, onSubmit, step, changeStep, closeModal
@@ -203,9 +204,9 @@ function AddMember({ handleSubmit, closeModal }) {
     if (!values.id) {
       dispatch(startCreateProjectMember(values, projectId)).then(nextStep)
     } else if (step === 4) {
-      dispatch(startUpdateProjectMember(values, projectId, 'creating')).then(closeModal)
+      dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(closeModal)
     } else {
-      dispatch(startUpdateProjectMember(values, projectId, 'creating')).then(nextStep)
+      dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(nextStep)
     }
   }, [step, dispatch, projectId, nextStep, closeModal])
 

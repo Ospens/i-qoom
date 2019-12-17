@@ -6,18 +6,46 @@ describe "User", type: :request do
   let(:json) { JSON(response.body) }
 
   context "registration" do
-    it 'should get a status "error"' do
-      post "/api/v1/users",
-        params: { user: user.slice(:email) }.to_json,
-        headers: headers
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
-
     it 'should get a status "success"' do
       post "/api/v1/users",
         params: { user: user }.to_json,
         headers: headers
       expect(response).to have_http_status(:success)
+      expect(ActionMailer::Base.deliveries.count).to eq(1)
+    end
+    it 'should get a status "error"' do
+      post "/api/v1/users",
+        params: { user: user.slice(:email) }.to_json,
+        headers: headers
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(ActionMailer::Base.deliveries.count).to eq(0)
+    end
+  end
+
+  context "project member registration" do
+    let(:project_member) { FactoryBot.create(:project_member_pending) }
+    it 'should get a status "success" with project_member_id' do
+      post "/api/v1/users",
+        params: { user: { project_member_id: project_member.id,
+                          password: "password1",
+                          password_confirmation: "password1",
+                          accept_terms_and_conditions: "1" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(:success)
+      expect(project_member.reload.user).to be_present
+      expect(json["member_id"]).to be_present
+      expect(ActionMailer::Base.deliveries.count).to eq(0)
+    end
+
+    it "shouldn't get a status 'success' without project_member_id" do
+      post "/api/v1/users",
+        params: { user: { password: "password1",
+                          password_confirmation: "password1",
+                          accept_terms_and_conditions: "1" } }.to_json,
+        headers: headers
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(User.count).to eq 0
+      expect(ActionMailer::Base.deliveries.count).to eq(0)
     end
   end
 

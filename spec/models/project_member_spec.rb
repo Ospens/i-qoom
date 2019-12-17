@@ -84,23 +84,19 @@ RSpec.describe ProjectMember, type: :model do
   end
 
   context "add_user" do
-    it 'should be added on details step' do
+    it 'should work when email is present' do
       user = FactoryBot.create(:user)
       project_member =
         FactoryBot.create(:project_member_details, email: user.email)
       expect(project_member.user).to eq(user)
     end
-    it "shouldn't be added on earlier steps" do
+    it "shouldn't work without email" do
       user = FactoryBot.create(:user)
       project_member =
-        FactoryBot.create(:project_member_details,
-                          creation_step: [ :employment_type,
-                                           :company_type,
-                                           :company_data ].sample,
-                          email: user.email)
+        FactoryBot.create(:project_member_company_data)
       expect(project_member.user).not_to eq(user)
     end
-    it "shouldn't be replaced after updating email" do
+    it "shouldn't work after updating email" do
       user = FactoryBot.create(:user)
       second_user = FactoryBot.create(:user)
       project_member =
@@ -140,7 +136,7 @@ RSpec.describe ProjectMember, type: :model do
 
   context "validates_acceptance of dms and cms modules" do
     it 'if project admin' do
-      member = FactoryBot.create(:project).members.first
+      member = FactoryBot.create(:project).reload.members.first
       member.cms_module_access = false
       member.save
       member.reload
@@ -155,5 +151,14 @@ RSpec.describe ProjectMember, type: :model do
       expect(member.cms_module_access).to be_falsy
     end
   end
-
+  context "admin?" do
+    it "should be true" do
+      project_admin = FactoryBot.create(:project_admin)
+      expect(project_admin.admin?).to be_truthy
+    end
+    it "should be false" do
+      project_member = FactoryBot.create(:project_member)
+      expect(project_member.admin?).to be_falsey
+    end
+  end
 end
