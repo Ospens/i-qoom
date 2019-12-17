@@ -7,7 +7,7 @@ import {
   Link, useHistory, useParams
 } from 'react-router-dom'
 import { signUpUser } from '../../actions/userActions'
-import CheckField from '../../elements/CheckField'
+import CheckBoxField from '../../elements/CheckBoxField'
 import InputField from '../../elements/InputField'
 import { required, passwordsMatch } from '../../elements/validations'
 import { addNotification } from '../../actions/notificationsActions'
@@ -45,7 +45,7 @@ function firstStep(onSubmit, memberName) {
           />
           <div className="form-check col-12 text-center">
             <Field
-              component={CheckField}
+              component={CheckBoxField}
               className="form-check-label"
               name="accept_terms_and_conditions"
               id="accept_terms_and_conditions"

@@ -1,20 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import CheckboxField from '../../../elements/CheckboxField'
+import { Field } from 'redux-form'
+import CheckBoxField from '../../../elements/CheckBoxField'
 
 const terms = (closeModal, termsAccepted, nextStep) => (
   <React.Fragment>
     <div className="modal-body info-modal">
       <h5 className="text-center">
-        <span>Please read our</span>
+        <span>Please read our </span>
         <Link to="/terms" target="_blank">Terms and Conditions</Link>
-        <span>and check the box below</span>
+        <span> and check the box below</span>
       </h5>
 
-      <div className="checkbox-terms rect-checkbox">
-        <CheckboxField
+      <div className="checkbox-terms">
+        <Field
+          component={CheckBoxField}
+          id="terms"
           name="terms"
-          checkBoxId="terms"
           labelClass="mr-2"
           text="I have read and agree to the Terms"
         />

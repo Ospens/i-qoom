@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom'
 import classnames from 'classnames'
 import { signUpUser } from '../../actions/userActions'
 import SelectField from '../../elements/SelectField'
-import CheckField from '../../elements/CheckField'
+import CheckBoxField from '../../elements/CheckBoxField'
 import InputField from '../../elements/InputField'
 import countryList from './countriesCodes'
 import { required, email, maxLength15 } from '../../elements/validations'
@@ -123,7 +123,7 @@ function SecondStep({ prevStep }) {
       </div>
       <div className='form-check col-12 text-center'>
         <Field
-          component={CheckField}
+          component={CheckBoxField}
           className='form-check-label'
           name='accept_terms_and_conditions'
           id='accept_terms_and_conditions'
@@ -154,7 +154,7 @@ function SignUp({ handleSubmit }) {
     }
     return dispatch(signUpUser(values)).then(() => history.push({ pathname: '/signedup' }))
   }, [dispatch, step])
-    
+
   return (
     <div id='sign-up-form'>
       <form noValidate={true} onSubmit={handleSubmit(submit)}>
