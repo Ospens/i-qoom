@@ -60,6 +60,8 @@ RSpec.describe ProjectMember, type: :model do
       it { is_expected.to validate_presence_of(:email) }
       it { is_expected.to allow_value(Faker::Internet.email)
                             .for(:email) }
+      it { is_expected.to validate_uniqueness_of(:email)
+                            .scoped_to(:project_id) }
       it { is_expected.to validate_presence_of(:first_name) }
       it { is_expected.to validate_length_of(:first_name)
                                 .is_at_least(2)

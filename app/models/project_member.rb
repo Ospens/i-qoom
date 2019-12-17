@@ -73,7 +73,8 @@ class ProjectMember < ApplicationRecord
                } do
     validates :email,
               email: true,
-              presence: true
+              presence: true,
+              uniqueness: { scope: [:project_id] }
 
     validates :first_name,
               :last_name,
