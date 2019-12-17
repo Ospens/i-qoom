@@ -187,27 +187,27 @@ function AddMember({ handleSubmit, closeModal }) {
     switch (step) {
     case '1':
       values.creation_step = 'employment_type'
-      return
+      break
     case '2':
       values.creation_step = 'company_type'
-      return
+      break
     case '3':
       values.creation_step = 'company_data'
-      return
+      break
     case '4':
       values.creation_step = 'details'
-      return
+      break
     default:
       values.creation_step = 'employment_type'
     }
 
     if (!values.id) {
-      dispatch(startCreateProjectMember(values, projectId)).then(nextStep)
-    } else if (step === 4) {
-      dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(closeModal)
-    } else {
-      dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(nextStep)
+      return dispatch(startCreateProjectMember(values, projectId)).then(nextStep)
     }
+    if (step === 4) {
+      return dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(closeModal)
+    }
+    return dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(nextStep)
   }, [step, dispatch, projectId, nextStep, closeModal])
 
   return (
