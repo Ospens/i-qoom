@@ -38,6 +38,10 @@ RSpec.describe ProjectMember, type: :model do
   it { is_expected.to accept_nested_attributes_for(:company_address)
                         .update_only(true) }
 
+  it { is_expected.to validate_uniqueness_of(:email)
+                        .scoped_to(:project_id)
+                        .case_insensitive }
+
   context "creation step is" do
     context "employment_type first step" do
       subject { FactoryBot.build(:project_member,
@@ -60,8 +64,6 @@ RSpec.describe ProjectMember, type: :model do
       it { is_expected.to validate_presence_of(:email) }
       it { is_expected.to allow_value(Faker::Internet.email)
                             .for(:email) }
-      it { is_expected.to validate_uniqueness_of(:email)
-                            .scoped_to(:project_id) }
       it { is_expected.to validate_presence_of(:first_name) }
       it { is_expected.to validate_length_of(:first_name)
                                 .is_at_least(2)
