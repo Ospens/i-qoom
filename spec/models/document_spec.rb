@@ -421,12 +421,13 @@ RSpec.describe Document, type: :model do
 
     it do
       project = get_project_from_document_attrs(attrs)
-      project.members.create!(user: user2,
+      project.members.create!(email: user2.email,
                               dms_module_access: true,
                               employment_type: :employee)
-      project.members.create!(user: user3,
+      project.members.create!(email: user3.email,
                               dms_module_access: true,
                               employment_type: :employee)
+
       doc = Document.create!(attrs)
       main = doc.document_main
       expect(main.reviewers.pluck(:id)).to eql([user2.id])
