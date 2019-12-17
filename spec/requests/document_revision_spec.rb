@@ -88,7 +88,7 @@ describe DocumentRevision, type: :request do
                 .document_review_subjects
                 .create!(user: user, reviewers: [user2], review_issuer: user)
       review_subject.comments.create!(text: '111', user: user)
-      project.members.create!(email: user.email,
+      project.members.create!(user: user,
                               dms_module_access: true,
                               employment_type: :employee)
       project.members.create!(user: user, dms_module_access: true, employment_type: :employee)

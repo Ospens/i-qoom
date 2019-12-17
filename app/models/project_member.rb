@@ -45,7 +45,8 @@ class ProjectMember < ApplicationRecord
   
   validates_uniqueness_of :email,
                           scope: :project_id,
-                          case_sensitive: false
+                          case_sensitive: false,
+                          allow_nil: true
 
   # employment_type first step
   validates :employment_type,
