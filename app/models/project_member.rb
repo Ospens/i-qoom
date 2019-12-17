@@ -92,6 +92,8 @@ class ProjectMember < ApplicationRecord
     validates_acceptance_of :dms_module_master
   end
 
+  validate :last_admin, if: :creation_step_active?, on: :update
+
   before_save :send_confirmation_email,
               if: :invite
   before_save :add_user, if: -> { user.nil? && email.present? }
@@ -105,6 +107,8 @@ class ProjectMember < ApplicationRecord
           joins(:role)
           .where(roles: { title: "Project Administrator" })
         }
+
+  scope :active, -> { creation_step_active }
 
   def send_confirmation_email
     self.inviter_id = new_inviter_id if invite && new_inviter_id.present?
@@ -130,6 +134,13 @@ class ProjectMember < ApplicationRecord
   end
 
   private
+
+  def last_admin
+    if role.try(:title) != "Project Administrator" &&
+       project.admins == [self]
+      errors.add(:role, :last_admin_cant_be_removed)
+    end
+  end
 
   def update_creation_step_to_pending
     update(creation_step: "pending")
