@@ -156,6 +156,7 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
 
   create_table "document_mains", force: :cascade do |t|
     t.bigint "project_id"
+    t.integer "document_review_status", default: 0
     t.string "project_code"
     t.boolean "planned", default: false
     t.integer "position"
@@ -373,8 +374,6 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
     t.datetime "updated_at", null: false
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean "admin", default: false
-    t.string "locale", default: "en"
     t.string "member_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["member_id"], name: "index_users_on_member_id", unique: true

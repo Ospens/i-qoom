@@ -12,18 +12,28 @@ function DocumentPlanning({ history, match: { params: { projectId } } }) {
   const [checkedDocs, setCheckedDocs] = useState([])
   const documents = useSelector(state => state.documents.allDocuments)
   const dispatch = useDispatch()
-  useEffect(() => { dispatch(startFetchDocuments(projectId, history)) }, [dispatch])
+  useEffect(() => {
+    dispatch(startFetchDocuments(projectId, history))
+  }, [dispatch, history, projectId])
 
   const toggleDocs = useCallback((checked, value) => {
     setCheckedDocs(toggleArray(checked, value))
   }, [])
-
+  const header = <Header checkedDocs={checkedDocs} />
+  const sidebar = <SideBar checkedDocs={checkedDocs} />
+  const content = (
+    <Content
+      checkedDocs={checkedDocs}
+      toggleDocs={toggleDocs}
+      documents={documents}
+    />
+  )
   return (
     <DMSLayout
-      header={<Header checkedDocs={checkedDocs} />}
-      sidebar={<SideBar checkedDocs={checkedDocs} />}
-      content={<Content checkedDocs={checkedDocs} toggleDocs={toggleDocs} documents={documents}/>}
-      classNames='with-header'
+      header={header}
+      sidebar={sidebar}
+      content={content}
+      classNames="with-header"
     />
   )
 }
