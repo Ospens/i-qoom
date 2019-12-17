@@ -145,6 +145,7 @@ RSpec.describe ProjectMember, type: :model do
     it 'if regular member' do
       member = FactoryBot.create(:project_member,
                                  cms_module_access: true)
+      member.reload
       member.cms_module_access = false
       member.save
       member.reload
@@ -159,6 +160,26 @@ RSpec.describe ProjectMember, type: :model do
     it "should be false" do
       project_member = FactoryBot.create(:project_member)
       expect(project_member.admin?).to be_falsey
+    end
+  end
+
+  context "validate last_admin" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:project_member) { project.reload.admins.first }
+    it "shouldn't be editable with only one admin" do
+      project_member.role = 
+        project.roles.where.not(title: "Project Administrator").sample
+      project_member.save
+      expect(project_member.reload.role.title).to eq("Project Administrator")
+    end
+    it "should be editable if the project has two admins" do
+      FactoryBot.create(:project_member,
+                        project_id: project.id,
+                        role: project.roles.find_by(title: "Project Administrator"))
+      project_member.role = 
+        project.roles.where.not(title: "Project Administrator").sample
+      project_member.save
+      expect(project_member.reload.role.title).not_to eq("Project Administrator")
     end
   end
 end

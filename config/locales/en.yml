@@ -35,10 +35,11 @@ en:
   activerecord:
     errors:
       models:
-        project_administrator:
+        project_member:
           attributes:
-            project:
-              last_admin: The last user can't be removed
+            role:
+              last_admin_cant_be_removed: 
+                The last admin can't be removed
         document_review_subject:
           attributes:
             reviewers:
@@ -88,6 +89,7 @@ en:
           attributes:
             user:
               not_confirmed: Your need to confirm your account first
+        
   documents:
     list:
       codification_string: Doc-ID

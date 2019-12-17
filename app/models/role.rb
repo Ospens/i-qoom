@@ -13,5 +13,4 @@ class Role < ApplicationRecord
                           if: -> { title_was == "Project Administrator" },
                           message: :cant_be_changed
 
-
 end
