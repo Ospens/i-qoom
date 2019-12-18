@@ -13,6 +13,37 @@ RSpec.describe Document, type: :model do
     expect(document['document_fields_attributes'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values_attributes'].length).to eql(1)
   end
 
+  it 'check rights in teams' do
+    user = FactoryBot.create(:user)
+    project = FactoryBot.create(:project)
+    convention = project.conventions.active
+    convention.document_fields.each do |field|
+      if field.select_field?
+        value = field.document_field_values.first
+        if field.can_limit_by_value?
+          field.document_rights.create!(parent: user,
+                                        limit_for: :value,
+                                        document_field_value: value,
+                                        enabled: true)
+        end
+      end
+    end
+    field = convention.document_fields.find_by(codification_kind: :originating_company)
+    value = field.document_field_values.create!(value: 'FFF', position: 5)
+    document = Document.build_from_convention(convention, user)
+    expect(document['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values'].length).to eql(1)
+    team = project.dms_teams.create!
+    team.users << user
+    team.document_rights.create!(document_field: field,
+                                 document_field_value: value,
+                                 limit_for: :value,
+                                 enabled: true,
+                                 view_only: false)
+    document = Document.build_from_convention(convention, user)
+    expect(document['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values'].length).to eql(2)
+
+  end
+
   it 'project creator should have access to all fields and values even without rights' do
     user = FactoryBot.create(:user)
     document = document_attributes(user)

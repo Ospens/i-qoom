@@ -77,7 +77,7 @@ class DocumentRight < ApplicationRecord
     team_ids =
       DocumentRight.where(document_field: fields, enabled: true, parent_type: 'DmsTeam').pluck(:parent_id).uniq
     teams =
-      only_new_teams ? DmsTeam.where.not(id: team_ids) : DmsTeam.where(id: team_ids)
+      only_new_teams ? project.dms_teams.where.not(id: team_ids) : project.dms_teams.where(id: team_ids)
     attrs = {
       fields: {}, # used just for info
       teams: []
