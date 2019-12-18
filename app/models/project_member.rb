@@ -154,6 +154,7 @@ class ProjectMember < ApplicationRecord
 
   # the user can't be changed by confirmation
   def add_user
-    self.user = User.find_by(email: email)
+    self.user = User.find_by("lower(email) = ? ", 
+                             email.downcase)
   end
 end
