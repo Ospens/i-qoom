@@ -41,27 +41,75 @@ RSpec.describe Document, type: :model do
     expect(field2['filename']).to eql(field1.file.filename.to_s)
   end
 
-  it '#additional_information' do
-    doc1 = FactoryBot.create(:document)
-    doc1.revision.update!(revision_number: '1')
-    doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
-    doc2 = FactoryBot.create(:document)
-    doc2.revision.update!(revision_number: '2')
-    doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
-    doc3 = FactoryBot.create(:document)
-    doc3.revision.update!(revision_number: '3')
-    doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
-    doc2.revision.update_columns(document_main_id: doc1.document_main.id)
-    doc3.revision.update_columns(document_main_id: doc1.document_main.id)
-    attrs = doc3.reload.attributes_for_show
-    info = attrs['additional_information']
-    expect(info.length).to eql(2)
-    first_info = info.detect{ |i| i[:min] == '1' }
-    second_info = info.detect{ |i| i[:min] == '3' }
-    expect(first_info[:max]).to eql('2')
-    expect(first_info[:value]).to eql('111')
-    expect(second_info[:max]).to eql('3')
-    expect(second_info[:value]).to eql('222')
+  context '#additional_information' do
+    it do
+      doc1 = FactoryBot.create(:document)
+      doc1.revision.update!(revision_number: '1')
+      doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc2 = FactoryBot.create(:document)
+      doc2.revision.update!(revision_number: '2')
+      doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc3 = FactoryBot.create(:document)
+      doc3.revision.update!(revision_number: '3')
+      doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
+      doc2.revision.update_columns(document_main_id: doc1.document_main.id)
+      doc3.revision.update_columns(document_main_id: doc1.document_main.id)
+      attrs = doc3.reload.attributes_for_show
+      info = attrs['additional_information']
+      expect(info.length).to eql(2)
+      first_info = info.detect{ |i| i[:min] == '1' }
+      second_info = info.detect{ |i| i[:min] == '3' }
+      expect(first_info[:max]).to eql('2')
+      expect(first_info[:value]).to eql('111')
+      expect(second_info[:max]).to eql('3')
+      expect(second_info[:value]).to eql('222')
+    end
+
+    it do
+      doc1 = FactoryBot.create(:document)
+      doc1.revision.update!(revision_number: '1')
+      doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc2 = FactoryBot.create(:document)
+      doc2.revision.update!(revision_number: '2')
+      doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '222')
+      doc3 = FactoryBot.create(:document)
+      doc3.revision.update!(revision_number: '3')
+      doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc2.revision.update_columns(document_main_id: doc1.document_main.id)
+      doc3.revision.update_columns(document_main_id: doc1.document_main.id)
+      attrs = doc3.reload.attributes_for_show
+      info = attrs['additional_information']
+      expect(info.length).to eql(3)
+      first_info = info.detect{ |i| i[:min] == '1' }
+      second_info = info.detect{ |i| i[:min] == '2' }
+      third_info = info.detect{ |i| i[:min] == '3' }
+      expect(first_info[:max]).to eql('1')
+      expect(first_info[:value]).to eql('111')
+      expect(second_info[:max]).to eql('2')
+      expect(second_info[:value]).to eql('222')
+      expect(third_info[:max]).to eql('3')
+      expect(third_info[:value]).to eql('111')
+    end
+
+    it do
+      doc1 = FactoryBot.create(:document)
+      doc1.revision.update!(revision_number: '1')
+      doc1.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc2 = FactoryBot.create(:document)
+      doc2.revision.update!(revision_number: '2')
+      doc2.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc3 = FactoryBot.create(:document)
+      doc3.revision.update!(revision_number: '3')
+      doc3.document_fields.find_by(codification_kind: :additional_information).update!(value: '111')
+      doc2.revision.update_columns(document_main_id: doc1.document_main.id)
+      doc3.revision.update_columns(document_main_id: doc1.document_main.id)
+      attrs = doc3.reload.attributes_for_show
+      info = attrs['additional_information']
+      expect(info.length).to eql(1)
+      info = info.detect{ |i| i[:min] == '1' }
+      expect(info[:max]).to eql('3')
+      expect(info[:value]).to eql('111')
+    end
   end
 
   it '#filter_by_codification_kind_and_value' do

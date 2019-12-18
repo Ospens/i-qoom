@@ -445,7 +445,7 @@ class Document < ApplicationRecord
     temporal_value.each_with_index do |val, index|
       prev_val = temporal_value[index - 1]
       if prev_val.present? && val[:value] == prev_val[:value] && !index.zero?
-        h = final_value.detect{ |i| i[:min] == prev_val[:revision] }
+        h = final_value.detect{ |i| i[:min] == prev_val[:revision] || i[:max] == prev_val[:revision] }
         h[:max] = val[:revision]
       else
         final_value << { min: val[:revision], max: val[:revision], value: val[:value]}
