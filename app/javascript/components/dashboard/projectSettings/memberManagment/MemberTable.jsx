@@ -20,8 +20,8 @@ const emplOptions = [
   { value: 'internal_contractor', title: 'Internal contractor' },
   { value: 'external_contractor', title: 'External contractor' }
 ]
-/*
 
+/*
 const renderAccessOptions = (label, modeleMaster, checked, member_id) => {
     const className = modeleMaster ? 'subitem' : 'mainitem'
     return (
@@ -36,7 +36,7 @@ const renderAccessOptions = (label, modeleMaster, checked, member_id) => {
   }
 */
 
-const ModuleAccess = ({ member, currentUserId, handleChange }) => {
+function ModuleAccess({ member, currentUserId, handleChange }) {
   const {
     id,
     cms_module_access: cmsModuleAccess,

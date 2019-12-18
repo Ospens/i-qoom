@@ -42,6 +42,11 @@ class ProjectMember < ApplicationRecord
 
   validates :job_title,
             length: { maximum: 255 }
+  
+  validates_uniqueness_of :email,
+                          scope: :project_id,
+                          case_sensitive: false,
+                          allow_nil: true
 
   # employment_type first step
   validates :employment_type,
@@ -73,8 +78,7 @@ class ProjectMember < ApplicationRecord
                } do
     validates :email,
               email: true,
-              presence: true,
-              uniqueness: { scope: [:project_id] }
+              presence: true
 
     validates :first_name,
               :last_name,
