@@ -32,3 +32,18 @@ export const createPlannedList = projectId => (dispatch, getState) => {
   )
 }
 
+export const updatePlannedListMembers = projectId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token }
+
+  return (
+    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
+      .then(response => {
+        console.log(response)
+      })
+      .catch(response => {
+        console.log(response)
+      })
+  )
+}
+

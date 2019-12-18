@@ -8,6 +8,7 @@ import {
   updateTeam,
   updateTeamRights
 } from '../../../../../../../actions/accessRightsActions'
+import { newUsersIds } from '../../../../../../../elements/UsersTableByTabs'
 import TeamName from './TeamName'
 import TeamMembers from './TeamMembers'
 import AccessRightsTeam from './AccessRightsTeam'
@@ -29,17 +30,7 @@ function Content({
         dispatch(createTeam(projectId, values)).then(handleNext)
       }
     } else if (step < 3) {
-      values.users = values.users.map(({ id }) => id)
-
-      if (values.removed_users) {
-        values.users = values.users.filter(id => !values.removed_users.includes(id))
-      }
-      if (values.added_users) {
-        values.users = values.users.concat(values.added_users)
-      }
-      delete values.removed_users
-      delete values.added_users
-
+      values.users = newUsersIds(values)
       if (values.skipAccess) {
         delete values.skipAccess
         dispatch(updateTeamMembers(projectId, values)).then(handleClose)
