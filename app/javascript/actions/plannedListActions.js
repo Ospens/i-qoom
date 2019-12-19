@@ -1,49 +1,79 @@
 import axios from 'axios'
+import { initialize, SubmissionError } from 'redux-form'
+import { PLANNED_LIST_UPDATED, PLANNED_LISTS_FETCHED } from './types'
 import { errorNotify } from './notificationsActions'
-import { sortTable } from './documentsActions'
+
+const plannedListUpdated = payload => ({
+  type: PLANNED_LIST_UPDATED,
+  payload
+})
 
 export const fetchPlannedDocuments = projectId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
-      .then(response => {
-        console.log(response)
+    axios.get(` /api/v1/projects/${projectId}/dms_planned_lists/`, { headers })
+      .then(({ data }) => {
+        dispatch({ type: PLANNED_LISTS_FETCHED, payload: data })
       })
-      .catch(response => {
-        console.log(response)
+      .catch(() => {
+        dispatch(errorNotify('Problem'))
       })
   )
 }
 
-export const createPlannedList = projectId => (dispatch, getState) => {
+export const createPlannedList = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { Authorization: token }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
-      .then(response => {
-        console.log(response)
+    axios.post(`/api/v1/projects/${projectId}/dms_planned_lists`,
+      { dms_planned_list: values },
+      headers)
+      .then(({ data }) => {
+        dispatch(initialize('planned_list_form', data))
       })
-      .catch(response => {
-        console.log(response)
+      .catch(({ response }) => {
+        dispatch(errorNotify('Problem'))
+        throw new SubmissionError(response.data)
       })
   )
 }
 
-export const updatePlannedListMembers = projectId => (dispatch, getState) => {
+export const updatePlannedList = (projectId, values) => (dispatch, getState) => {
   const { user: { token } } = getState()
-  const headers = { Authorization: token }
+  const headers = { headers: { Authorization: token } }
 
   return (
-    axios.get(`/api/v1/projects/${projectId}/documents`, { headers })
-      .then(response => {
-        console.log(response)
+    axios.put(`/api/v1/projects/${projectId}/dms_planned_lists/${values.id}`,
+      { dms_planned_list: values },
+      headers)
+      .then(({ data }) => {
+        dispatch(initialize('planned_list_form', data))
+        dispatch(plannedListUpdated(data))
       })
-      .catch(response => {
-        console.log(response)
+      .catch(({ response }) => {
+        dispatch(errorNotify('Problem'))
+        throw new SubmissionError(response.data)
       })
   )
 }
 
+export const updatePlannedListMembers = (projectId, values) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_planned_lists/${values.id}/update_users`,
+      { users: values.users },
+      headers)
+      .then(() => {
+        dispatch(plannedListUpdated(values))
+      })
+      .catch(({ response }) => {
+        dispatch(errorNotify('Problem'))
+        throw new SubmissionError(response.data)
+      })
+  )
+}

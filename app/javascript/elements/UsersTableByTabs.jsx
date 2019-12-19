@@ -20,7 +20,7 @@ export const submitButtonText = (added, removed) => {
 }
 
 export const newUsersIds = values => {
-  values.users = values.users.map(({ id }) => id)
+  values.users = values.users ? values.users.map(({ id }) => id) : []
 
   if (values.removed_users) {
     values.users = values.users.filter(id => !values.removed_users.includes(id))
