@@ -13,7 +13,6 @@ import TeamsAccessRights from './master/accessRights/team/TeamsAccessRights'
 import QuickSearch from './master/quickSearch/QuickSearch'
 import Codifications from './master/codifications/Codifications'
 import CodificationSettings from './master/codifications/CodificationSettings'
-import DistributionGroup from './master/distributionGroup/DistributionGroup'
 import FolderSettings from './user/folderSettings/FolderSettings'
 import DmsSettings from './user/dmsSettings/index'
 import DocumentPlanning from './user/documentPlanning/index'
@@ -68,7 +67,11 @@ function DMS() {
       />
       <Page
         title="Folders"
-        path={[`${path}/folders/all/`, `${path}/folders/my_documents/`, `${path}/folders/:folder_id/`]}
+        path={
+          [`${path}/folders/all/`,
+            `${path}/folders/my_documents/`,
+            `${path}/folders/:folder_id/`
+          ]}
         component={FolderSettings}
       />
       <Page
@@ -103,7 +106,7 @@ function DMS() {
       />
       <Page
         title="Planned list"
-        path={`${path}/planning/`}
+        path={`${path}/planning/:listId`}
         component={DocumentPlanning}
       />
       <Page
@@ -116,11 +119,11 @@ function DMS() {
         path={`${path}/master/codifications/settings/`}
         component={CodificationSettings}
       />
-      {/*<Page
+      {/* <Page
         title="Distribution group"
         path={`${path}/master/distribution_group/`}
         component={DistributionGroup}
-      />*/}
+      /> */}
       <Page
         title="Add revision"
         titleContent={documentHeader('Add revision', doc)}

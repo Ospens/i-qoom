@@ -129,35 +129,6 @@
     }
   }
 
-  a, button:not(.disable) {
-    &:hover {
-      .blue-plus-icon {
-        -webkit-mask: none;
-        mask: none;
-        background: url('../../../images/add_2.svg');
-        border-radius: 50%;
-        height: 19px;
-        min-height: 19px;
-        width: 19px;
-        min-width: 19px;
-      }
-
-      span {
-        font-weight: 700;
-        color: var(--color-blue) !important;
-      }
-    }
-
-    span::after {
-      display: block;
-      content: attr(data-title);
-      font-weight: 700;
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
-  }
-
   span {
     font-size: 16px;
   }
@@ -166,6 +137,40 @@
     span {
       color: var(--color-labels);
     }
+  }
+}
+
+.button-with-icon:not(.disable) {
+  display: flex;
+
+  span {
+    color: var(--color-blue) !important;
+  }
+
+  &:hover {
+    .blue-plus-icon {
+      -webkit-mask: none;
+      mask: none;
+      background: url('../../../images/add_2.svg');
+      border-radius: 50%;
+      height: 19px;
+      min-height: 19px;
+      width: 19px;
+      min-width: 19px;
+    }
+
+    span {
+      font-weight: 700;
+    }
+  }
+
+  span::after {
+    display: block;
+    content: attr(data-title);
+    font-weight: 700;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
   }
 }
 
@@ -323,19 +328,21 @@
         .dms-sidebar-menu__subitem {
           padding: 10px;
           margin-left: 30px;
+        }
 
-          .dms-sidebar-menu__sublink {
-            padding-top: 5px;
-            padding-bottom: 5px;
+        .dms-sidebar-menu__sublink {
+          padding-top: 5px;
+          padding-bottom: 5px;
 
-            a {
-              font-size: 15px;
-              color: var(--color-blue);
-              font-weight: 400;
+          a, button {
+            font-size: 15px;
+            color: var(--color-blue);
+            font-weight: 400;
+            background-color: transparent !important;
+            padding: 0;
 
-              &.active {
-                font-weight: 700;
-              }
+            &.active {
+              font-weight: 700;
             }
           }
         }

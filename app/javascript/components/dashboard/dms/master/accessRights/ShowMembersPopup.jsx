@@ -100,7 +100,7 @@ function Trigger({ handleOpen }) {
   return (
     <button
       type="button"
-      className="with-icon ml-3"
+      className="button-with-icon ml-3"
       onClick={handleOpen}
     >
       <span>

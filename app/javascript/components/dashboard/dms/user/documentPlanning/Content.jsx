@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import React, { useState } from 'react'
 import Tabs from '../../../../../elements/Tabs'
 import PlanningTable from './PlanningTable'
-import { fetchPlannedDocuments } from '../../../../../actions/plannedListActions'
 import PlannedListModal from './plannedListForm/PlannedListModal'
 
 const toBeUploadedLabel = (
@@ -21,15 +18,8 @@ const uploadedLabel = (
 )
 
 function Content({ checkedDocs, toggleDocs, documents }) {
-  const dispatch = useDispatch()
-  const [openModal, setOpenModal] = useState(true)
-  const { projectId } = useParams()
-  useEffect(() => {
-    dispatch(fetchPlannedDocuments(projectId))
-  }, [dispatch, projectId])
   return (
     <div className="dms-content">
-      <PlannedListModal open={openModal} setOpen={setOpenModal} />
       <Tabs className="top-block" scrollable>
         <div label={toBeUploadedLabel}>
           <PlanningTable

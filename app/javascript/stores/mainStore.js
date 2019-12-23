@@ -29,7 +29,7 @@ const rootReducer = combineReducers({
   accessRights: accessRightsReducer,
   filters: filterReducer,
   settings: settingsReducer,
-  plannedList: plannedListsReducer,
+  plannedLists: plannedListsReducer,
   distributionGroups: distributionGroupReducer,
   folders: documentFolderReducer,
   notifications: notificationsReducer,

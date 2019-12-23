@@ -1,8 +1,13 @@
-import { PLANNED_LISTS_FETCHED, PLANNED_LIST_UPDATED } from '../actions/types'
+import {
+  PLANNED_LISTS_FETCHED,
+  PLANNED_LIST_UPDATED,
+  PLANNED_LIST_FETCHED,
+  PLANNED_LIST_ADDED
+} from '../actions/types'
 
 const initialState = {
   all: [],
-  current: []
+  current: {}
 }
 
 const plannedListsReducer = (state = initialState, action) => {
@@ -16,6 +21,16 @@ const plannedListsReducer = (state = initialState, action) => {
     return {
       ...state,
       all: state.all.map(pl => (pl.id === action.payload.id ? action.payload : pl))
+    }
+  case PLANNED_LIST_ADDED:
+    return {
+      ...state,
+      all: state.all.concat(action.payload)
+    }
+  case PLANNED_LIST_FETCHED:
+    return {
+      ...state,
+      current: action.payload
     }
   default:
     return state
