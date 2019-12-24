@@ -6,6 +6,10 @@
   font-weight: 700 !important;
 }
 
+.d-invisible {
+  opacity: 0;
+}
+
 .dashboard-container {
   display: block;
   width: 100%;
@@ -28,6 +32,11 @@
 .form-group {
   &:hover, &:active {
     z-index: 5;
+  }
+
+  &.project-code, &.document-number {
+    max-width: 67px;
+    min-width: 67px;
   }
 }
 
@@ -1825,6 +1834,10 @@ i.arrow {
     .Rtable__row-cell {
       display: table-cell;
 
+      .form-group {
+        margin: 0;
+      }
+
       .Rtable__row-cell__header {
         display: flex;
         align-items: center;
@@ -1935,6 +1948,7 @@ i.arrow {
       max-width: 300px;
       text-overflow: ellipsis;
       padding: 16px;
+      background: white;
 
       &:first-of-type {
         border-top-left-radius: 5px;

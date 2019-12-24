@@ -16,6 +16,7 @@ import CodificationSettings from './master/codifications/CodificationSettings'
 import FolderSettings from './user/folderSettings/FolderSettings'
 import DmsSettings from './user/dmsSettings/index'
 import DocumentPlanning from './user/documentPlanning/index'
+import EditPlannedList from './user/documentPlanning/edit/edit'
 import UserProfile from './master/userProfile'
 
 const documentHeader = (title, doc) => {
@@ -103,6 +104,11 @@ function DMS() {
         title="DMS User Settings"
         path={`${path}/settings/`}
         component={DmsSettings}
+      />
+      <Page
+        title="Manage planned list"
+        path={`${path}/planning/:listId/edit`}
+        component={EditPlannedList}
       />
       <Page
         title="Planned list"
