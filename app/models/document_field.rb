@@ -191,10 +191,20 @@ class DocumentField < ApplicationRecord
 
   def has_access_for_limit_by_value_value?(user, value)
     return true if user == parent.project.user
-    document_rights.find_by(parent: user,
-                            document_field_value: value,
-                            enabled: true,
-                            view_only: false).present?
+    personal_rights =
+      document_rights.find_by(parent: user,
+                              document_field_value: value,
+                              enabled: true,
+                              view_only: false).present?
+    team = parent.project.dms_teams.joins(:users).where(users: { id: user.id }).first
+    team_rights =
+      team.present? &&
+        team.document_rights.find_by(document_field: self,
+                                     document_field_value: value,
+                                     limit_for: :value,
+                                     enabled: true,
+                                     view_only: false).present?
+    personal_rights || team_rights
   end
 
   def validate_codification_values?

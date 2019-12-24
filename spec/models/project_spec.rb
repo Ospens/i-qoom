@@ -151,4 +151,28 @@ RSpec.describe Project, type: :model do
       expect(project).to_not be_valid
     end
   end
+
+  it 'dms_master?' do
+    project = FactoryBot.create(:project)
+    user = FactoryBot.create(:user)
+    expect(project.dms_master?(user)).to eql(false)
+    member =
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              employment_type: :employee)
+    expect(project.dms_master?(user)).to eql(false)
+    member.update!(dms_module_master: true)
+    expect(project.dms_master?(user)).to eql(true)
+  end
+
+  it 'dms_access?' do
+    project = FactoryBot.create(:project)
+    user = FactoryBot.create(:user)
+    expect(project.dms_access?(user)).to eql(false)
+    member =
+      project.members.create!(user: user, employment_type: :employee)
+    expect(project.dms_access?(user)).to eql(false)
+    member.update!(dms_module_access: true)
+    expect(project.dms_access?(user)).to eql(true)
+  end
 end

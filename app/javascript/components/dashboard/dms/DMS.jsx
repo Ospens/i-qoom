@@ -68,11 +68,11 @@ function DMS() {
       />
       <Page
         title="Folders"
-        path={
-          [`${path}/folders/all/`,
-            `${path}/folders/my_documents/`,
-            `${path}/folders/:folder_id/`
-          ]}
+        path={[
+          `${path}/folders/all/`,
+          `${path}/folders/my_documents/`,
+          `${path}/folders/:folder_id/`
+        ]}
         component={FolderSettings}
       />
       <Page

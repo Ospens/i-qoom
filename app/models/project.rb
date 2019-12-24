@@ -81,11 +81,11 @@ class Project < ApplicationRecord
   end
 
   def dms_master?(user)
-    !members.find_by(user: user).try(:dms_module_master?).nil?
+    members.find_by(user: user).try(:dms_module_master?) == true
   end
 
   def dms_access?(user)
-    !members.find_by(user: user).try(:dms_module_access?).nil?
+    members.find_by(user: user).try(:dms_module_access?) == true
   end
 
   def can_create_documents?(user)

@@ -1,7 +1,7 @@
 class Api::V1::DocumentsController < ApplicationController
   include ActiveStorage::SendZip
   include PdfRender
-  include Documents
+  include DocumentConcern
 
   load_resource :project
 

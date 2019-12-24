@@ -135,7 +135,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
           dispatch(initialize('project_member_form', response.data))
         }
       })
-      .catch(response => {
+      .catch(({ response }) => {
         dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
