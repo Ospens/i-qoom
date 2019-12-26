@@ -20,8 +20,8 @@ const TextAreaField = ({
         required
         pattern=".*\S.*"
       />
-      {touched &&
-        <div className='invalid-feedback'>
+      {touched && (error || errorInfo) &&
+        <div className='input-feedback-text invalid'>
           {error
             ? error
             : errorInfo

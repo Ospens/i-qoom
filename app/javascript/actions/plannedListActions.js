@@ -116,3 +116,21 @@ export const editPlannedListDocuments = (projectId, listId) => (dispatch, getSta
       })
   )
 }
+
+
+export const updatePlannedListDocuments = (projectId, listId, request) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  return (
+    axios.post(`/api/v1/projects/${projectId}/dms_planned_lists/${listId}/update_documents`,
+      request,
+      headers)
+      .then(({ data }) => {
+        console.log(data)
+      })
+      .catch(({ response }) => {
+        dispatch(errorNotify('Problem'))
+        throw new SubmissionError(response.data)
+      })
+  )
+}

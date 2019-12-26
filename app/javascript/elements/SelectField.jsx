@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 import Select, { components } from 'react-select'
 import ReactSVG from 'react-svg'
+import { feedBackText } from './InputField'
 
 const DropdownIndicator = props => {
   const { isFocused } = props
@@ -154,11 +155,18 @@ const SelectField = ({
   label,
   placeholder,
   className,
+  isDirty,
+  infoFeedback,
   disabled = false,
   isMulti = false,
   valueAsTitle = false,
-  meta: { touched, error }
+  meta: { touched, error, dirty }
 }) => {
+  useEffect(() => {
+    if (!isDirty) return
+
+    isDirty(dirty)
+  }, [dirty])
   // eslint-disable-next-line no-nested-ternary
   const errorInfo = (touched && error)
     ? [error]
@@ -182,9 +190,16 @@ const SelectField = ({
         placeholder={placeholder || 'Select...'}
         valueAsTitle={valueAsTitle}
       />
-      <div className="invalid-feedback">
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+      {(() => {
+        if (touched) {
+          if (errorInfo) {
+            return feedBackText(errorInfo[0], true)
+          } if (infoFeedback) {
+            return feedBackText(infoFeedback)
+          }
+        }
+        return <Fragment />
+      })()}
     </div>
   )
 }

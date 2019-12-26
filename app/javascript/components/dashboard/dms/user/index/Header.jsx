@@ -42,7 +42,7 @@ function Header({ checkedDocs }) {
         <li>
           <button type='button' className={btnClass}>
             <span className='icon-common-file-edit mr-2' />
-            <span className='head-button__gray-text' data-title={`Edit document {checkedLength > 0 ? checkedLength : ''}`}>
+            <span className='head-button__gray-text' data-title={`Edit document ${checkedLength > 0 ? checkedLength : ''}`}>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>
           </button>

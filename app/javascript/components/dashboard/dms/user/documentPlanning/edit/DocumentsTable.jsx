@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { FieldArray, reduxForm } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
+import { updatePlannedListDocuments } from '../../../../../../actions/plannedListActions'
 
 const columns = [
   { title: 'Project' },
@@ -8,13 +11,23 @@ const columns = [
   { title: 'Discipline' },
   { title: 'Doc-Type' },
   { title: 'Doc-No.' },
+  { title: 'Rev-No.' },
+  { title: 'Rev-date' },
   { title: 'Document title' },
   { title: 'Add additional information' }
 ]
 
-function DocumentsTable({ pristine, reset }) {
+function DocumentsTable({
+  handleSubmit, pristine, reset, checkedDocs, toggleChecked
+}) {
+  const dispatch = useDispatch()
+  const { projectId, listId } = useParams()
+  const onSubmit = useCallback(values => {
+    dispatch(updatePlannedListDocuments(projectId, listId, values))
+  }, [dispatch, projectId, listId])
+
   return (
-    <div className="dms-content bordered">
+    <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-body">
         <div className="d-flex mb-4">
           <h4>Add multiple document data</h4>
@@ -23,15 +36,10 @@ function DocumentsTable({ pristine, reset }) {
           </button>
         </div>
         <div className="Rtable-container">
-          <div className="Rtable">
+          <div className="Rtable separate">
             <div className="Rtable__header">
               <div className="Rtable-row">
-                <div className="Rtable__row-cell">
-                  <div className="Rtable__row-cell__header">
-                    <span>Pos.</span>
-                  </div>
-                </div>
-                <div className="Rtable__row-cell" />
+                <div className="Rtable__row-cell event-name" />
                 <div className="Rtable__row-cell table-checkbox">
                   <div className="d-flex">
                     <input
@@ -41,6 +49,13 @@ function DocumentsTable({ pristine, reset }) {
                     <label htmlFor="check_all" />
                   </div>
                 </div>
+                <div className="Rtable__row-cell">
+                  <div className="Rtable__row-cell__header">
+                    <span>Pos.</span>
+                  </div>
+                </div>
+                <div className="Rtable__row-cell" />
+                <div className="Rtable__row-cell" />
                 {columns.map(({ title }) => (
                   <div className="Rtable__row-cell" key={title}>
                     <div className="Rtable__row-cell__header">
@@ -53,12 +68,12 @@ function DocumentsTable({ pristine, reset }) {
             <FieldArray
               name="document_mains"
               component={DocumentTableBody}
+              checkedDocs={checkedDocs}
+              toggleChecked={toggleChecked}
             />
           </div>
         </div>
-
       </div>
-
       {!pristine
       && (
         <div className="dms-footer data-changed-footer">
@@ -67,15 +82,15 @@ function DocumentsTable({ pristine, reset }) {
           </div>
           <div className="d-flex">
             <button type="button" className="btn btn-white" onClick={reset}>
-            Discard
+              Discard
             </button>
             <button type="submit" className="btn btn-purple">
-             Apply changes
+              Apply changes
             </button>
           </div>
         </div>
       )}
-    </div>
+    </form>
   )
 }
 

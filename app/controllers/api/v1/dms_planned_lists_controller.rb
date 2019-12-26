@@ -50,7 +50,7 @@ class Api::V1::DmsPlannedListsController < ApplicationController
   end
 
   def edit_documents
-    result = { document_mains: [], new: {} }
+    result = { document_mains: [], new: {}, name: @dms_planned_list.name }
     result[:new] =
       Document.build_from_convention(@project.conventions.active, signed_in_user)
     @dms_planned_list.document_mains.order(position: :asc).each do |main|

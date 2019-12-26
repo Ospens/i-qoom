@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import DMSLayout from '../../../DMSLayout'
 import DocumentsTable from './DocumentsTable'
-// import Content from '../Content'
-// import toggleArray from '../../../../../elements/toggleArray'
 import { editPlannedListDocuments } from '../../../../../../actions/plannedListActions'
+import toggleArray from '../../../../../../elements/toggleArray'
 
 function Header({ title }) {
   return (
@@ -16,22 +15,6 @@ function Header({ title }) {
           <h4>{title}</h4>
           <label>(Selected planned list)</label>
         </li>
-        <li className="ml-4">
-          <button type="button" className="button-with-icon">
-            <span className="icon-add_1 mr-2" />
-            <span data-title="Add planned document(s)">
-              <span>Add planned document(s)</span>
-            </span>
-          </button>
-        </li>
-        <li className="ml-4">
-          <button type="button" className="button-with-icon">
-            <span className="icon-add_1 mr-2" />
-            <span data-title="Create new planned list">
-              <span>Create new planned list</span>
-            </span>
-          </button>
-        </li>
       </ul>
     </div>
   )
@@ -39,21 +22,27 @@ function Header({ title }) {
 
 function DocumentPlanning() {
   const { projectId, listId } = useParams()
+  const [checkedDocs, setCheckedDoc] = useState([])
   const dispatch = useDispatch()
   const editData = useSelector(state => state.plannedLists.edit)
+
   useEffect(() => {
     dispatch(editPlannedListDocuments(projectId, listId))
   }, [dispatch, projectId, listId])
+
   useEffect(() => {
     if (!(editData.document_mains && editData.new)) return
     const { document_mains: documentMains } = editData
-    documentMains.push(editData.new)
+    documentMains.push({ document: editData.new })
     dispatch(initialize('dms_planned_list', { document_mains: documentMains }))
   }, [dispatch, editData])
 
-  const sidebar = <div>1</div>
-  const header = <Header title='{plannedList.name}' />
-  const content = <DocumentsTable />
+  const toggleChecked = useCallback(value => {
+    setCheckedDoc(toggleArray(checkedDocs, value))
+  }, [checkedDocs])
+  const sidebar = <div />
+  const header = <Header title={editData.name} />
+  const content = <DocumentsTable toggleChecked={toggleChecked} checkedDocs={checkedDocs} />
   return (
     <DMSLayout
       header={header}

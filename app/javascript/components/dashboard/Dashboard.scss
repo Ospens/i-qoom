@@ -35,8 +35,23 @@
   }
 
   &.project-code, &.document-number {
-    max-width: 67px;
-    min-width: 67px;
+    width: 67px !important;
+  }
+
+  &.document-codification-field {
+    width: 90px !important;
+  }
+
+  &.revision-number {
+    width: 47px !important;
+  }
+
+  &.revision-date {
+    width: 120px !important;
+  }
+
+  &.document-title {
+    width: 150px !important;
   }
 }
 
@@ -1828,6 +1843,10 @@ i.arrow {
   border-collapse: collapse;
   min-width: 100%;
 
+  &.separate {
+    border-collapse: separate;
+  }
+
   .Rtable-row {
     display: table-row;
 
@@ -1888,8 +1907,8 @@ i.arrow {
 
         label {
           margin-bottom: 0;
-        }
-      }
+        }      }
+
 
       .searchable-title {
         border: none;
@@ -1906,6 +1925,11 @@ i.arrow {
         }
       }
     }
+
+    .event-name {
+      padding: 0;
+      border: none;
+    }
   }
 
   .Rtable__body {
@@ -1914,6 +1938,7 @@ i.arrow {
     .Rtable-row {
       border-radius: 5px;
       transition: all 200ms ease-in-out;
+      border: 0;
 
       &:nth-child(even) {
         background-color: #F7FAFA;
@@ -1926,6 +1951,31 @@ i.arrow {
       &:first-of-type {
         border-top: 1px solid rgba(34, 36, 38, .1) !important;
       }
+
+      &.event-border {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-left: solid 1px var(--color-black);
+
+        .Rtable__row-cell {
+          &:not(:first-child) {
+            border-top: solid 1px var(--color-black);
+            border-bottom: solid 1px var(--color-black);
+          }
+
+          &:nth-child(2) {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+            border-left: solid 1px var(--color-black);
+          }
+
+          &:last-child {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            border-right: solid 1px var(--color-black);
+          }
+        }
+      }
     }
 
     &.non-stripped {
@@ -1937,7 +1987,7 @@ i.arrow {
         }
 
         &.Rtable-row__checked {
-          background-color: #F9F9F9;
+          background-color: #dcfcfb;
         }
       }
     }
@@ -1948,7 +1998,6 @@ i.arrow {
       max-width: 300px;
       text-overflow: ellipsis;
       padding: 16px;
-      background: white;
 
       &:first-of-type {
         border-top-left-radius: 5px;
@@ -2010,6 +2059,26 @@ i.arrow {
 
       &.td-date {
         white-space: nowrap;
+      }
+
+      &.event-name {
+        padding: 0;
+        background: #fff;
+
+        div {
+          font-size: 11px;
+          border-radius: 7px 0 0 7px;
+          background: var(--color-black);
+          color: #fff;
+          padding: 0;
+          max-width: 0;
+          transition: all 200ms ease-in-out;
+
+          &.active {
+            padding: 3px;
+            max-width: 70px;
+          }
+        }
       }
     }
   }
