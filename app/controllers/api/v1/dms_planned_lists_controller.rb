@@ -56,21 +56,34 @@ class Api::V1::DmsPlannedListsController < ApplicationController
   end
 
   def update_documents
+    result = []
+    # temp_id is used for detecting errors
     params[:document_mains].each do |main_params|
       main = DocumentMain.find_by(id: main_params[:id])
       if main.present?
         next if !@dms_planned_list.document_mains.include?(main)
         document = main.revisions.last_revision.last_version
-        document.revision.versions.create(document_params(main_params[:document], true))
+        new_document = document.revision.versions.new(document_params(main_params[:document], true))
+        if !new_document.save && main_params[:temp_id].present?
+          result << { temp_id: main_params[:temp_id], errors: new_document.errors }
+        end
       else
         main = @project.document_mains.create(planned: true, position: main_params[:position])
         rev = main.revisions.create
-        document = rev.versions.create(document_params(main_params[:document], true))
-        if !@dms_planned_list.document_mains.include?(main)
-          @dms_planned_list.document_mains << main
+        document = rev.versions.new(document_params(main_params[:document], true))
+        if document.save
+          if !@dms_planned_list.document_mains.include?(main)
+            @dms_planned_list.document_mains << main
+          end
+        else
+          if main_params[:temp_id].present?
+            result << { temp_id: main_params[:temp_id], errors: document.errors }
+          end
+          main.destroy
         end
       end
     end
+    render json: result
   end
 
   private

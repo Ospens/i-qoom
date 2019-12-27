@@ -315,15 +315,47 @@ describe DmsPlannedList, type: :request do
     end
 
     context 'dms master' do
-      it 'create document' do
-        Project.find(@project_id).members.create!(user: user,
-                                                  dms_module_master: true,
-                                                  employment_type: :employee)
-        post "/api/v1/projects/#{@project_id}/dms_planned_lists/#{list.id}/update_documents",\
-          params: @params, headers: credentials(user)
-        expect(response).to have_http_status(:success)
-        expect(DocumentMain.last).to be_planned
-        expect(DocumentMain.last.position).to eql(2)
+      context 'create document' do
+        before do
+          Project.find(@project_id).members.create!(user: user,
+                                                    dms_module_master: true,
+                                                    employment_type: :employee)
+        end
+
+        it 'valid document' do
+          post "/api/v1/projects/#{@project_id}/dms_planned_lists/#{list.id}/update_documents",\
+            params: @params, headers: credentials(user)
+          expect(response).to have_http_status(:success)
+          expect(DocumentMain.last).to be_planned
+          expect(DocumentMain.last.position).to eql(2)
+        end
+
+        it 'invalid document' do
+          DocumentMain.destroy_all
+          expect(DocumentMain.count).to eql(0)
+          @params[:document_mains].first[:document]['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values'] = nil
+          @params[:document_mains].first[:temp_id] = '1'
+          post "/api/v1/projects/#{@project_id}/dms_planned_lists/#{list.id}/update_documents",\
+            params: @params, headers: credentials(user)
+          expect(response).to have_http_status(:success)
+          expect(Document.count).to eql(0)
+          expect(DocumentRevision.count).to eql(0)
+          expect(DocumentMain.count).to eql(0)
+          main = json.first
+          expect(main).to have_key('temp_id')
+          expect(main).to have_key('errors')
+        end
+
+        it 'native file is not required' do
+          DocumentMain.destroy_all
+          expect(DocumentMain.count).to eql(0)
+          @params[:document_mains].first[:document]['document_fields'].detect{ |i| i['codification_kind'] == 'document_native_file' }['file'] = nil
+          @params[:document_mains].first[:temp_id] = '1'
+          post "/api/v1/projects/#{@project_id}/dms_planned_lists/#{list.id}/update_documents",\
+            params: @params, headers: credentials(user)
+          expect(response).to have_http_status(:success)
+          expect(DocumentMain.count).to eql(1)
+        end
       end
 
       context 'update document' do
@@ -348,14 +380,34 @@ describe DmsPlannedList, type: :request do
           expect(doc.revision.last_version.email_title).to_not eql(title)
         end
 
-        it 'in list' do
-          list.document_mains << doc.document_main
-          post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
-            params: { document_mains: [ { id: doc.document_main.id,
-                                          document: doc_attrs } ] },
-            headers: credentials(user)
-          expect(response).to have_http_status(:success)
-          expect(doc.revision.last_version.email_title).to eql(title)
+        context 'in list' do
+          before do
+            list.document_mains << doc.document_main
+          end
+
+          it 'valid' do
+            post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
+              params: { document_mains: [ { id: doc.document_main.id,
+                                            document: doc_attrs } ] },
+              headers: credentials(user)
+            expect(response).to have_http_status(:success)
+            expect(doc.revision.last_version.email_title).to eql(title)
+          end
+
+          it 'invalid' do
+            attrs = doc_attrs
+            attrs['document_fields'].detect{ |i| i['codification_kind'] == 'originating_company' }['document_field_values'] = []
+            post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
+              params: { document_mains: [ { id: doc.document_main.id,
+                                            temp_id: '1',
+                                            document: attrs } ] },
+              headers: credentials(user)
+            expect(response).to have_http_status(:success)
+            expect(doc.revision.last_version.email_title).to_not eql(title)
+            main = json.first
+            expect(main).to have_key('temp_id')
+            expect(main).to have_key('errors')
+          end
         end
       end
     end

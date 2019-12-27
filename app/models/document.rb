@@ -264,7 +264,7 @@ class Document < ApplicationRecord
       unless kind == 'document_number'
         field = field.document_field_values.detect{ |i| i['selected'] == true }
       end
-      if field.value.present?
+      if field.present? && field.value.present?
         str << '-' if kind != 'originating_company'
         str << field.value
       end
