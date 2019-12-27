@@ -25,10 +25,15 @@ class Api::V1::DmsPlannedListsController < ApplicationController
 
   def index
     authorize! :index, DmsPlannedList.new, @project
-    render json: @project.dms_planned_lists
-                         .joins(:users)
-                         .where(users: { id: signed_in_user.id })
-                         .as_json(only: [:id, :name])
+    lists =
+      if @project.dms_master?(signed_in_user)
+        @project.dms_planned_lists
+      else
+        @project.dms_planned_lists
+                .joins(:users)
+                .where(users: { id: signed_in_user.id })
+      end
+    render json: lists.as_json(only: [:id, :name])
   end
 
   def update_users

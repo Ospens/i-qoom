@@ -136,6 +136,17 @@ describe DmsPlannedList, type: :request do
         expect(json.first['name']).to eql(list.name)
       end
     end
+
+    it 'dms master should see all project lists' do
+      project.members.create!(user: user,
+                              dms_module_access: true,
+                              dms_module_master: true,
+                              employment_type: :employee)
+      get "/api/v1/projects/#{project.id}/dms_planned_lists",
+        headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      expect(json.length).to eql(1)
+    end
   end
 
   context '#update' do
