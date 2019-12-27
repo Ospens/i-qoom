@@ -147,7 +147,7 @@ class DocFieldsElement extends Component {
       input: { value },
       meta: { touched, error }
     } = this.props
-    
+
     return (
       <Draggable
         draggableId={`row_${column}_${index}`}
@@ -178,8 +178,8 @@ class DocFieldsElement extends Component {
               </div>
               {this.renderInputByType(value, index)}
               <div>
-                {touched && error && 
-                <div className='invalid-feedback convention-feedback'>
+                {touched && error &&
+                <div className='input-feedback-text invalid convention-feedback'>
                   {error}
                 </div>}
                 {!value.codification_kind && this.editButton(index)}

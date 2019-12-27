@@ -13,10 +13,10 @@ import TeamsAccessRights from './master/accessRights/team/TeamsAccessRights'
 import QuickSearch from './master/quickSearch/QuickSearch'
 import Codifications from './master/codifications/Codifications'
 import CodificationSettings from './master/codifications/CodificationSettings'
-// import DistributionGroup from './master/distributionGroup/DistributionGroup'
 import FolderSettings from './user/folderSettings/FolderSettings'
 import DmsSettings from './user/dmsSettings/index'
 import DocumentPlanning from './user/documentPlanning/index'
+import EditPlannedList from './user/documentPlanning/edit/edit'
 import UserProfile from './master/userProfile'
 
 const documentHeader = (title, doc) => {
@@ -106,8 +106,13 @@ function DMS() {
         component={DmsSettings}
       />
       <Page
+        title="Manage planned list"
+        path={`${path}/planning/:listId/edit`}
+        component={EditPlannedList}
+      />
+      <Page
         title="Planned list"
-        path={`${path}/planning/`}
+        path={`${path}/planning/:listId`}
         component={DocumentPlanning}
       />
       <Page

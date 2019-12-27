@@ -1,5 +1,13 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 import classnames from 'classnames'
+
+export function feedBackText(text, isError) {
+  return (
+    <div className={classnames('input-feedback-text', { invalid: isError })}>
+      {text}
+    </div>
+  )
+}
 
 const InputField = ({
   input,
@@ -8,9 +16,17 @@ const InputField = ({
   label,
   type,
   justHightlight = false,
-  meta: { touched, error },
+  isDirty,
+  infoFeedback,
+  meta: { touched, error, dirty },
   ...props
 }) => {
+  useEffect(() => {
+    if (!isDirty) return
+
+    isDirty(dirty)
+  }, [dirty])
+
   const errorInfo = errorField[input.name]
   return (
     <div className={className}>
@@ -23,12 +39,17 @@ const InputField = ({
         required
         pattern=".*\S.*"
       />
-      {touched && !justHightlight
-      && (
-        <div className="invalid-feedback">
-          {error || (errorInfo || '')}
-        </div>
-      )}
+      {(() => {
+        if (touched && !justHightlight) {
+          if (error || errorInfo) {
+            const text = error || errorInfo || ''
+            return feedBackText(text, true)
+          } if (infoFeedback) {
+            return feedBackText(infoFeedback)
+          }
+        }
+        return <Fragment />
+      })()}
     </div>
   )
 }

@@ -64,7 +64,7 @@ class ModalTeamForm extends Component {
 
   renderModalTrigger = () => (
     <button
-      className='ml-auto btn d-flex align-items-center with-icon'
+      className='ml-auto btn d-flex align-items-center button-with-icon'
       onClick={this.handleOpen}
     >
       <ReactSVG
@@ -241,7 +241,7 @@ class ModalTeamForm extends Component {
             <h4>New team</h4>
           </div>
           {step === 1 && this.renderNameField()}
-          {step === 2 && this.renderMembersTable()}          
+          {step === 2 && this.renderMembersTable()}
         </div>
         {this.renderFooter()}
       </form>

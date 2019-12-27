@@ -6,12 +6,22 @@ class Api::V1::DmsPlannedListsController < ApplicationController
   def create
     authorize! :create, DmsPlannedList.new, @project
     @project.dms_planned_lists.create(dms_planned_list_params)
-    head 200
+
+    dms_planned_lists = @project.dms_planned_lists.create(dms_planned_list_params)
+    if dms_planned_lists.save
+      render json: dms_planned_lists
+    else
+      render json: dms_planned_lists.errors,
+             status: :unprocessable_entity
+    end
   end
 
   def update
-    @dms_planned_list.update(dms_planned_list_params)
-    head 200
+    if @dms_planned_list.update(dms_planned_list_params)
+      render json: @dms_planned_list
+    else
+      render json: @dms_planned_list.errors, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -40,7 +50,7 @@ class Api::V1::DmsPlannedListsController < ApplicationController
   end
 
   def edit_documents
-    result = { document_mains: [], new: {} }
+    result = { document_mains: [], new: {}, name: @dms_planned_list.name }
     result[:new] =
       Document.build_from_convention(@project.conventions.active, signed_in_user)
     @dms_planned_list.document_mains.order(position: :asc).each do |main|

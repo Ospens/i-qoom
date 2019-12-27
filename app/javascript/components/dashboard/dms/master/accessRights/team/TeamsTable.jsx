@@ -48,9 +48,13 @@ const actions = (checkedLength, handleOpenBulkEdit, handleDelete) => {
 
 function ModalTrigger({ handleOpen }) {
   return (
-    <ul className="buttons-with-icons-list ml-auto">
+    <ul className="ml-auto my-auto">
       <li className="p-0">
-        <button type="button" className="d-flex align-items-center with-icon" onClick={handleOpen}>
+        <button
+          type="button"
+          className="d-flex align-items-center button-with-icon"
+          onClick={handleOpen}
+        >
           <span className="icon-add_1 mr-2" />
           <span data-title="Create new team">Create new team</span>
         </button>

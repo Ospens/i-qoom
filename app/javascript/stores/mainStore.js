@@ -15,7 +15,7 @@ import filterReducer from '../reducers/filterReducer'
 import distributionGroupReducer from '../reducers/distributionGroupReducer'
 import documentFolderReducer from '../reducers/documentFolderReducer'
 import settingsReducer from '../reducers/settingsReducer'
-import planningReducer from '../reducers/planningReducer'
+import plannedListsReducer from '../reducers/plannedListsReducer'
 import notificationsReducer from '../reducers/notificationsReducer'
 import loadState from './localStorage'
 
@@ -29,7 +29,7 @@ const rootReducer = combineReducers({
   accessRights: accessRightsReducer,
   filters: filterReducer,
   settings: settingsReducer,
-  plannings: planningReducer,
+  plannedLists: plannedListsReducer,
   distributionGroups: distributionGroupReducer,
   folders: documentFolderReducer,
   notifications: notificationsReducer,
