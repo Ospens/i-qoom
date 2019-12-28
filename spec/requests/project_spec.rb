@@ -20,9 +20,9 @@ describe "Project", type: :request do
   }
 
   let(:project_admin) {
-    FactoryBot.create(:project_member,
+    FactoryBot.create(:project_admin,
                       project_id: third_project.id,
-                      user: user)    
+                      user: user)
   }
 
   let(:json) { JSON(response.body) }
@@ -77,13 +77,6 @@ describe "Project", type: :request do
           expect(response).to have_http_status(:success)
           expect(json.values).to include(project.name)
         end
-        it 'if signed in as an invited member' do
-          project_member.reload
-          get "/api/v1/projects/#{second_project.id}",
-              headers: headers_for_second_user
-          expect(response).to have_http_status(:success)
-          expect(json.values).to include(second_project.name)
-        end
         it "if signed in as an invited admin" do
           project_admin.reload
           get "/api/v1/projects/#{third_project.id}",
@@ -108,6 +101,13 @@ describe "Project", type: :request do
           second_project.reload
           get "/api/v1/projects/#{second_project.id}",
                headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(second_project.name)
+        end
+        it 'if signed in as an invited member' do
+          project_member.reload
+          get "/api/v1/projects/#{second_project.id}",
+              headers: headers_for_second_user
           expect(response).to have_http_status(:forbidden)
           expect(json.values).not_to include(second_project.name)
         end
