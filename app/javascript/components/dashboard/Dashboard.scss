@@ -1907,13 +1907,15 @@ i.arrow {
 
         label {
           margin-bottom: 0;
-        }      }
-
+        }
+      }
 
       .searchable-title {
         border: none;
         color: var(--color-black);
         max-width: 170px;
+        width: 100%;
+        min-width: 50px;
 
         &:focus, &:active {
           outline: 0 !important;
@@ -1922,6 +1924,22 @@ i.arrow {
 
         &::placeholder {
           color: var(--color-labels);
+        }
+      }
+
+      &.version-revision-cell {
+        .Rtable__row-cell__header {
+          div:first-of-type {
+            max-width: 60px;
+          }
+        }
+      }
+
+      &.title-cell {
+        .Rtable__row-cell__header {
+          div:first-of-type {
+            min-width: 170px;
+          }
         }
       }
     }
