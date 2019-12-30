@@ -78,6 +78,9 @@ class Document < ApplicationRecord
 
   before_validation :assign_convention
 
+  before_validation :set_review_status_if_planned_document,
+                    if: -> { document_main.planned? && !unplan_document }
+
   before_create :set_review_status_in_document_main,
                 if: :first_document_in_chain?
 
@@ -507,5 +510,9 @@ class Document < ApplicationRecord
 
   def unplan_document_main
     document_main.update(planned: false)
+  end
+
+  def set_review_status_if_planned_document
+    self.review_status = 'issued_for_information'
   end
 end
