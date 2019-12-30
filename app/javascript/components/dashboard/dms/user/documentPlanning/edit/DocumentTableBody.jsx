@@ -2,6 +2,7 @@ import React, { Fragment, useCallback, useState } from 'react'
 import { change, Field } from 'redux-form'
 import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import SelectField from '../../../../../../elements/SelectField'
 import { required } from '../../../../../../elements/validations'
 import InputField from '../../../../../../elements/InputField'
@@ -65,14 +66,15 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
       ...currentField,
       temp_id: `f${((Math.random() * 1e8)).toString(16)}`
     }
-    fields.splice(index, 0, newValue)
+    fields.splice(index + 1, 0, newValue)
   }, [fields])
   if (documentTypeIndex < 0 || disciplineIndex < 0 || companyIndex < 0) return <Fragment />
 
   const lessThanTwo = fields.length < 2
   return (
-    <div className="Rtable__body non-stripped">
+    <TransitionGroup className="Rtable__body non-stripped">
       {fields.map((field, i) => {
+        const realField = fields.get(i)
         const checked = checkedDocs.includes(field)
         const changedRow = changedRows[field] || []
         const changed = changedRow.length > 0
@@ -88,173 +90,175 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
         const feedBackText = name => (changedRow.includes(name) ? INFO_FEEDBACK : '')
 
         return (
-          <div
-            key={field}
-            className={classnames('Rtable-row',
-              { 'Rtable-row__checked': checked },
-              { 'event-border': changed })}
-          >
-            <div className="Rtable__row-cell event-name">
-              <div className={classnames({ active: changed })}>changed</div>
-            </div>
-            <div className="Rtable__row-cell table-checkbox">
-              <input
-                type="checkbox"
-                id={field}
-                checked={checked}
-                onChange={() => toggleChecked(field)}
-              />
-              <label htmlFor={field} />
-            </div>
+          <CSSTransition key={realField.temp_id} timeout={200} classNames="Rtable-row">
+            <div
+              key={field}
+              className={classnames('Rtable-row',
+                { 'Rtable-row__checked': checked },
+                { 'event-border': changed })}
+            >
+              <div className="Rtable__row-cell event-name">
+                <div className={classnames({ active: changed })}>changed</div>
+              </div>
+              <div className="Rtable__row-cell table-checkbox">
+                <input
+                  type="checkbox"
+                  id={field}
+                  checked={checked}
+                  onChange={() => toggleChecked(field)}
+                />
+                <label htmlFor={field} />
+              </div>
+              <div className="Rtable__row-cell">
+                <div>
+                  {`${i + 1}.`}
+                </div>
+              </div>
+              <div className="Rtable__row-cell">
+                <button
+                  type="button"
+                  onClick={() => fields.remove(i)}
+                  className={classnames({ 'd-invisible': lessThanTwo })}
+                  disabled={lessThanTwo}
+                >
+                  <span className="icon-bin-1" />
+                </button>
+              </div>
 
-            <div className="Rtable__row-cell">
-              {`${i + 1}.`}
-            </div>
+              <div className="Rtable__row-cell">
+                <button type="button" onClick={() => copyDoc(i)}>
+                  <span className="icon-common-file-double-1" />
+                </button>
+              </div>
 
-            <div className="Rtable__row-cell">
-              <button
-                type="button"
-                onClick={() => fields.remove(i)}
-                className={classnames({ 'd-invisible': lessThanTwo })}
-                disabled={lessThanTwo}
-              >
-                <span className="icon-bin-1" />
-              </button>
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  component={InputField}
+                  className="form-group project-code"
+                  name={projectCodeName}
+                  id={projectCodeName}
+                  placeholder="MWP"
+                  disabled
+                  infoFeedback={feedBackText(projectCodeName)}
+                  isDirty={v => toggleChangedRows(v, field, projectCodeName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <button type="button" onClick={() => copyDoc(i)}>
-                <span className="icon-common-file-double-1" />
-              </button>
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={companyName}
+                  id={companyName}
+                  options={documentFields[companyIndex].document_field_values}
+                  className="form-group document-codification-field"
+                  component={SelectField}
+                  validate={[required]}
+                  onChange={v => changeValues(v, field, companyIndex)}
+                  placeholder="XXX"
+                  valueAsTitle
+                  infoFeedback={feedBackText(companyIndex)}
+                  isDirty={v => toggleChangedRows(v, field, companyIndex)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                component={InputField}
-                className="form-group project-code"
-                name={projectCodeName}
-                id={projectCodeName}
-                placeholder="MWP"
-                disabled
-                infoFeedback={feedBackText(projectCodeName)}
-                isDirty={v => toggleChangedRows(v, field, projectCodeName)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={disciplineName}
+                  id={disciplineName}
+                  options={documentFields[disciplineIndex].document_field_values}
+                  className="form-group document-codification-field"
+                  component={SelectField}
+                  validate={[required]}
+                  onChange={v => changeValues(v, field, disciplineIndex)}
+                  placeholder="XXX"
+                  valueAsTitle
+                  infoFeedback={feedBackText(disciplineIndex)}
+                  isDirty={v => toggleChangedRows(v, field, disciplineIndex)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={companyName}
-                id={companyName}
-                options={documentFields[companyIndex].document_field_values}
-                className="form-group document-codification-field"
-                component={SelectField}
-                validate={[required]}
-                onChange={v => changeValues(v, field, companyIndex)}
-                placeholder="XXX"
-                valueAsTitle
-                infoFeedback={feedBackText(companyIndex)}
-                isDirty={v => toggleChangedRows(v, field, companyIndex)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={docTypeName}
+                  id={docTypeName}
+                  options={documentFields[documentTypeIndex].document_field_values}
+                  className="form-group document-codification-field"
+                  component={SelectField}
+                  validate={[required]}
+                  onChange={v => changeValues(v, field, documentTypeIndex)}
+                  placeholder="XXX"
+                  valueAsTitle
+                  infoFeedback={feedBackText(docTypeName)}
+                  isDirty={v => toggleChangedRows(v, field, docTypeName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={disciplineName}
-                id={disciplineName}
-                options={documentFields[disciplineIndex].document_field_values}
-                className="form-group document-codification-field"
-                component={SelectField}
-                validate={[required]}
-                onChange={v => changeValues(v, field, disciplineIndex)}
-                placeholder="XXX"
-                valueAsTitle
-                infoFeedback={feedBackText(disciplineIndex)}
-                isDirty={v => toggleChangedRows(v, field, disciplineIndex)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={docNumberName}
+                  id={docNumberName}
+                  component={InputField}
+                  className="form-group document-number"
+                  validate={[required]}
+                  placeholder="0000"
+                  infoFeedback={feedBackText(docNumberName)}
+                  isDirty={v => toggleChangedRows(v, field, docNumberName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={docTypeName}
-                id={docTypeName}
-                options={documentFields[documentTypeIndex].document_field_values}
-                className="form-group document-codification-field"
-                component={SelectField}
-                validate={[required]}
-                onChange={v => changeValues(v, field, documentTypeIndex)}
-                placeholder="XXX"
-                valueAsTitle
-                infoFeedback={feedBackText(docTypeName)}
-                isDirty={v => toggleChangedRows(v, field, docTypeName)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={revNumberName}
+                  id={revNumberName}
+                  component={InputField}
+                  className="form-group revision-number"
+                  validate={[required]}
+                  placeholder="00"
+                  infoFeedback={feedBackText(revNumberName)}
+                  isDirty={v => toggleChangedRows(v, field, revNumberName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={docNumberName}
-                id={docNumberName}
-                component={InputField}
-                className="form-group document-number"
-                validate={[required]}
-                placeholder="0000"
-                infoFeedback={feedBackText(docNumberName)}
-                isDirty={v => toggleChangedRows(v, field, docNumberName)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={revDateName}
+                  id={revDateName}
+                  component={DatePickerField}
+                  className="form-group revision-date"
+                  validate={[required]}
+                  placeholder="01/01/2019"
+                  infoFeedback={feedBackText(revDateName)}
+                  isDirty={v => toggleChangedRows(v, field, revDateName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={revNumberName}
-                id={revNumberName}
-                component={InputField}
-                className="form-group revision-number"
-                validate={[required]}
-                placeholder="00"
-                infoFeedback={feedBackText(revNumberName)}
-                isDirty={v => toggleChangedRows(v, field, revNumberName)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={titleName}
+                  id={titleName}
+                  component={InputField}
+                  className="form-group document-title"
+                  validate={[required]}
+                  placeholder="Title"
+                  infoFeedback={feedBackText(titleName)}
+                  isDirty={v => toggleChangedRows(v, field, titleName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={revDateName}
-                id={revDateName}
-                component={DatePickerField}
-                className="form-group revision-date"
-                validate={[required]}
-                placeholder="01/01/2019"
-                infoFeedback={feedBackText(revDateName)}
-                isDirty={v => toggleChangedRows(v, field, revDateName)}
-              />
-            </div>
+              <div className="Rtable__row-cell">
+                <Field
+                  name={informationName}
+                  id={informationName}
+                  component={InputField}
+                  className="form-group"
+                  validate={[required]}
+                  placeholder="Additional information"
+                  infoFeedback={feedBackText(informationName)}
+                  isDirty={v => toggleChangedRows(v, field, informationName)}
+                />
+              </div>
 
-            <div className="Rtable__row-cell">
-              <Field
-                name={titleName}
-                id={titleName}
-                component={InputField}
-                className="form-group document-title"
-                validate={[required]}
-                placeholder="Title"
-                infoFeedback={feedBackText(titleName)}
-                isDirty={v => toggleChangedRows(v, field, titleName)}
-              />
             </div>
-
-            <div className="Rtable__row-cell">
-              <Field
-                name={informationName}
-                id={informationName}
-                component={InputField}
-                className="form-group"
-                validate={[required]}
-                placeholder="Additional information"
-                infoFeedback={feedBackText(informationName)}
-                isDirty={v => toggleChangedRows(v, field, informationName)}
-              />
-            </div>
-
-          </div>
+          </CSSTransition>
         )
       })}
       {/* <div className="Rtable-row">
@@ -274,7 +278,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
         </div>
         <div className="Rtable__row-cell" />
       </div> */}
-    </div>
+    </TransitionGroup>
   )
 }
 

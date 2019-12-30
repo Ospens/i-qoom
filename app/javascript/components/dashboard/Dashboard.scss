@@ -722,7 +722,6 @@ form {
   input[type=checkbox]+label {
     background-color: #e8f3f4;
     border-radius: 3px;
-    min-height: 15px;
     min-width: 15px;
     height: 15px;
     width: 15px;
@@ -734,7 +733,6 @@ form {
     margin-bottom: 0;
     background-color: #e8f3f4;
     border-radius: 3px;
-    min-height: 15px;
     min-width: 15px;
     height: 15px;
     width: 15px;
@@ -747,7 +745,6 @@ input[type=checkbox]+label {
   margin-top: 0;
   margin-bottom: 0;
   border-radius: 3px;
-  min-height: 15px;
   min-width: 15px;
   height: 15px;
   width: 15px;
@@ -764,7 +761,6 @@ input[type=checkbox]:checked+label {
   margin-bottom: 0;
   background-color: #e8f3f4;
   border-radius: 3px;
-  min-height: 15px;
   min-width: 15px;
   height: 15px;
   width: 15px;
@@ -1823,7 +1819,6 @@ i.arrow {
       margin-left: 0.5rem !important;
     }
   }
-
 }
 
 .company-data-form {
@@ -1849,7 +1844,6 @@ i.arrow {
 
   .Rtable-row {
     display: table-row;
-
     .Rtable__row-cell {
       display: table-cell;
 
@@ -1955,8 +1949,59 @@ i.arrow {
 
     .Rtable-row {
       border-radius: 5px;
-      transition: all 200ms ease-in-out;
       border: 0;
+
+      .Rtable__row-cell {
+        > * {
+          overflow: hidden;
+        }
+      }
+
+      &.Rtable-row-enter {
+        .Rtable__row-cell {
+          padding-top: 0;
+          padding-bottom: 0;
+          > * {
+            max-height: 0;
+          }
+        }
+      }
+
+      &.Rtable-row-enter-active {
+        .Rtable__row-cell {
+          transition: all .2s ease-in-out;
+          max-height: 90px;
+          padding-top: 16px;
+          padding-bottom: 16px;
+          > * {
+            transition: all .2s ease-in-out;
+            max-height: 90px;
+          }
+        }
+      }
+
+      &.Rtable-row-exit {
+        .Rtable__row-cell {
+          max-height: 90px;
+          padding-top: 16px;
+          padding-bottom: 16px;
+          > * {
+            max-height: 90px;
+          }
+        }
+      }
+
+      &.Rtable-row-exit-active {
+        .Rtable__row-cell {
+          padding-top: 0;
+          padding-bottom: 0;
+          transition: all .2s ease-in-out;
+          > * {
+            max-height: 0;
+            transition: all .2s ease-in-out;
+          }
+        }
+      }
 
       &:nth-child(even) {
         background-color: #F7FAFA;
