@@ -275,6 +275,8 @@ class DocumentField < ApplicationRecord
           errors.add(:document_field_values, :is_required)
         end
       elsif document_native_file?
+        # skipping because can't upload file in planned list
+        return if parent.document_main.planned?
         errors.add(:file, :is_required) if !file.attached?
       elsif additional_information?
         # nothing, not required
@@ -288,6 +290,8 @@ class DocumentField < ApplicationRecord
         errors.add(:document_field_values, :is_required)
       end
     elsif upload_field?
+      # skipping because can't upload file in planned list
+      return if parent.document_main.planned?
       # file only required in initial document, afterwards empty file field
       # will be mean to copy file from previous document version
       if !file.attached? && parent.first_document_in_chain?

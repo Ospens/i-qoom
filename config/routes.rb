@@ -75,6 +75,7 @@ Rails.application.routes.draw do
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
+            get :download_all_details
             get :download_list
             get :my_documents
             resources :members, only: :show, module: :documents
