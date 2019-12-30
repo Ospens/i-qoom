@@ -367,6 +367,16 @@ describe DmsPlannedList, type: :request do
           expect(response).to have_http_status(:success)
           expect(DocumentMain.count).to eql(1)
         end
+
+        it 'review_status is not required' do
+          DocumentMain.destroy_all
+          expect(DocumentMain.count).to eql(0)
+          @params[:document_mains].first[:document]['review_status'] = nil
+          post "/api/v1/projects/#{@project_id}/dms_planned_lists/#{list.id}/update_documents",\
+            params: @params, headers: credentials(user)
+          expect(response).to have_http_status(:success)
+          expect(DocumentMain.count).to eql(1)
+        end
       end
 
       context 'update document' do
