@@ -32,11 +32,14 @@ function DocumentPlanning() {
 
   useEffect(() => {
     if (!(editData.document_mains && editData.new)) return
+
     const { document_mains: documentMains } = editData
-    documentMains.push({
-      document: editData.new,
-      temp_id: `f${((Math.random() * 1e8)).toString(16)}`
-    })
+    if (editData.document_mains.length < 1) {
+      documentMains.push({
+        document: editData.new,
+        temp_id: `f${((Math.random() * 1e8)).toString(16)}`
+      })
+    }
     dispatch(initialize('dms_planned_list', { document_mains: documentMains }))
   }, [dispatch, editData])
 

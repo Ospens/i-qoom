@@ -64,6 +64,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
     const currentField = fields.get(index)
     const newValue = {
       ...currentField,
+      id: undefined,
       temp_id: `f${((Math.random() * 1e8)).toString(16)}`
     }
     fields.splice(index + 1, 0, newValue)
@@ -74,10 +75,11 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
   return (
     <TransitionGroup className="Rtable__body non-stripped">
       {fields.map((field, i) => {
-        const realField = fields.get(i)
-        const checked = checkedDocs.includes(field)
-        const changedRow = changedRows[field] || []
+        const { temp_id: tempId, id } = fields.get(i)
+        const checked = checkedDocs.includes(tempId)
+        const changedRow = changedRows[tempId] || []
         const changed = changedRow.length > 0
+        const bordered = !id || changed
         const projectCodeName = `${field}.document.project_code`
         const companyName = `${field}.document.document_fields[${companyIndex}].value`
         const disciplineName = `${field}.document.document_fields[${disciplineIndex}].value`
@@ -90,24 +92,25 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
         const feedBackText = name => (changedRow.includes(name) ? INFO_FEEDBACK : '')
 
         return (
-          <CSSTransition key={realField.temp_id} timeout={200} classNames="Rtable-row">
+          <CSSTransition key={tempId} timeout={200} classNames="Rtable-row">
             <div
-              key={field}
               className={classnames('Rtable-row',
                 { 'Rtable-row__checked': checked },
-                { 'event-border': changed })}
+                { 'event-border': bordered })}
             >
               <div className="Rtable__row-cell event-name">
-                <div className={classnames({ active: changed })}>changed</div>
+                <div className={classnames({ active: bordered })}>
+                  { id ? 'changed' : 'new'}
+                </div>
               </div>
               <div className="Rtable__row-cell table-checkbox">
                 <input
                   type="checkbox"
-                  id={field}
+                  id={tempId}
                   checked={checked}
-                  onChange={() => toggleChecked(field)}
+                  onChange={() => toggleChecked(tempId)}
                 />
-                <label htmlFor={field} />
+                <label htmlFor={tempId} />
               </div>
               <div className="Rtable__row-cell">
                 <div>
@@ -140,7 +143,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   placeholder="MWP"
                   disabled
                   infoFeedback={feedBackText(projectCodeName)}
-                  isDirty={v => toggleChangedRows(v, field, projectCodeName)}
+                  isDirty={v => toggleChangedRows(v, tempId, projectCodeName)}
                 />
               </div>
 
@@ -155,8 +158,8 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   onChange={v => changeValues(v, field, companyIndex)}
                   placeholder="XXX"
                   valueAsTitle
-                  infoFeedback={feedBackText(companyIndex)}
-                  isDirty={v => toggleChangedRows(v, field, companyIndex)}
+                  infoFeedback={feedBackText(companyName)}
+                  isDirty={v => toggleChangedRows(v, tempId, companyName)}
                 />
               </div>
 
@@ -171,8 +174,8 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   onChange={v => changeValues(v, field, disciplineIndex)}
                   placeholder="XXX"
                   valueAsTitle
-                  infoFeedback={feedBackText(disciplineIndex)}
-                  isDirty={v => toggleChangedRows(v, field, disciplineIndex)}
+                  infoFeedback={feedBackText(disciplineName)}
+                  isDirty={v => toggleChangedRows(v, tempId, disciplineName)}
                 />
               </div>
 
@@ -188,7 +191,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   placeholder="XXX"
                   valueAsTitle
                   infoFeedback={feedBackText(docTypeName)}
-                  isDirty={v => toggleChangedRows(v, field, docTypeName)}
+                  isDirty={v => toggleChangedRows(v, tempId, docTypeName)}
                 />
               </div>
 
@@ -201,7 +204,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   validate={[required]}
                   placeholder="0000"
                   infoFeedback={feedBackText(docNumberName)}
-                  isDirty={v => toggleChangedRows(v, field, docNumberName)}
+                  isDirty={v => toggleChangedRows(v, tempId, docNumberName)}
                 />
               </div>
 
@@ -214,7 +217,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   validate={[required]}
                   placeholder="00"
                   infoFeedback={feedBackText(revNumberName)}
-                  isDirty={v => toggleChangedRows(v, field, revNumberName)}
+                  isDirty={v => toggleChangedRows(v, tempId, revNumberName)}
                 />
               </div>
 
@@ -227,7 +230,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   validate={[required]}
                   placeholder="01/01/2019"
                   infoFeedback={feedBackText(revDateName)}
-                  isDirty={v => toggleChangedRows(v, field, revDateName)}
+                  isDirty={v => toggleChangedRows(v, tempId, revDateName)}
                 />
               </div>
 
@@ -240,7 +243,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   validate={[required]}
                   placeholder="Title"
                   infoFeedback={feedBackText(titleName)}
-                  isDirty={v => toggleChangedRows(v, field, titleName)}
+                  isDirty={v => toggleChangedRows(v, tempId, titleName)}
                 />
               </div>
 
@@ -253,7 +256,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   validate={[required]}
                   placeholder="Additional information"
                   infoFeedback={feedBackText(informationName)}
-                  isDirty={v => toggleChangedRows(v, field, informationName)}
+                  isDirty={v => toggleChangedRows(v, tempId, informationName)}
                 />
               </div>
 

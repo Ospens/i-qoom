@@ -11,7 +11,9 @@ const initialState = {
   current: {
     documents: []
   },
-  edit: {}
+  edit: {
+    document_mains: []
+  }
 }
 
 const plannedListsReducer = (state = initialState, action) => {
