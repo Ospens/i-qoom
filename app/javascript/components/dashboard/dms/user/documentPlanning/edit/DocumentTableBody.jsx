@@ -60,7 +60,11 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
   }, [changedRows])
 
   const copyDoc = useCallback(index => {
-    const newValue = fields.get(index)
+    const currentField = fields.get(index)
+    const newValue = {
+      ...currentField,
+      temp_id: `f${((Math.random() * 1e8)).toString(16)}`
+    }
     fields.splice(index, 0, newValue)
   }, [fields])
   if (documentTypeIndex < 0 || disciplineIndex < 0 || companyIndex < 0) return <Fragment />

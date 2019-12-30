@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { FieldArray, reduxForm } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
@@ -16,6 +16,38 @@ const columns = [
   { title: 'Document title' },
   { title: 'Add additional information' }
 ]
+
+function tableFooter(pristine, reset, projectId, listId) {
+  if (pristine) {
+    return (
+      <div className="dms-footer data-changed-footer">
+        <div className="d-flex">
+          <Link
+            to={`/dashboard/projects/${projectId}/documents/planning/${listId}`}
+            className="btn btn-white"
+          >
+            Close edit mode
+          </Link>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="dms-footer data-changed-footer">
+      <div className="changes-description">
+        <span>You made changes to existing planned list. Do you want to apply? </span>
+      </div>
+      <div className="d-flex">
+        <button type="button" className="btn btn-white" onClick={reset}>
+          Discard
+        </button>
+        <button type="submit" className="btn btn-purple">
+          Apply changes
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function DocumentsTable({
   handleSubmit, pristine, reset, checkedDocs, toggleChecked
@@ -74,22 +106,7 @@ function DocumentsTable({
           </div>
         </div>
       </div>
-      {!pristine
-      && (
-        <div className="dms-footer data-changed-footer">
-          <div className="changes-description">
-            <span>You made changes to existing planned list. Do you want to apply? </span>
-          </div>
-          <div className="d-flex">
-            <button type="button" className="btn btn-white" onClick={reset}>
-              Discard
-            </button>
-            <button type="submit" className="btn btn-purple">
-              Apply changes
-            </button>
-          </div>
-        </div>
-      )}
+      {tableFooter(pristine, reset, projectId, listId)}
     </form>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import DMSLayout from '../../DMSLayout'
 import SideBar from './SideBar'
 import Content from './Content'
@@ -10,6 +10,7 @@ import PlannedListModal from './plannedListForm/PlannedListModal'
 
 function Header({ title }) {
   const [openModal, setOpenModal] = useState(false)
+  const { projectId, listId } = useParams()
   return (
     <div className="dms-header">
       <ul className="buttons-with-icons-list">
@@ -34,6 +35,16 @@ function Header({ title }) {
             </span>
           </button>
         </li>
+        <li className="ml-auto">
+          <Link
+            to={`/dashboard/projects/${projectId}/documents/planning/${listId}/edit`}
+            className="button-with-icon"
+          >
+            <span data-title="Edit planned list">
+              <span>Edit planned list</span>
+            </span>
+          </Link>
+        </li>
       </ul>
     </div>
   )
@@ -43,7 +54,7 @@ function DocumentPlanning() {
   const [checkedDocs, setCheckedDocs] = useState([])
   const { projectId, listId } = useParams()
   const dispatch = useDispatch()
-  const documents = useSelector(state => state.documents.allDocuments)
+  const documents = useSelector(state => state.plannedLists.current.documents)
   const plannedList = useSelector(state => state.plannedLists.current)
   useEffect(() => {
     dispatch(fetchPlannedList(projectId, listId))

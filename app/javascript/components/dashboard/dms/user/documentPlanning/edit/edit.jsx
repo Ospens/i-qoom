@@ -7,7 +7,7 @@ import DocumentsTable from './DocumentsTable'
 import { editPlannedListDocuments } from '../../../../../../actions/plannedListActions'
 import toggleArray from '../../../../../../elements/toggleArray'
 
-function Header({ title }) {
+function header(title) {
   return (
     <div className="dms-header">
       <ul className="buttons-with-icons-list">
@@ -41,11 +41,10 @@ function DocumentPlanning() {
     setCheckedDoc(toggleArray(checkedDocs, value))
   }, [checkedDocs])
   const sidebar = <div />
-  const header = <Header title={editData.name} />
   const content = <DocumentsTable toggleChecked={toggleChecked} checkedDocs={checkedDocs} />
   return (
     <DMSLayout
-      header={header}
+      header={header(editData.name)}
       sidebar={sidebar}
       content={content}
       classNames="with-header"

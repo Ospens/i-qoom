@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Tabs from '../../../../../elements/Tabs'
 import PlanningTable from './PlanningTable'
-import PlannedListModal from './plannedListForm/PlannedListModal'
 
 const toBeUploadedLabel = (
   <div>

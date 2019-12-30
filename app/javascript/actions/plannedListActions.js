@@ -108,6 +108,10 @@ export const editPlannedListDocuments = (projectId, listId) => (dispatch, getSta
     axios.get(`/api/v1/projects/${projectId}/dms_planned_lists/${listId}/edit_documents`,
       headers)
       .then(({ data }) => {
+        data.document_mains.map(doc => ({
+          temp_id: `f${((Math.random() * 1e8)).toString(16)}`,
+          ...doc
+        }))
         dispatch({ type: EDIT_PLANNED_LIST, payload: data })
       })
       .catch(({ response }) => {

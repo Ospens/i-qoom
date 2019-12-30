@@ -8,7 +8,9 @@ import {
 
 const initialState = {
   all: [],
-  current: {},
+  current: {
+    documents: []
+  },
   edit: {}
 }
 
