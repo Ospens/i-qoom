@@ -1,10 +1,16 @@
 import React, { Fragment, useCallback, useState } from 'react'
-import { change, Field } from 'redux-form'
+import { change, touch, Field } from 'redux-form'
 import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import SelectField from '../../../../../../elements/SelectField'
-import { required } from '../../../../../../elements/validations'
+import {
+  required,
+  maxLength4,
+  maxLength2,
+  minLength2,
+  minLength4
+} from '../../../../../../elements/validations'
 import InputField from '../../../../../../elements/InputField'
 import DatePickerField from '../../../../../../elements/DatePickerField'
 
@@ -69,6 +75,15 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
     }
     fields.splice(index + 1, 0, newValue)
   }, [fields])
+
+  const blurPadStart = useCallback((document, index, padStart, event) => {
+    event.preventDefault()
+    const newValue = String(event.target.value).padStart(padStart, 0)
+    dispatch(change('dms_planned_list',
+      `${document}.document.document_fields[${index}].value`,
+      newValue))
+    dispatch(touch('dms_planned_list', `document_fields[${index}].value`))
+  }, [dispatch])
   if (documentTypeIndex < 0 || disciplineIndex < 0 || companyIndex < 0) return <Fragment />
 
   const lessThanTwo = fields.length < 2
@@ -89,7 +104,7 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
         const revDateName = `${field}.document.document_fields[${revDateIndex}].value`
         const titleName = `${field}.document.title`
         const informationName = `${field}.document.document_fields[${informationIndex}].value`
-        const feedBackText = name => (changedRow.includes(name) ? INFO_FEEDBACK : '')
+        const feedBackText = name => (changedRow.includes(name) && id ? INFO_FEEDBACK : '')
 
         return (
           <CSSTransition key={tempId} timeout={200} classNames="Rtable-row">
@@ -200,9 +215,13 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   name={docNumberName}
                   id={docNumberName}
                   component={InputField}
+                  type="number"
                   className="form-group document-number"
-                  validate={[required]}
+                  validate={[required, maxLength4, minLength4]}
                   placeholder="0000"
+                  maxLength="4"
+                  min="0000"
+                  onBlur={v => blurPadStart(field, docNumberIndex, 4, v)}
                   infoFeedback={feedBackText(docNumberName)}
                   isDirty={v => toggleChangedRows(v, tempId, docNumberName)}
                 />
@@ -213,9 +232,13 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
                   name={revNumberName}
                   id={revNumberName}
                   component={InputField}
+                  type="number"
                   className="form-group revision-number"
-                  validate={[required]}
+                  validate={[required, maxLength2, minLength2]}
                   placeholder="00"
+                  maxLength="2"
+                  min="00"
+                  onBlur={v => blurPadStart(field, revNumberIndex, 2, v)}
                   infoFeedback={feedBackText(revNumberName)}
                   isDirty={v => toggleChangedRows(v, tempId, revNumberName)}
                 />

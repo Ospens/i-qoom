@@ -121,6 +121,17 @@ export const editPlannedListDocuments = (projectId, listId) => (dispatch, getSta
   )
 }
 
+const stringToObjectKeys = params => {
+  const data = { document: { document_fields: [] } }
+  params.forEach(param => {
+    const documentField = param.find(c => c.includes('document_fields['))
+    if (documentField) {
+      const documentFieldNumber = documentField.match(/\d+/)[0]
+      data.document.document_fields[documentFieldNumber] = { value: 'error' }
+    }
+  })
+  return data
+}
 
 export const updatePlannedListDocuments = (projectId, listId, request) => (dispatch, getState) => {
   const { user: { token } } = getState()
@@ -130,11 +141,25 @@ export const updatePlannedListDocuments = (projectId, listId, request) => (dispa
       request,
       headers)
       .then(({ data }) => {
-        console.log(data)
+        const errorsFields = data.map(el => Object.entries(el.errors).length === 0
+          && el.errors.constructor === Object)
+        if (errorsFields.filter(er => !er).length > 0) {
+          const errors = { document_mains: [] }
+          errors.document_mains = request.document_mains.map(dm => {
+            const field = data.find(el => el.temp_id === dm.temp_id)
+            if (!field) return {}
+
+            const keysArray = Object.keys(field.errors).map(a => a.split('.'))
+            return stringToObjectKeys(keysArray)
+          })
+          throw errors
+        }
+
+        // TODO: part if data is valid
       })
-      .catch(({ response }) => {
+      .catch(response => {
         dispatch(errorNotify('Problem'))
-        throw new SubmissionError(response.data)
+        throw new SubmissionError(response)
       })
   )
 }

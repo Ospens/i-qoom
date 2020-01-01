@@ -34,8 +34,12 @@
     z-index: 5;
   }
 
-  &.project-code, &.document-number {
+  &.project-code {
     width: 67px !important;
+  }
+
+  &.document-number {
+    width: 80px !important;
   }
 
   &.document-codification-field {
@@ -43,7 +47,7 @@
   }
 
   &.revision-number {
-    width: 47px !important;
+    width: 60px !important;
   }
 
   &.revision-date {

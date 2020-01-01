@@ -55,7 +55,7 @@ function DocumentsTable({
   const dispatch = useDispatch()
   const { projectId, listId } = useParams()
   const onSubmit = useCallback(values => {
-    dispatch(updatePlannedListDocuments(projectId, listId, values))
+    return dispatch(updatePlannedListDocuments(projectId, listId, values))
   }, [dispatch, projectId, listId])
 
   return (
