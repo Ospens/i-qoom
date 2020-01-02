@@ -26,8 +26,9 @@ function nestedItems(nested, location, customItem) {
 }
 
 function PlannedListItem({
-  matched, text, location
+  match, text, location
 }) {
+  const matched = match.path.includes('documents/planning/')
   const [open, setOpen] = useState(matched)
   const [openForm, setOpenForm] = useState(false)
   const { projectId } = useParams()
@@ -110,7 +111,7 @@ function DmsSideBarItem({
                 if (type === 'plannedList') {
                   return (
                     <PlannedListItem
-                      matched={matched}
+                      match={match}
                       text={text}
                       location={location}
                     />

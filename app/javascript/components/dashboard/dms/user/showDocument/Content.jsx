@@ -57,7 +57,7 @@ function Content() {
     const { versions } = revisions
     lastDocID = versions[versions.length - 1].id
   }
-  console.log(document)
+
   return (
     <div className="show-document bordered">
       <div className="dms-content__header">

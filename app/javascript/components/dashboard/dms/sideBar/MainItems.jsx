@@ -27,7 +27,7 @@ const menuItems = (projectCode, dmsSections, projectId, masterPath) => [
     title: 'Document planning',
     icon: 'icon-calendar-3',
     type: 'plannedList',
-    root: `/dashboard/projects/${projectId}/documents/planning/`,
+    root: `/dashboard/projects/${projectId}/documents/planning/`
   },
   {
     title: 'Master settings',
