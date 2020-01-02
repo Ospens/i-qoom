@@ -156,7 +156,7 @@ function Content() {
         <div className="my-4">
           <label className="mb-4">Files</label>
           {fileFields.map((field, i) => {
-            const fileExtension = field.filename.match(/\.[0-9a-z]+$/i)[0]
+            const fileExtension = field.filename ? field.filename.match(/\.[0-9a-z]+$/i)[0] : ''
             let iconClassName = 'icon-common-file-text1'
             if (fileExtension === '.pdf') {
               iconClassName = 'icon-Work-Office-Companies---Office-Files---office-file-pdf'
