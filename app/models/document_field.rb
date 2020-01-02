@@ -43,7 +43,8 @@ class DocumentField < ApplicationRecord
   before_validation :attach_previous_file,
                     if: -> { parent.class.name == 'Document' &&
                              upload_field? &&
-                             !file.attached? },
+                             !file.attached? &&
+                             !parent.document_main.planned? },
                     on: :create
 
   after_save :update_revision_number,
