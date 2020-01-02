@@ -5,11 +5,11 @@ class Api::V1::DmsPlannedListsController < ApplicationController
 
   def create
     authorize! :create, DmsPlannedList.new, @project
-    dms_planned_lists = @project.dms_planned_lists.new(dms_planned_list_params)
-    if dms_planned_lists.save
-      render json: dms_planned_lists
+    dms_planned_list = @project.dms_planned_lists.new(dms_planned_list_params)
+    if dms_planned_list.save
+      render json: dms_planned_list
     else
-      render json: dms_planned_lists.errors,
+      render json: dms_planned_list.errors,
              status: :unprocessable_entity
     end
   end

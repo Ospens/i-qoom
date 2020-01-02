@@ -418,7 +418,7 @@ describe DmsPlannedList, type: :request do
             expect(doc.revision.last_version.email_title).to eql(title)
           end
 
-          it 'valid' do
+          it 'no file' do
             field = doc.document_fields.find_by(kind: :upload_field)
             field.file.purge
             post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
