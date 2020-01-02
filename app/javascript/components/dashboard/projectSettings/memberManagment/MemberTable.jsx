@@ -40,7 +40,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
   const {
     id,
     cms_module_access: cmsModuleAccess,
-    cms_module_master: cmsModuleMaster,
+    // cms_module_master: cmsModuleMaster,
     dms_module_access: dmsModuleAccess,
     dms_module_master: dmsModuleMaster,
     user_id: userId
@@ -49,7 +49,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
   useEffect(() => {
     const newTitle = []
     if (cmsModuleAccess) {
-      newTitle.push('CMS')
+      // newTitle.push('CMS')
     }
     if (dmsModuleAccess) {
       newTitle.push('DMS')
@@ -63,7 +63,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
       btnName={titleItems.join(', ')}
       btnClass="btn btn-for-switch"
     >
-      <button className="dropdown-item mainitem" type="button">
+      {/* <button className="dropdown-item mainitem" type="button">
         <span>Contract MS</span>
         <label className="switch ml-2" htmlFor={`cms_module_access_${id}`}>
           <input
@@ -75,8 +75,8 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
           />
           <span className="slider round" />
         </label>
-      </button>
-      {cmsModuleAccess
+      </button> */}
+      {/* {cmsModuleAccess
       && (
         <button className="dropdown-item subitem" type="button">
           <span>Module master</span>
@@ -90,7 +90,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
             <span className="slider round" />
           </label>
         </button>
-      )}
+      )} */}
       <button className="dropdown-item mainitem" type="button">
         <span>Document MS</span>
         <label className="switch ml-2" htmlFor={`dms_module_access_${id}`}>
@@ -98,6 +98,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
             type="checkbox"
             id={`dms_module_access_${id}`}
             checked={dmsModuleAccess}
+            disabled={userId === currentUserId}
             onChange={() => handleChange(!dmsModuleAccess, id, 'dms_module_access')}
           />
           <span className="slider round" />
@@ -112,6 +113,7 @@ function ModuleAccess({ member, currentUserId, handleChange }) {
               type="checkbox"
               id={`dms_module_master_${id}`}
               checked={dmsModuleMaster}
+              disabled={userId === currentUserId}
               onChange={() => handleChange(!dmsModuleMaster, id, 'dms_module_master')}
             />
             <span className="slider round" />

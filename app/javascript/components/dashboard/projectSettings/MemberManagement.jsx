@@ -40,7 +40,7 @@ function MemberManagement() {
           <li>
             <button
               type="button"
-              className="with-icon"
+              className="button-with-icon"
               onClick={() => openModal('role')}
             >
               <span className="icon-task-list-edit" />
@@ -50,7 +50,7 @@ function MemberManagement() {
           <li>
             <button
               type="button"
-              className="with-icon"
+              className="button-with-icon"
               onClick={() => openModal('discipline')}
             >
               <span className="icon-common-file-text1" />
@@ -60,7 +60,7 @@ function MemberManagement() {
           <li>
             <button
               type="button"
-              className="with-icon"
+              className="button-with-icon"
               onClick={() => openModal('addMember')}
             >
               <span className="icon-add_1" />

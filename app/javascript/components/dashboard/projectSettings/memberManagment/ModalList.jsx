@@ -25,7 +25,7 @@ function ModalList({ closeModal, items, openForm, removeItem, type }) {
       <div className='new-modal__body'>
         <ul>
           <li>
-            <button type='button' className='btn with-icon pl-0' onClick={() => openForm()}>
+            <button type='button' className='btn button-with-icon pl-0' onClick={() => openForm()}>
               <span className='icon-add_1' />
               <span>{`Add a ${type}`}</span>
             </button>

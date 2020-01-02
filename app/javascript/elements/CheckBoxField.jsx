@@ -28,7 +28,7 @@ function CheckBoxField({
       <label htmlFor={id} className="text-label">{text}</label>
       {touched && error
         && (
-          <div className="invalid-feedback">
+          <div className="input-feedback-text invalid">
             {error}
           </div>
         )}

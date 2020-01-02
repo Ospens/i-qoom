@@ -170,6 +170,7 @@ a {
 
   &.is-invalid:not(.checkbox-input) {
     display: block;
+    padding: 6px 12px;
     border: 1px solid #FF0042;
     background-image: none;
     box-shadow: 0px 0px 15px #FF004280;
@@ -183,22 +184,22 @@ a {
     box-shadow: 0px 0px 15px #FF004280;
   }
 
-  .invalid-feedback {
-    display: block;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  //.invalid {
+  //  display: block;
+  //  position: absolute;
+  //  left: 0;
+  //  right: 0;
+  //  margin-left: auto;
+  //  margin-right: auto;
+  //}
 }
 
-.invalid-feedback {
+.input-feedback-text {
   position: relative;
   margin-bottom: -16px;
   width: max-content;
   margin-top: 0px;
-  background-color: #FF0042;
+  background-color: var(--color-black);
   padding-top: 5.5px;
   padding-bottom: 5.5px;
   padding-left: 10px;
@@ -215,6 +216,10 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  &.invalid {
+    background-color: #FF0042;
+  }
 }
 
 .form-control-select {
@@ -223,12 +228,12 @@ a {
   }
 }
 
-.form-control-select.is-invalid~.invalid-feedback,
-.invalid-feedback.convention-feedback  {
+.form-control-select.is-invalid~.invalid,
+.invalid.convention-feedback  {
   display: block;
 }
 
-.invalid-feedback.convention-feedback  {
+.invalid.convention-feedback  {
   font-size: 0.8em;
   height: 2em;
   text-align: center;
@@ -441,10 +446,12 @@ footer:after,
 
 .checkbox-field {
   display: flex;
+  align-items: center;
 
   .text-label {
     line-height: 1;
     color: var(--color-black);
+    margin: 0;
   }
 }
 

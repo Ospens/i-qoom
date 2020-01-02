@@ -35,15 +35,41 @@ export const actionDDitems = (projectId, documentId) => (
 )
 
 export const columns = [
-  { title: 'DOC-ID', divider: true, searchable: true, sortable: 'doc_id' },
-  { title: 'Document title', divider: true, searchable: true, sortable: 'title' },
+  {
+    title: 'DOC-ID', divider: true, searchable: true, sortable: 'doc_id'
+  },
+  {
+    title: 'Rev',
+    divider: true,
+    sortable: 'revision_version',
+    className: 'version-revision-cell'
+  },
+  {
+    title: 'Version',
+    divider: true,
+    sortable: 'document_number',
+    className: 'version-revision-cell'
+  },
+  {
+    title: 'Document title',
+    divider: true,
+    searchable: true,
+    sortable: 'title',
+    className: 'title-cell'
+  },
   { title: 'DL', divider: true },
   { title: 'Native', divider: true },
   { title: 'Additional', divider: true },
-  { title: 'Revision date', divider: true, sortable: 'revision_date'},
-  { title: 'Discipline', divider: true, searchable: true, sortable: 'discipline' },
-  { title: 'Document type', divider: true, searchable: true, sortable: 'document_type' },
-  { title: 'Originating company', divider: true, searchable: true, sortable: 'originating_company' }
+  { title: 'Revision date', divider: true, sortable: 'revision_date' },
+  {
+    title: 'Discipline', divider: true, searchable: true, sortable: 'discipline'
+  },
+  {
+    title: 'Document type', divider: true, searchable: true, sortable: 'document_type'
+  },
+  {
+    title: 'Originating company', divider: true, searchable: true, sortable: 'originating_company'
+  }
 ]
 
 export const DtOptions = [

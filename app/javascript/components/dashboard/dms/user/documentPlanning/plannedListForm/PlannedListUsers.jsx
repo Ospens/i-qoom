@@ -1,14 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { formValueSelector } from 'redux-form'
-import UsersTableByTabs, { submitButtonText } from '../../../../../../../elements/UsersTableByTabs'
+import UsersTableByTabs, { submitButtonText } from '../../../../../../elements/UsersTableByTabs'
 
-const selector = formValueSelector('team_form')
+const selector = formValueSelector('planned_list_form')
 
-function TeamMembers({
+function PlannedListUsers({
   handleClose, handleSubmit, onSubmit, handleBack
 }) {
-  const name = useSelector(state => selector(state, 'name'))
   const newMembers = useSelector(state => selector(state, 'added_users')) || []
   const removedUsers = useSelector(state => selector(state, 'removed_users')) || []
   const submitText = submitButtonText(newMembers, removedUsers)
@@ -16,45 +15,37 @@ function TeamMembers({
   return (
     <React.Fragment>
       <div className="new-modal__header">
-        <h4>{`Edit - ${name || 'Untitled'}`}</h4>
+        <h4>Apply members to planned list</h4>
       </div>
 
       <div className="new-modal__body">
         <UsersTableByTabs
           firstTabLabel="Add members"
-          secondTabLabel="Team members"
+          secondTabLabel="Applied to planned list"
           selector={selector}
-          teams
         />
       </div>
 
       <div className="new-modal__footer">
         <button
           type="button"
-          className="btn btn-white mr-auto"
+          className="btn btn-white"
           onClick={handleBack}
         >
           Back
         </button>
         <button
           type="button"
-          className="btn btn-white mx-auto"
+          className="btn btn-white ml-2"
           onClick={handleClose}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="btn btn-purple mx-auto"
-          onClick={handleSubmit(values => onSubmit({ ...values, skipAccess: true }))}
+          className="btn btn-purple"
         >
-          {submitText ? `${submitText}` : 'Update with current members'}
-        </button>
-        <button
-          type="submit"
-          className="btn btn-purple ml-auto"
-        >
-          {submitText ? `${submitText} & define rights` : 'Define access rights'}
+          {submitText ? `${submitText}` : 'Create planned list'}
         </button>
       </div>
 
@@ -62,4 +53,4 @@ function TeamMembers({
   )
 }
 
-export default TeamMembers
+export default PlannedListUsers

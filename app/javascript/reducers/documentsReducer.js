@@ -43,7 +43,8 @@ function transformatedDocuments(documents) {
       originating_company: d.document_fields.find(el => el.codification_kind === 'originating_company').document_field_values.find(({ selected }) => selected).title,
       document_type: d.document_fields.find(el => el.codification_kind === 'document_type').document_field_values.find(({ selected }) => selected).title,
       discipline: d.document_fields.find(el => el.codification_kind === 'discipline').document_field_values.find(({ selected }) => selected).title,
-      revision_date: d.document_fields.find(el => el.codification_kind === 'revision_date').value
+      revision_date: d.document_fields.find(el => el.codification_kind === 'revision_date').value,
+      document_number: d.document_fields.find(el => el.codification_kind === 'document_number').value
     }
   ))
 }
