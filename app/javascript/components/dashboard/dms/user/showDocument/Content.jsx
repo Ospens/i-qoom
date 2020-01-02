@@ -1,111 +1,115 @@
-import React from 'react'
+import React, { Fragment, useCallback } from 'react'
 import moment from 'moment'
-import { useSelector } from 'react-redux'
+import classnames from 'classnames'
+import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
+import { downloadNativeFile } from '../../../../../actions/documentsActions'
 
 const renderBlock = field => {
+  let content
   if (field.codification_kind === 'revision_number') {
-    return (
-      <React.Fragment>
-        <label>{field.title}</label>
-        <label className='rounded-label red'>
-          {`Revision ${field.value}`}
-          <span className='icon-Locked ml-2' />
-        </label>
-      </React.Fragment>
+    content = (
+      <label className="rounded-label red">
+        {`Revision ${field.value}`}
+        <span className="icon-Locked ml-2" />
+      </label>
     )
   } else if (field.codification_kind === 'revision_version') {
-    return (
-      <React.Fragment>
-        <label>{field.title}</label>
-        <label className='rounded-label red'>
-          {`Version ${field.value}`}
-          <span className='icon-Locked ml-2' />
-        </label>
-      </React.Fragment>
+    content = (
+      <label className="rounded-label red">
+        {`Version ${field.value}`}
+        <span className="icon-Locked ml-2" />
+      </label>
     )
   } else if (field.codification_kind === 'revision_date') {
-    return (
-      <React.Fragment>
-        <label>{field.title}</label>
-        <span>{moment(new Date(field.value)).format('MM/DD/YYYY')}</span>
-      </React.Fragment>
-    )
-  } else if (field.title && field.kind !== 'upload_field') {
-    return (
-      <React.Fragment>
-        <label>{field.title}</label>
-        <span>{field.value}</span>
-      </React.Fragment>
-    )
+    content = <span>{moment(new Date(field.value)).format('M.D.YYYY')}</span>
+  } else {
+    content = <span>{field.value}</span>
   }
+  return (
+    <div key={field.title} className="document-show__info-row">
+      <label>{field.title}</label>
+      {content}
+    </div>
+  )
 }
 
 function Content() {
-  const { projectId } = useParams()
-  const document = useSelector(state => state.documents.current)
+  const dispatch = useDispatch()
+  const { projectId, document_id } = useParams()
+  const document = useSelector(state => state.documents.current) || {}
   const revisionsWithVersions = useSelector(state => state.documents.revisions)
-  const firstColumn = document.document_fields.filter(el => el.column == 1 )
-  const secondColumn = document.document_fields.filter(el => el.column == 2)
+  const openFile = useCallback(() => {
+    dispatch(downloadNativeFile(document_id, true))
+  }, [dispatch, document_id])
+  const firstColumn = document.document_fields
+    .filter(el => el.column === 1
+      && el.codification_kind !== 'additional_information'
+      && el.kind !== 'upload_field')
+  const secondColumn = document.document_fields.filter(el => el.column === 2)
   const fileFields = document.document_fields.filter(el => el.kind === 'upload_field')
+  const additionalInformation = document.document_fields
+    .find(el => el.codification_kind === 'additional_information') || {}
   const revisions = revisionsWithVersions[revisionsWithVersions.length - 1]
-  let lastDocID = undefined
+  let lastDocID
 
   if (revisions) {
-    const versions = revisions.versions
+    const { versions } = revisions
     lastDocID = versions[versions.length - 1].id
   }
 
   return (
-    <div className='show-document bordered'>
-      <div className='dms-content__header'>
-        <div className='d-flex'>
+    <div className="show-document bordered">
+      <div className="dms-content__header">
+        <div className="d-flex">
           <h4>Document details</h4>
-          {lastDocID &&
-          <div className='dms-content__header_links-block'>
-            <Link
-              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}
-              className='mx-4 link'
-              data-title='Edit document'
-            >
-              Edit document
-            </Link>
-            <Link
-              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}
-              className='mx-4 link'
-              data-title='Add revision'
-            >
-              Add revision
-            </Link>
-            <Link
-              to='#'
-              className='mx-4 link'
-              data-title='Review document'
-            >
-              Review document
-            </Link>
-          </div>}
+          {lastDocID
+          && (
+            <div className="dms-content__header_links-block">
+              <Link
+                to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}
+                className="mx-4 link"
+                data-title="Edit document"
+              >
+                Edit document
+              </Link>
+              <Link
+                to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}
+                className="mx-4 link"
+                data-title="Add revision"
+              >
+                Add revision
+              </Link>
+              <Link
+                to="#"
+                className="mx-4 link"
+                data-title="Review document"
+              >
+                Review document
+              </Link>
+            </div>
+          )}
         </div>
-        <div className='dms-content__project-phases'>
+        <div className="dms-content__project-phases">
           <span>Project phases</span>
-          <ul className='row mx-0'>
-            <li className='col-3 active'>
-              <button type='button'>
+          <ul className="row mx-0">
+            <li className="col-3 active">
+              <button type="button">
                 Planning
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Development
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Execution
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Operation
               </button>
             </li>
@@ -113,157 +117,175 @@ function Content() {
         </div>
       </div>
 
-      <div className='document-show content-body'>
-        <div className='main-block'>
+      <div className="document-show content-body mb-2">
+        <div className="main-block">
 
-          <div className='left-column'>
-            <div className='document-show__info-row'>
+          <div className="left-column">
+            <div className="document-show__info-row">
               <label>Project</label>
               <span>{document.project_name}</span>
             </div>
 
-            <div className='document-show__info-row'>
+            <div className="document-show__info-row">
               <label>Document ID</label>
               <span>{document.document_id}</span>
             </div>
 
-            {firstColumn.map((field, i) => (
-              <div key={i} className='document-show__info-row'>
-                {renderBlock(field)}
-              </div>
-            ))}
+            {firstColumn.map(field => renderBlock(field))}
           </div>
 
-          <div className='right-column'>
-            <div className='document-show__info-row'>
-            </div>
+          <div className="right-column">
+            <div className="document-show__info-row" />
 
-            <div className='document-show__info-row'>
+            <div className="document-show__info-row">
               <label>Title</label>
               <span>{document.title}</span>
             </div>
 
-            {secondColumn.map((field, i) => (
-              <div key={i} className='document-show__info-row'>
-                {renderBlock(field)}
+            {secondColumn.map(field => renderBlock(field))}
+          </div>
+        </div>
+
+        <div className="my-4">
+          <label className="mb-4">Additional information</label>
+          <div className="d-flex align-items-center mb-4">
+            <span>{additionalInformation.value}</span>
+          </div>
+        </div>
+
+        <div className="my-4">
+          <label className="mb-4">Files</label>
+          {fileFields.map((field, i) => {
+            const fileExtension = field.filename ? field.filename.match(/\.[0-9a-z]+$/i)[0] : ''
+            let iconClassName = 'icon-common-file-text1'
+            if (fileExtension === '.pdf') {
+              iconClassName = 'icon-Work-Office-Companies---Office-Files---office-file-pdf'
+            } else if (['.doc', '.docs'].includes(fileExtension)) {
+              iconClassName = 'icon-office-file-doc'
+            } else if (fileExtension === '.csv') {
+              iconClassName = 'icon-csv-1'
+            }
+            return (
+              <div className="d-flex align-items-center mb-4" key={field.filename}>
+                <button type="button" onClick={() => openFile()} className="d-flex">
+                  <i className={classnames('mr-2', iconClassName)} />
+                  <span>{field.filename}</span>
+                </button>
               </div>
-            ))}
-          </div>
+            )
+          })}
         </div>
 
-        {/*<div className='document-show__text-row row'>
-          <label className='mb-4'>Additional information</label>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </div>*/}
-
-        <div className='document-show__files-row my-4'>
-          <label className='mb-4'>Files</label>
-          {fileFields.map((field, i) => (
-            <div className='d-flex align-items-center mb-4' key={i}>
-              <i className='icon-Work-Office-Companies---Office-Files---office-file-pdf mr-2' />
-              <span>{field.filename}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className='main-block'>
-          <div className='left-column'>
-            <div className='document-show__info-row'>
+        <div className="main-block">
+          <div className="left-column">
+            <div className="document-show__info-row">
               <label>Uploaded on</label>
-              <span>12.10.2019</span>
+              <span>{moment(document.created_at).format('M.D.YYYY')}</span>
             </div>
           </div>
 
-          <div className='right-column'>
-            <div className='document-show__info-row'>
+          <div className="right-column">
+            <div className="document-show__info-row">
               <label>Uploaded by</label>
-              <span>John Doe</span>
+              {document.username
+                && <span>{`${document.username.first_name} ${document.username.last_name}`}</span>}
             </div>
           </div>
         </div>
 
-        <div className='info-block pt-4'>
-          <div className='left-column'>
+        {/* <div className="info-block pt-4">
+          <div className="left-column">
             <label>Access rights</label>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>K. Koppes, D.Drennen, C. Caro, L. Lundell K. Koppes, D.Drennen, C. Caro, L. Lundell</p>
           </div>
         </div>
 
-        <div className='info-block'>
-          <div className='left-column'>
+        <div className="info-block">
+          <div className="left-column">
             <label>E-mail to</label>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>Team Munster Windpark (Engeneers)</p>
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <div className="document-show content-body">
-        <div className='border-divider' />
+      {/* <div className="document-show content-body">
+        <div className="border-divider" />
 
-        <div className='info-block pt-4'>
-          <div className='left-column'>
+        <div className="info-block pt-4">
+          <div className="left-column">
             <div><label>Issued on</label></div>
             <div><span>12.10.2019</span></div>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>K. Koppes, D.Drennen, C. Caro, L. Lundell</p>
           </div>
         </div>
 
-        <div className='info-block'>
-          <div className='left-column'>
+        <div className="info-block">
+          <div className="left-column">
             <label>By</label>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>M. Lundell</p>
           </div>
         </div>
 
-        <div className='border-divider' />
+        <div className="border-divider" />
 
-        <div className='info-block pt-4'>
-          <div className='left-column'>
+        <div className="info-block pt-4">
+          <div className="left-column">
             <div><label>Reissued</label></div>
             <div><span>18.10.2019</span></div>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>K. Koppes, D.Drennen, C. Caro, L. Lundell</p>
           </div>
         </div>
 
-        <div className='info-block'>
-          <div className='left-column'>
+        <div className="info-block">
+          <div className="left-column">
             <label>By</label>
           </div>
 
-          <div className='right-column'>
+          <div className="right-column">
             <p>M. Lundell</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className='dms-footer'>
-        <Link className='btn btn-white' to={`/dashboard/projects/${projectId}/documents/`}>Back</Link>
-        {lastDocID &&
-        <React.Fragment>
-          <Link className='btn btn-purple' to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}>Edit</Link>
-          <Link className='btn btn-purple' to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}>Add revision</Link>
-        </React.Fragment>}
+      <div className="dms-footer">
+        <Link
+          className="btn btn-white"
+          to={`/dashboard/projects/${projectId}/documents/`}
+        >
+          Back
+        </Link>
+        {lastDocID
+        && (
+          <Fragment>
+            <Link
+              className="btn btn-purple"
+              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/edit`}
+            >
+              Edit
+            </Link>
+            <Link
+              className="btn btn-purple"
+              to={`/dashboard/projects/${projectId}/documents/${lastDocID}/add_revision`}
+            >
+              Add revision
+            </Link>
+          </Fragment>
+        )}
       </div>
     </div>
   )

@@ -1,5 +1,4 @@
 require 'rails_helper'
-include DocumentConcern
 
 describe Document, type: :request do
   let(:json) { JSON(response.body) }

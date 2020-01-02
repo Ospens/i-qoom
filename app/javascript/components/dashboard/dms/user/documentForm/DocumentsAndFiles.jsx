@@ -10,7 +10,6 @@ import {
 import { Link, withRouter } from 'react-router-dom'
 import DocIdModal from '../../DocIdModal'
 import SelectField from '../../../../../elements/SelectField'
-import CheckboxField from '../../../../../elements/CheckboxField'
 import DatePickerField from '../../../../../elements/DatePickerField'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
@@ -18,7 +17,8 @@ import TextAreaField from '../../../../../elements/TextAreaField'
 import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../../elements/validations'
 import { initValues } from '../../initDocId'
 import DocumentIdInputs from '../../DocumentIdInputs'
-import { addNotification } from '../../../../../actions/notificationsActions'
+import { infoNotify } from '../../../../../actions/notificationsActions'
+import CheckBoxField from '../../../../../elements/CheckBoxField'
 
 const codificationString = [
   'originating_company',
@@ -179,11 +179,9 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
     }
     if (!generateId) return
 
-    const infoMsg = title => dispatch(addNotification({
-      title: 'Documents',
-      text: `Can not get data from title ${title}`,
-      type: 'info'
-    }))
+    const infoMsg = title => dispatch(
+      infoNotify('Documents', `Can not get data from title ${title}`)
+    )
 
     const values = initValues(documentFields, (title) => infoMsg(title))
     if (!values) return
@@ -234,11 +232,13 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
               docNumberValue={docNumberValue}
             />
             <div className='form-group'>
-              <CheckboxField
-                name='generate_id'
-                checkBoxId='generate_id'
+              <Field
+                component={CheckBoxField}
+                id="generate_id"
+                name="generate_id"
                 labelClass='form-check-label mr-2'
                 text='Generate Document ID through file code'
+                className="d-flex justify-content-center"
               />
             </div>
             {groupedFields[columns[0]].map((field, index) => (

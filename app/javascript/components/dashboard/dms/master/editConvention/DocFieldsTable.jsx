@@ -78,7 +78,7 @@ class DocFieldsTable extends Component {
       </div>
       <div className='draggable-container undraggable'>
         <div className='form-group'>
-          <div className='checkbox-field justify-content-center'>
+          <div className='d-flex align-items-center justify-content-center'>
             <input
               name='generate_id'
               id='generate_id'
@@ -93,11 +93,11 @@ class DocFieldsTable extends Component {
     </React.Fragment>
   )
 
-  renerFooter = () => {
+  renderFooter = () => {
     const { reset, version } = this.props
 
     return (
-      <div className='dms-footer edit-convetion-footer'>
+      <div className='dms-footer data-changed-footer'>
         <div className='changes-description'>
           You made changes to the upload <b>form {version} of Convention 1</b>.
           Do you want to save all changes to update this form to <b>version {version + 1}</b>?
@@ -121,7 +121,7 @@ class DocFieldsTable extends Component {
   renerFooterForNewConv = () => {
     const { reset } = this.props
     return (
-      <div className='dms-footer edit-convetion-footer'>
+      <div className='dms-footer data-changed-footer'>
         <div className='d-flex'>
           <button
             type='button'
@@ -201,8 +201,8 @@ class DocFieldsTable extends Component {
               </div>
               {this.renderModalButton()}
             </div>
-            {!pristine && this.renerFooter()}
           </form>
+          {!pristine && this.renderFooter()}
         </ DragDropContext>
       </React.Fragment>
     )

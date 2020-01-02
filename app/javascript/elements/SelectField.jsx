@@ -1,19 +1,20 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 import Select, { components } from 'react-select'
 import ReactSVG from 'react-svg'
+import { feedBackText } from './InputField'
 
 const DropdownIndicator = props => {
   const { isFocused } = props
   return (
-    <components.DropdownIndicator {...props} className='mr-3'>
-      {!isFocused && <i className='arrow down'/>}
-      {isFocused && <i className='arrow up'/>}
+    <components.DropdownIndicator {...props} className="mr-3">
+      {!isFocused && <i className="arrow down" />}
+      {isFocused && <i className="arrow up" />}
     </components.DropdownIndicator>
   )
 }
 
 const Option = props => {
-  const { data: { icon, title }} = props
+  const { data: { icon, title, value }, selectProps: { valueAsTitle } } = props
   if (icon) {
     return (
       <components.Option {...props}>
@@ -26,52 +27,52 @@ const Option = props => {
         </div>
       </components.Option>
     )
-  } else {
-    return (
-      <components.Option {...props} >
-        <span>{props.data.title || props.data.value}</span>
-      </ components.Option>
-    )
   }
+  return (
+    <components.Option {...props}>
+      <span>{title && !valueAsTitle ? title : value}</span>
+    </components.Option>
+  )
 }
 
 const SingleValue = props => {
+  const { data: { title, value }, selectProps: { valueAsTitle } } = props
   return (
     <components.SingleValue {...props}>
-      {props.data.title || props.data.value}
+      {title && !valueAsTitle ? title : value}
     </components.SingleValue>
   )
 }
 
 const MultiValueLabel = props => {
+  const { data: { title, value } } = props
   return (
     <components.MultiValueLabel {...props}>
-      {props.data.title || props.data.value}
+      {title || value}
     </components.MultiValueLabel>
   )
 }
 
-const IndicatorSeparator = ({ innerProps }) => {
-  return (
-    <span style={{display: 'none'}} {...innerProps} />
-  )
-}
+const IndicatorSeparator = ({ innerProps }) => (
+  <span style={{ display: 'none' }} {...innerProps} />
+)
 
 const checkValue = (options, input) => {
   if (!options) return {}
-  
+
   if (typeof input.value === 'string' || typeof input.value === 'number') {
     return options.filter(option => input.value === option.value)
-  } else if (typeof input.value === 'object' && Object.keys(input.value)) {
+  } if (typeof input.value === 'object' && Object.keys(input.value)) {
     return options.filter(option => input.value.includes(option.value))
   }
+  return []
 }
 
-export const colourStyles = errorInfo => {
+export const colourStyles = (errorInfo, valueAsTitle) => {
   const borderColor = errorInfo ? '#FF0042 !important' : '#E9F3F5 !important'
   const boxShadow = errorInfo ? '0px 0px 15px #FF004280' : 'none'
 
-  const colourStyles = {
+  const cssStyles = {
     control: (styles, state) => ({
       ...styles,
       borderColor,
@@ -80,7 +81,13 @@ export const colourStyles = errorInfo => {
       borderRadius: state.menuIsOpen ? '5px 5px 0 0' : '5px',
       zIndex: '4',
       minHeight: '45px',
-      backgroundColor: state.isDisabled ? '#f5f9fa' : state.selectProps.value && state.selectProps.value.length > 0 ? '#fff' : '#FCFFFF'
+      minWidth: valueAsTitle ? '90px' : 'auto',
+      maxWidth: valueAsTitle ? '90px' : 'auto',
+      // eslint-disable-next-line no-nested-ternary
+      backgroundColor: state.isDisabled
+        ? '#f5f9fa'
+        : state.selectProps.value && state.selectProps.value.length > 0
+          ? '#fff' : '#FCFFFF'
     }),
     menu: styles => ({
       ...styles,
@@ -95,6 +102,7 @@ export const colourStyles = errorInfo => {
       borderRadius: '5px',
       borderTopLeftRadius: '0',
       borderTopRightRadius: '0',
+      maxHeight: '300px'
     }),
     placeholder: styles => ({
       ...styles,
@@ -113,7 +121,7 @@ export const colourStyles = errorInfo => {
       lineHeight: 'normal'
     })
   }
-  return colourStyles
+  return cssStyles
 }
 
 const customFilterOption = (option, rawInput) => {
@@ -124,16 +132,21 @@ const customFilterOption = (option, rawInput) => {
   )
 }
 
-export const SelectComponent = props => (
-  <Select
-    {...props}
-    filterOption={customFilterOption}
-    components={{ DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel }}
-    autoFocus={false}
-    styles={colourStyles(props.errorInfo)}
-    maxMenuHeight='180'
-  />
-)
+export const SelectComponent = props => {
+  const { errorInfo, valueAsTitle } = props
+  return (
+    <Select
+      {...props}
+      filterOption={customFilterOption}
+      components={{
+        DropdownIndicator, IndicatorSeparator, Option, SingleValue, MultiValueLabel
+      }}
+      autoFocus={false}
+      styles={colourStyles(errorInfo, valueAsTitle)}
+      maxMenuHeight="180"
+    />
+  )
+}
 
 const SelectField = ({
   input,
@@ -142,16 +155,25 @@ const SelectField = ({
   label,
   placeholder,
   className,
+  isDirty,
+  infoFeedback,
   disabled = false,
   isMulti = false,
-  meta: { touched, error }
+  valueAsTitle = false,
+  meta: { touched, error, dirty }
 }) => {
+  useEffect(() => {
+    if (!isDirty) return
+
+    isDirty(dirty)
+  }, [dirty])
+  // eslint-disable-next-line no-nested-ternary
   const errorInfo = (touched && error)
     ? [error]
     : errorField
       ? errorField[input.name]
       : false
-      
+
   return (
     <div className={className}>
       {label && <label htmlFor={input.id}>{label}</label>}
@@ -165,11 +187,19 @@ const SelectField = ({
         onBlur={value => input.onBlur(value.value)}
         className={`form-control-select ${errorInfo ? ' is-invalid' : ''}`}
         isDisabled={disabled}
-        placeholder={placeholder ? placeholder : 'Select...'}
+        placeholder={placeholder || 'Select...'}
+        valueAsTitle={valueAsTitle}
       />
-      <div className='invalid-feedback'>
-        {errorInfo ? errorInfo[0] : ''}
-      </div>
+      {(() => {
+        if (touched) {
+          if (errorInfo) {
+            return feedBackText(errorInfo[0], true)
+          } if (infoFeedback) {
+            return feedBackText(infoFeedback)
+          }
+        }
+        return <Fragment />
+      })()}
     </div>
   )
 }

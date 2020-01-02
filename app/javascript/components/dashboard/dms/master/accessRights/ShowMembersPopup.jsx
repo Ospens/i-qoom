@@ -7,23 +7,28 @@ import { useParams } from 'react-router-dom'
 import DropDown from '../../../../../elements/DropDown'
 import { deleteTeamMembers } from '../../../../../actions/accessRightsActions'
 
-const ddOPtions = remove => [
-  {
+const ddOPtions = (remove, teamId, href) => {
+  const options = [{
     icon: 'icon-single-neutral-actions-text',
-    title: 'Show profile'
+    title: 'Show profile',
+    link: href
   },
   {
     icon: 'icon-email-action-send-2',
     title: 'Send message'
-  },
-  {
-    icon: 'icon-rating-star-subtract',
-    title: 'Remove from team',
-    onClick: remove
-  }
-]
+  }]
 
-export function Teamlist({ users = [], handleOpen, teamId }) {
+  if (teamId) {
+    options.push({
+      icon: 'icon-rating-star-subtract',
+      title: 'Remove from team',
+      onClick: remove
+    })
+  }
+  return options
+}
+
+export function TeamList({ users = [], handleOpen, teamId }) {
   const dispatch = useDispatch()
   const { projectId } = useParams()
   const [showMore, toggleShowMore] = useState(false)
@@ -43,18 +48,20 @@ export function Teamlist({ users = [], handleOpen, teamId }) {
     dispatch(deleteTeamMembers(projectId, teamId, id))
   }, [dispatch, projectId, teamId])
 
-
   return (
     <React.Fragment>
       <div className="opened-members-block">
-        {handleOpen &&
-        <button type="button" className="popup-add-team-member" onClick={handleOpen}>
-          <span className="icon-add_1 mr-2" />
-        </button>}
+        {handleOpen
+        && (
+          <button type="button" className="popup-add-team-member" onClick={handleOpen}>
+            <span className="icon-add_1 mr-2" />
+          </button>
+        )}
         <React.Fragment>
           <div className={classnames('team-member-list', { opened: checkedUser })}>
             {tmpUsers.map(user => {
               const remove = () => removeFromTeam(user.id)
+              const href = `/dashboard/projects/${projectId}/documents/master/access_rights/members/${user.id}`
               const button = (
                 <div className="d-flex">
                   <UserAvatar size="42" name={`${user.first_name} ${user.last_name}`} />
@@ -66,7 +73,7 @@ export function Teamlist({ users = [], handleOpen, teamId }) {
                   key={user.id}
                   btnClass="avatar-with-dropdown"
                   openState={open => toggleCheck(open, user.id)}
-                  defaultValues={ddOPtions(remove)}
+                  defaultValues={ddOPtions(remove, teamId, href)}
                   btnComponent={button}
                   className="dropdown-with-icon"
                 />
@@ -93,7 +100,7 @@ function Trigger({ handleOpen }) {
   return (
     <button
       type="button"
-      className="with-icon ml-3"
+      className="button-with-icon ml-3"
       onClick={handleOpen}
     >
       <span>
@@ -122,7 +129,7 @@ function ShowMembersPopup({ users, handleOpen, teamId }) {
       onOpen={() => setOpen(true)}
     >
       <div className="tooltip-block">
-        <Teamlist users={users} handleOpen={handleOpen} teamId={teamId} />
+        <TeamList users={users} handleOpen={handleOpen} teamId={teamId} />
       </div>
     </Popup>
   )

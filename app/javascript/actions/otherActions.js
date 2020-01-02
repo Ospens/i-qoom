@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { addNotification } from './notificationsActions'
+import { errorNotify } from './notificationsActions'
 
 const sendEmail = (values, afterUpdate) => dispatch => {
   const request = { contact: { ...values } }
@@ -8,7 +8,7 @@ const sendEmail = (values, afterUpdate) => dispatch => {
     axios.post('/api/v1/contacts', request)
       .then(() => afterUpdate())
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }

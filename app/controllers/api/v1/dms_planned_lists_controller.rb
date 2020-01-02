@@ -5,13 +5,21 @@ class Api::V1::DmsPlannedListsController < ApplicationController
 
   def create
     authorize! :create, DmsPlannedList.new, @project
-    @project.dms_planned_lists.create(dms_planned_list_params)
-    head 200
+    dms_planned_list = @project.dms_planned_lists.new(dms_planned_list_params)
+    if dms_planned_list.save
+      render json: dms_planned_list
+    else
+      render json: dms_planned_list.errors,
+             status: :unprocessable_entity
+    end
   end
 
   def update
-    @dms_planned_list.update(dms_planned_list_params)
-    head 200
+    if @dms_planned_list.update(dms_planned_list_params)
+      render json: @dms_planned_list
+    else
+      render json: @dms_planned_list.errors, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -25,10 +33,15 @@ class Api::V1::DmsPlannedListsController < ApplicationController
 
   def index
     authorize! :index, DmsPlannedList.new, @project
-    render json: @project.dms_planned_lists
-                         .joins(:users)
-                         .where(users: { id: signed_in_user.id })
-                         .as_json(only: [:id, :name])
+    lists =
+      if @project.dms_master?(signed_in_user)
+        @project.dms_planned_lists
+      else
+        @project.dms_planned_lists
+                .joins(:users)
+                .where(users: { id: signed_in_user.id })
+      end
+    render json: lists.as_json(only: [:id, :name])
   end
 
   def update_users
@@ -40,7 +53,7 @@ class Api::V1::DmsPlannedListsController < ApplicationController
   end
 
   def edit_documents
-    result = { document_mains: [], new: {} }
+    result = { document_mains: [], new: {}, name: @dms_planned_list.name }
     result[:new] =
       Document.build_from_convention(@project.conventions.active, signed_in_user)
     @dms_planned_list.document_mains.order(position: :asc).each do |main|
@@ -48,29 +61,47 @@ class Api::V1::DmsPlannedListsController < ApplicationController
       document = main.revisions.last_revision.last_version
       main_attrs[:document] =
         main.revisions.last_revision.last_version.attributes_for_edit
-      main_attrs[:edit] =
-        Document.build_from_convention(document.convention, signed_in_user)
       result[:document_mains] << main_attrs
     end
     render json: result
   end
 
   def update_documents
+    result = { document_mains: [], new: {} }
+    result[:new] =
+      Document.build_from_convention(@project.conventions.active, signed_in_user)
+    # temp_id is used for detecting errors
     params[:document_mains].each do |main_params|
+      result_main = {}
+      if main_params[:temp_id].present?
+        result_main[:temp_id] = main_params[:temp_id]
+      end
       main = DocumentMain.find_by(id: main_params[:id])
       if main.present?
         next if !@dms_planned_list.document_mains.include?(main)
         document = main.revisions.last_revision.last_version
-        document.revision.versions.create(document_params(main_params[:document], true))
+        new_document = document.revision.versions.new(document_params(main_params[:document], true))
+        if !new_document.save
+          result_main[:errors] = new_document.errors
+        end
+        result_main[:document] = new_document.attributes_for_edit
       else
         main = @project.document_mains.create(planned: true, position: main_params[:position])
         rev = main.revisions.create
-        document = rev.versions.create(document_params(main_params[:document], true))
-        if !@dms_planned_list.document_mains.include?(main)
-          @dms_planned_list.document_mains << main
+        document = rev.versions.new(document_params(main_params[:document], true))
+        if document.save
+          if !@dms_planned_list.document_mains.include?(main)
+            @dms_planned_list.document_mains << main
+          end
+        else
+          result_main[:errors] = document.errors
+          main.destroy
         end
+        result_main[:document] = document.attributes_for_edit
       end
+      result[:document_mains] << result_main
     end
+    render json: result
   end
 
   private

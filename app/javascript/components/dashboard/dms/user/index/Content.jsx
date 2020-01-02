@@ -93,8 +93,10 @@ function Content({ projectId, checkedDocs, checkItem }) {
                   <label htmlFor="check_all" />
                 </div>
               </div>
-              {columns.map(({ title, searchable, sortable }) => (
-                <div className="Rtable__row-cell" key={title}>
+              {columns.map(({
+                title, searchable, sortable, className
+              }) => (
+                <div className={classnames('Rtable__row-cell', className)} key={title}>
                   <div className="Rtable__row-cell__header">
                     <div>
                       {searchable
@@ -112,7 +114,8 @@ function Content({ projectId, checkedDocs, checkItem }) {
                       && (
                         <button
                           type="button"
-                          className={classnames('icon-arrow-button-down order-arrow', { [sortBy.order]: sortBy.column === sortable })}
+                          className={classnames('icon-arrow-button-down order-arrow',
+                            { [sortBy.order]: sortBy.column === sortable })}
                           onClick={() => toggleSort(sortable)}
                         />
                       )}
@@ -125,7 +128,8 @@ function Content({ projectId, checkedDocs, checkItem }) {
             {documents.map(doc => (
               <div
                 key={doc.id}
-                className={classnames('Rtable-row', { 'Rtable-row__checked': checkedDocs.includes(doc.id) })}
+                className={classnames('Rtable-row',
+                  { 'Rtable-row__checked': checkedDocs.includes(doc.id) })}
               >
                 <div className="Rtable__row-cell table-checkbox">
                   <DropDown
@@ -157,6 +161,14 @@ function Content({ projectId, checkedDocs, checkItem }) {
                   <Link to={`/dashboard/projects/${projectId}/documents/${doc.id}`}>
                     {doc.doc_id}
                   </Link>
+                </div>
+
+                <div className="Rtable__row-cell revision-cell">
+                  {doc.revision_version}
+                </div>
+
+                <div className="Rtable__row-cell version">
+                  {doc.document_number}
                 </div>
 
                 <div className="Rtable__row-cell title-cell">
@@ -203,7 +215,9 @@ function Content({ projectId, checkedDocs, checkItem }) {
           </div>
         </div>
         <div className="d-flex">
-          <span className={classnames('grey', { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}>
+          <span className={classnames('grey',
+            { 'ml-auto': documents.length > 0 }, { 'mx-auto': documents.length < 1 })}
+          >
             {`${documents.length} total documents`}
           </span>
         </div>

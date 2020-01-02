@@ -29,6 +29,9 @@ class Ability
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
 
+    # Project
+    can :confirm_member, Project
+
     if user.present?
       # Project
       can :create, Project, user_id: user.id
@@ -36,19 +39,16 @@ class Ability
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
       can :manage, Project,
-          id: user.project_administrators.map(&:project_id)
-      # ProjectAdministrator
-      can :manage, ProjectAdministrator,
-          project: { id: user.project_administrators.map(&:project_id) }
+          id: user.admin_projects.map(&:id)
       # ProjectMember
       can :manage, ProjectMember,
-          project: { id: user.project_administrators.map(&:project_id) }
+          project: { id: user.admin_projects.map(&:id) }
       # Discipline
       can :manage, Discipline,
-          project: { id: user.project_administrators.map(&:project_id) }
+          project: { id: user.admin_projects.map(&:id) }
       # Role
       can :manage, Role,
-          project: { id: user.project_administrators.map(&:project_id) }
+          project: { id: user.admin_projects.map(&:id) }
       # Message
       can [ :create,
             :inbox,

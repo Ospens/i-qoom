@@ -1,27 +1,22 @@
-import React, { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import CompanyBlock from './CompanyBlock'
-import AdminBlock from './AdminBlock'
-import NewAdmin from './NewAdmin'
-import { starUpdateAdmin } from '../../../../actions/projectActions'
 
-function ProjectDetails({ match: { params: { projectId } } }) {
-  const admins = useSelector(state => state.projects.current.admins)
+function ProjectDetails() {
+  // const admins = useSelector(state => state.projects.current.admins)
   const companyData = useSelector(state => state.projects.current.company_data)
   const id = useSelector(state => state.projects.current.id)
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  const updateAdmin = useCallback(values =>
-    dispatch(starUpdateAdmin(projectId, values))
-  [dispatch])
+  // const updateAdmin = useCallback(values => dispatch(starUpdateAdmin(projectId, values))
+  //  [dispatch])
 
   return (
     <div>
-      <h5 className='tab-title'>Project details</h5>
-      <div className='row'>
-        <CompanyBlock initialValues={{ company_data: companyData, id }}/>
-        <div className='col-lg-6 admins-column'>
+      <h5 className="tab-title">Project details</h5>
+      <div className="row">
+        <CompanyBlock initialValues={{ company_data: companyData, id }} />
+        {/* <div className='col-lg-6 admins-column'>
           {admins.map((admin, i) => (
             <AdminBlock
               key={i}
@@ -39,10 +34,10 @@ function ProjectDetails({ match: { params: { projectId } } }) {
             updateAdmin={updateAdmin}
             projectId={projectId}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   )
 }
 
-export default withRouter(ProjectDetails)
+export default ProjectDetails

@@ -11,20 +11,20 @@ import Header from './Header'
 function IndexDMS() {
   const dispatch = useDispatch()
   const { projectId } = useParams()
-  const [checkedDocs, setСheckedDocs] = useState([])
+  const [checkedDocs, setCheckedDocs] = useState([])
   const documents = useSelector(state => state.documents.allDocuments)
-  const toggleСheckedDocs = useCallback(value => {
-    setСheckedDocs(toggleArray(checkedDocs, value))
+  const toggleCheckedDocs = useCallback(value => {
+    setCheckedDocs(toggleArray(checkedDocs, value))
   }, [checkedDocs])
   useEffect(() => { dispatch(startFetchDocuments(projectId)) }, [dispatch, projectId])
-  useEffect(() => { setСheckedDocs([]) }, [documents])
+  useEffect(() => { setCheckedDocs([]) }, [documents])
 
   const header = <Header checkedDocs={checkedDocs} />
   const sidebar = <Sidebar projectId={projectId} checkedDocs={checkedDocs} />
   const content = (
     <Content
       projectId={projectId}
-      checkItem={toggleСheckedDocs}
+      checkItem={toggleCheckedDocs}
       checkedDocs={checkedDocs}
     />
   )

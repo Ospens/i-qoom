@@ -48,7 +48,7 @@ function TeamName({ values, handleOpen }) {
           {values.name || 'Team without name'}
         </span>
         <div className="d-flex">
-          <button type="button" className="with-icon" onClick={handleOpen}>
+          <button type="button" className="button-with-icon" onClick={handleOpen}>
             <span>Add new members</span>
           </button>
           {values.users

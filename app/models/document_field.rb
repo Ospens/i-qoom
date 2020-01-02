@@ -43,7 +43,8 @@ class DocumentField < ApplicationRecord
   before_validation :attach_previous_file,
                     if: -> { parent.class.name == 'Document' &&
                              upload_field? &&
-                             !file.attached? },
+                             !file.attached? &&
+                             !parent.document_main.planned? },
                     on: :create
 
   after_save :update_revision_number,
@@ -191,10 +192,20 @@ class DocumentField < ApplicationRecord
 
   def has_access_for_limit_by_value_value?(user, value)
     return true if user == parent.project.user
-    document_rights.find_by(parent: user,
-                            document_field_value: value,
-                            enabled: true,
-                            view_only: false).present?
+    personal_rights =
+      document_rights.find_by(parent: user,
+                              document_field_value: value,
+                              enabled: true,
+                              view_only: false).present?
+    team = parent.project.dms_teams.joins(:users).where(users: { id: user.id }).first
+    team_rights =
+      team.present? &&
+        team.document_rights.find_by(document_field: self,
+                                     document_field_value: value,
+                                     limit_for: :value,
+                                     enabled: true,
+                                     view_only: false).present?
+    personal_rights || team_rights
   end
 
   def validate_codification_values?
@@ -265,6 +276,8 @@ class DocumentField < ApplicationRecord
           errors.add(:document_field_values, :is_required)
         end
       elsif document_native_file?
+        # skipping because can't upload file in planned list
+        return if parent.document_main.planned?
         errors.add(:file, :is_required) if !file.attached?
       elsif additional_information?
         # nothing, not required
@@ -278,6 +291,8 @@ class DocumentField < ApplicationRecord
         errors.add(:document_field_values, :is_required)
       end
     elsif upload_field?
+      # skipping because can't upload file in planned list
+      return if parent.document_main.planned?
       # file only required in initial document, afterwards empty file field
       # will be mean to copy file from previous document version
       if !file.attached? && parent.first_document_in_chain?

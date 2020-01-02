@@ -38,6 +38,10 @@ RSpec.describe ProjectMember, type: :model do
   it { is_expected.to accept_nested_attributes_for(:company_address)
                         .update_only(true) }
 
+  it { is_expected.to validate_uniqueness_of(:email)
+                        .scoped_to(:project_id)
+                        .case_insensitive }
+
   context "creation step is" do
     context "employment_type first step" do
       subject { FactoryBot.build(:project_member,
@@ -84,23 +88,19 @@ RSpec.describe ProjectMember, type: :model do
   end
 
   context "add_user" do
-    it 'should be added on details step' do
+    it 'should work when email is present' do
       user = FactoryBot.create(:user)
       project_member =
         FactoryBot.create(:project_member_details, email: user.email)
       expect(project_member.user).to eq(user)
     end
-    it "shouldn't be added on earlier steps" do
+    it "shouldn't work without email" do
       user = FactoryBot.create(:user)
       project_member =
-        FactoryBot.create(:project_member_details,
-                          creation_step: [ :employment_type,
-                                           :company_type,
-                                           :company_data ].sample,
-                          email: user.email)
+        FactoryBot.create(:project_member_company_data)
       expect(project_member.user).not_to eq(user)
     end
-    it "shouldn't be replaced after updating email" do
+    it "shouldn't work after updating email" do
       user = FactoryBot.create(:user)
       second_user = FactoryBot.create(:user)
       project_member =
@@ -140,7 +140,7 @@ RSpec.describe ProjectMember, type: :model do
 
   context "validates_acceptance of dms and cms modules" do
     it 'if project admin' do
-      member = FactoryBot.create(:project).members.first
+      member = FactoryBot.create(:project).reload.members.first
       member.cms_module_access = false
       member.save
       member.reload
@@ -149,11 +149,41 @@ RSpec.describe ProjectMember, type: :model do
     it 'if regular member' do
       member = FactoryBot.create(:project_member,
                                  cms_module_access: true)
+      member.reload
       member.cms_module_access = false
       member.save
       member.reload
       expect(member.cms_module_access).to be_falsy
     end
   end
+  context "admin?" do
+    it "should be true" do
+      project_admin = FactoryBot.create(:project_admin)
+      expect(project_admin.admin?).to be_truthy
+    end
+    it "should be false" do
+      project_member = FactoryBot.create(:project_member)
+      expect(project_member.admin?).to be_falsey
+    end
+  end
 
+  context "validate last_admin" do
+    let(:project) { FactoryBot.create(:project) }
+    let(:project_member) { project.reload.admins.first }
+    it "shouldn't be editable with only one admin" do
+      project_member.role = 
+        project.roles.where.not(title: "Project Administrator").sample
+      project_member.save
+      expect(project_member.reload.role.title).to eq("Project Administrator")
+    end
+    it "should be editable if the project has two admins" do
+      FactoryBot.create(:project_member,
+                        project_id: project.id,
+                        role: project.roles.find_by(title: "Project Administrator"))
+      project_member.role = 
+        project.roles.where.not(title: "Project Administrator").sample
+      project_member.save
+      expect(project_member.reload.role.title).not_to eq("Project Administrator")
+    end
+  end
 end

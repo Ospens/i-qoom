@@ -6,7 +6,7 @@ import DMSLayout from '../../DMSLayout'
 import DmsSideBar from '../../sideBar/DmsSideBar'
 import { showMemberProfile } from '../../../../../actions/accessRightsActions'
 import countries from '../../../../landing/countriesCodes'
-import DistributionGroup from './DistributionGroup'
+// import DistributionGroup from './DistributionGroup'
 import Teams from './Teams'
 
 function BasicInfo({
@@ -23,7 +23,7 @@ function BasicInfo({
             Address
           </div>
           <div className="user-profile__user-contact-info_block-content">
-            {country.title}, {state}
+            {`${country.title}, ${state}`}
           </div>
         </div>
         <div className="user-profile__user_block">
@@ -70,9 +70,9 @@ function AccessRights({ rights = {} }) {
 
   return (
     <div className="user-profile__info-container">
-      <div className="user-profile__info-container_title">
-        <span> Access rights</span>
-        <span> Access rights</span>
+      <div className="user-profile__info-container_title d-flex">
+        <div>Access rights</div>
+        <div className="green ml-5">Access limit: 12.10.2021</div>
       </div>
       <div className="user-profile__user-base-info">
         <div className="user-profile__user_block">
@@ -128,7 +128,7 @@ function Content() {
               Email
             </div>
             <div className="user-profile__user-contact-info_block-content">
-              <a href="#">{`${member.email}`}</a>
+              <a href={`mailto:${member.email}`}>{`${member.email}`}</a>
             </div>
           </div>
 
@@ -137,7 +137,7 @@ function Content() {
               i-Qoom-ID
             </div>
             <div className="user-profile__user_block-content">
-              <a href="#">{`${member.username}`}</a>
+              <span>{`${member.username}`}</span>
             </div>
           </div>
 
@@ -162,8 +162,8 @@ function Content() {
         />
         <Bio />
         <AccessRights rights={member.rights} />
-        <Teams groups={member.teams} />
-        <DistributionGroup groups={member.teams} />
+        <Teams teams={member.teams} />
+        {/* <DistributionGroup groups={member.teams} /> */}
       </div>
     </div>
   )
@@ -171,10 +171,10 @@ function Content() {
 
 function Index() {
   const dispatch = useDispatch()
-  const { projectId } = useParams()
+  const { projectId, memberId } = useParams()
   useEffect(() => {
-    dispatch(showMemberProfile(projectId, 1))
-  }, [dispatch])
+    dispatch(showMemberProfile(projectId, memberId))
+  }, [dispatch, memberId, projectId])
 
   const sidebar = <DmsSideBar />
   const content = <Content />

@@ -9,7 +9,7 @@ function Header({ checkedDocs }) {
   const dispatch = useDispatch()
   const { projectId } = useParams()
   const checkedLength = checkedDocs.length
-  const btnClass = classnames('with-icon', { 'disable': checkedLength === 0 })
+  const btnClass = classnames('button-with-icon', { 'disable': checkedLength === 0 })
   const [searchTerm, setSearchTerm] = useState(undefined)
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
@@ -24,7 +24,7 @@ function Header({ checkedDocs }) {
       <ul className='buttons-with-icons-list'>
         <li>
           <Link
-            className='d-flex align-items-center'
+            className='d-flex align-items-center button-with-icon'
             to={`/dashboard/projects/${projectId}/documents/new/`}
           >
             <span className='icon-add_1 mr-2' />
@@ -42,7 +42,7 @@ function Header({ checkedDocs }) {
         <li>
           <button type='button' className={btnClass}>
             <span className='icon-common-file-edit mr-2' />
-            <span className='head-button__gray-text' data-title={`Edit document {checkedLength > 0 ? checkedLength : ''}`}>
+            <span className='head-button__gray-text' data-title={`Edit document ${checkedLength > 0 ? checkedLength : ''}`}>
               Edit document {checkedLength > 0 ? checkedLength : ''}
             </span>
           </button>

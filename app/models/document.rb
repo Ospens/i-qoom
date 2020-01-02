@@ -78,6 +78,9 @@ class Document < ApplicationRecord
 
   before_validation :assign_convention
 
+  before_validation :set_review_status_if_planned_document,
+                    if: -> { document_main.planned? && !unplan_document }
+
   before_create :set_review_status_in_document_main,
                 if: :first_document_in_chain?
 
@@ -264,7 +267,7 @@ class Document < ApplicationRecord
       unless kind == 'document_number'
         field = field.document_field_values.detect{ |i| i['selected'] == true }
       end
-      if field.value.present?
+      if field.present? && field.value.present?
         str << '-' if kind != 'originating_company'
         str << field.value
       end
@@ -445,7 +448,7 @@ class Document < ApplicationRecord
     temporal_value.each_with_index do |val, index|
       prev_val = temporal_value[index - 1]
       if prev_val.present? && val[:value] == prev_val[:value] && !index.zero?
-        h = final_value.detect{ |i| i[:min] == prev_val[:revision] }
+        h = final_value.detect{ |i| i[:min] == prev_val[:revision] || i[:max] == prev_val[:revision] }
         h[:max] = val[:revision]
       else
         final_value << { min: val[:revision], max: val[:revision], value: val[:value]}
@@ -507,5 +510,9 @@ class Document < ApplicationRecord
 
   def unplan_document_main
     document_main.update(planned: false)
+  end
+
+  def set_review_status_if_planned_document
+    self.review_status = 'issued_for_information'
   end
 end

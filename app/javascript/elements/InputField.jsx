@@ -1,5 +1,13 @@
-import React from 'react'
+import React, { Fragment, useEffect } from 'react'
 import classnames from 'classnames'
+
+export function feedBackText(text, isError) {
+  return (
+    <div className={classnames('input-feedback-text', { invalid: isError })}>
+      {text}
+    </div>
+  )
+}
 
 const InputField = ({
   input,
@@ -8,29 +16,40 @@ const InputField = ({
   label,
   type,
   justHightlight = false,
-  meta: { touched, error },
+  isDirty,
+  infoFeedback,
+  meta: { touched, error, dirty },
   ...props
 }) => {
+  useEffect(() => {
+    if (!isDirty) return
+
+    isDirty(dirty)
+  }, [dirty])
+
   const errorInfo = errorField[input.name]
   return (
     <div className={className}>
-      {label && <label htmlFor={input.id}>{label}</label>}
+      {label && <label htmlFor={props.id}>{label}</label>}
       <input
         {...input}
         {...props}
-        type={type ? type : 'text'}
+        type={type || 'text'}
         className={classnames('form-control', { 'is-invalid': errorInfo || (touched && error) })}
         required
         pattern=".*\S.*"
       />
-      {touched && !justHightlight &&
-      <div className='invalid-feedback'>
-      {error
-        ? error
-        : errorInfo
-          ? errorInfo
-          : ''}
-      </div>}
+      {(() => {
+        if (touched && !justHightlight) {
+          if (error || errorInfo) {
+            const text = error || errorInfo || ''
+            return feedBackText(text, true)
+          } if (infoFeedback) {
+            return feedBackText(infoFeedback)
+          }
+        }
+        return <Fragment />
+      })()}
     </div>
   )
 }

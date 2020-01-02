@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { formValueSelector, Field, FieldArray, change } from 'redux-form'
 import SelectField from '../../../../../elements/SelectField'
 import InputField from '../../../../../elements/InputField'
-import CheckField from '../../../../../elements/CheckField'
+import CheckBoxField from '../../../../../elements/CheckBoxField'
 import renderDocumentTextEditor from '../../../../../elements/DocumentTextEditor'
-import { addNotification } from '../../../../../actions/notificationsActions'
+import { errorNotify } from '../../../../../actions/notificationsActions'
 import { required } from '../../../../../elements/validations'
 
 const selector = formValueSelector('document_form')
@@ -25,7 +25,7 @@ const EmailSubjects = ({ fields, discardValue }) => {
     if (e.charCode === 13) {
       e.preventDefault()
       const error = email(e.target.value)
-      if (error) return dispatch(addNotification({ title: 'Problem', text: error, type: 'error' }))
+      if (error) return dispatch(errorNotify('Problem', error))
 
       fields.push(e.target.value)
       discardValue()
@@ -70,7 +70,7 @@ const AccessAndCommunication = ({ backStep }) => {
   const IFI = reviewStatus === 'issued_for_information'
   useEffect(() => {
     if (!emailTitleLikeDocument) return
-    
+
     dispatch(change('document_form', 'mail_subject', title))
   }, [dispatch, title, emailTitleLikeDocument])
 
@@ -109,7 +109,7 @@ const AccessAndCommunication = ({ backStep }) => {
             </div>
             <div className='col-6 subject-like-document'>
               <Field
-                component={CheckField}
+                component={CheckBoxField}
                 id='email_title_like_document'
                 name='email_title_like_document'
                 className='form-group m-0'
@@ -163,7 +163,7 @@ const AccessAndCommunication = ({ backStep }) => {
                 isMulti={true}
                 disabled={IFI}
               />
-            </div>  
+            </div>
           </div>}
         </div>
 

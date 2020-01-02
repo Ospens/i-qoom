@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import classnames from 'classnames'
 import { useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import ProjectContent from './ProjectContent'
-import DashboardContent from './DashboardContent'
 import AdminContent from './AdminContent'
+import SideBarItem from './SideBarItem'
+
+function dashboardContent() {
+  return (
+    <ul className="nav flex-column nav-items">
+      <li className="nav-item">
+        <span className="sidebar_section-title">Frequently used</span>
+      </li>
+      <SideBarItem path="/dashboard/" label="Project overview" />
+    </ul>
+  )
+}
 
 function SideBar({ isOpen, toggle }) {
   const { pathname } = useLocation()
@@ -12,43 +23,48 @@ function SideBar({ isOpen, toggle }) {
   const currentProject = useSelector(({ projects }) => projects.current)
   const sideBarShow = isAdmin || pathname.includes('/dashboard')
 
-  if (!sideBarShow) return null
+  if (!sideBarShow) return <Fragment />
 
-  const mainClass = classnames('sidebar', { 'sidebar-admin-panel': isAdmin }, { 'is-visible': isOpen })
+  const mainClass = classnames('sidebar',
+    { 'sidebar-admin-panel': isAdmin },
+    { 'is-visible': isOpen })
   return (
     <aside className={mainClass}>
-      <div className='sidebar-sticky'>
-        <div className='side-bar-logo'>
-          <div className='side-bar-logo__container'>
-            <i className='svg-icon logo-header' />
-            {isAdmin && <span className='text-white'>Admin access</span>}
+      <div className="sidebar-sticky">
+        <div className="side-bar-logo">
+          <div className="side-bar-logo__container">
+            <i className="svg-icon logo-header" />
+            {isAdmin && <span className="text-white">Admin access</span>}
           </div>
-          <button type='button' onClick={toggle}>
-            <span className='icon-Burgermenu_1 white' />
+          <button type="button" onClick={toggle}>
+            <span className="icon-Burgermenu_1 white" />
           </button>
         </div>
         {(() => {
           if (pathname.includes('/dashboard/projects')) {
             return <ProjectContent />
-          } else if (pathname.includes('/dashboard')) {
-            return <DashboardContent />
-          } else if (isAdmin) {
+          } if (pathname.includes('/dashboard')) {
+            return dashboardContent()
+          } if (isAdmin) {
             return <AdminContent />
           }
+          return <Fragment />
         })()}
       </div>
-      {pathname.includes('/dashboard/projects') &&
-        <div className='active-project'>
-          <div className='project-description'>
-            <div className='active-project-text'>
-              <span>Active project</span>
+      {pathname.includes('/dashboard/projects')
+        && (
+          <div className="active-project">
+            <div className="project-description">
+              <div className="active-project-text">
+                <span>Active project</span>
+              </div>
+              <div>
+                <span className="active-project-title">{currentProject.name}</span>
+              </div>
             </div>
-            <div>
-              <span className='active-project-title'>{currentProject.name}</span>
-            </div>
+            <span className="icon-cog-double-2 white" />
           </div>
-          <span className='icon-cog-double-2 white' />
-        </div>}
+        )}
     </aside>
   )
 }

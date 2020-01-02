@@ -192,6 +192,19 @@ describe "ProjectMember", type: :request do
         end
       end
     end
+
+    context "check_if_present" do
+      it 'should get status ok' do
+        get "/api/v1/projects/#{project.id}/members/check_if_present?email=#{user.email}",
+            headers: headers
+        expect(response).to have_http_status(:ok)
+      end
+      it "shouldn't get status ok" do
+        get "/api/v1/projects/#{project.id}/members/check_if_present?email=#{Faker::Internet.email}",
+            headers: headers
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
@@ -229,6 +242,11 @@ describe "ProjectMember", type: :request do
              project_member: { creation_step: "some step" }
            }.to_json,
            headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'check_if_present' do
+      get "/api/v1/projects/#{project.id}/members/check_if_present?email=#{user.email}",
+          headers: headers
       expect(response).to have_http_status(:forbidden)
     end
   end

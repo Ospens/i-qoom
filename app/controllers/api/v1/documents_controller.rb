@@ -1,7 +1,7 @@
 class Api::V1::DocumentsController < ApplicationController
   include ActiveStorage::SendZip
   include PdfRender
-  include Documents
+  include DocumentConcern
 
   load_resource :project
 
@@ -18,11 +18,13 @@ class Api::V1::DocumentsController < ApplicationController
                                           :create,
                                           :index,
                                           :download_native_files,
+                                          :download_all_details,
                                           :download_list,
                                           :my_documents ]
 
   before_action :authorize_collection_actions, only: [ :index,
                                                        :download_native_files,
+                                                       :download_all_details,
                                                        :download_list,
                                                        :my_documents ]
 
@@ -136,13 +138,6 @@ class Api::V1::DocumentsController < ApplicationController
     send_data(file.download, filename: filename, disposition: 'attachment')
   end
 
-  def download_details
-    send_data document_render(@document),
-              filename: "#{@document.codification_string}.pdf",
-              type: 'application/pdf',
-              disposition: 'attachment'
-  end
-
   def download_native_files
     documents =
       @project.document_mains
@@ -156,6 +151,42 @@ class Api::V1::DocumentsController < ApplicationController
       files << file
     end
     send_zip(files, filename: "#{@project.name.underscore}.zip")
+  end
+
+  def download_details
+    send_data document_render(@document),
+              filename: "#{@document.codification_string}.pdf",
+              type: 'application/pdf',
+              disposition: 'attachment'
+  end
+
+  def download_all_details
+    documents =
+      @project.document_mains
+              .documents_available_for(signed_in_user)
+              .select{ |i| params[:document_ids].include?(i.id.to_s) }
+    temp_file = Tempfile.new
+    begin
+      Zip::OutputStream.open(temp_file) { |zos| }
+      Zip::File.open(temp_file.path, Zip::File::CREATE) do |zip|
+        documents.each do |doc|
+          file = Tempfile.new
+          file.binmode
+          file.write(document_render(doc))
+          file.read
+          zip.add("#{doc.codification_string}.pdf", file.path)
+        end
+      end
+      zip_data = File.read(temp_file.path)
+      filename = "documents_#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}"
+      send_data(zip_data,
+                type: 'application/zip',
+                disposition: 'attachment',
+                filename: "#{filename}.zip")
+    ensure
+      temp_file.close
+      temp_file.unlink
+    end
   end
 
   def download_list

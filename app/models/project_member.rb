@@ -20,14 +20,6 @@ class ProjectMember < ApplicationRecord
 
   attr_accessor :creator, :invite, :new_inviter_id
 
-  before_save :send_confirmation_email,
-              if: :invite
-  before_save :add_user, if: :creation_step_details?
-  
-  after_save :update_creation_step_to_pending,
-             unless: -> { creation_step_active? ||
-                          creation_step_pending? }
-
   belongs_to :project,
     inverse_of: :members
 
@@ -50,6 +42,11 @@ class ProjectMember < ApplicationRecord
 
   validates :job_title,
             length: { maximum: 255 }
+  
+  validates_uniqueness_of :email,
+                          scope: :project_id,
+                          case_sensitive: false,
+                          allow_nil: true
 
   # employment_type first step
   validates :employment_type,
@@ -92,13 +89,31 @@ class ProjectMember < ApplicationRecord
 
   with_options if: -> {
     creation_step_active? &&
-      project.admins.map(&:user_id).include?(user.id)
+      project.admins.map(&:user_id).include?(user.try(:id))
   } do
     validates_acceptance_of :cms_module_access
     validates_acceptance_of :dms_module_access
     validates_acceptance_of :cms_module_master
     validates_acceptance_of :dms_module_master
   end
+
+  validate :last_admin, if: :creation_step_active?, on: :update
+
+  before_save :send_confirmation_email,
+              if: :invite
+  before_save :add_user, if: -> { user.nil? && email.present? }
+  
+  after_save :update_creation_step_to_pending,
+             unless: -> { creation_step_active? ||
+                          creation_step_pending? }
+
+  scope :admins,
+        -> {
+          joins(:role)
+          .where(roles: { title: "Project Administrator" })
+        }
+
+  scope :active, -> { creation_step_active }
 
   def send_confirmation_email
     self.inviter_id = new_inviter_id if invite && new_inviter_id.present?
@@ -108,23 +123,38 @@ class ProjectMember < ApplicationRecord
   end
 
   def confirmation_token
-    ::JsonWebToken.encode(member_id: id, email: email)
+    ::JsonWebToken.encode(member_id: id)
   end
 
   def creator?
     creator == true || project.try(:user) == user
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def admin?
+    role.try(:title) == "Project Administrator"
+  end
+
   private
+
+  def last_admin
+    if role.try(:title) != "Project Administrator" &&
+       project.admins == [self]
+      errors.add(:role, :last_admin_cant_be_removed)
+    end
+  end
 
   def update_creation_step_to_pending
     update(creation_step: "pending")
     self.reload if creation_step_pending?
   end
 
-  # adds a user only on details step,
-  # then a user can be changed only by confirmation
+  # the user can't be changed by confirmation
   def add_user
-    self.user = User.find_by(email: email)
+    self.user = User.find_by("lower(email) = ? ", 
+                             email.downcase)
   end
 end

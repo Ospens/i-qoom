@@ -6,19 +6,16 @@ import {
   SIGN_UP_USER,
   SIGN_OUT_USER
 } from './types'
-import { addNotification } from './notificationsActions'
+import { errorNotify, successNotify } from './notificationsActions'
 
 const signIn = payload => ({
   type: SIGN_IN_USER,
   payload
 })
 
-const signUp = (token, headers) => ({
+const signUp = payload => ({
   type: SIGN_UP_USER,
-  payload: {
-    token,
-    headers
-  }
+  payload
 })
 
 export const signOutUser = () => {
@@ -48,11 +45,8 @@ export const signInUser = values => (dispatch, getState) => {
         localStorage.setItem('i-qoom-user', JSON.stringify(getState().user))
       })
       .catch(({ response }) => {
-        if (response.data.user) {
-          dispatch(addNotification({ title: 'Problem', text: response.data.user[0], type: 'error' }))
-        } else {
-          dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
-        }
+        const errorMsg = response.data.user ? response.data.user[0] : undefined
+        dispatch(errorNotify('Problem', errorMsg))
         throw new SubmissionError(response.data)
       })
   )
@@ -65,11 +59,11 @@ export const signUpUser = userFields => dispatch => {
     }
   }
   return axios.post('/api/v1/users', request)
-    .then(response => {
-      dispatch(signUp(response.data, response.headers))
+    .then(({ data }) => {
+      dispatch(signUp(data))
     })
     .catch(({ response }) => {
-      dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+      dispatch(errorNotify('Problem'))
       throw new SubmissionError(response.data)
     })
 }
@@ -77,19 +71,19 @@ export const signUpUser = userFields => dispatch => {
 export const resetPassword = (values, callback) => dispatch => axios.post('/api/v1/users/send_reset_password_instructions', values)
   .then(() => {
     callback()
-    dispatch(addNotification({ title: 'System', text: 'Email was sent!', type: 'success' }))
+    dispatch(successNotify('System', 'Email was sent!'))
   })
   .catch(({ response }) => {
-    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+    dispatch(errorNotify('Problem'))
     throw new SubmissionError(response.data)
   })
 
 export const updatePassword = (values, callback) => dispatch => axios.patch('/api/v1/users/update_password', values)
   .then(() => {
     callback()
-    dispatch(addNotification({ title: 'System', text: 'Password was changed!', type: 'success' }))
+    dispatch(successNotify('System', 'Password was changed!'))
   })
   .catch(({ response }) => {
-    dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+    dispatch(errorNotify('Problem'))
     throw new SubmissionError(response.data)
   })

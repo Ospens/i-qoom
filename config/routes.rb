@@ -59,7 +59,6 @@ Rails.application.routes.draw do
 
       resources :projects, except: [:new, :edit] do
         collection do
-          get :confirm_admin
           get :confirm_member
         end
         member do
@@ -76,6 +75,7 @@ Rails.application.routes.draw do
         resources :documents, only: [:new, :create, :index] do
           collection do
             get :download_native_files
+            get :download_all_details
             get :download_list
             get :my_documents
             resources :members, only: :show, module: :documents
@@ -107,6 +107,7 @@ Rails.application.routes.draw do
           collection do
             get  :active
             get  :pending
+            get  :check_if_present
           end
         end
         resources :disciplines,

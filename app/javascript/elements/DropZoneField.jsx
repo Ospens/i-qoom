@@ -28,7 +28,7 @@ function DropZoneField({ input, filename, label, disabled = false, renameFile = 
     if (renameFile) {
       const docNameInfo = filename.match(fileNameReg)
       const newFileWrong = acceptedFiles[0].name.match(fileNameReg)
-      
+
       if (docNameInfo && !newFileWrong) {
         docNameInfo[11] = (Number(docNameInfo[11]) + 1).toString().padStart(2, 0)
         docNameInfo[13] = acceptedFiles[0].name
@@ -55,7 +55,7 @@ function DropZoneField({ input, filename, label, disabled = false, renameFile = 
   const sectionClass = classnames({ 'is-invalid': touched && error })
   const currentFile = input.value ? input.value[0] : acceptedFiles[0]
   const fileChanged = input.value ? input.value[0].name !== currentFile : false
-/* 
+/*
   useEffect(() => {
     if (!input.value) return
     console.log(input.value[0].name, currentFile)
@@ -109,7 +109,7 @@ function DropZoneField({ input, filename, label, disabled = false, renameFile = 
 
       </div>
       {touched && error &&
-      <div className='invalid-feedback'>
+      <div className='input-feedback-text invalid'>
         {error}
       </div>}
     </section>

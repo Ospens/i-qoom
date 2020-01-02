@@ -3,35 +3,39 @@ import { SubmissionError, initialize } from 'redux-form'
 import {
   GET_CURRENT_MEMBER,
   DELETE_TEAM,
-  UPDATE_NEW_TEAMS_LIST,
-  UPDATE_OLD_TEAMS_LIST,
+  // UPDATE_NEW_TEAMS_LIST,
+  // UPDATE_OLD_TEAMS_LIST,
   GET_NEW_TEAMS_LIST,
   GET_OLD_TEAMS_LIST,
   GET_NEW_MEMBERS_LIST,
   GET_CURRENT_MEMBERS_LIST,
   UPDATE_TEAM_MEMBERS
 } from './types'
-import { addNotification } from './notificationsActions'
+import { errorNotify, successNotify } from './notificationsActions'
 
 const teamDeleted = payload => ({
   type: DELETE_TEAM,
   payload
 })
+/*
 
 const updateNewTeams = payload => ({
   type: UPDATE_NEW_TEAMS_LIST,
   payload
 })
+*/
 
 const teamMembersUpdated = payload => ({
   type: UPDATE_TEAM_MEMBERS,
   payload
 })
+/*
 
 const updateOldTeams = payload => ({
   type: UPDATE_OLD_TEAMS_LIST,
   payload
 })
+*/
 
 const teamsFetched = payload => ({
   type: GET_OLD_TEAMS_LIST,
@@ -72,7 +76,7 @@ export const getTeams = (projectId, isNew = false) => (dispatch, getState) => {
         }
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -87,7 +91,7 @@ export const createTeam = (projectId, request) => (dispatch, getState) => {
         dispatch(initialize('team_form', data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -103,7 +107,7 @@ export const updateTeam = (projectId, request) => (dispatch, getState) => {
         dispatch(initialize('team_form', data))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -118,17 +122,17 @@ export const deleteTeam = (projectId, teamIds) => (dispatch, getState) => {
     axios.delete(`/api/v1/projects/${projectId}/dms_teams/`, { data, headers })
       .then(() => {
         dispatch(teamDeleted({ teamIds }))
-        dispatch(addNotification({ title: 'Teams', text: 'Team(s) was deleted!', type: 'success' }))
+        dispatch(successNotify('Teams', 'Team(s) was deleted!'))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
 }
 
 export const updateTeamMembers = (projectId, values) => (dispatch, getState) => {
-  const { user: { token }, accessRights: { oldTeams } } = getState()
+  const { user: { token }, accessRights: { oldTeams, newTeams } } = getState()
   const headers = { headers: { Authorization: token } }
   const request = {
     ...values
@@ -138,19 +142,24 @@ export const updateTeamMembers = (projectId, values) => (dispatch, getState) => 
     axios.post(`/api/v1/projects/${projectId}/dms_teams/${values.id}/update_members`, request, headers)
       .then(({ data }) => {
         const type = oldTeams.findIndex(t => t.id === data.id) > -1 ? 'oldTeams' : 'newTeams'
-        const value = { [type]: oldTeams.filter(t => t.id !== data.id).concat(data) }
+        let value = {}
+        if (type === 'oldTeams') {
+          value = { oldTeams: oldTeams.map(t => (t.id === data.id ? data : t)) }
+        } else {
+          value = { newTeams: newTeams.map(t => (t.id === data.id ? data : t)) }
+        }
         dispatch(teamMembersUpdated(value))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
 }
 
 export const deleteTeamMembers = (projectId, teamId, userId) => (dispatch, getState) => {
-  const { accessRights: { oldTeams } } = getState()
-  const team = oldTeams.find(({ id }) => id === teamId)
+  const { accessRights: { oldTeams, newTeams } } = getState()
+  const team = oldTeams.concat(newTeams).find(({ id }) => id === teamId)
   team.users = team.users.filter(({ id }) => id !== userId)
   const values = {
     id: teamId,
@@ -168,10 +177,10 @@ export const updateTeamRights = (projectId, teams) => (dispatch, getState) => {
       .then(() => {
         dispatch(getTeams(projectId))
         dispatch(getTeams(projectId, true))
-        dispatch(addNotification({ title: 'Teams', text: 'Access rights changed!', type: 'success' }))
+        dispatch(successNotify('Teams', 'Access rights changed!'))
       })
       .catch(({ response }) => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
         throw new SubmissionError(response.data)
       })
   )
@@ -187,7 +196,7 @@ export const getGrantAccessMembers = projectId => (dispatch, getState) => {
         dispatch(newMembersFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -202,7 +211,7 @@ export const getGrandedAccessMembers = projectId => (dispatch, getState) => {
         dispatch(currentMembersFetched(response.data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -220,10 +229,10 @@ export const startUpdateAccessMembers = (projectId, values, type) => (dispatch, 
         } else if (type === 'oldMembers') {
           dispatch(getGrandedAccessMembers(projectId))
         }
-        dispatch(addNotification({ title: 'Access rights', text: 'Rights successfully updated', type: 'success' }))
+        dispatch(successNotify('Access rights', 'Rights successfully updated'))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }
@@ -238,7 +247,7 @@ export const showMemberProfile = (projectId, memberId) => (dispatch, getState) =
         dispatch(memberFetched(data))
       })
       .catch(() => {
-        dispatch(addNotification({ title: 'Problem', text: 'Something went wrong!', type: 'error' }, true))
+        dispatch(errorNotify('Problem'))
       })
   )
 }

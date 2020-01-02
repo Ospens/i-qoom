@@ -25,16 +25,43 @@ export const removeNotification = id => dispatch => {
   dispatch({ type: REMOVE_NOTIFICATION, payload: id })
 }
 
-export const addNotification = (values, autodelete = false) => dispatch => {
+export const addNotification = (values, autoDelete) => dispatch => {
   const notification = {
     ...values,
     id: `f${((Math.random() * 1e8)).toString(16)}`,
-    time: values.time ? values.time : new Date()
+    time: new Date() // values.time ? values.time : new Date()
   }
   dispatch(({ type: ADD_NOTIFICATION, payload: notification }))
-  if (autodelete) {
+  if (autoDelete) {
     setTimeout(() => { dispatch(removeNotification(notification.id)) }, 4900)
   }
   dispatch(toggleState(true))
   stateOffTimer(dispatch)
+}
+
+export const errorNotify = (title, text, autoDelete = true) => dispatch => {
+  const values = {
+    title,
+    text: text || 'Something went wrong!',
+    type: 'error'
+  }
+  dispatch(addNotification(values, autoDelete))
+}
+
+export const successNotify = (title, text, autoDelete = false) => dispatch => {
+  const values = {
+    title,
+    text,
+    type: 'success'
+  }
+  dispatch(addNotification(values, autoDelete))
+}
+
+export const infoNotify = (title, text, autoDelete = false) => dispatch => {
+  const values = {
+    title,
+    text,
+    type: 'info'
+  }
+  dispatch(addNotification(values, autoDelete))
 }

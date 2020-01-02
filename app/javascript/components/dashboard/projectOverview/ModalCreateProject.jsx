@@ -5,14 +5,14 @@ import NewModal from '../../../elements/Modal'
 import { startFetchProjects } from '../../../actions/projectActions'
 import ModalContent from './ModalContent'
 
-function Trigger({ toggleOpen }) {
+function trigger(toggleOpen) {
   return (
-    <div onClick={toggleOpen}>
-      <div className='project-card blank'>
-        <span className='icon-add_1' />
+    <button type="button" onClick={toggleOpen}>
+      <div className="project-card blank">
+        <span className="icon-add_1" />
         <label>Create a new project</label>
       </div>
-    </div>
+    </button>
   )
 }
 
@@ -25,16 +25,19 @@ function ModalCreateProject() {
     dispatch(destroy('project_form'))
     dispatch(startFetchProjects())
   }, [dispatch])
-  
+
+  const content = (
+    <ModalContent
+      step={modalStep}
+      changeStep={val => setModalStep(modalStep + val)}
+      handleClose={handleClose}
+    />
+  )
+
   return (
     <NewModal
-      content={
-      <ModalContent
-        step={modalStep}
-        changeStep={val => setModalStep(modalStep + val)}
-        handleClose={handleClose}
-      />}
-      trigger={<Trigger toggleOpen={() => setModalStep(1)}/>}
+      content={content}
+      trigger={trigger(() => setModalStep(1))}
       open={modalStep > 0}
       onClose={handleClose}
       closeOnDimmerClick={false}

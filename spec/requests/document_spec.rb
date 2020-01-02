@@ -1,6 +1,5 @@
 require 'rails_helper'
 require 'zip'
-include DocumentConcern
 
 describe Document, type: :request do
   let(:json) { JSON(response.body) }
@@ -372,6 +371,22 @@ describe Document, type: :request do
         #   f.write(response.body)
         # end
       end
+    end
+
+    it 'download_all_details' do
+      project.members.create!(user: user, dms_module_access: true, employment_type: :employee)
+      get "/api/v1/projects/#{project.id}/documents/download_all_details",
+        params: { document_ids: [document.id] }, headers: credentials(user)
+      expect(response).to have_http_status(:success)
+      # File.open('public/documents.zip', 'w+') do |f|
+      #   f.binmode
+      #   f.write(response.body)
+      # end
+      files = Zip::InputStream.open(StringIO.new(response.body))
+      file = files.get_next_entry
+      expect(file.name).to include(document.codification_string)
+      expect(file.get_input_stream.read.length).to be > 5000
+      expect(response.header['Content-Disposition']).to include('documents')
     end
 
     context 'download_list' do
