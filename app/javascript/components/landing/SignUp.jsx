@@ -8,7 +8,7 @@ import SelectField from '../../elements/SelectField'
 import CheckBoxField from '../../elements/CheckBoxField'
 import InputField from '../../elements/InputField'
 import countryList from './countriesCodes'
-import { required, email, maxLength15 } from '../../elements/validations'
+import { required, email, maxLength15, minLength2 } from '../../elements/validations'
 
 function FirstStep() {
   return (
@@ -21,7 +21,7 @@ function FirstStep() {
           id='first_name'
           label='Type in first name*'
           placeholder='First name'
-          validate={[required]}
+          validate={[required, minLength2]}
         />
         <Field
           component={InputField}
@@ -30,7 +30,7 @@ function FirstStep() {
           id='last_name'
           label='Type in last name*'
           placeholder='Last name'
-          validate={[required]}
+          validate={[required, minLength2]}
         />
       </div>
       <div className='form-row'>
@@ -65,10 +65,10 @@ function FirstStep() {
       <div className='form-buttons col-12 text-center'>
         <Link to='/' className='col-2 btn btn-back'>
           <span className='icon-arrow-button-left' />
-          Back
+          <span>Back</span>
         </Link>
         <button type='submit' className='col-2 btn btn-primary'>
-          Next
+          <span>Next</span>
           <span className='icon-arrow-button-right' />
         </button>
       </div>
