@@ -235,7 +235,7 @@ class Document < ApplicationRecord
   end
 
   def attributes_for_edit
-    doc = attributes.except('id', 'created_at', 'updated_at')
+    doc = attributes.except('created_at', 'updated_at')
     doc['document_fields'] = []
     document_fields.each do |field|
       field_attributes = field.build_for_edit_document
@@ -248,7 +248,6 @@ class Document < ApplicationRecord
 
   def attributes_for_show
     doc = attributes_for_edit
-    doc['id'] = attributes['id']
     doc['project_name'] = project.name
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')
