@@ -21,19 +21,19 @@ function ProjectContent() {
       </ul>
       <ul className="nav flex-column nav-items">
         <li className="nav-item">
-          <span className="sidebar_section-title">Commercial Managment</span>
+          <span className="sidebar_section-title">Commercial Management</span>
         </li>
         <SideBarItem
           path={projectCode && dmsSections
             ? `/dashboard/projects/${currentProject.id}/documents/`
             : `/dashboard/projects/${currentProject.id}/documents/master/codifications/1`}
           root={`/dashboard/projects/${currentProject.id}/documents/`}
-          label="Documents Managment"
+          label="Document Management"
         />
       </ul>
       <ul className="nav flex-column nav-items">
         <li className="nav-item">
-          <span className="sidebar_section-title">Project Managment</span>
+          <span className="sidebar_section-title">Project Management</span>
         </li>
       </ul>
     </div>

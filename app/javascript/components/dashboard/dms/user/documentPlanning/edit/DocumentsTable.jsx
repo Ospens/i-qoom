@@ -4,6 +4,12 @@ import { useDispatch } from 'react-redux'
 import { FieldArray, reduxForm } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
 import { updatePlannedListDocuments } from '../../../../../../actions/plannedListActions'
+import {
+  Table,
+  Header,
+  HeaderRow,
+  HeaderCell
+} from '../../../../../table/Table'
 
 const columns = [
   { title: 'Project' },
@@ -67,44 +73,38 @@ function DocumentsTable({
             Upload list
           </button>
         </div>
-        <div className="Rtable-container">
-          <div className="Rtable separate">
-            <div className="Rtable__header">
-              <div className="Rtable-row">
-                <div className="Rtable__row-cell event-name" />
-                <div className="Rtable__row-cell table-checkbox">
-                  <div className="d-flex">
-                    <input
-                      type="checkbox"
-                      id="check_all"
-                    />
-                    <label htmlFor="check_all" />
-                  </div>
+        <Table separated>
+          <Header>
+            <HeaderRow>
+              <HeaderCell className="event-name" />
+              <HeaderCell className="table-checkbox">
+                <div className="d-flex">
+                  <input
+                    type="checkbox"
+                    id="check_all"
+                  />
+                  <label htmlFor="check_all" />
                 </div>
-                <div className="Rtable__row-cell">
-                  <div className="Rtable__row-cell__header">
-                    <span>Pos.</span>
-                  </div>
-                </div>
-                <div className="Rtable__row-cell" />
-                <div className="Rtable__row-cell" />
-                {columns.map(({ title }) => (
-                  <div className="Rtable__row-cell" key={title}>
-                    <div className="Rtable__row-cell__header">
-                      <span>{title}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <FieldArray
-              name="document_mains"
-              component={DocumentTableBody}
-              checkedDocs={checkedDocs}
-              toggleChecked={toggleChecked}
-            />
-          </div>
-        </div>
+              </HeaderCell>
+              <HeaderCell>
+                <span>Pos.</span>
+              </HeaderCell>
+              <HeaderCell />
+              <HeaderCell />
+              {columns.map(({ title }) => (
+                <HeaderCell key={title}>
+                  <span>{title}</span>
+                </HeaderCell>
+              ))}
+            </HeaderRow>
+          </Header>
+          <FieldArray
+            name="document_mains"
+            component={DocumentTableBody}
+            checkedDocs={checkedDocs}
+            toggleChecked={toggleChecked}
+          />
+        </Table>
       </div>
       {tableFooter(pristine, reset, projectId, listId)}
     </form>

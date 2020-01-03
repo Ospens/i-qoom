@@ -34,12 +34,12 @@ const initialState = {
   samplesAndContent: {
     title: '<h3 style="text-align:center;"><span style="font-size: 65px;color:#26276a;">Samples &amp; Contents</span></h3>',
     firstTab: {
-      title: 'Comercial Managment',
-      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Comercial Managment</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
+      title: 'Comercial Management',
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Comercial Management</span></h4><p style="font-size: 15px;;color: #475759;">Largemouth bass Arctic char, salmon brook lamprey, delta smelt thorny catfish cardinalfish barbelless catfish Atlantic trout velvetfish char greenling</p>'
     },
     secondTab: {
-      title: 'Project Managment',
-      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Project Managment</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
+      title: 'Project Management',
+      description: '<h4 style="margin-bottom: 20px;"><span style="color: #222222;font-size: 30px;">Project Management</span></h4><p style="font-size: 15px;color: #475759;">Sed ut perspiciatis unde omnis iste natus error sit oluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa</p>'
     },
     cards: [
       {

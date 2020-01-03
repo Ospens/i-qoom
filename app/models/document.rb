@@ -248,6 +248,7 @@ class Document < ApplicationRecord
 
   def attributes_for_show
     doc = attributes_for_edit
+    doc['id'] = attributes['id']
     doc['project_name'] = project.name
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')

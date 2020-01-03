@@ -41,11 +41,24 @@ export const paramsToFormData = (data, params, preceding = '') => {
 }
 
 const regexp = /(filename=")(.*)"/i
-const imgMIMEtypes = ['jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'ico', 'cur', 'gif', 'bmp', 'apng']
+const imgMIMEtypes = [
+  'jpg',
+  'jpeg',
+  'jfif',
+  'pjpeg',
+  'pjp',
+  'png',
+  'svg',
+  'ico',
+  'cur',
+  'gif',
+  'bmp',
+  'apng'
+]
 const applicationMIMEtypes = ['pdf', 'json']
 const textMIMEtypes = ['csv', 'css', 'html', 'calendar']
 
-export const downloadFile = (response, open = false) => {
+export const downloadFile = (response, open = false, windowReference) => {
   const disposition = response.headers['content-disposition'].match(regexp)
   const type = disposition[2].match(/(\.)(.*)/i)
   let MIMEtype = ''
@@ -60,8 +73,7 @@ export const downloadFile = (response, open = false) => {
     }
     if (MIMEtype) {
       url = window.URL.createObjectURL(new Blob([response.data], { type: MIMEtype }))
-      const win = window.open(url, '_blank')
-      win.focus()
+      windowReference.location.replace(url)
       return
     }
   } else {
@@ -405,7 +417,8 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
 export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
-
+  // Safari is blocking any call to window.open() which is made inside an async call.
+  const windowReference = window.open()
   return (
     axios({
       url: `/api/v1/documents/${docId}/download_native_file`,
@@ -413,7 +426,7 @@ export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
       headers,
       responseType: 'blob' // important
     }).then(response => {
-      downloadFile(response, open)
+      downloadFile(response, open, windowReference)
     })
       .catch(() => {
         dispatch(errorNotify('Problem'))
