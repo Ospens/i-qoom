@@ -12,7 +12,8 @@ class Api::V1::DocumentsController < ApplicationController
                                    :download_native_file,
                                    :download_details,
                                    :revisions,
-                                   :revisions_and_versions ]
+                                   :revisions_and_versions,
+                                   :send_emails ]
 
   authorize_resource :document, except: [ :new,
                                           :create,
@@ -45,6 +46,7 @@ class Api::V1::DocumentsController < ApplicationController
     rev = main.revisions.create
     document = rev.versions.new(document_params(true))
     if document.save
+      send_emails_helper(document)
       render json: document.attributes_for_edit
     else
       rev.destroy
@@ -60,6 +62,7 @@ class Api::V1::DocumentsController < ApplicationController
   def update
     document = @document.revision.versions.new(document_params(true))
     if document.save
+      send_emails_helper(document)
       render json: document.attributes_for_edit
     else
       render json: document.errors, status: :unprocessable_entity
@@ -72,6 +75,7 @@ class Api::V1::DocumentsController < ApplicationController
     rev = main.revisions.create
     document = rev.versions.new(document_params(true))
     if document.save
+      send_emails_helper(document)
       render json: document.attributes_for_edit
     else
       rev.destroy
@@ -235,6 +239,12 @@ class Api::V1::DocumentsController < ApplicationController
     render formats: :json
   end
 
+  def send_emails
+    @document.save_emails(signed_in_user, params[:emails])
+    @document.send_emails
+    head 200
+  end
+
   private
 
   def authorize_collection_actions
@@ -243,5 +253,12 @@ class Api::V1::DocumentsController < ApplicationController
 
   def document_params(assign_attrs = false)
     common_document_params(params[:document], assign_attrs, signed_in_user)
+  end
+
+  def send_emails_helper(document)
+    document.save_emails(signed_in_user, params[:document][:emails])
+    if params[:document][:send_emails]
+      document.send_emails
+    end
   end
 end

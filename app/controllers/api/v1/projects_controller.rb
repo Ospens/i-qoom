@@ -85,6 +85,14 @@ class Api::V1::ProjectsController < ApplicationController
                                       :username])
   end
 
+  def show_dms_teams
+    render json: @project.dms_teams.as_json(include: { users: {
+                                                        only: [:id,
+                                                               :first_name,
+                                                               :last_name] } },
+                                            only: [:name])
+  end
+
   private
 
   def project_params

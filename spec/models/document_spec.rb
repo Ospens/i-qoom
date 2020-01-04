@@ -409,20 +409,6 @@ RSpec.describe Document, type: :model do
     expect(doc2.convention).to eql(con1)
   end
 
-  it 'send emails' do
-    email1 = Faker::Internet.email
-    email2 = Faker::Internet.email
-    subject.emails = [email1, email2]
-    dbl = double
-    expect(ApplicationMailer).to\
-      receive(:new_document).with(instance_of(Document), email1).and_return(dbl)
-    expect(dbl).to receive(:deliver_later)
-    expect(ApplicationMailer).to\
-      receive(:new_document).with(instance_of(Document), email2).and_return(dbl)
-    expect(dbl).to receive(:deliver_later)
-    subject.save!
-  end
-
   it '#prevent_update_of_previous_revisions' do
     user = FactoryBot.create(:user)
     attrs = document_attributes(user)
@@ -685,5 +671,36 @@ RSpec.describe Document, type: :model do
     edit_attrs['review_issuers'] = [user.id]
     doc2 = doc.revision.versions.new(edit_attrs)
     expect(doc2).to be_valid
+  end
+
+  it 'save_emails' do
+    doc = FactoryBot.create(:document)
+    user = FactoryBot.create(:user)
+    user2 = FactoryBot.create(:user)
+    email = Faker::Internet.email
+    doc.save_emails(user, ['rtwwvwv'])
+    expect(doc.document_email_groups.count).to eql(0)
+    doc.save_emails(user, [email])
+    expect(doc.document_email_groups.count).to eql(1)
+    group = doc.document_email_groups.last
+    expect(group.document_emails.count).to eql(1)
+    expect(group.document_emails.last.email).to eql(email)
+    doc.save_emails(user, ["#{user2.id}"])
+    expect(doc.document_email_groups.reload.count).to eql(2)
+    group = doc.document_email_groups.last
+    expect(group.document_emails.count).to eql(1)
+    expect(group.document_emails.last.user).to eql(user2)
+  end
+
+  it 'send_emails' do
+    doc = FactoryBot.create(:document)
+    user = FactoryBot.create(:user)
+    email = Faker::Internet.email
+    doc.save_emails(user, [email])
+    dbl = double
+    expect(doc).to receive(:document_email_groups).and_return(dbl)
+    expect(dbl).to receive(:last).and_return(dbl)
+    expect(dbl).to receive(:send_emails)
+    doc.send_emails
   end
 end

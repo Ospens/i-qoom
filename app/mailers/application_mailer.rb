@@ -24,7 +24,12 @@ class ApplicationMailer < ActionMailer::Base
 
   def new_document(document, email)
     @document = document
-    mail to: email, subject: document.email_title
+    slug = SecureRandom.hex(16)
+    @download = @document.document_native_file_downloads.new(slug: slug, email: email)
+    @password = SecureRandom.hex(5)
+    @download.password = @password
+    @download.save
+    mail to: email, subject: @document.email_title
   end
 
   def reset_password_instructions(user)

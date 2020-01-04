@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_12_182658) do
+ActiveRecord::Schema.define(version: 2020_01_03_180330) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,25 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
     t.index ["user_id", "dms_team_id"], name: "index_dms_teams_users_on_user_id_and_dms_team_id"
   end
 
+  create_table "document_email_groups", force: :cascade do |t|
+    t.bigint "document_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_document_email_groups_on_document_id"
+    t.index ["user_id"], name: "index_document_email_groups_on_user_id"
+  end
+
+  create_table "document_emails", force: :cascade do |t|
+    t.bigint "document_email_group_id"
+    t.string "email"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_email_group_id"], name: "index_document_emails_on_document_email_group_id"
+    t.index ["user_id"], name: "index_document_emails_on_user_id"
+  end
+
   create_table "document_field_values", force: :cascade do |t|
     t.bigint "document_field_id"
     t.string "value"
@@ -171,6 +190,16 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
   create_table "document_mains_reviewers", id: false, force: :cascade do |t|
     t.bigint "document_main_id", null: false
     t.bigint "reviewer_id", null: false
+  end
+
+  create_table "document_native_file_downloads", force: :cascade do |t|
+    t.bigint "document_id"
+    t.string "slug"
+    t.string "password_digest"
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_document_native_file_downloads_on_document_id"
   end
 
   create_table "document_review_comments", force: :cascade do |t|
@@ -386,10 +415,15 @@ ActiveRecord::Schema.define(version: 2019_12_12_182658) do
   add_foreign_key "dms_settings", "projects"
   add_foreign_key "dms_settings", "users"
   add_foreign_key "dms_teams", "projects"
+  add_foreign_key "document_email_groups", "documents"
+  add_foreign_key "document_email_groups", "users"
+  add_foreign_key "document_emails", "document_email_groups"
+  add_foreign_key "document_emails", "users"
   add_foreign_key "document_field_values", "document_fields"
   add_foreign_key "document_folders", "projects"
   add_foreign_key "document_folders", "users"
   add_foreign_key "document_mains", "projects"
+  add_foreign_key "document_native_file_downloads", "documents"
   add_foreign_key "document_review_comments", "document_review_subjects"
   add_foreign_key "document_review_comments", "users"
   add_foreign_key "document_review_owners", "projects"

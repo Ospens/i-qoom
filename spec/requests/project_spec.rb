@@ -7,7 +7,7 @@ describe "Project", type: :request do
   let(:second_user) { FactoryBot.create(:user) }
   let(:third_project) { FactoryBot.create(:project,
                                           user_id: second_user.id) }
-  let(:project_member) { 
+  let(:project_member) {
     FactoryBot.create(:project_member,
                       project_id: second_project.id,
                       user: second_user)
@@ -27,7 +27,7 @@ describe "Project", type: :request do
 
   let(:json) { JSON(response.body) }
 
-  
+
   context "logged in" do
     let(:headers) { credentials(user).merge("CONTENT_TYPE" => "application/json") }
     let(:headers_for_second_user) { credentials(second_user).merge("CONTENT_TYPE" => "application/json") }
@@ -82,7 +82,7 @@ describe "Project", type: :request do
           get "/api/v1/projects/#{third_project.id}",
               headers: headers
           expect(response).to have_http_status(:success)
-          expect(json.values).to include(third_project.name)    
+          expect(json.values).to include(third_project.name)
         end
       end
       context "should get a status forbidden" do
@@ -117,7 +117,7 @@ describe "Project", type: :request do
           get "/api/v1/projects/#{new_project.id}",
                headers: headers
           expect(response).to have_http_status(:forbidden)
-          expect(json.values).not_to include(new_project.name)          
+          expect(json.values).not_to include(new_project.name)
         end
       end
     end
@@ -276,7 +276,7 @@ describe "Project", type: :request do
     end
 
     context "confirm_member" do
-      context "when project member doesn't have a user" do 
+      context "when project member doesn't have a user" do
         it "shouldn't confirm a member with a wrong or without a user" do
           project_member =
             FactoryBot.create(:project_member_pending)
@@ -395,6 +395,34 @@ describe "Project", type: :request do
         expect(json.length).to eql(0)
       end
     end
+
+    context 'dms_teams' do
+      before do
+        team = project.dms_teams.create
+        team.users << project.user
+      end
+
+      it 'project admin' do
+        get "/api/v1/projects/#{project.id}/show_dms_teams",
+           headers: headers
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+      end
+
+      it 'user with dms access' do
+        user = FactoryBot.create(:user)
+        project.members.create!(user: user,
+                                dms_module_access: true,
+                                employment_type: :employee)
+        get "/api/v1/projects/#{project.id}/show_dms_teams",
+           headers: credentials(user)
+        expect(response).to have_http_status(:success)
+        expect(json.length).to eql(1)
+        expect(json.first).to have_key('name')
+        expect(json.first).to have_key('users')
+        expect(json.first['users'].length).to eql(1)
+      end
+    end
   end
 
   context 'not logged in and should get a status "forbidden" on' do
@@ -456,6 +484,12 @@ describe "Project", type: :request do
 
     it 'dms_users' do
       get "/api/v1/projects/#{project.id}/dms_users",
+         headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'dms_teams' do
+      get "/api/v1/projects/#{project.id}/show_dms_teams",
          headers: headers
       expect(response).to have_http_status(:forbidden)
     end
