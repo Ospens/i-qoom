@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { formValueSelector, Field } from 'redux-form'
+import { Link, useParams } from 'react-router-dom'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import { required } from '../../../../../elements/validations'
@@ -12,6 +13,7 @@ export const changeFile = value => (value || typeof value === 'number'
 const selector = formValueSelector('document_form')
 
 function UploadFile() {
+  const { projectId } = useParams()
   const documentFields = useSelector(state => selector(state, 'document_fields'))
   if (!(documentFields && documentFields.length > 0)) return <div />
 
@@ -54,7 +56,9 @@ function UploadFile() {
       </div>
 
       <div className="dms-footer">
-        <button type="button" className="btn btn-white">Cancel</button>
+        <Link className="btn btn-white" to={`/dashboard/projects/${projectId}/documents/`}>
+          Cancel
+        </Link>
         <button type="submit" className="btn btn-purple">
           Next
         </button>
