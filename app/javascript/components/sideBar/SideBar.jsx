@@ -1,10 +1,11 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useCallback } from 'react'
 import classnames from 'classnames'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import ProjectContent from './ProjectContent'
 import AdminContent from './AdminContent'
 import SideBarItem from './SideBarItem'
+import { toggleSidebar } from '../../actions/projectActions'
 
 function dashboardContent() {
   return (
@@ -17,16 +18,19 @@ function dashboardContent() {
   )
 }
 
-function SideBar({ isOpen, toggle }) {
+function SideBar() {
+  const dispatch = useDispatch()
   const { pathname } = useLocation()
-  const isAdmin = useSelector(({ user }) => user.isAdmin)
+  const iQoomAdmin = useSelector(({ user }) => user.iQoomAdmin)
   const currentProject = useSelector(({ projects }) => projects.current)
-  const sideBarShow = isAdmin || pathname.includes('/dashboard')
+  const sideBarShow = iQoomAdmin || pathname.includes('/dashboard')
+  const isOpen = useSelector(({ projects }) => projects.sidebar)
+  const toggleOff = useCallback(() => dispatch(toggleSidebar(false)), [dispatch])
 
   if (!sideBarShow) return <Fragment />
 
   const mainClass = classnames('sidebar',
-    { 'sidebar-admin-panel': isAdmin },
+    { 'sidebar-admin-panel': iQoomAdmin },
     { 'is-visible': isOpen })
   return (
     <aside className={mainClass}>
@@ -34,18 +38,18 @@ function SideBar({ isOpen, toggle }) {
         <div className="side-bar-logo">
           <div className="side-bar-logo__container">
             <i className="svg-icon logo-header" />
-            {isAdmin && <span className="text-white">Admin access</span>}
+            {iQoomAdmin && <span className="text-white">Admin access</span>}
           </div>
-          <button type="button" onClick={toggle}>
+          <button type="button" onClick={toggleOff}>
             <span className="icon-Burgermenu_1 white" />
           </button>
         </div>
         {(() => {
           if (pathname.includes('/dashboard/projects')) {
             return <ProjectContent />
-          } if (pathname.includes('/dashboard')) {
+          } if (pathname.includes('/dashboard') && currentProject.isAdmin) {
             return dashboardContent()
-          } if (isAdmin) {
+          } if (iQoomAdmin) {
             return <AdminContent />
           }
           return <Fragment />

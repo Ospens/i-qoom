@@ -64,9 +64,9 @@ button:disabled {
 }
 
 .project-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 35px 1fr 35px;
   height: 15em;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -76,6 +76,7 @@ button:disabled {
   height: 250px;
   max-height: 24vh;
   min-height: 230px;
+  background-color: #fff;
 
   .icon-cog-double-2 {
     align-self: end;
@@ -90,11 +91,16 @@ button:disabled {
     }
   }
 
-  &.in-preparation {
+  .project-title {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #fff;
+    align-items: center;
+    justify-content: center;
+    a {
+      color: var(--color-labels);
+    }
+  }
+
+  &.in-preparation {
     border-top: 4px solid #ff9b00;
     border-left: 2px solid #f2f8f9;
     border-right: 2px solid #f2f8f9;
@@ -127,19 +133,15 @@ button:disabled {
     cursor: pointer;
     align-items: center;
 
-    label {
-      margin-top: 10px;
+    .blank-title {
       color: var(--color-labels);
+      margin-top: 10px;
       font-weight: 700;
-      cursor: pointer;
-    }
 
-    &:hover {
-      label {
-        margin-top: 10px;
+      &:hover {
         color: var(--color-blue);
         cursor: pointer;
-      }
+      } 
     }
   }
 }

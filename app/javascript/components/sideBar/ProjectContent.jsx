@@ -1,11 +1,18 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import SideBarItem from './SideBarItem'
 
 function ProjectContent() {
-  const currentProject = useSelector(({ projects }) => projects.current)
-  const projectCode = useSelector(({ projects }) => projects.current.project_code)
-  const dmsSections = useSelector(({ projects }) => projects.current.dmsSections)
+  const { projectId } = useParams()
+  const {
+    project_code: projectCode,
+    dmsSections,
+    isAdmin,
+    dms_module_access: dmsModuleAccess,
+    dms_module_master: dmsModuleMaster
+  } = useSelector(({ projects }) => projects.current)
+  const dmsAccess = dmsModuleAccess || dmsModuleMaster
 
   return (
     <div className="mb-4">
@@ -14,22 +21,28 @@ function ProjectContent() {
           <span className="sidebar_section-title">Frequently used</span>
         </li>
         <SideBarItem path="/dashboard/" label="Dashboard" />
-        <SideBarItem
-          path={`/dashboard/projects/${currentProject.id}`}
-          label="Project"
-        />
+        {isAdmin
+        && (
+          <SideBarItem
+            path={`/dashboard/projects/${projectId}`}
+            label="Project"
+          />
+        )}
       </ul>
       <ul className="nav flex-column nav-items">
         <li className="nav-item">
           <span className="sidebar_section-title">Commercial Management</span>
         </li>
-        <SideBarItem
-          path={projectCode && dmsSections
-            ? `/dashboard/projects/${currentProject.id}/documents/`
-            : `/dashboard/projects/${currentProject.id}/documents/master/codifications/1`}
-          root={`/dashboard/projects/${currentProject.id}/documents/`}
-          label="Document Management"
-        />
+        {dmsAccess
+        && (
+          <SideBarItem
+            path={projectCode && dmsSections
+              ? `/dashboard/projects/${projectId}/documents/`
+              : `/dashboard/projects/${projectId}/documents/master/codifications/1`}
+            root={`/dashboard/projects/${projectId}/documents/`}
+            label="Document Management"
+          />
+        )}
       </ul>
       <ul className="nav flex-column nav-items">
         <li className="nav-item">

@@ -127,13 +127,27 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   )
 }
 
+const setProjectAccesses = (userId, moduleAccess, project) => {
+  const accesses = []
+  Object.keys(moduleAccess).forEach(k => {
+    accesses[k] = moduleAccess[k].includes(project.id)
+  })
+  return {
+    ...project,
+    ...accesses,
+    isAdmin: project.admins.findIndex(admin => admin.user_id === userId) > -1
+  }
+}
+
 export const startFetchProjects = () => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
   const headers = { headers: { Authorization: token } }
+  
   return (
     axios.get('/api/v1/projects', headers)
-      .then(response => {
-        dispatch(projectsFetched(response.data))
+      .then(({ data }) => {
+        const projects = data.map(project => setProjectAccesses(userId, moduleAccess, project))
+        dispatch(projectsFetched(projects))
       })
       .catch(() => {
         dispatch(errorNotify('Problem'))
@@ -142,12 +156,13 @@ export const startFetchProjects = () => (dispatch, getState) => {
 }
 
 export const startFetchProject = id => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
   const headers = { headers: { Authorization: token } }
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
-        dispatch(projectFetched(response.data))
+        const project = setProjectAccesses(userId, moduleAccess, response.data)
+        dispatch(projectFetched(project))
         return response
       })
       .catch(({ response }) => {
@@ -162,7 +177,7 @@ export const startFetchProject = id => (dispatch, getState) => {
 }
 
 export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
