@@ -290,7 +290,6 @@ describe DmsPlannedList, type: :request do
       expect(json['document_mains'].length).to eql(1)
       expect(json['new']['document_fields'].length).to eql(8)
       main = json['document_mains'].first
-      expect(main['edit']['document_fields'].length).to eql(8)
       expect(main['document']['document_fields'].length).to eql(8)
       expect(main['position']).to eql(3)
     end
@@ -339,6 +338,8 @@ describe DmsPlannedList, type: :request do
           expect(response).to have_http_status(:success)
           expect(DocumentMain.last).to be_planned
           expect(DocumentMain.last.position).to eql(2)
+          main = json['document_mains'].first
+          expect(main).to have_key('document')
         end
 
         it 'invalid document' do
@@ -352,7 +353,7 @@ describe DmsPlannedList, type: :request do
           expect(Document.count).to eql(0)
           expect(DocumentRevision.count).to eql(0)
           expect(DocumentMain.count).to eql(0)
-          main = json.first
+          main = json['document_mains'].first
           expect(main).to have_key('temp_id')
           expect(main).to have_key('errors')
         end
@@ -389,6 +390,7 @@ describe DmsPlannedList, type: :request do
                                       dms_module_master: true,
                                       employment_type: :employee)
           list.update(project: doc.project)
+          doc.document_main.update!(planned: true)
           attrs
         end
 
@@ -412,7 +414,18 @@ describe DmsPlannedList, type: :request do
                                             document: doc_attrs } ] },
               headers: credentials(user)
             expect(response).to have_http_status(:success)
+            expect(doc.revision.versions.count).to eql(2)
             expect(doc.revision.last_version.email_title).to eql(title)
+          end
+
+          it 'no file' do
+            field = doc.document_fields.find_by(kind: :upload_field)
+            field.file.purge
+            post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
+              params: { document_mains: [ { id: doc.document_main.id,
+                                            document: doc_attrs } ] },
+              headers: credentials(user)
+            expect(response).to have_http_status(:success)
           end
 
           it 'invalid' do
@@ -425,7 +438,7 @@ describe DmsPlannedList, type: :request do
               headers: credentials(user)
             expect(response).to have_http_status(:success)
             expect(doc.revision.last_version.email_title).to_not eql(title)
-            main = json.first
+            main = json['document_mains'].first
             expect(main).to have_key('temp_id')
             expect(main).to have_key('errors')
           end
