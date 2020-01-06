@@ -1,4 +1,5 @@
 en:
   application_mailer:
     new_document:
-      document: 'Document:'
+      document_: 'Document:'
+      password_: 'Password:'

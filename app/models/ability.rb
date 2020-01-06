@@ -35,7 +35,7 @@ class Ability
     if user.present?
       # Project
       can :create, Project, user_id: user.id
-      can :dms_users, Project do |project|
+      can [:dms_users, :show_dms_teams], Project do |project|
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
       can :manage, Project,
@@ -94,7 +94,7 @@ class Ability
         document.user == user ||
           document.can_create?(user)
       end
-      can :update, Document do |document|
+      can [:update, :send_emails], Document do |document|
         (document.user == user || document.can_create?(user)) &&
           document == document.revision.versions.last_version
       end

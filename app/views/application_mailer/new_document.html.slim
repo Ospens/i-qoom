@@ -1,5 +1,10 @@
 div
-  = t('document_')
-  = link_to 'Link to document is pending...', 'https://i-qoom.com/'
+  strong = t('.document_')
+  '
+  = link_to nil, api_v1_document_native_file_download_url(@download)
+  br
+  strong = t('.password_')
+  '
+  = @password
 div
   = sanitize @document.email_text

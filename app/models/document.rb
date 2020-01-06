@@ -28,6 +28,12 @@ class Document < ApplicationRecord
            index_errors: true,
            dependent: :destroy
 
+  has_many :document_native_file_downloads,
+           dependent: :destroy
+
+  has_many :document_email_groups,
+           dependent: :destroy
+
   delegate :project_code,
            to: :document_main
 
@@ -91,8 +97,6 @@ class Document < ApplicationRecord
 
   before_create :unplan_document_main,
                 if: -> { document_main.planned? && unplan_document }
-
-  after_create :send_emails, if: -> { emails.try(:any?) }
 
   scope :order_by_revision_version, -> { order(Arel.sql('revision_version::integer ASC')) }
 
@@ -339,6 +343,19 @@ class Document < ApplicationRecord
     end
   end
 
+  def save_emails(initiator, array)
+    if !array.respond_to?('map') ||
+        !array.map{ |i| DocumentEmail.check_if_string_valid?(i) }.include?(true)
+      return
+    end
+    group = document_email_groups.create(user: initiator)
+    group.create_emails(array)
+  end
+
+  def send_emails
+    document_email_groups.last.send_emails
+  end
+
   private
 
   def original_document
@@ -472,12 +489,6 @@ class Document < ApplicationRecord
       else
         original_document.convention
       end
-  end
-
-  def send_emails
-    emails.each do |email|
-      ApplicationMailer.new_document(self, email).deliver_later
-    end
   end
 
   def set_review_status_in_document_main
