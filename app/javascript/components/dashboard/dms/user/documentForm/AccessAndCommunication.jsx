@@ -63,7 +63,7 @@ const EmailSubjects = ({ fields, discardValue }) => {
   )
 }
 
-function AccessAndCommunication({ backStep }) {
+function AccessAndCommunication({ backStep, handleSubmit, onSubmit }) {
   const dispatch = useDispatch()
   const { projectId } = useParams()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
@@ -194,7 +194,13 @@ function AccessAndCommunication({ backStep }) {
           Cancel
         </Link>
         <button type="submit" className="btn btn-purple">Save only</button>
-        <button type="submit" className="btn btn-purple">Save & send</button>
+        <button
+          type="submit"
+          className="btn btn-purple"
+          onClick={handleSubmit(values => onSubmit({ ...values, send_emails: true }))}
+        >
+          Save & send
+        </button>
       </div>
     </React.Fragment>
   )
