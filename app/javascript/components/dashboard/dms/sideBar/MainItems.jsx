@@ -12,32 +12,37 @@ const codificationTitle = (
   </div>
 )
 
-const menuItems = (projectCode, dmsSections, projectId, masterPath) => [
-  {
-    title: 'Overview',
-    icon: 'icon-task-checklist-check',
-    path: projectCode && dmsSections ? `/dashboard/projects/${projectId}/documents/` : '#'
-  },
-  {
-    title: 'DMS User Settings',
-    icon: 'icon-task-list-settings',
-    path: projectCode && dmsSections ? `/dashboard/projects/${projectId}/documents/settings/` : '#'
-  },
-  {
-    title: 'Document planning',
-    icon: 'icon-calendar-3',
-    type: 'plannedList',
-    root: `/dashboard/projects/${projectId}/documents/planning/`
-  },
-  {
-    title: 'Master settings',
-    icon: 'icon-task-list-settings',
-    path: projectCode && dmsSections
-      ? `${masterPath}/edit_convention`
-      : `${masterPath}/codifications/1/`,
-    root: `${masterPath}/`
+const menuItems = (codComplete, projectId, dmsMaster) => {
+  const items = [
+    {
+      title: 'Overview',
+      icon: 'icon-task-checklist-check',
+      path: codComplete ? `/dashboard/projects/${projectId}/documents/` : '#'
+    },
+    {
+      title: 'DMS User Settings',
+      icon: 'icon-task-list-settings',
+      path: codComplete ? `/dashboard/projects/${projectId}/documents/settings/` : '#'
+    },
+    {
+      title: 'Document planning',
+      icon: 'icon-calendar-3',
+      type: 'plannedList',
+      root: `/dashboard/projects/${projectId}/documents/planning/`
+    }
+  ]
+  if (dmsMaster) {
+    items.push({
+      title: 'Master settings',
+      icon: 'icon-task-list-settings',
+      path: codComplete
+        ? `/dashboard/projects/${projectId}/documents/master/edit_convention`
+        : `/dashboard/projects/${projectId}/documents/master/codifications/1`,
+      root: `/dashboard/projects/${projectId}/documents/master`
+    })
   }
-]
+  return items
+}
 
 const masterMenu = masterPath => [
   {
@@ -106,19 +111,22 @@ function MainItems() {
   const dispatch = useDispatch()
   const { projectId } = useParams()
   const { path } = useRouteMatch()
-  const projectCode = useSelector(({ projects }) => projects.current.project_code)
-  const dmsSections = useSelector(({ projects }) => projects.current.dmsSections)
+  const {
+    dmsSections,
+    project_code: projectCode,
+    dms_module_master: dmsModuleMaster
+  } = useSelector(({ projects }) => projects.current)
   useEffect(() => {
     dispatch(fetchPlannedLists(projectId))
   }, [dispatch, projectId])
   // TODO: Need check for master's permit
   const masterPath = `/dashboard/projects/${projectId}/documents/master`
-
+  const codComplete = projectCode && dmsSections
   return (
     <div className="dms-sidebar-menu__block">
       <h4>DMS menu</h4>
       <ul className="dms-sidebar-menu__list">
-        {menuItems(projectId, dmsSections, projectId, masterPath).map(({
+        {menuItems(codComplete, projectId, dmsModuleMaster).map(({
           path: menuPath, title, icon, root, type
         }) => (
           <DmsSideBarItem
