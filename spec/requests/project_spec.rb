@@ -25,6 +25,7 @@ describe "Project", type: :request do
                       user: user)
   }
 
+
   let(:json) { JSON(response.body) }
 
   
@@ -80,9 +81,16 @@ describe "Project", type: :request do
         it "if signed in as an invited admin" do
           project_admin.reload
           get "/api/v1/projects/#{third_project.id}",
-              headers: headers
+              headers: headers_for_second_user
           expect(response).to have_http_status(:success)
           expect(json.values).to include(third_project.name)    
+        end
+        it 'if signed in as an invited member' do
+          project_member.reload
+          get "/api/v1/projects/#{second_project.id}",
+              headers: headers_for_second_user
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(second_project.name)
         end
       end
       context "should get a status forbidden" do
@@ -96,7 +104,7 @@ describe "Project", type: :request do
           expect(response).to have_http_status(:forbidden)
           expect(json.values).not_to include(project.name)
         end
-        it "if a signed in user haven't accept the invitation" do
+        it "if a signed in user hasn't accept the invitation" do
           pending_project_member.reload
           second_project.reload
           get "/api/v1/projects/#{second_project.id}",
@@ -104,9 +112,54 @@ describe "Project", type: :request do
           expect(response).to have_http_status(:forbidden)
           expect(json.values).not_to include(second_project.name)
         end
+        it "if a signed in user doesn't have the membership" do
+          new_project = FactoryBot.create(:project)
+          new_project.reload
+          get "/api/v1/projects/#{new_project.id}",
+               headers: headers
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(new_project.name)          
+        end
+      end
+    end
+    context "edit" do
+      context "should get a status 'success' and render the project" do
+        it 'if signed in as a creator' do
+          get "/api/v1/projects/#{project.id}/edit",
+               headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(project.name)
+        end
+        it "if signed in as an invited admin" do
+          project_admin.reload
+          get "/api/v1/projects/#{third_project.id}/edit",
+              headers: headers
+          expect(response).to have_http_status(:success)
+          expect(json.values).to include(third_project.name)    
+        end
+      end
+      context "should get a status forbidden" do
+        it "if signed in as member, but project is not completed" do
+          new_project_member =
+            FactoryBot.create(:project_member,
+                              project_id: project.id,
+                              user: second_user)
+          get "/api/v1/projects/#{project.id}/edit",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(project.name)
+        end
+        it "if a signed in user hasn't accept the invitation" do
+          pending_project_member.reload
+          second_project.reload
+          get "/api/v1/projects/#{second_project.id}/edit",
+               headers: headers_for_second_user
+          expect(response).to have_http_status(:forbidden)
+          expect(json.values).not_to include(second_project.name)
+        end
         it 'if signed in as an invited member' do
           project_member.reload
-          get "/api/v1/projects/#{second_project.id}",
+          get "/api/v1/projects/#{second_project.id}/edit",
               headers: headers_for_second_user
           expect(response).to have_http_status(:forbidden)
           expect(json.values).not_to include(second_project.name)
@@ -114,7 +167,7 @@ describe "Project", type: :request do
         it "if a signed in user doesn't have the membership" do
           new_project = FactoryBot.create(:project)
           new_project.reload
-          get "/api/v1/projects/#{new_project.id}",
+          get "/api/v1/projects/#{new_project.id}/edit",
                headers: headers
           expect(response).to have_http_status(:forbidden)
           expect(json.values).not_to include(new_project.name)          
@@ -406,6 +459,11 @@ describe "Project", type: :request do
     end
     it 'show' do
       get "/api/v1/projects/#{project.id}",
+           headers: headers
+      expect(response).to have_http_status(:forbidden)
+    end
+    it 'edit' do
+      get "/api/v1/projects/#{project.id}/edit",
            headers: headers
       expect(response).to have_http_status(:forbidden)
     end

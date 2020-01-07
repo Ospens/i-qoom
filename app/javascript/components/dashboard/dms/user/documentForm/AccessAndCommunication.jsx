@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { formValueSelector, Field, FieldArray, change } from 'redux-form'
+import {
+  formValueSelector, Field, FieldArray, change
+} from 'redux-form'
+import { Link, useParams } from 'react-router-dom'
 import SelectField from '../../../../../elements/SelectField'
 import InputField from '../../../../../elements/InputField'
 import CheckBoxField from '../../../../../elements/CheckBoxField'
@@ -21,35 +24,36 @@ const email = value => (
 const EmailSubjects = ({ fields, discardValue }) => {
   const dispatch = useDispatch()
 
-  const updateEmails = useCallback((e, fields, discardValue) => {
-    if (e.charCode === 13) {
-      e.preventDefault()
-      const error = email(e.target.value)
-      if (error) return dispatch(errorNotify('Problem', error))
+  const updateEmails = useCallback(e => {
+    if (e.charCode !== 13) return null
 
-      fields.push(e.target.value)
-      discardValue()
-    }
-  }, [dispatch])
+    e.preventDefault()
+    const error = email(e.target.value)
+    if (error) return dispatch(errorNotify('Problem', error))
+
+    fields.push(e.target.value)
+    discardValue()
+    return null
+  }, [dispatch, fields, discardValue])
 
   return (
     <React.Fragment>
       <Field
         component={InputField}
-        onKeyPress={e => updateEmails(e, fields, discardValue)}
-        name='email_addresses'
-        id='email_addresses'
-        placeholder='Type in an e-mail and press Enter'
-        label='Enter E-mail addresses'
+        onKeyPress={e => updateEmails(e)}
+        name="email_addresses"
+        id="email_addresses"
+        placeholder="Type in an e-mail and press Enter"
+        label="Enter E-mail addresses"
       />
-      <ul className='document__email_addresses-list'>
+      <ul className="document__email_addresses-list">
         {fields.map((field, index) => (
-          <li className='document__email_addresses-list__item' key={index}>
+          <li className="document__email_addresses-list__item" key={field}>
             <Field
               name={field}
               component={renderField}
             />
-            <button type='button' onClick={() => fields.remove(index)}>
+            <button type="button" onClick={() => fields.remove(index)}>
               x
             </button>
           </li>
@@ -59,8 +63,9 @@ const EmailSubjects = ({ fields, discardValue }) => {
   )
 }
 
-const AccessAndCommunication = ({ backStep }) => {
+function AccessAndCommunication({ backStep }) {
   const dispatch = useDispatch()
+  const { projectId } = useParams()
   const emailTitleLikeDocument = useSelector(state => selector(state, 'email_title_like_document'))
   const reviewStatus = useSelector(state => selector(state, 'review_status'))
   const conventionId = useSelector(state => selector(state, 'convention_id'))
@@ -81,105 +86,115 @@ const AccessAndCommunication = ({ backStep }) => {
 
   return (
     <React.Fragment>
-      <div className='dms-content__header'>
+      <div className="dms-content__header">
         <h4>Access & communication</h4>
       </div>
 
-      <div className='form-body'>
+      <div className="form-body">
         <div>
-          <div className='form-group'>
+          <div className="form-group">
             <FieldArray
-              name='emails'
-              component={props => <EmailSubjects {...props} discardValue={discardValue}/>}
+              name="emails"
+              component={props => <EmailSubjects {...props} discardValue={discardValue} />}
             />
           </div>
 
-          <div className='row'>
-            <div className='col-6'>
+          <div className="row">
+            <div className="col-6">
               <Field
                 component={InputField}
-                className='form-group'
-                name='mail_subject'
-                id='mail_subject'
-                label='Mail subject'
-                placeholder='Define a mail subject'
+                className="form-group"
+                name="mail_subject"
+                id="mail_subject"
+                label="Mail subject"
+                placeholder="Define a mail subject"
                 disabled={emailTitleLikeDocument}
-                value={'title'}
+                value="title"
               />
             </div>
-            <div className='col-6 subject-like-document'>
+            <div className="col-6 subject-like-document">
               <Field
                 component={CheckBoxField}
-                id='email_title_like_document'
-                name='email_title_like_document'
-                className='form-group m-0'
-                labelClass='mr-2'
-                text='Subject like document title'
+                id="email_title_like_document"
+                name="email_title_like_document"
+                className="form-group m-0"
+                labelClass="mr-2"
+                text="Subject like document title"
               />
             </div>
           </div>
 
-          {!conventionId &&
-          <div className='row'>
-            <div className='col-6'>
-              <Field
-                name='review_status'
-                id='review_status'
-                className='form-group'
-                options={reviewStatusValues}
-                component={SelectField}
-                label='Review status*'
-                placeholder='Select status'
-                validate={[required]}
-              />
+          {!conventionId
+          && (
+            <div className="row">
+              <div className="col-6">
+                <Field
+                  name="review_status"
+                  id="review_status"
+                  className="form-group"
+                  options={reviewStatusValues}
+                  component={SelectField}
+                  label="Review status*"
+                  placeholder="Select status"
+                  validate={[required]}
+                />
+              </div>
+              <div className="col-6" />
             </div>
-            <div className='col-6' />
-          </div>}
+          )}
 
-          {!conventionId &&
-          <div className='row'>
-            <div className='col-6'>
-              <Field
-                name='reviewers'
-                id='reviewers'
-                className='form-group'
-                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
-                component={SelectField}
-                label='Reviewers*'
-                placeholder='Select reviwers'
-                isMulti={true}
-                disabled={IFI}
-              />
+          {!conventionId
+          && (
+            <div className="row">
+              <div className="col-6">
+                <Field
+                  name="reviewers"
+                  id="reviewers"
+                  className="form-group"
+                  options={
+                    users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))
+                  }
+                  component={SelectField}
+                  label="Reviewers*"
+                  placeholder="Select reviwers"
+                  isMulti
+                  disabled={IFI}
+                />
+              </div>
+              <div className="col-6">
+                <Field
+                  name="review_issuers"
+                  id="review_issuers"
+                  className="form-group"
+                  options={
+                    users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))
+                  }
+                  component={SelectField}
+                  label="Issuers review issuer*"
+                  placeholder="Define Issuers review issuer"
+                  isMulti
+                  disabled={IFI}
+                />
+              </div>
             </div>
-            <div className='col-6'>
-              <Field
-                name='review_issuers'
-                id='review_issuers'
-                className='form-group'
-                options={users.map(u => ({ value: u.id, title: `${u.first_name} ${u.last_name}` }))}
-                component={SelectField}
-                label='Issuers review issuer*'
-                placeholder='Define Issuers review issuer'
-                isMulti={true}
-                disabled={IFI}
-              />
-            </div>
-          </div>}
+          )}
         </div>
 
-        <div className='form-group'>
+        <div className="form-group">
           <Field
-            name='document_text_editor'
+            name="document_text_editor"
             component={renderDocumentTextEditor}
           />
         </div>
       </div>
 
-      <div className='dms-footer'>
-        <button type='button' className='btn btn-white' onClick={backStep}>Back</button>
-        <button type='button' className='btn btn-white'>Cancel</button>
-        <button type='submit' className='btn btn-purple'>Save only</button>
-        <button type='submit' className='btn btn-purple'>Save & send</button>
+      <div className="dms-footer">
+        <button type="button" className="btn btn-white" onClick={backStep}>Back</button>
+        <Link className="btn btn-white" to={`/dashboard/projects/${projectId}/documents/`}>
+          Cancel
+        </Link>
+        <button type="submit" className="btn btn-purple">Save only</button>
+        <button type="submit" className="btn btn-purple">Save & send</button>
       </div>
     </React.Fragment>
   )

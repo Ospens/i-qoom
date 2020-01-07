@@ -17,7 +17,7 @@ const initialState = {
   state: null,
   updated_at: null,
   username: null,
-  isAdmin: false,
+  iQoomAdmin: false,
   newUser: {}
 }
 

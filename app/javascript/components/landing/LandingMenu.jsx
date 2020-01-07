@@ -28,6 +28,15 @@ const menuListFirstRow = [
 ]
 
 function CardContent({ project, i }) {
+  let href = '#'
+  const { access_rights: accessRights } = project
+  if (accessRights) {
+    if (accessRights.admin) {
+      href = `/dashboard/projects/${project.id}/`
+    } else if (accessRights.dms_module_access || accessRights.dms_module_master) {
+      href = `/dashboard/projects/${project.id}/documents`
+    }
+  }
   if (project.id === 0) {
     return (
       <Link to="/dashboard/">
@@ -42,7 +51,7 @@ function CardContent({ project, i }) {
     )
   }
   return (
-    <Link to={`/dashboard/projects/${project.id}`}>
+    <Link to={href}>
       <div className="landing-card__title-block">
         <span>{`Project ${i + 1}:`}</span>
         <p>{project.name}</p>
@@ -57,7 +66,7 @@ function RootMenu({ open, list }) {
 
   return (
     list.map(({ title, icon, project }, i) => (
-      <div className="landing-menu__card" key={i}>
+      <div className="landing-menu__card" key={`${title}${icon}`}>
         <div className={mainContentClass}>
           <div className="landing-card__title-block">
             {icon
@@ -85,10 +94,9 @@ function LandingMenu() {
 
   useEffect(() => {
     const prjlength = projects.length > 3 ? 3 : projects.length
-    projects.slice(0, 4).map((el, i) => (
-      menuListFirstRow[i].project = el
-    ))
-    { [...Array(3 - prjlength)].forEach((_, i) => { menuListFirstRow[i + prjlength].project = { id: 0 } }) }
+    projects.slice(0, 4).forEach((el, i) => { menuListFirstRow[i].project = el })
+    const tmpArray = [...Array(3 - prjlength)]
+    tmpArray.forEach((_, i) => { menuListFirstRow[i + prjlength].project = { id: 0 } })
   }, [projects])
 
   useEffect(() => {

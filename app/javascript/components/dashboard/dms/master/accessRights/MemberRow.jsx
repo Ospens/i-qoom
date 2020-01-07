@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { connect, useDispatch } from 'react-redux'
 import { getFormValues, reduxForm } from 'redux-form'
 import classnames from 'classnames'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import UserAvatar from 'react-user-avatar'
 import RightsDropDown from './RightsDropDown'
 import { startUpdateAccessMembers } from '../../../../../actions/accessRightsActions'
@@ -24,7 +24,8 @@ function MemberRow({
   }, [dispatch, projectId, type])
 
   if (!member) return <React.Fragment />
-
+  /* eslint-disable max-len */
+  const userHref = `/dashboard/projects/${projectId}/documents/master/access_rights/members/${member.id}`
   return (
     <form onSubmit={handleSubmit(submitMember)} className={classnames({ 'row-changed': !pristine })}>
       <div className="table-row">
@@ -48,7 +49,12 @@ function MemberRow({
                   <span className="team-length">{member.team.members || 0}</span>
                 </div>
               )}
-            <UserAvatar size="42" name={`${member.first_name} ${member.last_name}`} />
+            <Link
+              to={userHref}
+              target="_blank"
+            >
+              <UserAvatar size="42" name={`${member.first_name} ${member.last_name}`} />
+            </Link>
           </div>
           <div className="user-and-company">
             <span className="user_names">{`${member.first_name} ${member.last_name}`}</span>
@@ -56,7 +62,12 @@ function MemberRow({
           </div>
         </div>
         <div className="member-id table__row-cell">
-          <span>{`${member.id} Member id`}</span>
+          <Link
+            to={userHref}
+            target="_blank"
+          >
+            <span>{`${member.id} Member id`}</span>
+          </Link>
         </div>
         <div className="table__row-cell access-rights-cell">
           <RightsDropDown

@@ -38,6 +38,9 @@ class Ability
       can :dms_users, Project do |project|
         project.members.find_by(user_id: user.id).try(:dms_module_access?)
       end
+      can :show, Project,
+          id: user.member_projects.creation_step_done.map(&:id)
+
       can :manage, Project,
           id: user.admin_projects.map(&:id)
       # ProjectMember

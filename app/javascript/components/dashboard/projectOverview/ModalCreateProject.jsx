@@ -9,8 +9,12 @@ function trigger(toggleOpen) {
   return (
     <button type="button" onClick={toggleOpen}>
       <div className="project-card blank">
-        <span className="icon-add_1" />
-        <label>Create a new project</label>
+        <div />
+        <div>
+          <div className="icon-add_1" />
+          <div className="blank-title">Create a new project</div>
+        </div>
+        <div />
       </div>
     </button>
   )

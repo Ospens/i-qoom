@@ -8,13 +8,12 @@ import { columns } from '../../constants'
 import { DropDownItems } from './elements'
 import Filters from './Filters'
 import DownloadDocuments from './DownloadDocuments'
-import OpenDocument from './OpenDocument'
 import {
   downloadList, downloadDetailFile, downloadNativeFile, toggleSearchFilters, sortTable
 } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
-
 import useDebounce from '../../../../../elements/useDebounce'
+import FileIcon from '../../../../../elements/FileIcon'
 
 function Content({ projectId, checkedDocs, checkItem }) {
   const dispatch = useDispatch()
@@ -41,6 +40,10 @@ function Content({ projectId, checkedDocs, checkItem }) {
   const toggleFormats = useCallback((checked, value) => {
     changeFormats(toggleArray(checked, value))
   }, [])
+
+  const openFile = useCallback(docId => {
+    dispatch(downloadNativeFile(docId, true))
+  }, [dispatch])
 
   const toggleSort = useCallback(column => { dispatch(sortTable(column)) }, [dispatch])
 
@@ -164,7 +167,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
                 </div>
 
                 <div className="Rtable__row-cell revision-cell">
-                  {doc.revision_version}
+                  {doc.revision_number}
                 </div>
 
                 <div className="Rtable__row-cell version">
@@ -186,7 +189,9 @@ function Content({ projectId, checkedDocs, checkItem }) {
                 </div>
 
                 <div className="Rtable__row-cell td-files">
-                  <OpenDocument docId={doc.id} />
+                  <button type="button" onClick={() => openFile(doc.id)}>
+                    <FileIcon filename={doc.filename} />
+                  </button>
                 </div>
 
                 <div className="Rtable__row-cell td-files">
