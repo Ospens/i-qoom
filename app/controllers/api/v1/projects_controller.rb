@@ -6,7 +6,9 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def show
-    render json: @project, serializer: MemberProjectSerializer
+    render json: @project,
+           serializer: MemberProjectSerializer,
+           user: signed_in_user
   end
 
   def edit
