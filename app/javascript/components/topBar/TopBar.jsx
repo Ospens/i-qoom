@@ -9,7 +9,7 @@ function TopBar() {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
   const isOpen = useSelector(({ projects }) => projects.sidebar)
-  const toggleOn = useCallback(() => dispatch(toggleSidebar(false)), [dispatch])
+  const toggleOn = useCallback(() => dispatch(toggleSidebar(true)), [dispatch])
 
   if (pathname.includes('dashboard')) {
     return <DashboardBar isOpen={isOpen} toggle={toggleOn} />

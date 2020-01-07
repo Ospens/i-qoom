@@ -20,7 +20,7 @@ function ProjectContent() {
         <li className="nav-item">
           <span className="sidebar_section-title">Frequently used</span>
         </li>
-        <SideBarItem path="/dashboard/" label="Dashboard" />
+        <SideBarItem path="/dashboard/" label="Project overview" />
         {isAdmin
         && (
           <SideBarItem

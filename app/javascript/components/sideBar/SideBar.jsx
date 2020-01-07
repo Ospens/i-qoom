@@ -47,7 +47,7 @@ function SideBar() {
         {(() => {
           if (pathname.includes('/dashboard/projects')) {
             return <ProjectContent />
-          } if (pathname.includes('/dashboard') && currentProject.isAdmin) {
+          } if (pathname.includes('/dashboard')) {
             return dashboardContent()
           } if (iQoomAdmin) {
             return <AdminContent />

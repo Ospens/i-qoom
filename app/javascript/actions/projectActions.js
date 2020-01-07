@@ -142,7 +142,7 @@ const setProjectAccesses = (userId, moduleAccess, project) => {
 export const startFetchProjects = () => (dispatch, getState) => {
   const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
   const headers = { headers: { Authorization: token } }
-  
+
   return (
     axios.get('/api/v1/projects', headers)
       .then(({ data }) => {
