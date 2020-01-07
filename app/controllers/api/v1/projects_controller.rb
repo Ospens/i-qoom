@@ -2,7 +2,9 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    render json: signed_in_user.member_projects.creation_step_done
+    render json: signed_in_user.member_projects.creation_step_done,
+           each_serializer: MemberProjectSerializer,
+           user: signed_in_user
   end
 
   def show
