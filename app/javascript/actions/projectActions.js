@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
+  EDIT_PROJECT,
   SET_PAGE_TITLE,
   PROJECT_CREATED_SUCCESS,
   PROJECT_UPDATED_SUCCESS,
@@ -135,7 +136,9 @@ const setProjectAccesses = (userId, moduleAccess, project) => {
   return {
     ...project,
     ...accesses,
-    isAdmin: project.admins.findIndex(admin => admin.user_id === userId) > -1
+    isAdmin: project.admins
+      ? project.admins.findIndex(admin => admin.user_id === userId) > -1
+      : false
   }
 }
 
@@ -163,6 +166,27 @@ export const startFetchProject = id => (dispatch, getState) => {
       .then(response => {
         const project = setProjectAccesses(userId, moduleAccess, response.data)
         dispatch(projectFetched(project))
+        return response
+      })
+      .catch(({ response }) => {
+        if (response.status === 403) {
+          dispatch(errorNotify('Problem', 'Access denied!'))
+        } else {
+          dispatch(errorNotify('Problem'))
+        }
+        return response
+      })
+  )
+}
+
+export const startEditProject = id => (dispatch, getState) => {
+  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
+  const headers = { headers: { Authorization: token } }
+  return (
+    axios.get(`/api/v1/projects/${id}/edit`, headers)
+      .then(response => {
+        const project = setProjectAccesses(userId, moduleAccess, response.data)
+        dispatch(({ type: EDIT_PROJECT, payload: project }))
         return response
       })
       .catch(({ response }) => {

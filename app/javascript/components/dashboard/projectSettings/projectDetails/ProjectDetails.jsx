@@ -4,8 +4,8 @@ import CompanyBlock from './CompanyBlock'
 
 function ProjectDetails() {
   // const admins = useSelector(state => state.projects.current.admins)
-  const companyData = useSelector(state => state.projects.current.company_data)
-  const id = useSelector(state => state.projects.current.id)
+  const companyData = useSelector(state => state.projects.edit.company_data)
+  const id = useSelector(state => state.projects.edit.id)
   // const dispatch = useDispatch()
 
   // const updateAdmin = useCallback(values => dispatch(starUpdateAdmin(projectId, values))
