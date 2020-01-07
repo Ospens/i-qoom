@@ -18,8 +18,7 @@ const initialState = {
   updated_at: null,
   username: null,
   iQoomAdmin: false,
-  newUser: {},
-  module_access: []
+  newUser: {}
 }
 
 const userReducer = (state = initialState, action) => {

@@ -21,10 +21,13 @@ const initialState = {
     admins: [],
     project_code: undefined,
     dmsSections: undefined,
-    cms_module_access: false,
-    dms_module_access: false,
-    cms_module_master: false,
-    dms_module_master: false
+    access_rights: {
+      cms_module_access: false,
+      dms_module_access: false,
+      cms_module_master: false,
+      dms_module_master: false,
+      admin: false
+    }
   },
   edit: {
     admins: [],

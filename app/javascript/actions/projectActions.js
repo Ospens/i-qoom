@@ -128,29 +128,14 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
   )
 }
 
-const setProjectAccesses = (userId, moduleAccess, project) => {
-  const accesses = []
-  Object.keys(moduleAccess).forEach(k => {
-    accesses[k] = moduleAccess[k].includes(project.id)
-  })
-  return {
-    ...project,
-    ...accesses,
-    isAdmin: project.admins
-      ? project.admins.findIndex(admin => admin.user_id === userId) > -1
-      : false
-  }
-}
-
 export const startFetchProjects = () => (dispatch, getState) => {
-  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (
     axios.get('/api/v1/projects', headers)
       .then(({ data }) => {
-        const projects = data.map(project => setProjectAccesses(userId, moduleAccess, project))
-        dispatch(projectsFetched(projects))
+        dispatch(projectsFetched(data))
       })
       .catch(() => {
         dispatch(errorNotify('Problem'))
@@ -159,13 +144,12 @@ export const startFetchProjects = () => (dispatch, getState) => {
 }
 
 export const startFetchProject = id => (dispatch, getState) => {
-  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
       .then(response => {
-        const project = setProjectAccesses(userId, moduleAccess, response.data)
-        dispatch(projectFetched(project))
+        dispatch(projectFetched(response.data))
         return response
       })
       .catch(({ response }) => {
@@ -180,13 +164,12 @@ export const startFetchProject = id => (dispatch, getState) => {
 }
 
 export const startEditProject = id => (dispatch, getState) => {
-  const { user: { token, user_id: userId, module_access: moduleAccess } } = getState()
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   return (
     axios.get(`/api/v1/projects/${id}/edit`, headers)
       .then(response => {
-        const project = setProjectAccesses(userId, moduleAccess, response.data)
-        dispatch(({ type: EDIT_PROJECT, payload: project }))
+        dispatch(({ type: EDIT_PROJECT, payload: response.data }))
         return response
       })
       .catch(({ response }) => {

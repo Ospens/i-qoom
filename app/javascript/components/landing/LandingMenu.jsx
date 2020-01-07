@@ -29,10 +29,13 @@ const menuListFirstRow = [
 
 function CardContent({ project, i }) {
   let href = '#'
-  if (project.isAdmin) {
-    href = `/dashboard/projects/${project.id}/`
-  } else if (project.dms_module_access || project.dms_module_master) {
-    href = `/dashboard/projects/${project.id}/documents`
+  const { access_rights: accessRights } = project
+  if (accessRights) {
+    if (accessRights.admin) {
+      href = `/dashboard/projects/${project.id}/`
+    } else if (accessRights.dms_module_access || accessRights.dms_module_master) {
+      href = `/dashboard/projects/${project.id}/documents`
+    }
   }
   if (project.id === 0) {
     return (

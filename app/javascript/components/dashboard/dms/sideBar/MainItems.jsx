@@ -114,7 +114,9 @@ function MainItems() {
   const {
     dmsSections,
     project_code: projectCode,
-    dms_module_master: dmsModuleMaster
+    access_rights: {
+      dms_module_master: dmsModuleMaster
+    }
   } = useSelector(({ projects }) => projects.current)
   useEffect(() => {
     dispatch(fetchPlannedLists(projectId))

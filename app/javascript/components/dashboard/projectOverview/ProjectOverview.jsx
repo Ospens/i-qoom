@@ -18,7 +18,8 @@ const ProjectOverview = () => {
       <div className="row-projects">
         {allProjects.map(project => {
           let href = '#'
-          if (project.dms_module_access || project.dms_module_master) {
+          const { access_rights: accessRights } = project
+          if (accessRights && (accessRights.dms_module_access || accessRights.dms_module_master)) {
             href = `/dashboard/projects/${project.id}/documents`
           }
           return (

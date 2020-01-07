@@ -8,9 +8,11 @@ function ProjectContent() {
   const {
     project_code: projectCode,
     dmsSections,
-    isAdmin,
-    dms_module_access: dmsModuleAccess,
-    dms_module_master: dmsModuleMaster
+    access_rights: {
+      dms_module_access: dmsModuleAccess,
+      dms_module_master: dmsModuleMaster,
+      admin
+    }
   } = useSelector(({ projects }) => projects.current)
   const dmsAccess = dmsModuleAccess || dmsModuleMaster
 
@@ -21,7 +23,7 @@ function ProjectContent() {
           <span className="sidebar_section-title">Frequently used</span>
         </li>
         <SideBarItem path="/dashboard/" label="Project overview" />
-        {isAdmin
+        {admin
         && (
           <SideBarItem
             path={`/dashboard/projects/${projectId}`}
