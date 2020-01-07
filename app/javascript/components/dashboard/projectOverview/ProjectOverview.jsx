@@ -19,12 +19,13 @@ const ProjectOverview = () => {
         {allProjects.map(project => {
           let href = '#'
           const { access_rights: accessRights } = project
+
           if (accessRights && (accessRights.dms_module_access || accessRights.dms_module_master)) {
             href = `/dashboard/projects/${project.id}/documents`
           }
           return (
             <div className="project-card in-preparation" key={project.id}>
-              {project.isAdmin
+              {accessRights && accessRights.admin
                 ? (
                   <Link to={`/dashboard/projects/${project.id}`}>
                     <span className="icon-cog-double-2" />
