@@ -99,6 +99,9 @@ class ProjectMember < ApplicationRecord
 
   validate :last_admin, if: :creation_step_active?, on: :update
 
+  after_validation :set_module_access, 
+                   if: :admin?
+
   before_save :send_confirmation_email,
               if: :invite
   before_save :add_user, if: -> { user.nil? && email.present? }
@@ -156,5 +159,12 @@ class ProjectMember < ApplicationRecord
   def add_user
     self.user = User.find_by("lower(email) = ? ", 
                              email.downcase)
+  end
+
+  def set_module_access
+    self.cms_module_access = true
+    self.dms_module_access = true
+    self.cms_module_master = true
+    self.dms_module_master = true
   end
 end
