@@ -6,13 +6,16 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def show
+    render json: @project, serializer: MemberProjectSerializer
+  end
+
+  def edit
     render json: @project, user: signed_in_user
   end
 
   def create
     if @project.save
       render json: @project
-
     else
       render json: @project.errors,
              status: :unprocessable_entity

@@ -12,6 +12,11 @@ RSpec.describe Api::V1::ProjectsController, type: :routing do
         route_to("api/v1/projects#show", id: "1")
     end
 
+    it "routes to #edit" do
+      expect(get: "/api/v1/projects/1/edit").to\
+        route_to("api/v1/projects#edit", id: "1")
+    end
+
     it "routes to #create" do
       expect(post: "/api/v1/projects").to\
         route_to("api/v1/projects#create")

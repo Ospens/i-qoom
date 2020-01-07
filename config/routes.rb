@@ -57,7 +57,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :projects, except: [:new, :edit] do
+      resources :projects, except: :new do
         collection do
           get :confirm_member
         end
