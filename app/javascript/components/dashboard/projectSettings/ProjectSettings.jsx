@@ -1,10 +1,13 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+  Link, useParams, useHistory
+} from 'react-router-dom'
 import Tabs from '../../../elements/Tabs'
 import ProjectDetails from './projectDetails/ProjectDetails'
 import ProjectStatus from './ProjectStatus'
 import MemberManagement from './MemberManagement'
+import { startEditProject } from '../../../actions/projectActions'
 
 const renderProjectStatus = (color, text) => (
   <React.Fragment>
@@ -17,8 +20,18 @@ const renderProjectStatus = (color, text) => (
 )
 
 function ProjectSettings() {
+  const dispatch = useDispatch()
+  const { projectId } = useParams()
+  const history = useHistory()
   const projectName = useSelector(state => state.projects.current.name)
 
+  useEffect(() => {
+    dispatch(startEditProject(projectId)).then(response => {
+      if (response.status === 403) {
+        history.push({ pathname: '/dashboard' })
+      }
+    })
+  }, [dispatch, history, projectId])
   return (
     <div className="project-settings">
       <div className="project-title-editable">{projectName}</div>

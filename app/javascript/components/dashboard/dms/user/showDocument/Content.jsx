@@ -1,9 +1,9 @@
 import React, { Fragment, useCallback } from 'react'
 import moment from 'moment'
-import classnames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
 import { downloadNativeFile } from '../../../../../actions/documentsActions'
+import FileIcon from '../../../../../elements/FileIcon'
 
 const renderBlock = field => {
   let content
@@ -155,25 +155,14 @@ function Content() {
 
         <div className="my-4">
           <label className="mb-4">Files</label>
-          {fileFields.map((field, i) => {
-            const fileExtension = field.filename ? field.filename.match(/\.[0-9a-z]+$/i)[0] : ''
-            let iconClassName = 'icon-common-file-text1'
-            if (fileExtension === '.pdf') {
-              iconClassName = 'icon-Work-Office-Companies---Office-Files---office-file-pdf'
-            } else if (['.doc', '.docs'].includes(fileExtension)) {
-              iconClassName = 'icon-office-file-doc'
-            } else if (fileExtension === '.csv') {
-              iconClassName = 'icon-csv-1'
-            }
-            return (
-              <div className="d-flex align-items-center mb-4" key={field.filename}>
-                <button type="button" onClick={() => openFile()} className="d-flex">
-                  <i className={classnames('mr-2', iconClassName)} />
-                  <span>{field.filename}</span>
-                </button>
-              </div>
-            )
-          })}
+          {fileFields.map(field => (
+            <div className="d-flex align-items-center mb-4" key={field.filename}>
+              <button type="button" onClick={() => openFile()} className="d-flex">
+                <FileIcon className="mr-2" filename={field.filename} />
+                <span>{field.filename}</span>
+              </button>
+            </div>
+          ))}
         </div>
 
         <div className="main-block">

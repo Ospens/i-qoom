@@ -14,7 +14,9 @@ import DatePickerField from '../../../../../elements/DatePickerField'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import TextAreaField from '../../../../../elements/TextAreaField'
-import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../../elements/validations'
+import {
+  required, maxLength4, maxLength2, minLength2, minLength4
+} from '../../../../../elements/validations'
 import { initValues } from '../../initDocId'
 import DocumentIdInputs from '../../DocumentIdInputs'
 import { infoNotify } from '../../../../../actions/notificationsActions'
@@ -35,16 +37,18 @@ const validationList = field => {
   if (field.required) {
     list.push(required)
   }
-  if ('document_number' === field.codification_kind) {
+  if (field.codification_kind === 'document_number') {
     list.push(maxLength4, minLength4)
   }
-  if ('revision_number' === field.codification_kind) {
+  if (field.codification_kind === 'revision_number') {
     list.push(maxLength2, minLength2)
   }
   return list
 }
 
-function InputByType({ field, modal, toggleModal, conventionId, changeValues, blurPadStart }) {
+function InputByType({
+  field, modal, toggleModal, conventionId, changeValues, blurPadStart
+}) {
   const uniqName = `document_fields[${field.index}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
 
@@ -66,7 +70,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
     return (
       <React.Fragment>
-        {modal && <DocIdModal toggleModal={toggleModal} open={modal}/>}
+        {modal && <DocIdModal toggleModal={toggleModal} open={modal} />}
         <Field
           {...commonProps}
           component={DropZoneField}
@@ -76,7 +80,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
         />
       </React.Fragment>
     )
-  } else if (field.kind === 'upload_field') {
+  } if (field.kind === 'upload_field') {
     return (
       <Field
         {...commonProps}
@@ -86,7 +90,7 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
         id={`document_fields[${field.index}].file`}
       />
     )
-  } else if (field.kind === 'select_field') {
+  } if (field.kind === 'select_field') {
     const fieldValues = field.document_field_values
 
     return (
@@ -97,29 +101,29 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
         onChange={v => changeValues(v, fieldValues, field.index)}
       />
     )
-  } else if (field.kind === 'textarea_field') {
+  } if (field.kind === 'textarea_field') {
     return (
       <Field
         {...commonProps}
         component={TextAreaField}
       />
     )
-  } else if (field.kind === 'date_field') {
+  } if (field.kind === 'date_field') {
     return (
       <Field
         {...commonProps}
         component={DatePickerField}
       />
     )
-  } else {
-    return (
-      <Field
-        {...commonProps}
-        type={['document_number', 'revision_number'].includes(field.codification_kind) ? 'number' : 'text' }
-        component={InputField}
-      />
-    )
   }
+  return (
+    <Field
+      {...commonProps}
+      type={['document_number', 'revision_number']
+        .includes(field.codification_kind) ? 'number' : 'text'}
+      component={InputField}
+    />
+  )
 }
 
 export const formvalue = (fields = [], codKind) => {
@@ -152,7 +156,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
 
   const changeValues = useCallback((value, fieldValues, index) => {
     const newValues = fieldValues.map(field => {
-      const selected = field.value == value
+      const selected = field.value === value
       return {
         ...field,
         selected
@@ -183,37 +187,37 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
       infoNotify('Documents', `Can not get data from title ${title}`)
     )
 
-    const values = initValues(documentFields, (title) => infoMsg(title))
+    const values = initValues(documentFields, title => infoMsg(title))
     if (!values) return
 
     initDocIdForm(values)
     toggleModal(true)
-  }, [docFile])
+  }, [dispatch, docFile, documentFields, generateId, initDocIdForm, modal])
 
   return (
     <React.Fragment>
-      <div className='dms-content__header'>
+      <div className="dms-content__header">
         <h4>Add documents data & files</h4>
-        <div className='dms-content__project-phases'>
+        <div className="dms-content__project-phases">
           <span>Project phases</span>
-          <ul className='row mx-0'>
-            <li className='col-3 active'>
-              <button type='button'>
+          <ul className="row mx-0">
+            <li className="col-3 active">
+              <button type="button">
                 Planning
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Development
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Execution
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Operation
               </button>
             </li>
@@ -221,28 +225,28 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
         </div>
       </div>
 
-      <div className='form-body'>
-        <div className='row new-document-table'>
+      <div className="form-body">
+        <div className="row new-document-table">
 
-          <div className='col-6'>
+          <div className="col-6">
             <DocumentIdInputs
               origCompanyValue={origCompanyValue}
               disciplineValue={disciplineValue}
               docTypeValue={docTypeValue}
               docNumberValue={docNumberValue}
             />
-            <div className='form-group'>
+            <div className="form-group">
               <Field
                 component={CheckBoxField}
                 id="generate_id"
                 name="generate_id"
-                labelClass='form-check-label mr-2'
-                text='Generate Document ID through file code'
+                labelClass="form-check-label mr-2"
+                text="Generate Document ID through file code"
                 className="d-flex justify-content-center"
               />
             </div>
-            {groupedFields[columns[0]].map((field, index) => (
-              <div className='form-group' key={index}>
+            {groupedFields[columns[0]].map(field => (
+              <div className="form-group" key={`0${field.row}`}>
                 <InputByType
                   modal={modal}
                   toggleModal={toggleModal}
@@ -256,18 +260,18 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
 
           </div>
 
-          <div className='col-6'>
+          <div className="col-6">
             <Field
               component={InputField}
-              name='title'
-              id='title'
-              label='Define a document title'
-              placeholder='Title'
-              className='form-group'
+              name="title"
+              id="title"
+              label="Define a document title"
+              placeholder="Title"
+              className="form-group"
               validate={[required]}
             />
-            {groupedFields[columns[1]].map((field, index) => (
-              <div className='form-group' key={index}>
+            {groupedFields[columns[1]].map(field => (
+              <div className="form-group" key={`1${field.row}`}>
                 <InputByType
                   modal={modal}
                   toggleModal={toggleModal}
@@ -282,9 +286,11 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
         </div>
 
       </div>
-      <div className='dms-footer'>
-        <Link className='btn btn-white' to={`/dashboard/projects/${projectId}/documents/`}>Cancel</Link>
-        <button type='submit' className='btn btn-purple'>Next</button>
+      <div className="dms-footer">
+        <Link className="btn btn-white" to={`/dashboard/projects/${projectId}/documents/`}>
+          Cancel
+        </Link>
+        <button type="submit" className="btn btn-purple">Next</button>
       </div>
     </React.Fragment>
   )

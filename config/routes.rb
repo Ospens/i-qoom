@@ -64,7 +64,7 @@ Rails.application.routes.draw do
         post :download, on: :member
       end
 
-      resources :projects, except: [:new, :edit] do
+      resources :projects, except: :new do
         collection do
           get :confirm_member
         end

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { SubmissionError } from 'redux-form'
 import {
+  EDIT_PROJECT,
   SET_PAGE_TITLE,
   PROJECT_CREATED_SUCCESS,
   PROJECT_UPDATED_SUCCESS,
@@ -128,12 +129,13 @@ export const startCreateProject = (values, afterCreate) => (dispatch, getState) 
 }
 
 export const startFetchProjects = () => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
+
   return (
     axios.get('/api/v1/projects', headers)
-      .then(response => {
-        dispatch(projectsFetched(response.data))
+      .then(({ data }) => {
+        dispatch(projectsFetched(data))
       })
       .catch(() => {
         dispatch(errorNotify('Problem'))
@@ -142,7 +144,7 @@ export const startFetchProjects = () => (dispatch, getState) => {
 }
 
 export const startFetchProject = id => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
   return (
     axios.get(`/api/v1/projects/${id}`, headers)
@@ -161,8 +163,28 @@ export const startFetchProject = id => (dispatch, getState) => {
   )
 }
 
+export const startEditProject = id => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+  return (
+    axios.get(`/api/v1/projects/${id}/edit`, headers)
+      .then(response => {
+        dispatch(({ type: EDIT_PROJECT, payload: response.data }))
+        return response
+      })
+      .catch(({ response }) => {
+        if (response.status === 403) {
+          dispatch(errorNotify('Problem', 'Access denied!'))
+        } else {
+          dispatch(errorNotify('Problem'))
+        }
+        return response
+      })
+  )
+}
+
 export const startDeleteAdmin = (projectId, adminId) => (dispatch, getState) => {
-  const { token } = getState().user
+  const { user: { token } } = getState()
   const headers = { headers: { Authorization: token } }
 
   return (

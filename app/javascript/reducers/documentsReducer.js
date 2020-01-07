@@ -44,7 +44,9 @@ function transformatedDocuments(documents) {
       document_type: d.document_fields.find(el => el.codification_kind === 'document_type').document_field_values.find(({ selected }) => selected).title,
       discipline: d.document_fields.find(el => el.codification_kind === 'discipline').document_field_values.find(({ selected }) => selected).title,
       revision_date: d.document_fields.find(el => el.codification_kind === 'revision_date').value,
-      document_number: d.document_fields.find(el => el.codification_kind === 'document_number').value
+      document_number: d.document_fields.find(el => el.codification_kind === 'document_number').value,
+      revision_number: d.document_fields.find(el => el.codification_kind === 'revision_number').value,
+      filename: d.document_fields.find(el => el.codification_kind === 'document_native_file').filename
     }
   ))
 }

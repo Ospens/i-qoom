@@ -139,7 +139,7 @@ RSpec.describe ProjectMember, type: :model do
   end
 
   context "validates_acceptance of dms and cms modules" do
-    it 'if project admin' do
+    it 'if creator and project admin' do
       member = FactoryBot.create(:project).reload.members.first
       member.cms_module_access = false
       member.save
@@ -154,6 +154,14 @@ RSpec.describe ProjectMember, type: :model do
       member.save
       member.reload
       expect(member.cms_module_access).to be_falsy
+    end
+    it "if invited admin" do
+      admin = FactoryBot.create(:project_admin)
+      admin.reload
+      admin.cms_module_access = false
+      admin.save
+      admin.reload
+      expect(admin.cms_module_access).to be_truthy
     end
   end
   context "admin?" do
