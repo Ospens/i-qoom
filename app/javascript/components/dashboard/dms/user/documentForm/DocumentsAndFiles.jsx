@@ -47,10 +47,19 @@ const validationList = field => {
 }
 
 function InputByType({
-  field, modal, toggleModal, conventionId, changeValues, blurPadStart
+  field, modal, toggleModal, changeValues, filedIndex
 }) {
-  const uniqName = `document_fields[${field.index}].value`
+  const dispatch = useDispatch()
+  const conventionId = useSelector(state => selector(state, 'convention_id'))
+  const uniqName = `document_fields[${field.index || filedIndex}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
+
+  const blurPadStart = useCallback((index, padStart, event) => {
+    event.preventDefault()
+    const newValue = String(event.target.value).padStart(padStart, 0)
+    dispatch(change('document_form', `document_fields[${index}].value`, newValue))
+    dispatch(touch('document_form', `document_fields[${index}].value`))
+  }, [dispatch])
 
   const commonProps = {
     label: field.title,
@@ -140,8 +149,7 @@ export const formvalue = (fields = [], codKind) => {
 function DocumentsAndFiles({ match: { params: { projectId } } }) {
   const [modal, toggleModal] = useState(false)
   const groupedFields = useSelector(state => state.documents.current.grouped_fields)
-  const documentFields = useSelector(state => selector(state, 'document_fields'))
-  const conventionId = useSelector(state => selector(state, 'convention_id'))
+  const documentFields = useSelector(state => selector(state, 'document_fields')) || []
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
   const disciplineValue = formvalue(documentFields, 'discipline')
@@ -165,13 +173,6 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
     dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
   }, [dispatch])
 
-  const blurPadStart = useCallback((index, padStart, event) => {
-    event.preventDefault()
-    const newValue = String(event.target.value).padStart(padStart, 0)
-    dispatch(change('document_form', `document_fields[${index}].value`, newValue))
-    dispatch(touch('document_form', `document_fields[${index}].value`))
-  }, [dispatch])
-
   const initDocIdForm = useCallback(values => {
     dispatch(initialize('doc_id_form', values))
   }, [dispatch])
@@ -193,6 +194,10 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
     initDocIdForm(values)
     toggleModal(true)
   }, [dispatch, docFile, documentFields, generateId, initDocIdForm, modal])
+  const additionalInformationIndex = documentFields
+    .findIndex(f => f.codification_kind === 'additional_information')
+  const nativeFileIndex = documentFields
+    .findIndex(f => f.codification_kind === 'document_native_file')
 
   return (
     <React.Fragment>
@@ -245,18 +250,21 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
                 className="d-flex justify-content-center"
               />
             </div>
-            {groupedFields[columns[0]].map(field => (
-              <div className="form-group" key={`0${field.row}`}>
-                <InputByType
-                  modal={modal}
-                  toggleModal={toggleModal}
-                  field={field}
-                  conventionId={conventionId}
-                  changeValues={changeValues}
-                  blurPadStart={blurPadStart}
-                />
-              </div>
-            ))}
+            {groupedFields[columns[0]].map(field => {
+              if ([additionalInformationIndex, nativeFileIndex].includes(field.index)) {
+                return <div key={field.index} />
+              }
+              return (
+                <div className="form-group" key={field.index}>
+                  <InputByType
+                    modal={modal}
+                    toggleModal={toggleModal}
+                    field={field}
+                    changeValues={changeValues}
+                  />
+                </div>
+              )
+            })}
 
           </div>
 
@@ -270,21 +278,47 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
               className="form-group"
               validate={[required]}
             />
-            {groupedFields[columns[1]].map(field => (
-              <div className="form-group" key={`1${field.row}`}>
-                <InputByType
-                  modal={modal}
-                  toggleModal={toggleModal}
-                  field={field}
-                  conventionId={conventionId}
-                  changeValues={changeValues}
-                  blurPadStart={blurPadStart}
-                />
-              </div>
-            ))}
+            {groupedFields[columns[1]].map(field => {
+              if ([additionalInformationIndex, nativeFileIndex].includes(field.index)) {
+                return <div key={field.index} />
+              }
+              return (
+                <div className="form-group" key={field.index}>
+                  <InputByType
+                    modal={modal}
+                    toggleModal={toggleModal}
+                    field={field}
+                    changeValues={changeValues}
+                  />
+                </div>
+              )
+            })}
           </div>
         </div>
-
+        {additionalInformationIndex > -1 && (
+          <div className="form-group additional-information">
+            <InputByType
+              modal={modal}
+              toggleModal={toggleModal}
+              field={documentFields[additionalInformationIndex]}
+              filedIndex={additionalInformationIndex}
+              changeValues={changeValues}
+            />
+          </div>
+        )}
+        {nativeFileIndex > -1 && (
+          <div className="col-6">
+            <div className="form-group">
+              <InputByType
+                modal={modal}
+                toggleModal={toggleModal}
+                field={documentFields[nativeFileIndex]}
+                filedIndex={nativeFileIndex}
+                changeValues={changeValues}
+              />
+            </div>
+          </div>
+        )}
       </div>
       <div className="dms-footer">
         <Link className="btn btn-white" to={`/dashboard/projects/${projectId}/documents/`}>

@@ -2,17 +2,24 @@ class Api::V1::ProjectsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    render json: signed_in_user.member_projects.creation_step_done
+    render json: signed_in_user.member_projects.creation_step_done,
+           each_serializer: MemberProjectSerializer,
+           user: signed_in_user
   end
 
   def show
+    render json: @project,
+           serializer: MemberProjectSerializer,
+           user: signed_in_user
+  end
+
+  def edit
     render json: @project, user: signed_in_user
   end
 
   def create
     if @project.save
       render json: @project
-
     else
       render json: @project.errors,
              status: :unprocessable_entity

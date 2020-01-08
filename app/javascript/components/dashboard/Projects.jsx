@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Switch, useRouteMatch, useParams, useHistory } from 'react-router-dom'
+import {
+  Switch, useRouteMatch, useParams, useHistory
+} from 'react-router-dom'
 import ProjectSettings from './projectSettings/ProjectSettings'
 import DMS from './dms/DMS'
 import { startFetchProject } from '../../actions/projectActions'
@@ -15,13 +17,13 @@ function Projects() {
 
   useEffect(() => {
     dispatch(startFetchProject(projectId)).then(response => {
-      if (response.status === 403) {
-        history.push({ pathname: '/menu' })
+      if ([403, 404].includes(response.status)) {
+        history.push({ pathname: '/dashboard' })
       } else {
         dispatch(startEditConvention(projectId))
       }
     })
-  }, [dispatch, projectId])
+  }, [dispatch, history, projectId])
 
   return (
     <Switch>
