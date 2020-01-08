@@ -108,6 +108,7 @@ Rails.application.routes.draw do
             get  :active
             get  :pending
             get  :check_if_present
+            post :delete
           end
         end
         resources :disciplines,

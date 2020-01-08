@@ -117,6 +117,24 @@ RSpec.describe Project, type: :model do
     end
   end
 
+  context "delete_members" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:project) { FactoryBot.create(:project,
+                                      user: user) }
+    before(:each) {
+      FactoryBot.create_list(:project_member, 3, project: project)
+    }
+    it "should delete all members, but current user" do
+      project.delete_members(project.members.ids, user.id)
+      expect(project.members.map(&:user_id)).to eq [user.id]
+    end
+    it "should delete only last two members" do
+      ids = project.members.ids
+      project.delete_members(ids.last(2), user.id)
+      expect(project.members.ids).to include(*ids.first(2))
+    end
+  end
+
   context 'validate project_code' do
     let(:project) { FactoryBot.create(:project) }
     before(:each) { project.reload }
