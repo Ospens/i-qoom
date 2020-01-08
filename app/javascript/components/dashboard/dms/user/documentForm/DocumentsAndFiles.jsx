@@ -51,7 +51,8 @@ function InputByType({
 }) {
   const dispatch = useDispatch()
   const conventionId = useSelector(state => selector(state, 'convention_id'))
-  const uniqName = `document_fields[${field.index || filedIndex}].value`
+  // 0 || undefined ---> undefined
+  const uniqName = `document_fields[${Number(field.index) > -1 ? field.index : filedIndex}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
 
   const blurPadStart = useCallback((index, padStart, event) => {
