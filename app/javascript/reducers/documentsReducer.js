@@ -29,9 +29,10 @@ const initialState = {
   revisions: [],
   current: {
     document_fields: [],
+    additional_information: [],
     grouped_fields: {
-      column_1: [{}],
-      column_2: [{}]
+      column_1: [],
+      column_2: []
     }
   }
 }
