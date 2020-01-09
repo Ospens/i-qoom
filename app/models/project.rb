@@ -80,6 +80,12 @@ class Project < ApplicationRecord
     end
   end
 
+  def delete_members(ids, user_id)
+    self.members.where(id: ids)
+        .where("user_id is null or user_id != ?", user_id)
+        .destroy_all
+  end
+
   def dms_master?(user)
     members.find_by(user: user).try(:dms_module_master?) == true
   end

@@ -205,6 +205,18 @@ describe "ProjectMember", type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    it "delete" do
+      FactoryBot.create_list(:project_member, 3, project: project)
+      ids = project.members.ids
+      post "/api/v1/projects/#{project.id}/members/delete",
+            params: {
+              project_member_ids: ids.last(2)
+            }.to_json,
+            headers: headers(user)
+      expect(response).to have_http_status(:ok)
+      expect(project.members.ids).to include(*ids.first(2))
+    end
   end
   context 'not logged in and should get a status "forbidden" on' do
     let(:headers) { { "CONTENT_TYPE" => "application/json" } }
@@ -248,6 +260,13 @@ describe "ProjectMember", type: :request do
       get "/api/v1/projects/#{project.id}/members/check_if_present?email=#{user.email}",
           headers: headers
       expect(response).to have_http_status(:forbidden)
+    end
+    it 'delete' do
+      post "/api/v1/projects/#{project.id}/members/delete",
+          params: {
+            project_member_ids: ["1", "2", "3"]
+          }.to_json,
+          headers: headers
     end
   end
 end
