@@ -132,7 +132,7 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
           dispatch(updateActiveMembers(response.data))
         } else if (type === PENDING_MEMBERS) {
           dispatch(updatePendingMembers(response.data))
-        } else if (response.data.creation_step === 'pending' && type === EDITING_MEMBER) {
+        } else if (type === EDITING_MEMBER) {
           dispatch({ type: PROJECT_MEMBER_UPDATED, payload: response.data })
           dispatch(initialize('project_member_form', response.data))
         } else if (response.data.creation_step === 'pending' && type === CREATING_MEMBER) {

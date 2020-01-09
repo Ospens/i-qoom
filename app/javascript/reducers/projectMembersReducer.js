@@ -55,7 +55,7 @@ const projectMembersReducer = (state = initialState, action) => {
       activeMembers: state.activeMembers
         .filter(item => !action.payload.includes(item.id))
     }
-    case PROJECT_MEMBER_UPDATED:
+  case PROJECT_MEMBER_UPDATED:
     return {
       ...state,
       pendingMembers: state.pendingMembers
