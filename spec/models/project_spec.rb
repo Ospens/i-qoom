@@ -125,13 +125,20 @@ RSpec.describe Project, type: :model do
       FactoryBot.create_list(:project_member, 3, project: project)
     }
     it "should delete all members, but current user" do
+      FactoryBot.create_list(:project_member, 3, project: project)
       project.delete_members(project.members.ids, user.id)
       expect(project.members.map(&:user_id)).to eq [user.id]
     end
     it "should delete only last two members" do
+      FactoryBot.create_list(:project_member, 3, project: project)
       ids = project.members.ids
       project.delete_members(ids.last(2), user.id)
       expect(project.members.ids).to include(*ids.first(2))
+    end
+    it "should delete pending members" do
+      FactoryBot.create_list(:project_member_pending, 3, project: project)
+      project.delete_members(project.members.ids, user.id)
+      expect(project.members.map(&:user_id)).to eq [user.id]
     end
   end
 
