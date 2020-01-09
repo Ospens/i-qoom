@@ -1,4 +1,6 @@
 import {
+  DELETE_MEMBERS,
+  PROJECT_MEMBER_UPDATED,
   ACTIVE_MEMBERS_FETCHED_SUCCESS,
   PENDING_MEMBERS_FETCHED_SUCCESS,
   PROJECT_MEMBER_CREATED,
@@ -45,10 +47,26 @@ const projectMembersReducer = (state = initialState, action) => {
       ...state,
       creating: action.payload
     }
+  case DELETE_MEMBERS:
+    return {
+      ...state,
+      pendingMembers: state.pendingMembers
+        .filter(item => !action.payload.includes(item.id)),
+      activeMembers: state.activeMembers
+        .filter(item => !action.payload.includes(item.id))
+    }
+    case PROJECT_MEMBER_UPDATED:
+    return {
+      ...state,
+      pendingMembers: state.pendingMembers
+        .map(item => (item.id === action.payload.id ? action.payload : item)),
+      activeMembers: state.activeMembers
+        .map(item => (item.id === action.payload.id ? action.payload : item))
+    }
   case ACTIVE_MEMBERS_UPDATED:
     return {
       ...state,
-      activeMembers: state.activeMembers
+      pendingMembers: state.pendingMembers
         .map(item => (item.id === action.payload.id ? action.payload : item))
     }
   case PENDING_MEMBERS_UPDATED:
