@@ -545,6 +545,7 @@ RSpec.describe Document, type: :model do
     doc = Document.create(attrs)
     attrs = doc.attributes_for_edit
     expect(attrs['revision_version']).to be_present
+    expect(attrs).to have_key('additional_information')
   end
 
   it 'attributes_for_show' do

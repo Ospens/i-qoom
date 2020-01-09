@@ -46,6 +46,8 @@ module DocumentHelpers
   end
 
   def assign_attributes_suffix_to_document(attrs)
+    attrs.delete('id')
+    attrs.delete('additional_information')
     attrs['document_fields_attributes'] = attrs.delete('document_fields')
     attrs['document_fields_attributes'].each do |field|
       next if field['document_field_values'].blank?

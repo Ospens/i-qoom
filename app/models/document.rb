@@ -247,6 +247,7 @@ class Document < ApplicationRecord
         doc['document_fields'] << field_attributes
       end
     end
+    doc['additional_information'] = additional_information
     doc
   end
 
@@ -256,7 +257,6 @@ class Document < ApplicationRecord
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')
     doc['created_at'] = created_at
-    doc['additional_information'] = additional_information
     doc
   end
 
@@ -457,6 +457,7 @@ class Document < ApplicationRecord
     revisions = document_main.revisions.order_by_revision_number
     temporal_value = []
     revisions.each do |rev|
+      next if rev.last_version.blank?
       val = rev.last_version.additional_information_field.value
       next if val.blank?
       temporal_value << { revision: rev.revision_number, value: val }
