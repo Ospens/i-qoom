@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import {
+  getFormValues,
   reduxForm,
   FormSection,
   Field
@@ -15,7 +16,7 @@ import {
   startUpdateProjectMember
 } from '../../../../actions/projectMembersActions'
 import { required, email } from '../../../../elements/validations'
-import { CREATING_MEMBER } from './membersTypes'
+import { CREATING_MEMBER, EDITING_MEMBER } from './membersTypes'
 
 function Footer({
   handleSubmit, onSubmit, step, changeStep, closeModal
@@ -63,7 +64,7 @@ function Footer({
     </div>
   )
 }
-const TypeEmployment = ({ options }) => (
+const typeEmployment = options => (
   <React.Fragment>
     <h6>Please select type of employment</h6>
     <div className="form-group">
@@ -78,7 +79,7 @@ const TypeEmployment = ({ options }) => (
   </React.Fragment>
 )
 
-const CompanyEmplyee = ({ options }) => (
+const companyEmplyee = options => (
   <React.Fragment>
     <h6>From which company is the employee?</h6>
     <div className="form-group">
@@ -93,7 +94,7 @@ const CompanyEmplyee = ({ options }) => (
   </React.Fragment>
 )
 
-const MemberDetails = ({ disciplines }) => (
+const memberDetails = disciplines => (
   <div>
     <h6>Please enter member details</h6>
     <Field
@@ -157,7 +158,7 @@ const MemberDetails = ({ disciplines }) => (
   </div>
 )
 
-const CompanyData = () => (
+const companyData = () => (
   <div>
     <h6>Please enter company data</h6>
     <FormSection name="company_address">
@@ -166,7 +167,7 @@ const CompanyData = () => (
   </div>
 )
 
-function AddMember({ handleSubmit, closeModal }) {
+function MemberForm({ handleSubmit, closeModal, editing }) {
   const dispatch = useDispatch()
   const { projectId } = useParams()
   const [step, setStep] = useState(1)
@@ -174,7 +175,7 @@ function AddMember({ handleSubmit, closeModal }) {
   const emplTypes = useSelector(({ projectMembers: { creating } }) => creating.employment_types)
   const companyTypes = useSelector(({ projectMembers: { creating } }) => creating.company_types)
   const disciplineOptions = useSelector(({ projectMembers: { disciplines } }) => disciplines)
-
+  const formValues = useSelector(state => getFormValues('project_member_form')(state))
   const nextStep = useCallback(() => {
     setStep(step + 1)
   }, [step])
@@ -184,6 +185,13 @@ function AddMember({ handleSubmit, closeModal }) {
   }, [])
 
   const onSubmit = useCallback(values => {
+    if (editing) {
+      if (step === 4) {
+        return dispatch(startUpdateProjectMember(values, projectId, EDITING_MEMBER))
+          .then(closeModal)
+      }
+      return dispatch(startUpdateProjectMember(values, projectId, EDITING_MEMBER)).then(nextStep)
+    }
     switch (step) {
     case '1':
       values.creation_step = 'employment_type'
@@ -200,7 +208,6 @@ function AddMember({ handleSubmit, closeModal }) {
     default:
       values.creation_step = 'employment_type'
     }
-
     if (!values.id) {
       return dispatch(startCreateProjectMember(values, projectId)).then(nextStep)
     }
@@ -208,26 +215,30 @@ function AddMember({ handleSubmit, closeModal }) {
       return dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(closeModal)
     }
     return dispatch(startUpdateProjectMember(values, projectId, CREATING_MEMBER)).then(nextStep)
-  }, [step, dispatch, projectId, nextStep, closeModal])
+  }, [step, dispatch, projectId, nextStep, closeModal, editing])
 
+  let modalTitle = 'New member'
+  if (formValues && formValues.id && formValues.first_name && formValues.last_name) {
+    modalTitle = `Edit member: ${formValues.first_name} ${formValues.last_name}`
+  }
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="new-modal">
       <div className="new-modal__header">
-        <h4>New member</h4>
+        <h4>{modalTitle}</h4>
       </div>
       <div className="new-modal__body">
         {(() => {
           switch (step) {
           case 1:
-            return <TypeEmployment options={emplTypes} />
+            return typeEmployment(emplTypes)
           case 2:
-            return <CompanyEmplyee options={companyTypes} />
+            return companyEmplyee(companyTypes)
           case 3:
-            return <CompanyData />
+            return companyData()
           case 4:
-            return <MemberDetails disciplines={disciplineOptions} />
+            return memberDetails(disciplineOptions)
           default:
-            return <TypeEmployment />
+            return typeEmployment(emplTypes)
           }
         })()}
       </div>
@@ -242,4 +253,4 @@ function AddMember({ handleSubmit, closeModal }) {
   )
 }
 
-export default reduxForm({ form: 'project_member_form' })(AddMember)
+export default reduxForm({ form: 'project_member_form' })(MemberForm)

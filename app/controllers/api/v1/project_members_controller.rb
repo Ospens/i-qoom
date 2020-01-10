@@ -56,6 +56,12 @@ class Api::V1::ProjectMembersController < ApplicationController
     end
   end
 
+  def delete
+    @project.delete_members(params[:project_member_ids],
+                            signed_in_user.id)
+    head :ok
+  end
+
   private
 
   def project_member_params

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import NewModal from '../../../elements/Modal'
 import Tabs from '../../../elements/Tabs'
-import AddMember from './memberManagment/AddMember'
+import MemberForm from './memberManagment/MemberForm'
 import DisciplineList from './memberManagment/DisciplineList'
 import RoleList from './memberManagment/RoleList'
 import MembersBlock from './memberManagment/MembersBlock'
@@ -10,7 +10,7 @@ import { ACTIVE_MEMBERS, PENDING_MEMBERS } from './memberManagment/membersTypes'
 
 const modalContent = (type, closeModal) => {
   if (type === 'addMember') {
-    return <AddMember closeModal={closeModal} />
+    return <MemberForm closeModal={closeModal} />
   }
   if (type === 'role') {
     return <RoleList closeModal={closeModal} />

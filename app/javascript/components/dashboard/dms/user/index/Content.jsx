@@ -171,7 +171,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
                 </div>
 
                 <div className="Rtable__row-cell version">
-                  {doc.document_number}
+                  {doc.revision_version.padStart(3, 0)}
                 </div>
 
                 <div className="Rtable__row-cell title-cell">
