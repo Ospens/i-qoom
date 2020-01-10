@@ -257,6 +257,20 @@ class Document < ApplicationRecord
     doc['document_id'] = codification_string
     doc['username'] = user.attributes.slice('first_name', 'last_name')
     doc['created_at'] = created_at
+    doc['users_with_rights'] =
+      User.where(id: users_with_rights)
+          .as_json(only: [:id, :first_name, :last_name])
+    doc['teams_with_rights'] =
+      DmsTeam.where(id: teams_with_rights)
+        .as_json(only: [:id, :name],
+                 include: { users: { only: [:id, :first_name, :last_name] } })
+    doc['document_email_groups'] =
+      document_email_groups
+        .as_json(only: [:created_at], include: {
+          user: { only: [:id, :first_name, :last_name] },
+          document_emails: {
+            only: [:email],
+            include: { user: { only: [:id, :first_name, :last_name] } } } })
     doc
   end
 
@@ -354,6 +368,69 @@ class Document < ApplicationRecord
 
   def send_emails
     document_email_groups.last.send_emails
+  end
+
+  def users_with_rights
+    users = []
+    convention.document_fields.limit_by_value.each do |field|
+      selected_field =
+        document_fields
+          .find_by(codification_kind: field.codification_kind)
+      selected_value =
+        selected_field.document_field_values.find_by(selected: true)
+      field_users =
+        field.document_rights
+             .joins(:document_field_value)
+             .where(parent_type: 'User',
+                    limit_for: :value,
+                    enabled: true,
+                    document_field_values: { value: selected_value.value })
+             .pluck(:parent_id)
+      if !field_users.any?
+        users = []
+        break # no users has access to document
+      end
+      users =
+        if users.any?
+          users & field_users
+        else
+          users = field_users
+        end
+    end
+    users =
+      users +
+        project.members.where(dms_module_master: true).pluck(:user_id)
+    users.uniq.compact
+  end
+
+  def teams_with_rights
+    teams = []
+    convention.document_fields.limit_by_value.each do |field|
+      selected_field =
+        document_fields
+          .find_by(codification_kind: field.codification_kind)
+      selected_value =
+        selected_field.document_field_values.find_by(selected: true)
+      field_teams =
+        field.document_rights
+             .joins(:document_field_value)
+             .where(parent_type: 'DmsTeam',
+                    limit_for: :value,
+                    enabled: true,
+                    document_field_values: { value: selected_value.value })
+             .pluck(:parent_id)
+      if !field_teams.any?
+        teams = []
+        break # no teams has access to document
+      end
+      teams =
+        if teams.any?
+          teams & field_teams
+        else
+          teams = field_teams
+        end
+    end
+    teams.uniq.compact
   end
 
   private
