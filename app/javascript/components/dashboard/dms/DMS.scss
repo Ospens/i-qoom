@@ -210,6 +210,28 @@
       padding-left: 2.3vw;
       padding-right: 45px;
       padding-right: 2.3vw;
+      
+      .dms-content__heade__actions {
+        margin-left: auto;
+
+        .dms-content__heade__actions_button {
+          padding: 10px;
+          background-color: #F0F7F7;
+          border-width: 2px 0 2px 2px;
+          border-style: solid;
+          border-color: #EDEDED;
+          &:first-of-type {
+            border-bottom-left-radius: 10px;
+            border-top-left-radius: 10px;
+            border-right: 0;
+          }
+          &:last-of-type {
+            border-bottom-right-radius: 10px;
+            border-top-right-radius: 10px;
+            border-right: 2px solid #EDEDED;
+          }
+        }
+      }
     }
 
     .form-body, .content-body {

@@ -9,7 +9,12 @@ import { DropDownItems } from './elements'
 import Filters from './Filters'
 import DownloadDocuments from './DownloadDocuments'
 import {
-  downloadList, downloadDetailFile, downloadNativeFile, toggleSearchFilters, sortTable
+  downloadList,
+  downloadDetailFile,
+  downloadNativeFile,
+  toggleSearchFilters,
+  sortTable,
+  openNativeFile
 } from '../../../../../actions/documentsActions'
 import toggleArray from '../../../../../elements/toggleArray'
 import useDebounce from '../../../../../elements/useDebounce'
@@ -42,7 +47,7 @@ function Content({ projectId, checkedDocs, checkItem }) {
   }, [])
 
   const openFile = useCallback(docId => {
-    dispatch(downloadNativeFile(docId, true))
+    dispatch(openNativeFile(docId))
   }, [dispatch])
 
   const toggleSort = useCallback(column => { dispatch(sortTable(column)) }, [dispatch])

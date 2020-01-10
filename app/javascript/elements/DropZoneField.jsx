@@ -2,6 +2,8 @@ import React, { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import classnames from 'classnames'
 import { fileNameReg } from '../components/dashboard/dms/initDocId'
+import FileIcon from './FileIcon'
+
 
 const fileProperties = [
   'lastModified',
@@ -80,7 +82,10 @@ function DropZoneField({
           if (currentFile || filename) {
             return (
               <div className="accepted-file">
-                <span className="icon-common-file-text1 black mr-3" />
+                <FileIcon
+                  className="icon-file mr-3"
+                  filename={currentFile ? currentFile.name : filename}
+                />
                 <div className="accepted-file__text">
                   <span className="file-name">{currentFile ? currentFile.name : filename}</span>
                   <span>Replace the document file</span>
