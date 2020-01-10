@@ -69,7 +69,7 @@ RSpec.describe Document, type: :model do
     field2 =
       document.attributes_for_edit['document_fields']
               .detect{ |i| i['codification_kind'] == 'document_native_file' }
-    expect(field2['filename']).to eql(field1.file.filename.to_s)
+    expect(field2['filename']).to include(document.codification_string)
   end
 
   context '#additional_information' do
