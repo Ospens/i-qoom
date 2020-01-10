@@ -60,9 +60,9 @@ function DocumentsTable({
 }) {
   const dispatch = useDispatch()
   const { projectId, listId } = useParams()
-  const onSubmit = useCallback(values => {
-    return dispatch(updatePlannedListDocuments(projectId, listId, values))
-  }, [dispatch, projectId, listId])
+  const onSubmit = useCallback(values => (
+    dispatch(updatePlannedListDocuments(projectId, listId, values))
+  ), [dispatch, projectId, listId])
 
   return (
     <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>

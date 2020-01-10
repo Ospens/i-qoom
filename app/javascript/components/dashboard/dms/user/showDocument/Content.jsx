@@ -92,14 +92,14 @@ function Content() {
               </Link>
             </div>
           )}
-          <div className="dms-content__heade__actions">
-            <button type="button" className="dms-content__heade__actions_button">
+          <div className="dms-content__header__actions">
+            <button type="button" className="dms-content__header__actions_button">
               <span className="icon-email-action-send-2" />
             </button>
-            <button type="button" className="dms-content__heade__actions_button">
+            <button type="button" className="dms-content__header__actions_button">
               <span className="icon-download-button" />
             </button>
-            <button type="button" className="dms-content__heade__actions_button">
+            <button type="button" className="dms-content__header__actions_button">
               <span className="icon-printer" />
             </button>
           </div>

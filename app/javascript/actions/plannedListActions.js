@@ -141,13 +141,12 @@ export const updatePlannedListDocuments = (projectId, listId, request) => (dispa
       request,
       headers)
       .then(({ data }) => {
-        const errorsFields = data.map(el => Object.entries(el.errors).length === 0
-          && el.errors.constructor === Object)
-        if (errorsFields.filter(er => !er).length > 0) {
+        const errorsFields = data.document_mains.filter(el => el.errors)
+        if (errorsFields.length > 0) {
           const errors = { document_mains: [] }
           errors.document_mains = request.document_mains.map(dm => {
-            const field = data.find(el => el.temp_id === dm.temp_id)
-            if (!field) return {}
+            const field = data.document_mains.find(el => el.temp_id === dm.temp_id)
+            if (!field || !field.errors) return {}
 
             const keysArray = Object.keys(field.errors).map(a => a.split('.'))
             return stringToObjectKeys(keysArray)
@@ -156,6 +155,7 @@ export const updatePlannedListDocuments = (projectId, listId, request) => (dispa
         }
 
         // TODO: part if data is valid
+        dispatch(initialize('dms_planned_list', { document_mains: data.document_mains }))
       })
       .catch(response => {
         dispatch(errorNotify('Problem'))

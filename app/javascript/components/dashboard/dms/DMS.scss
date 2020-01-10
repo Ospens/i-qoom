@@ -211,10 +211,11 @@
       padding-right: 45px;
       padding-right: 2.3vw;
       
-      .dms-content__heade__actions {
+      .dms-content__header__actions {
         margin-left: auto;
+        display: flex;
 
-        .dms-content__heade__actions_button {
+        .dms-content__header__actions_button {
           padding: 10px;
           background-color: #F0F7F7;
           border-width: 2px 0 2px 2px;

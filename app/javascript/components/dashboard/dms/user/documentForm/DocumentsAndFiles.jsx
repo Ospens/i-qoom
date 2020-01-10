@@ -309,7 +309,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
           </div>
         )}
         {nativeFileIndex > -1 && (
-          <div className="col-6">
+          <div className="col-6 pl-0">
             <div className="form-group">
               <InputByType
                 modal={modal}

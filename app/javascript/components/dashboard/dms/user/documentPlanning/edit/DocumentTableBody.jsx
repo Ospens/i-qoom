@@ -71,6 +71,19 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
     const currentField = fields.get(index)
     const newValue = {
       ...currentField,
+      document: {
+        ...currentField.document,
+        email_title: undefined,
+        email_text: undefined,
+        revision_version: undefined,
+        user_id: undefined,
+        document_revision_id: undefined,
+        convention_id: undefined,
+        emails: undefined,
+        doc_id: undefined,
+        contractor: undefined,
+        id: undefined
+      },
       id: undefined,
       temp_id: `f${((Math.random() * 1e8)).toString(16)}`
     }
@@ -91,11 +104,11 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
   return (
     <Body stripped={false} component={TransitionGroup}>
       {fields.map((field, i) => {
-        const { temp_id: tempId, id } = fields.get(i)
+        const { temp_id: tempId, id, document } = fields.get(i)
         const checked = checkedDocs.includes(tempId)
         const changedRow = changedRows[tempId] || []
         const changed = changedRow.length > 0
-        const bordered = !id || changed
+        const bordered = !document.id || changed
         const projectCodeName = `${field}.document.project_code`
         const companyName = `${field}.document.document_fields[${companyIndex}].value`
         const disciplineName = `${field}.document.document_fields[${disciplineIndex}].value`
