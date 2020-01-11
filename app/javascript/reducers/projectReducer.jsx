@@ -1,11 +1,12 @@
 import React from 'react'
 import {
+  EDIT_PROJECT,
   PROJECT_CREATED_SUCCESS,
   SET_PAGE_TITLE,
   PROJECT_UPDATED_SUCCESS,
   PROJECTS_FETCH_SUCCESS,
-  PROJECT_ADMIN_DELETED,
   PROJECT_ADMIN_UPDATED,
+  PROJECT_ADMIN_DELETED,
   PROJECT_CODE_UPDATED,
   CHECK_MAIN_SECTION_DMS,
   TOGGLE_SIDEBAR,
@@ -20,6 +21,18 @@ const initialState = {
     admins: [],
     project_code: undefined,
     dmsSections: undefined,
+    access_rights: {
+      cms_module_access: false,
+      dms_module_access: false,
+      cms_module_master: false,
+      dms_module_master: false,
+      admin: false
+    }
+  },
+  edit: {
+    admins: [],
+    project_code: undefined,
+    dmsSections: undefined
   },
   title: <h2>I-Qoom</h2>
 }
@@ -82,6 +95,14 @@ const projectReducer = (state = initialState, action) => {
     return {
       ...state,
       current: {
+        ...state.current,
+        ...action.payload
+      }
+    }
+  case EDIT_PROJECT:
+    return {
+      ...state,
+      edit: {
         ...state.current,
         ...action.payload
       }

@@ -80,6 +80,12 @@ class Project < ApplicationRecord
     end
   end
 
+  def delete_members(ids, user_id)
+    self.members.where(id: ids)
+        .where("user_id is null or user_id != ?", user_id)
+        .destroy_all
+  end
+
   def dms_master?(user)
     members.find_by(user: user).try(:dms_module_master?) == true
   end
@@ -181,10 +187,6 @@ class Project < ApplicationRecord
                    creation_step: "active",
                    first_name: user.first_name,
                    last_name: user.last_name,
-                   cms_module_access: true,
-                   dms_module_access: true,
-                   cms_module_master: true,
-                   dms_module_master: true,
                    role_id: roles.find_by(title: "Project Administrator").id,
                    discipline_id: disciplines.find_by(title: "i-Qoom Admin").id)
   end

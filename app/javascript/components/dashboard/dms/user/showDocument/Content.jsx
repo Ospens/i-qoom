@@ -1,9 +1,11 @@
-import React, { Fragment, useCallback } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import moment from 'moment'
 import classnames from 'classnames'
+import { CSSTransition } from 'react-transition-group'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
 import { downloadNativeFile } from '../../../../../actions/documentsActions'
+import FileIcon from '../../../../../elements/FileIcon'
 
 const renderBlock = field => {
   let content
@@ -36,6 +38,7 @@ const renderBlock = field => {
 
 function Content() {
   const dispatch = useDispatch()
+  const [prevInfo, setPrevInfo] = useState(false)
   const { projectId, document_id } = useParams()
   const document = useSelector(state => state.documents.current) || {}
   const revisionsWithVersions = useSelector(state => state.documents.revisions)
@@ -147,6 +150,35 @@ function Content() {
         </div>
 
         <div className="my-4">
+          <div className={classnames('collapsible-block', { opened: prevInfo })}>
+            <button
+              type="button"
+              className="collapsible__button mb-4"
+              onClick={() => setPrevInfo(!prevInfo)}
+            >
+              <span>Show previous statements</span>
+              <span className="arrow-icon icon-arrow-button-down" />
+            </button>
+            <CSSTransition
+              unmountOnExit
+              in={prevInfo}
+              timeout={300}
+              classNames="collapsible__content"
+            >
+              <div className="collapsible__content">
+                {document.additional_information.map(({ min, max, value }) => {
+                  const number = min === max ? max : `${min} - ${max}`
+                  return (
+                    <div className="mb-4" key={number}>
+                      <div className="lightgrey mb-4">{`Revision ${number}`}</div>
+                      <div>{value}</div>
+                    </div>
+                  )
+                })}
+              </div>
+            </CSSTransition>
+          </div>
+
           <label className="mb-4">Additional information</label>
           <div className="d-flex align-items-center mb-4">
             <span>{additionalInformation.value}</span>
@@ -155,25 +187,14 @@ function Content() {
 
         <div className="my-4">
           <label className="mb-4">Files</label>
-          {fileFields.map((field, i) => {
-            const fileExtension = field.filename ? field.filename.match(/\.[0-9a-z]+$/i)[0] : ''
-            let iconClassName = 'icon-common-file-text1'
-            if (fileExtension === '.pdf') {
-              iconClassName = 'icon-Work-Office-Companies---Office-Files---office-file-pdf'
-            } else if (['.doc', '.docs'].includes(fileExtension)) {
-              iconClassName = 'icon-office-file-doc'
-            } else if (fileExtension === '.csv') {
-              iconClassName = 'icon-csv-1'
-            }
-            return (
-              <div className="d-flex align-items-center mb-4" key={field.filename}>
-                <button type="button" onClick={() => openFile()} className="d-flex">
-                  <i className={classnames('mr-2', iconClassName)} />
-                  <span>{field.filename}</span>
-                </button>
-              </div>
-            )
-          })}
+          {fileFields.map(field => (
+            <div className="d-flex align-items-center mb-4" key={field.filename}>
+              <button type="button" onClick={() => openFile()} className="d-flex">
+                <FileIcon className="mr-2" filename={field.filename} />
+                <span>{field.filename}</span>
+              </button>
+            </div>
+          ))}
         </div>
 
         <div className="main-block">
@@ -199,19 +220,22 @@ function Content() {
           </div>
 
           <div className="right-column">
-            <p>K. Koppes, D.Drennen, C. Caro, L. Lundell K. Koppes, D.Drennen, C. Caro, L. Lundell</p>
+            <p>K. Koppes, D.Drennen, C. Caro, L.
+            Lundell K. Koppes, D.Drennen, C. Caro, L. Lundell</p>
           </div>
-        </div>
+        </div> */}
 
-        <div className="info-block">
+        <div className="info-block my-4">
           <div className="left-column">
             <label>E-mail to</label>
           </div>
 
-          <div className="right-column">
-            <p>Team Munster Windpark (Engeneers)</p>
-          </div>
-        </div> */}
+          {document.emails && (
+            <div className="right-column">
+              <div>{document.emails.join(', ')}</div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* <div className="document-show content-body">

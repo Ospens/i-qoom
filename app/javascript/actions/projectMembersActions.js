@@ -4,18 +4,21 @@ import {
   initialize
 } from 'redux-form'
 import {
+  DELETE_MEMBERS,
   ACTIVE_MEMBERS_FETCHED_SUCCESS,
   ACTIVE_MEMBERS_UPDATED,
   PENDING_MEMBERS_UPDATED,
   PENDING_MEMBERS_FETCHED_SUCCESS,
   PROJECT_MEMBER_CREATED,
-  CREATING_PROJECT_MEMBER
+  CREATING_PROJECT_MEMBER,
+  PROJECT_MEMBER_UPDATED
 } from './types'
 import { errorNotify, successNotify } from './notificationsActions'
 import {
   CREATING_MEMBER,
   ACTIVE_MEMBERS,
-  PENDING_MEMBERS
+  PENDING_MEMBERS,
+  EDITING_MEMBER
 } from '../components/dashboard/projectSettings/memberManagment/membersTypes'
 
 const projectMembersFetched = payload => ({
@@ -129,6 +132,9 @@ export const startUpdateProjectMember = (values, projectId, type) => (dispatch, 
           dispatch(updateActiveMembers(response.data))
         } else if (type === PENDING_MEMBERS) {
           dispatch(updatePendingMembers(response.data))
+        } else if (type === EDITING_MEMBER) {
+          dispatch({ type: PROJECT_MEMBER_UPDATED, payload: response.data })
+          dispatch(initialize('project_member_form', response.data))
         } else if (response.data.creation_step === 'pending' && type === CREATING_MEMBER) {
           dispatch(createProjectMember(response.data))
         } else if (type === CREATING_MEMBER) {
@@ -169,6 +175,24 @@ export const startConfirmMember = memberToken => (dispatch, getState) => {
           dispatch(errorNotify('Problem', text))
         }
         return response
+      })
+  )
+}
+
+export const deleteMembers = (projectId, memberIds) => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { headers: { Authorization: token } }
+
+  return (
+    axios.post(`/api/v1/projects/${projectId}/members/delete`,
+      { project_member_ids: memberIds },
+      headers)
+      .then(() => {
+        dispatch({ type: DELETE_MEMBERS, payload: memberIds })
+        dispatch(successNotify('Projects', 'The members were deleted!'))
+      })
+      .catch(() => {
+        dispatch(errorNotify('Problem'))
       })
   )
 }

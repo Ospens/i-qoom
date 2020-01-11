@@ -14,7 +14,9 @@ import DatePickerField from '../../../../../elements/DatePickerField'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import TextAreaField from '../../../../../elements/TextAreaField'
-import { required, maxLength4, maxLength2, minLength2, minLength4 } from '../../../../../elements/validations'
+import {
+  required, maxLength4, maxLength2, minLength2, minLength4
+} from '../../../../../elements/validations'
 import { initValues } from '../../initDocId'
 import DocumentIdInputs from '../../DocumentIdInputs'
 import { infoNotify } from '../../../../../actions/notificationsActions'
@@ -35,18 +37,29 @@ const validationList = field => {
   if (field.required) {
     list.push(required)
   }
-  if ('document_number' === field.codification_kind) {
+  if (field.codification_kind === 'document_number') {
     list.push(maxLength4, minLength4)
   }
-  if ('revision_number' === field.codification_kind) {
+  if (field.codification_kind === 'revision_number') {
     list.push(maxLength2, minLength2)
   }
   return list
 }
 
-function InputByType({ field, modal, toggleModal, conventionId, changeValues, blurPadStart }) {
-  const uniqName = `document_fields[${field.index}].value`
+function InputByType({
+  field, modal, toggleModal, changeValues, fieldIndex
+}) {
+  const dispatch = useDispatch()
+  const conventionId = useSelector(state => selector(state, 'convention_id'))
+  const uniqName = `document_fields[${fieldIndex}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
+
+  const blurPadStart = useCallback((index, padStart, event) => {
+    event.preventDefault()
+    const newValue = String(event.target.value).padStart(padStart, 0)
+    dispatch(change('document_form', `document_fields[${index}].value`, newValue))
+    dispatch(touch('document_form', `document_fields[${index}].value`))
+  }, [dispatch])
 
   const commonProps = {
     label: field.title,
@@ -57,36 +70,36 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
     disabled
   }
   if (field.codification_kind === 'document_number') {
-    commonProps.onBlur = v => blurPadStart(field.index, 4, v)
+    commonProps.onBlur = v => blurPadStart(fieldIndex, 4, v)
   }
   if (field.codification_kind === 'revision_number') {
-    commonProps.onBlur = v => blurPadStart(field.index, 2, v)
+    commonProps.onBlur = v => blurPadStart(fieldIndex, 2, v)
   }
 
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
     return (
       <React.Fragment>
-        {modal && <DocIdModal toggleModal={toggleModal} open={modal}/>}
+        {modal && <DocIdModal toggleModal={toggleModal} open={modal} />}
         <Field
           {...commonProps}
           component={DropZoneField}
           filename={field.filename}
-          name={`document_fields[${field.index}].file`}
-          id={`document_fields[${field.index}].file`}
+          name={`document_fields[${fieldIndex}].file`}
+          id={`document_fields[${fieldIndex}].file`}
         />
       </React.Fragment>
     )
-  } else if (field.kind === 'upload_field') {
+  } if (field.kind === 'upload_field') {
     return (
       <Field
         {...commonProps}
         component={DropZoneField}
         filename={field.filename}
-        name={`document_fields[${field.index}].file`}
-        id={`document_fields[${field.index}].file`}
+        name={`document_fields[${fieldIndex}].file`}
+        id={`document_fields[${fieldIndex}].file`}
       />
     )
-  } else if (field.kind === 'select_field') {
+  } if (field.kind === 'select_field') {
     const fieldValues = field.document_field_values
 
     return (
@@ -94,32 +107,32 @@ function InputByType({ field, modal, toggleModal, conventionId, changeValues, bl
         {...commonProps}
         component={SelectField}
         options={fieldValues}
-        onChange={v => changeValues(v, fieldValues, field.index)}
+        onChange={v => changeValues(v, fieldValues, fieldIndex)}
       />
     )
-  } else if (field.kind === 'textarea_field') {
+  } if (field.kind === 'textarea_field') {
     return (
       <Field
         {...commonProps}
         component={TextAreaField}
       />
     )
-  } else if (field.kind === 'date_field') {
+  } if (field.kind === 'date_field') {
     return (
       <Field
         {...commonProps}
         component={DatePickerField}
       />
     )
-  } else {
-    return (
-      <Field
-        {...commonProps}
-        type={['document_number', 'revision_number'].includes(field.codification_kind) ? 'number' : 'text' }
-        component={InputField}
-      />
-    )
   }
+  return (
+    <Field
+      {...commonProps}
+      type={['document_number', 'revision_number']
+        .includes(field.codification_kind) ? 'number' : 'text'}
+      component={InputField}
+    />
+  )
 }
 
 export const formvalue = (fields = [], codKind) => {
@@ -136,8 +149,7 @@ export const formvalue = (fields = [], codKind) => {
 function DocumentsAndFiles({ match: { params: { projectId } } }) {
   const [modal, toggleModal] = useState(false)
   const groupedFields = useSelector(state => state.documents.current.grouped_fields)
-  const documentFields = useSelector(state => selector(state, 'document_fields'))
-  const conventionId = useSelector(state => selector(state, 'convention_id'))
+  const documentFields = useSelector(state => selector(state, 'document_fields')) || []
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
   const disciplineValue = formvalue(documentFields, 'discipline')
@@ -152,20 +164,13 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
 
   const changeValues = useCallback((value, fieldValues, index) => {
     const newValues = fieldValues.map(field => {
-      const selected = field.value == value
+      const selected = field.value === value
       return {
         ...field,
         selected
       }
     })
     dispatch(change('document_form', `document_fields[${index}].document_field_values`, newValues))
-  }, [dispatch])
-
-  const blurPadStart = useCallback((index, padStart, event) => {
-    event.preventDefault()
-    const newValue = String(event.target.value).padStart(padStart, 0)
-    dispatch(change('document_form', `document_fields[${index}].value`, newValue))
-    dispatch(touch('document_form', `document_fields[${index}].value`))
   }, [dispatch])
 
   const initDocIdForm = useCallback(values => {
@@ -183,37 +188,41 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
       infoNotify('Documents', `Can not get data from title ${title}`)
     )
 
-    const values = initValues(documentFields, (title) => infoMsg(title))
+    const values = initValues(documentFields, title => infoMsg(title))
     if (!values) return
 
     initDocIdForm(values)
     toggleModal(true)
-  }, [docFile])
+  }, [dispatch, docFile, documentFields, generateId, initDocIdForm, modal])
+  const additionalInformationIndex = documentFields
+    .findIndex(f => f.codification_kind === 'additional_information')
+  const nativeFileIndex = documentFields
+    .findIndex(f => f.codification_kind === 'document_native_file')
 
   return (
     <React.Fragment>
-      <div className='dms-content__header'>
+      <div className="dms-content__header">
         <h4>Add documents data & files</h4>
-        <div className='dms-content__project-phases'>
+        <div className="dms-content__project-phases">
           <span>Project phases</span>
-          <ul className='row mx-0'>
-            <li className='col-3 active'>
-              <button type='button'>
+          <ul className="row mx-0">
+            <li className="col-3 active">
+              <button type="button">
                 Planning
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Development
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Execution
               </button>
             </li>
-            <li className='col-3'>
-              <button type='button'>
+            <li className="col-3">
+              <button type="button">
                 Operation
               </button>
             </li>
@@ -221,70 +230,103 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
         </div>
       </div>
 
-      <div className='form-body'>
-        <div className='row new-document-table'>
+      <div className="form-body">
+        <div className="row new-document-table">
 
-          <div className='col-6'>
+          <div className="col-6">
             <DocumentIdInputs
               origCompanyValue={origCompanyValue}
               disciplineValue={disciplineValue}
               docTypeValue={docTypeValue}
               docNumberValue={docNumberValue}
             />
-            <div className='form-group'>
+            <div className="form-group">
               <Field
                 component={CheckBoxField}
                 id="generate_id"
                 name="generate_id"
-                labelClass='form-check-label mr-2'
-                text='Generate Document ID through file code'
+                labelClass="form-check-label mr-2"
+                text="Generate Document ID through file code"
                 className="d-flex justify-content-center"
               />
             </div>
-            {groupedFields[columns[0]].map((field, index) => (
-              <div className='form-group' key={index}>
-                <InputByType
-                  modal={modal}
-                  toggleModal={toggleModal}
-                  field={field}
-                  conventionId={conventionId}
-                  changeValues={changeValues}
-                  blurPadStart={blurPadStart}
-                />
-              </div>
-            ))}
+            {groupedFields[columns[0]].map(field => {
+              if ([additionalInformationIndex, nativeFileIndex].includes(field.index)) {
+                return <div key={field.index} />
+              }
+              return (
+                <div className="form-group" key={field.index}>
+                  <InputByType
+                    modal={modal}
+                    toggleModal={toggleModal}
+                    field={field}
+                    changeValues={changeValues}
+                    fieldIndex={field.index}
+                  />
+                </div>
+              )
+            })}
 
           </div>
 
-          <div className='col-6'>
+          <div className="col-6">
             <Field
               component={InputField}
-              name='title'
-              id='title'
-              label='Define a document title'
-              placeholder='Title'
-              className='form-group'
+              name="title"
+              id="title"
+              label="Define a document title"
+              placeholder="Title"
+              className="form-group"
               validate={[required]}
             />
-            {groupedFields[columns[1]].map((field, index) => (
-              <div className='form-group' key={index}>
-                <InputByType
-                  modal={modal}
-                  toggleModal={toggleModal}
-                  field={field}
-                  conventionId={conventionId}
-                  changeValues={changeValues}
-                  blurPadStart={blurPadStart}
-                />
-              </div>
-            ))}
+            {groupedFields[columns[1]].map(field => {
+              if ([additionalInformationIndex, nativeFileIndex].includes(field.index)) {
+                return <div key={field.index} />
+              }
+              return (
+                <div className="form-group" key={field.index}>
+                  <InputByType
+                    modal={modal}
+                    toggleModal={toggleModal}
+                    field={field}
+                    changeValues={changeValues}
+                    fieldIndex={field.index}
+                  />
+                </div>
+              )
+            })}
           </div>
         </div>
-
+        {additionalInformationIndex > -1 && (
+          <div className="form-group additional-information">
+            <InputByType
+              modal={modal}
+              toggleModal={toggleModal}
+              field={documentFields[additionalInformationIndex]}
+              fieldIndex={additionalInformationIndex}
+              changeValues={changeValues}
+            />
+          </div>
+        )}
+        {nativeFileIndex > -1 && (
+          <div className="col-6">
+            <div className="form-group">
+              <InputByType
+                modal={modal}
+                toggleModal={toggleModal}
+                field={documentFields[nativeFileIndex]}
+                fieldIndex={nativeFileIndex}
+                changeValues={changeValues}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      <div className='dms-footer'>
-        <Link className='btn btn-white' to={`/dashboard/projects/${projectId}/documents/`}>Cancel</Link>
-        <button type='submit' className='btn btn-purple'>Next</button>
+      <div className="dms-footer">
+        <Link className="btn btn-white" to={`/dashboard/projects/${projectId}/documents/`}>
+          Cancel
+        </Link>
+        <button type="submit" className="btn btn-purple">Next</button>
       </div>
     </React.Fragment>
   )

@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import classnames from 'classnames'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch, useLocation } from 'react-router-dom'
 import PrivateRoute from '../elements/PrivateRoute'
 import LandingPage from './landing/LandingPage'
 import Dashboard from './dashboard/Dashboard'
@@ -9,13 +9,11 @@ import TopBar from './topBar/TopBar'
 import SideBar from './sideBar/SideBar'
 import LandingMenu from './landing/LandingMenu'
 import Notifications from './notifications/Notifications'
-import { toggleSidebar } from '../actions/projectActions'
 
-const App = ({ location: { pathname } }) => {
-  const dispatch = useDispatch()
+function App() {
+  const { pathname } = useLocation()
   const authed = useSelector(({ user }) => user.authStatus)
   const openSB = useSelector(({ projects }) => projects.sidebar)
-  const toggleSB = useCallback(() => dispatch(toggleSidebar(!openSB)), [dispatch, openSB])
 
   const mainClass = classnames(
     { dashboard: pathname.includes('/dashboard') },
@@ -24,11 +22,16 @@ const App = ({ location: { pathname } }) => {
 
   return (
     <div id="wrapper">
-      {authed && <SideBar toggle={toggleSB} isOpen={openSB} />}
+      <PrivateRoute
+        authed={authed}
+        // The order is matter!
+        path={['/dashboard/projects/:projectId', '/dashboard']}
+        component={SideBar}
+      />
       <div id="main" className={mainClass}>
         <header id="header">
           <div className="wrap">
-            <TopBar toggle={() => toggleSB(!openSB)} isOpen={openSB} />
+            <TopBar />
           </div>
         </header>
         <Switch>
@@ -42,4 +45,4 @@ const App = ({ location: { pathname } }) => {
   )
 }
 
-export default withRouter(App)
+export default App
