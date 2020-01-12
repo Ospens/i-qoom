@@ -442,6 +442,17 @@ describe DmsPlannedList, type: :request do
             expect(main).to have_key('temp_id')
             expect(main).to have_key('errors')
           end
+
+          it 'destroy' do
+            expect(DocumentMain.count).to eql(2)
+            post "/api/v1/projects/#{doc.project.id}/dms_planned_lists/#{list.id}/update_documents",
+              params: { document_mains: [ { id: doc.document_main.id,
+                                            document: doc_attrs,
+                                            _destroy: '1' } ] },
+              headers: credentials(user)
+            expect(response).to have_http_status(:success)
+            expect(DocumentMain.count).to eql(1)
+          end
         end
       end
     end
