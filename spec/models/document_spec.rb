@@ -69,7 +69,7 @@ RSpec.describe Document, type: :model do
     field2 =
       document.attributes_for_edit['document_fields']
               .detect{ |i| i['codification_kind'] == 'document_native_file' }
-    expect(field2['filename']).to eql(field1.file.filename.to_s)
+    expect(field2['filename']).to include(document.codification_string)
   end
 
   context '#additional_information' do
@@ -545,6 +545,7 @@ RSpec.describe Document, type: :model do
     doc = Document.create(attrs)
     attrs = doc.attributes_for_edit
     expect(attrs['revision_version']).to be_present
+    expect(attrs).to have_key('additional_information')
   end
 
   it 'attributes_for_show' do
@@ -552,7 +553,35 @@ RSpec.describe Document, type: :model do
     attrs = document_attributes(user)
     doc = Document.create(attrs)
     expect(doc).to receive(:attributes_for_edit).and_call_original
-    doc.attributes_for_show
+    team = doc.project.dms_teams.create
+    team.document_rights.update_all(enabled: true)
+    team.users << user
+    doc.save_emails(user, ["#{user.id}"])
+    attrs = doc.attributes_for_show
+    expect(attrs).to have_key('users_with_rights')
+    expect(attrs['users_with_rights'].length).to eql(2)
+    user_attrs = attrs['users_with_rights'].first
+    expect(user_attrs).to have_key('id')
+    expect(user_attrs).to have_key('first_name')
+    expect(user_attrs).to have_key('last_name')
+    expect(attrs).to have_key('teams_with_rights')
+    expect(attrs['teams_with_rights'].length).to eql(1)
+    team_attrs = attrs['teams_with_rights'].first
+    expect(team_attrs).to have_key('id')
+    expect(team_attrs).to have_key('name')
+    expect(team_attrs).to have_key('users')
+    expect(team_attrs['users'].length).to eql(1)
+    expect(team_attrs['users'].first).to have_key('id')
+    expect(team_attrs['users'].first).to have_key('first_name')
+    expect(team_attrs['users'].first).to have_key('last_name')
+    expect(attrs).to have_key('document_email_groups')
+    expect(attrs['document_email_groups'].length).to eql(1)
+    expect(attrs['document_email_groups'].first).to have_key('created_at')
+    expect(attrs['document_email_groups'].first).to have_key('user')
+    emails = attrs['document_email_groups'].first['document_emails']
+    expect(emails.length).to eql(1)
+    expect(emails.first).to have_key('user')
+    expect(emails.first).to have_key('email')
   end
 
   it 'validates document number' do
@@ -702,5 +731,38 @@ RSpec.describe Document, type: :model do
     expect(dbl).to receive(:last).and_return(dbl)
     expect(dbl).to receive(:send_emails)
     doc.send_emails
+  end
+
+  it 'users_with_rights' do
+    doc = FactoryBot.create(:document)
+    user = FactoryBot.create(:user)
+    value =
+      doc.document_fields
+         .find_by(codification_kind: :originating_company)
+         .document_field_values
+         .find_by(selected: true)
+         .value
+    con_field =
+      doc.convention.document_fields.find_by(codification_kind: :originating_company)
+    con_value =
+      con_field.document_field_values.find_by(value: value)
+    con_field.document_rights.create!(document_field_value: con_value,
+                                      limit_for: :value,
+                                      enabled: true,
+                                      parent: user)
+    ids = doc.users_with_rights
+    expect(ids).to include(doc.user.id)
+    expect(ids).to include(doc.project.user.id)
+    expect(ids).to_not include(user.id)
+  end
+
+  it 'teams_with_rights' do
+    doc = FactoryBot.create(:document)
+    team1 = doc.project.dms_teams.create
+    team2 = doc.project.dms_teams.create
+    team1.document_rights.update_all(enabled: true)
+    ids = doc.teams_with_rights
+    expect(ids).to include(team1.id)
+    expect(ids).to_not include(team2.id)
   end
 end

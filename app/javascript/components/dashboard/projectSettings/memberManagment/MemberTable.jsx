@@ -139,6 +139,9 @@ function MemberTable({
     dispatch(startUpdateProjectMember(v, projectId, type))
   }, [dispatch, projectId, type])
 
+  const defualtFilter = useCallback((id, options, optionsType) => (
+    options.filter(el => members.find(m => m.id === id)[optionsType] === el.value)
+  ), [members])
   return (
     <div className="table-block">
       <Table sortable striped className="main-table-block">
@@ -196,7 +199,7 @@ function MemberTable({
                   name="employment_type"
                   onChange={val => handleChange(val, member.id, 'employment_type')}
                   options={emplOptions}
-                  defaultValue={emplOptions.filter(el => member.employment_type === el.value)}
+                  value={defualtFilter(member.id, emplOptions, 'employment_type')}
                   className="form-control-select"
                 />
               </Table.Cell>
@@ -206,7 +209,7 @@ function MemberTable({
                   name="company_type"
                   onChange={val => handleChange(val, member.id, 'role_id')}
                   options={roleOptions}
-                  defaultValue={roleOptions.filter(el => member.role_id === el.id)}
+                  value={defualtFilter(member.id, roleOptions, 'role_id')}
                   className="form-control-select"
                 />
               </Table.Cell>
@@ -216,7 +219,7 @@ function MemberTable({
                   name="discipline"
                   onChange={val => handleChange(val, member.id, 'discipline_id')}
                   options={discOptions}
-                  defaultValue={discOptions.filter(el => member.discipline_id === el.id)}
+                  value={defualtFilter(member.id, discOptions, 'discipline_id')}
                   className="form-control-select"
                 />
               </Table.Cell>

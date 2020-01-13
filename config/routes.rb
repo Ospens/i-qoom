@@ -64,7 +64,7 @@ Rails.application.routes.draw do
         post :download, on: :member
       end
 
-      resources :projects, except: [:new, :edit] do
+      resources :projects, except: :new do
         collection do
           get :confirm_member
         end
@@ -119,6 +119,7 @@ Rails.application.routes.draw do
             get  :active
             get  :pending
             get  :check_if_present
+            post :delete
           end
         end
         resources :disciplines,

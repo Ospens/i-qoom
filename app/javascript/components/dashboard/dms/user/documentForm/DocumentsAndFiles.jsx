@@ -47,12 +47,11 @@ const validationList = field => {
 }
 
 function InputByType({
-  field, modal, toggleModal, changeValues, filedIndex
+  field, modal, toggleModal, changeValues, fieldIndex
 }) {
   const dispatch = useDispatch()
   const conventionId = useSelector(state => selector(state, 'convention_id'))
-  // 0 || undefined ---> undefined
-  const uniqName = `document_fields[${Number(field.index) > -1 ? field.index : filedIndex}].value`
+  const uniqName = `document_fields[${fieldIndex}].value`
   const disabled = conventionId && codificationString.includes(field.codification_kind)
 
   const blurPadStart = useCallback((index, padStart, event) => {
@@ -71,10 +70,10 @@ function InputByType({
     disabled
   }
   if (field.codification_kind === 'document_number') {
-    commonProps.onBlur = v => blurPadStart(field.index, 4, v)
+    commonProps.onBlur = v => blurPadStart(fieldIndex, 4, v)
   }
   if (field.codification_kind === 'revision_number') {
-    commonProps.onBlur = v => blurPadStart(field.index, 2, v)
+    commonProps.onBlur = v => blurPadStart(fieldIndex, 2, v)
   }
 
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
@@ -85,8 +84,8 @@ function InputByType({
           {...commonProps}
           component={DropZoneField}
           filename={field.filename}
-          name={`document_fields[${field.index}].file`}
-          id={`document_fields[${field.index}].file`}
+          name={`document_fields[${fieldIndex}].file`}
+          id={`document_fields[${fieldIndex}].file`}
         />
       </React.Fragment>
     )
@@ -96,8 +95,8 @@ function InputByType({
         {...commonProps}
         component={DropZoneField}
         filename={field.filename}
-        name={`document_fields[${field.index}].file`}
-        id={`document_fields[${field.index}].file`}
+        name={`document_fields[${fieldIndex}].file`}
+        id={`document_fields[${fieldIndex}].file`}
       />
     )
   } if (field.kind === 'select_field') {
@@ -108,7 +107,7 @@ function InputByType({
         {...commonProps}
         component={SelectField}
         options={fieldValues}
-        onChange={v => changeValues(v, fieldValues, field.index)}
+        onChange={v => changeValues(v, fieldValues, fieldIndex)}
       />
     )
   } if (field.kind === 'textarea_field') {
@@ -262,6 +261,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
                     toggleModal={toggleModal}
                     field={field}
                     changeValues={changeValues}
+                    fieldIndex={field.index}
                   />
                 </div>
               )
@@ -290,6 +290,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
                     toggleModal={toggleModal}
                     field={field}
                     changeValues={changeValues}
+                    fieldIndex={field.index}
                   />
                 </div>
               )
@@ -302,7 +303,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
               modal={modal}
               toggleModal={toggleModal}
               field={documentFields[additionalInformationIndex]}
-              filedIndex={additionalInformationIndex}
+              fieldIndex={additionalInformationIndex}
               changeValues={changeValues}
             />
           </div>
@@ -314,7 +315,7 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
                 modal={modal}
                 toggleModal={toggleModal}
                 field={documentFields[nativeFileIndex]}
-                filedIndex={nativeFileIndex}
+                fieldIndex={nativeFileIndex}
                 changeValues={changeValues}
               />
             </div>

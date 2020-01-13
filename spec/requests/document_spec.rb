@@ -558,7 +558,7 @@ describe Document, type: :request do
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
         expect(json['documents'][0]['id']).to eql(document.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
         expect(json['documents'].length).to eql(1)
       end
 
@@ -570,7 +570,7 @@ describe Document, type: :request do
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
         expect(json['documents'][0]['id']).to eql(document.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
         expect(json['documents'].length).to eql(1)
       end
 

@@ -1,0 +1,9 @@
+sass:
+  form
+    width: 300px
+    margin: 20px auto auto auto
+    #password
+      margin-bottom: 15px
+= form_tag download_api_v1_document_native_file_download_path, method: :post do
+  = password_field_tag :password, '', placeholder: t('.enter_password_here'), class: 'form-control'
+  = submit_tag t('.download_file'), class: 'col-12 btn btn-primary'

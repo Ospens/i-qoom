@@ -3,7 +3,6 @@ class Api::V1::DocumentNativeFileDownloadsController < ApplicationController
   skip_authorization_check
 
   def show
-    render json: { password: '' }
   end
 
   def download
