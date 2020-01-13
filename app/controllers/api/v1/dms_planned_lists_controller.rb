@@ -79,14 +79,22 @@ class Api::V1::DmsPlannedListsController < ApplicationController
       main = DocumentMain.find_by(id: main_params[:id])
       if main.present?
         next if !@dms_planned_list.document_mains.include?(main)
+        if main_params['_destroy'] == '1'
+          main.destroy
+          next
+        end
         document = main.revisions.last_revision.last_version
-        new_document = document.revision.versions.new(document_params(main_params[:document], true))
+        new_document =
+          document.revision
+                  .versions
+                  .new(document_params(main_params[:document], true))
         if !new_document.save
           result_main[:errors] = new_document.errors
         end
         result_main[:document] = new_document.attributes_for_edit
       else
-        main = @project.document_mains.create(planned: true, position: main_params[:position])
+        main = @project.document_mains
+                       .create(planned: true, position: main_params[:position])
         rev = main.revisions.create
         document = rev.versions.new(document_params(main_params[:document], true))
         if document.save
