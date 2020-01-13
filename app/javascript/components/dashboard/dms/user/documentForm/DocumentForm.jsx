@@ -16,14 +16,18 @@ import DocumentsAndFiles from './DocumentsAndFiles'
 import UploadFile from './UploadFile'
 import AccessAndCommunication from './AccessAndCommunication'
 
-function Content({ handleSubmit, step, backStep, revision }) {
+function Content({ submitDocument, submitEvent, handleSubmit, step, backStep, revision }) {
   return (
     <form noValidate={true} className='dms-content bordered' onSubmit={handleSubmit}>
       {step === 1
         ? revision
           ? <UploadFile />
           : <DocumentsAndFiles />
-        : <AccessAndCommunication backStep={backStep} />}
+        : <AccessAndCommunication
+            backStep={backStep}
+            handleSubmit={submitEvent}
+            onSubmit={submitDocument}
+          />}
     </form>
   )
 }
@@ -39,6 +43,10 @@ function DocumentForm({ initialize, handleSubmit }) {
 
   const submitDocument = useCallback(values => {
     if (step === 1) return toggleStep(2)
+
+    if (values.send_emails && !values.emails) {
+      values.send_emails = false
+    }
 
     if (revision) {
       return dispatch(startCreateRevision(document_id, values))
@@ -81,6 +89,8 @@ function DocumentForm({ initialize, handleSubmit }) {
       content={<Content
         handleSubmit={handleSubmit(submitDocument)}
         step={step}
+        submitDocument={submitDocument}
+        submitEvent={handleSubmit}
         revision={revision}
         backStep={() => toggleStep(1)}
       />}

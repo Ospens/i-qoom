@@ -90,9 +90,9 @@ describe Document, type: :request do
 
     it 'emails' do
       @params[:document]['emails'] = [Faker::Internet.email]
-      dbl = double
-      expect(ApplicationMailer).to receive(:new_document).and_return(dbl)
-      expect(dbl).to receive(:deliver_later)
+      @params[:document]['send_emails'] = true
+      expect_any_instance_of(Document).to receive(:save_emails)
+      expect_any_instance_of(Document).to receive(:send_emails)
       post "/api/v1/projects/#{@project_id}/documents",\
         params: @params, headers: credentials(user)
       expect(response).to have_http_status(:success)
@@ -269,6 +269,36 @@ describe Document, type: :request do
         expect(json['email_title']).to eql(title)
         expect(json['document_fields'].select{ |i| i['kind'] == 'select_field' }.length).to eql(3)
         expect(document.revision.versions.length).to eql(2)
+      end
+    end
+
+    context '#send_emails' do
+      let(:email) { Faker::Internet.email }
+
+      it 'anon' do
+        post "/api/v1/projects/#{document.project.id}/documents/#{document.id}/send_emails",
+          params: { emails: [email] }
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user' do
+        post "/api/v1/projects/#{document.project.id}/documents/#{document.id}/send_emails",
+          params: { emails: [email] },
+          headers: credentials(FactoryBot.create(:user))
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'user with rights' do
+        post "/api/v1/projects/#{document.project.id}/documents/#{document.id}/send_emails",
+          params: { emails: [email] }, headers: credentials(user)
+        expect(response).to have_http_status(:success)
+      end
+
+      it 'owner' do
+        post "/api/v1/projects/#{document.project.id}/documents/#{document.id}/send_emails",
+          params: { emails: [email] }, headers: credentials(owner)
+        expect(response).to have_http_status(:success)
+        expect(document.document_email_groups.length).to eql(1)
       end
     end
 
@@ -528,7 +558,7 @@ describe Document, type: :request do
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
         expect(json['documents'][0]['id']).to eql(document.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
         expect(json['documents'].length).to eql(1)
       end
 
@@ -540,7 +570,7 @@ describe Document, type: :request do
         expect(json['discipline'].length).to eql(1)
         expect(json['document_types'].length).to eql(1)
         expect(json['documents'][0]['id']).to eql(document.id)
-        expect(json['documents'][0]['document_fields'].length).to eql(9)
+        expect(json['documents'][0]['document_fields'].length).to eql(8)
         expect(json['documents'].length).to eql(1)
       end
 
