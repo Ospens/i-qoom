@@ -2517,7 +2517,7 @@ input[type=checkbox] {
 
     .notifications_content__element-msg {
       overflow: hidden;
-      white-space: nowrap;
+      white-space: normal;
       text-overflow: ellipsis;
 
       &.success {

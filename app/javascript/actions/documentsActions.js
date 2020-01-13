@@ -305,9 +305,11 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
 }
 
 export const startCreateRevision = (documentId, values) => (dispatch, getState) => {
-  const { user: { token } } = getState()
+  const { user: { token }, documents: { current } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
+  const oldRevNumber = current.document_fields
+    .find(f => f.codification_kind === 'revision_number').value
 
   const formValues = {
     document: { ...values }
@@ -320,8 +322,12 @@ export const startCreateRevision = (documentId, values) => (dispatch, getState) 
       url: `/api/v1/documents/${documentId}/create_revision`,
       data: formData,
       headers
-    }).then(() => {
-      dispatch(successNotify('DMS', 'Revision successfully created!'))
+    }).then(({ data }) => {
+      const newRevNumber = data.document_fields
+        .find(f => f.codification_kind === 'revision_number').value
+      dispatch(successNotify('DMS',
+        `Revision created!
+        Old Revision: ${oldRevNumber}, New Revision: ${newRevNumber}`))
     })
       .catch(({ response: { data } }) => {
         dispatch(errorNotify('Problem'))
