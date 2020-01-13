@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import classnames from 'classnames'
+import { CSSTransition } from 'react-transition-group'
 import {
   formValueSelector,
   Field,
@@ -148,7 +150,11 @@ export const formvalue = (fields = [], codKind) => {
 
 function DocumentsAndFiles({ match: { params: { projectId } } }) {
   const [modal, toggleModal] = useState(false)
-  const groupedFields = useSelector(state => state.documents.current.grouped_fields)
+  const [prevInfo, setPrevInfo] = useState(false)
+  const {
+    grouped_fields: groupedFields,
+    additional_information: additionalInformation
+  } = useSelector(state => state.documents.current)
   const documentFields = useSelector(state => selector(state, 'document_fields')) || []
 
   const origCompanyValue = formvalue(documentFields, 'originating_company')
@@ -299,6 +305,34 @@ function DocumentsAndFiles({ match: { params: { projectId } } }) {
         </div>
         {additionalInformationIndex > -1 && (
           <div className="form-group additional-information">
+            <div className={classnames('collapsible-block', { opened: prevInfo })}>
+              <button
+                type="button"
+                className="collapsible__button mb-4"
+                onClick={() => setPrevInfo(!prevInfo)}
+              >
+                <span>Show previous statements</span>
+                <span className="arrow-icon icon-arrow-button-down" />
+              </button>
+              <CSSTransition
+                unmountOnExit
+                in={prevInfo}
+                timeout={300}
+                classNames="collapsible__content"
+              >
+                <div className="collapsible__content">
+                  {additionalInformation.map(({ min, max, value }) => {
+                    const number = min === max ? max : `${min} - ${max}`
+                    return (
+                      <div className="mb-4" key={number}>
+                        <div className="lightgrey mb-4">{`Revision ${number}`}</div>
+                        <div>{value}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CSSTransition>
+            </div>
             <InputByType
               modal={modal}
               toggleModal={toggleModal}
