@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FieldArray, reduxForm } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
 import { updatePlannedListDocuments } from '../../../../../../actions/plannedListActions'
@@ -60,9 +60,24 @@ function DocumentsTable({
 }) {
   const dispatch = useDispatch()
   const { projectId, listId } = useParams()
-  const onSubmit = useCallback(values => (
-    dispatch(updatePlannedListDocuments(projectId, listId, values))
-  ), [dispatch, projectId, listId])
+  const editinglist = useSelector(state => state.plannedLists.edit.document_mains)
+  const onSubmit = useCallback(values => {
+    const formIds = values.document_mains.map(f => f.id)
+    const withDestroyedRows = editinglist.map(initRow => {
+      if (formIds.includes(initRow.id)) return initRow
+      return {
+        ...initRow,
+        _destroy: '1'
+      }
+    })
+    const uniqueRows = withDestroyedRows.concat(values.document_mains).reduce((newArray, item) => {
+      if (newArray.map(el => el.id).includes(item.id)) {
+        return newArray
+      }
+      return [...newArray, item]
+    }, [])
+    return dispatch(updatePlannedListDocuments(projectId, listId, { document_mains: uniqueRows }))
+  }, [dispatch, projectId, listId, editinglist])
 
   return (
     <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>
