@@ -10,6 +10,7 @@ import {
   change,
   initialize
 } from 'redux-form'
+import { useParams } from 'react-router-dom'
 import InputField from '../../../../../elements/InputField'
 import { required } from '../../../../../elements/validations'
 import { initValues } from '../../initDocId'
@@ -24,6 +25,7 @@ const selector = formValueSelector('document_form')
 function UploadForm({ editableRevision }) {
   const [modal, toggleModal] = useState(false)
   const [prevInfo, setPrevInfo] = useState(false)
+  const { document_id } = useParams()
   const {
     grouped_fields: groupedFields,
     additional_information: additionalInformation
@@ -174,34 +176,36 @@ function UploadForm({ editableRevision }) {
       </div>
       {additionalInformationIndex > -1 && (
         <div className="form-group additional-information">
-          <div className={classnames('collapsible-block', { opened: prevInfo })}>
-            <button
-              type="button"
-              className="collapsible__button mb-4"
-              onClick={() => setPrevInfo(!prevInfo)}
-            >
-              <span>Show previous statements</span>
-              <span className="arrow-icon icon-arrow-button-down" />
-            </button>
-            <CSSTransition
-              unmountOnExit
-              in={prevInfo}
-              timeout={300}
-              classNames="collapsible__content"
-            >
-              <div className="collapsible__content">
-                {additionalInformation.map(({ min, max, value }) => {
-                  const number = min === max ? max : `${min} - ${max}`
-                  return (
-                    <div className="mb-4" key={number}>
-                      <div className="lightgrey mb-4">{`Revision ${number}`}</div>
-                      <div>{value}</div>
-                    </div>
-                  )
-                })}
-              </div>
-            </CSSTransition>
-          </div>
+          {document_id && (
+            <div className={classnames('collapsible-block', { opened: prevInfo })}>
+              <button
+                type="button"
+                className="collapsible__button mb-4"
+                onClick={() => setPrevInfo(!prevInfo)}
+              >
+                <span>Show previous statements</span>
+                <span className="arrow-icon icon-arrow-button-down" />
+              </button>
+              <CSSTransition
+                unmountOnExit
+                in={prevInfo}
+                timeout={300}
+                classNames="collapsible__content"
+              >
+                <div className="collapsible__content">
+                  {additionalInformation.map(({ min, max, value }) => {
+                    const number = min === max ? max : `${min} - ${max}`
+                    return (
+                      <div className="mb-4" key={number}>
+                        <div className="lightgrey mb-4">{`Revision ${number}`}</div>
+                        <div>{value}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </CSSTransition>
+            </div>
+          )}
           <InputByType
             modal={modal}
             toggleModal={toggleModal}
