@@ -222,7 +222,8 @@ class DocumentField < ApplicationRecord
   end
 
   def set_required
-    self.required = document_native_file? ? false : true
+    self.required =
+      (document_native_file? || additional_information?) ? false : true
   end
 
   def can_build_codification_field?(user)
