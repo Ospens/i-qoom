@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { FieldArray, reduxForm } from 'redux-form'
+import { FieldArray, reduxForm, arrayPush } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
 import { updatePlannedListDocuments } from '../../../../../../actions/plannedListActions'
 import {
@@ -10,6 +10,7 @@ import {
   HeaderRow,
   HeaderCell
 } from '../../../../../table/Table'
+import generateId from '../../../../../../elements/generateId'
 
 const columns = [
   { title: 'Project' },
@@ -79,12 +80,24 @@ function DocumentsTable({
     return dispatch(updatePlannedListDocuments(projectId, listId, { document_mains: uniqueRows }))
   }, [dispatch, projectId, listId, editinglist])
 
+  const newFields = useSelector(state => state.plannedLists.edit.new)
+  const addDocument = useCallback(() => {
+    const emptyDoc = {
+      document: newFields,
+      temp_id: generateId()
+    }
+    dispatch(arrayPush('dms_planned_list', 'document_mains', emptyDoc))
+  }, [dispatch, newFields],)
   return (
     <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-body">
         <div className="d-flex mb-4">
           <h4>Add multiple document data</h4>
-          <button type="button" className="ml-auto">
+          <button type="button" className="button-with-icon ml-auto" onClick={addDocument}>
+            <span className="icon-add_1 mr-2" />
+            <span data-title="Add document">Add document</span>
+          </button>
+          <button type="button" className="ml-4">
             Upload list
           </button>
         </div>

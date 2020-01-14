@@ -3,6 +3,7 @@ import {
   ADD_NOTIFICATION,
   REMOVE_NOTIFICATION
 } from './types'
+import generateId from '../elements/generateId'
 
 let offTimer
 
@@ -28,7 +29,7 @@ export const removeNotification = id => dispatch => {
 export const addNotification = (values, autoDelete) => dispatch => {
   const notification = {
     ...values,
-    id: `f${((Math.random() * 1e8)).toString(16)}`,
+    id: generateId(),
     time: new Date() // values.time ? values.time : new Date()
   }
   dispatch(({ type: ADD_NOTIFICATION, payload: notification }))

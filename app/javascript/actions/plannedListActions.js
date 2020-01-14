@@ -8,6 +8,7 @@ import {
   EDIT_PLANNED_LIST
 } from './types'
 import { errorNotify } from './notificationsActions'
+import generateId from '../elements/generateId'
 
 const plannedListUpdated = payload => ({
   type: PLANNED_LIST_UPDATED,
@@ -110,7 +111,7 @@ export const editPlannedListDocuments = (projectId, listId) => (dispatch, getSta
       .then(({ data }) => {
         data.document_mains = data.document_mains.map(doc => ({
           ...doc,
-          temp_id: `f${((Math.random() * 1e8)).toString(16)}`
+          temp_id: generateId()
         }))
         dispatch({ type: EDIT_PLANNED_LIST, payload: data })
       })

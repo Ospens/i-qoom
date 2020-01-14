@@ -16,6 +16,7 @@ import DatePickerField from '../../../../../../elements/DatePickerField'
 import { Body, BodyRow, BodyCell } from '../../../../../table/Table'
 
 const INFO_FEEDBACK = 'Updated manually'
+const generateId = () => `f${((Math.random() * 1e8)).toString(16)}`
 
 function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
   const dispatch = useDispatch()
@@ -31,9 +32,8 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
     .findIndex(el => el.codification_kind === 'document_number')
   const informationIndex = documentFields
     .findIndex(el => el.codification_kind === 'additional_information')
-  // const emptyDoc = { document: useSelector(state => state.plannedLists.edit.new) }
+    
   // Select options haven't ids
-
   const changeValues = useCallback((value, document, fieldIndex) => {
     const newValues = documentFields[fieldIndex].document_field_values.map(field => {
       const selected = field.value === value
@@ -85,9 +85,9 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
         id: undefined
       },
       id: undefined,
-      temp_id: `f${((Math.random() * 1e8)).toString(16)}`
+      temp_id: generateId()
     }
-    fields.splice(index + 1, 0, newValue)
+    fields.push(newValue)
   }, [fields])
 
   const blurPadStart = useCallback((document, index, padStart, event) => {
@@ -297,23 +297,6 @@ function DocumentTableBody({ fields, checkedDocs, toggleChecked }) {
           </CSSTransition>
         )
       })}
-      {/* <div className="Rtable-row">
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell" />
-        <div className="Rtable__row-cell">
-          <button type="button" className="btn btn-purple" onClick={() => fields.push(emptyDoc)}>
-            Add document
-          </button>
-        </div>
-        <div className="Rtable__row-cell" />
-      </div> */}
     </Body>
   )
 }
