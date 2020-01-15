@@ -140,11 +140,11 @@
   }
 }
 
-.button-with-icon:not(.disable) {
+.button-with-icon {
   display: flex;
 
   span {
-    color: var(--color-blue) !important;
+    color: var(--color-blue);
   }
 
   &:hover {
@@ -171,6 +171,12 @@
     height: 0;
     overflow: hidden;
     visibility: hidden;
+  }
+
+  &.disable {
+    span {
+      color: var(--color-labels);
+    }
   }
 }
 

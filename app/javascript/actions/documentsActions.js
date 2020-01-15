@@ -357,8 +357,10 @@ export const startEditDocument = documentId => (dispatch, getState) => {
 
   return (
     axios.get(`/api/v1/documents/${documentId}/edit`, headers)
-      .then(response => {
-        const { data } = response
+      .then(({ data }) => {
+        const additionalField = data.document_fields
+          .find(f => f.codification_kind === 'additional_information') || {}
+        additionalField.value = ''
         const sortedData = fieldByColumn(data)
         dispatch(editDocument(sortedData))
       })
