@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import {
   change, touch, Field
 } from 'redux-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import SelectField from '../../../../../../elements/SelectField'
@@ -25,7 +25,7 @@ function DocumentTableBody({
   fields, checkedDocs, toggleChecked, changedRows, setChangedRows
 }) {
   const dispatch = useDispatch()
-
+  const projectCode = useSelector(state => state.projects.current.project_code)
   // Select options haven't ids
   const changeValues = useCallback((value, document, fieldIndex, fieldValues) => {
     const newValues = fieldValues.map(f => {
@@ -147,13 +147,18 @@ function DocumentTableBody({
         const titleName = `${fieldName}.document.title`
         const informationName = `${fieldName}.document.document_fields[${informationIndex}].value`
         const feedBackText = name => (changedRow.includes(name) && id ? INFO_FEEDBACK : '')
-
+        const labelText = () => {
+          if (!bordered) return ''
+          if (_destroy) return 'deleted'
+          if (document.id) return 'changed'
+          return 'new'
+        }
         return (
           <CSSTransition key={tempId} timeout={200} classNames="Rtable-row">
             <BodyRow checked={checked} bordered={bordered}>
               <BodyCell className="event-name">
                 <div className={classnames({ active: bordered })}>
-                  {_destroy ? 'deleted' : document.id ? 'changed' : 'new'}
+                  {labelText()}
                 </div>
               </BodyCell>
               <BodyCell className="table-checkbox">
@@ -196,7 +201,7 @@ function DocumentTableBody({
                   className="form-group project-code"
                   name={projectCodeName}
                   id={projectCodeName}
-                  placeholder="MWP"
+                  placeholder={projectCode}
                   disabled
                   infoFeedback={feedBackText(projectCodeName)}
                   isDirty={v => toggleChangedRows(v, tempId, projectCodeName)}

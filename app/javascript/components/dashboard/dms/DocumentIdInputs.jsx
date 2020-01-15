@@ -1,12 +1,13 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 function DocumentIdInputs({
-  projectCode,
   origCompanyValue,
   disciplineValue,
   docTypeValue,
   docNumberValue
 }) {
+  const projectCode = useSelector(state => state.projects.current.project_code)
   return (
     <div className='form-group'>
       <div className='form-group__title'>

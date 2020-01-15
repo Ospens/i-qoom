@@ -88,7 +88,7 @@ function DocumentsTable({
             <span className="icon-add_1 mr-2" />
             <span data-title="Add document">Add document</span>
           </button>
-          <button type="button" className="ml-4">
+          <button type="button" className="color-blue ml-4">
             Upload list
           </button>
         </div>

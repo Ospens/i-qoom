@@ -133,7 +133,6 @@ class DocIdModal extends Component {
       <div className='form-group'>
         <label>Define a Document-ID to add information</label>
         <DocumentIdInputs
-          projectCode={project_code}
           origCompanyValue={origCompanyValue}
           disciplineValue={disciplineValue}
           docTypeValue={docTypeValue}
