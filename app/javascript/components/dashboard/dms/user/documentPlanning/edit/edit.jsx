@@ -47,12 +47,10 @@ function DocumentPlanning() {
   const toggleChecked = useCallback(value => {
     setCheckedDoc(toggleArray(checkedDocs, value))
   }, [checkedDocs])
-  const sidebar = <div />
   const content = <DocumentsTable toggleChecked={toggleChecked} checkedDocs={checkedDocs} />
   return (
     <DMSLayout
       header={header(editData.name)}
-      sidebar={sidebar}
       content={content}
       classNames="with-header"
     />

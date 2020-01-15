@@ -198,6 +198,12 @@
       font-size: 0.8em;
     }
   }
+  
+  &.without-sidebar {
+    .content-column {
+      margin-left: 0;
+    }
+  }
 
   .bordered {
     border-radius: 5px;
