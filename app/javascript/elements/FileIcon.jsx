@@ -28,18 +28,7 @@ const icons = {
 function FileIcon({ className, filename = '' }) {
   const fileInfo = filename.match(/\.[0-9a-z]+$/i)
   const fileExtension = fileInfo ? fileInfo[0] : ''
-  const iconClassName = icons[fileExtension]
-  if (!iconClassName) {
-    return (
-      <span className={classnames(className, 'icon-common-file-text_big')}>
-        <span className="path1" />
-        <span className="path2" />
-        <span className="path3" />
-        <span className="path4" />
-      </span>
-    )
-  }
-
+  const iconClassName = icons[fileExtension] || 'icon-common-file-text1'
   return <i className={classnames(className, iconClassName)} />
 }
 

@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { FieldArray, reduxForm } from 'redux-form'
+import { useDispatch, useSelector } from 'react-redux'
+import { FieldArray, reduxForm, arrayPush } from 'redux-form'
 import DocumentTableBody from './DocumentTableBody'
 import { updatePlannedListDocuments } from '../../../../../../actions/plannedListActions'
 import {
@@ -10,6 +10,7 @@ import {
   HeaderRow,
   HeaderCell
 } from '../../../../../table/Table'
+import generateId from '../../../../../../elements/generateId'
 
 const columns = [
   { title: 'Project' },
@@ -59,17 +60,35 @@ function DocumentsTable({
   handleSubmit, pristine, reset, checkedDocs, toggleChecked
 }) {
   const dispatch = useDispatch()
+  const [changedRows, setChangedRows] = useState({})
   const { projectId, listId } = useParams()
-  const onSubmit = useCallback(values => {
-    return dispatch(updatePlannedListDocuments(projectId, listId, values))
-  }, [dispatch, projectId, listId])
-
+  const onSubmit = useCallback(values => (
+    dispatch(updatePlannedListDocuments(projectId, listId, values)).then(() => {
+      setChangedRows({})
+    })
+  ), [dispatch, projectId, listId, setChangedRows])
+  const newFields = useSelector(state => state.plannedLists.edit.new)
+  const addDocument = useCallback(() => {
+    const emptyDoc = {
+      document: newFields,
+      temp_id: generateId()
+    }
+    dispatch(arrayPush('dms_planned_list', 'document_mains', emptyDoc))
+  }, [dispatch, newFields])
+  const resetTable = useCallback(() => {
+    reset()
+    setChangedRows({})
+  }, [reset])
   return (
     <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-body">
         <div className="d-flex mb-4">
           <h4>Add multiple document data</h4>
-          <button type="button" className="ml-auto">
+          <button type="button" className="button-with-icon ml-auto" onClick={addDocument}>
+            <span className="icon-add_1 mr-2" />
+            <span data-title="Add document">Add document</span>
+          </button>
+          <button type="button" className="color-blue ml-4">
             Upload list
           </button>
         </div>
@@ -103,10 +122,13 @@ function DocumentsTable({
             component={DocumentTableBody}
             checkedDocs={checkedDocs}
             toggleChecked={toggleChecked}
+            changedRows={changedRows}
+            setChangedRows={setChangedRows}
+            rerenderOnEveryChange
           />
         </Table>
       </div>
-      {tableFooter(pristine, reset, projectId, listId)}
+      {tableFooter(pristine, resetTable, projectId, listId)}
     </form>
   )
 }

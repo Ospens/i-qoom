@@ -213,7 +213,7 @@ describe "ProjectMember", type: :request do
             params: {
               project_member_ids: ids.last(2)
             }.to_json,
-            headers: headers(user)
+            headers: headers
       expect(response).to have_http_status(:ok)
       expect(project.members.ids).to include(*ids.first(2))
     end

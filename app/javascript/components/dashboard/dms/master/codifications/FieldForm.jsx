@@ -158,7 +158,7 @@ const CodeList = ({ fields, title, isForm, projectCode }) => {
       {isForm &&
       <button
         type='button'
-        className='with-icon add-button justify-content-center'
+        className='button-with-icon add-button justify-content-center'
         onClick={() => fields.push({ position: fields.length + 1 })}
         disabled={!projectCode}
       >

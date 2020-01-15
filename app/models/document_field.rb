@@ -137,7 +137,12 @@ class DocumentField < ApplicationRecord
     original_attributes =
       attributes.except('id', 'parent_id', 'parent_type', 'created_at', 'updated_at')
     if upload_field? && file.attached?
-      original_attributes['filename'] = file.filename.to_s
+      original_attributes['filename'] =
+        if document_native_file?
+          "#{parent.codification_string}#{file.filename.extension_with_delimiter}"
+        else
+          file.filename.to_s
+        end
     end
     if select_field?
       original_attributes['document_field_values'] = []
@@ -222,7 +227,8 @@ class DocumentField < ApplicationRecord
   end
 
   def set_required
-    self.required = document_native_file? ? false : true
+    self.required =
+      (document_native_file? || additional_information?) ? false : true
   end
 
   def can_build_codification_field?(user)

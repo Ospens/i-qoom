@@ -41,45 +41,34 @@ export const paramsToFormData = (data, params, preceding = '') => {
 }
 
 const regexp = /(filename=")(.*)"/i
-const imgMIMEtypes = [
-  'jpg',
-  'jpeg',
-  'jfif',
-  'pjpeg',
-  'pjp',
-  'png',
-  'svg',
-  'ico',
-  'cur',
-  'gif',
-  'bmp',
-  'apng'
-]
-const applicationMIMEtypes = ['pdf', 'json']
-const textMIMEtypes = ['csv', 'css', 'html', 'calendar']
+const MIMEtypes = {
+  // image types
+  jpg: 'image/jpg',
+  jpeg: 'image/jpeg',
+  jfif: 'image/jfif',
+  pjpeg: 'image/pjpeg',
+  pjp: 'image/pjp',
+  png: 'image/png',
+  svg: 'image/svg',
+  ico: 'image/ico',
+  cur: 'image/cur',
+  gif: 'image/gif',
+  bmp: 'image/bmp',
+  apng: 'image/apng',
+  // application types
+  pdf: 'application/pdf',
+  json: 'application/json',
+  // text types
+  csv: 'text/csv',
+  css: 'text/css',
+  html: 'text/html',
+  calendar: 'text/calendar',
+  txt: 'text/txt'
+}
 
-export const downloadFile = (response, open = false, windowReference) => {
+export const downloadFile = response => {
   const disposition = response.headers['content-disposition'].match(regexp)
-  const type = disposition[2].match(/(\.)(.*)/i)
-  let MIMEtype = ''
-  let url = ''
-  if (type && open) {
-    if (imgMIMEtypes.includes(type[2])) {
-      MIMEtype = `image/${type[2]}`
-    } else if (applicationMIMEtypes.includes(type[2])) {
-      MIMEtype = `application/${type[2]}`
-    } else if (textMIMEtypes.includes(type[2])) {
-      MIMEtype = `text/${type[2]}`
-    }
-    if (MIMEtype) {
-      url = window.URL.createObjectURL(new Blob([response.data], { type: MIMEtype }))
-      windowReference.location.replace(url)
-      return
-    }
-  } else {
-    url = window.URL.createObjectURL(new Blob([response.data]))
-  }
-
+  const url = window.URL.createObjectURL(new Blob([response.data]))
   const title = disposition ? disposition[2] : 'file.pdf'
   const link = document.createElement('a')
   link.href = url
@@ -87,6 +76,21 @@ export const downloadFile = (response, open = false, windowReference) => {
   link.setAttribute('download', title)
   document.body.appendChild(link)
   link.click()
+}
+
+const openFile = (response, windowReference) => {
+  const disposition = response.headers['content-disposition'].match(regexp)
+  const type = disposition ? disposition[2].match(/(\.)(.*)/i) : undefined
+
+  if (!(type || type[2])) {
+    windowReference.close()
+    downloadFile(response)
+    return
+  }
+
+  const MIMEtype = MIMEtypes[type[2]] || 'text/txt'
+  const url = window.URL.createObjectURL(new Blob([response.data], { type: MIMEtype }))
+  windowReference.location.replace(url)
 }
 
 const documentsFetched = payload => ({
@@ -301,9 +305,11 @@ export const startUpdateDocument = (documentId, values) => (dispatch, getState) 
 }
 
 export const startCreateRevision = (documentId, values) => (dispatch, getState) => {
-  const { user: { token } } = getState()
+  const { user: { token }, documents: { current } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
+  const oldRevNumber = current.document_fields
+    .find(f => f.codification_kind === 'revision_number').value
 
   const formValues = {
     document: { ...values }
@@ -316,8 +322,12 @@ export const startCreateRevision = (documentId, values) => (dispatch, getState) 
       url: `/api/v1/documents/${documentId}/create_revision`,
       data: formData,
       headers
-    }).then(() => {
-      dispatch(successNotify('DMS', 'Revision successfully created!'))
+    }).then(({ data }) => {
+      const newRevNumber = data.document_fields
+        .find(f => f.codification_kind === 'revision_number').value
+      dispatch(successNotify('DMS',
+        `Revision created!
+        Old Revision: ${oldRevNumber}, New Revision: ${newRevNumber}`))
     })
       .catch(({ response: { data } }) => {
         dispatch(errorNotify('Problem'))
@@ -347,8 +357,10 @@ export const startEditDocument = documentId => (dispatch, getState) => {
 
   return (
     axios.get(`/api/v1/documents/${documentId}/edit`, headers)
-      .then(response => {
-        const { data } = response
+      .then(({ data }) => {
+        const additionalField = data.document_fields
+          .find(f => f.codification_kind === 'additional_information') || {}
+        additionalField.value = ''
         const sortedData = fieldByColumn(data)
         dispatch(editDocument(sortedData))
       })
@@ -414,7 +426,26 @@ export const downloadDetailFile = docId => (dispatch, getState) => {
   )
 }
 
-export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
+const tryOpen = (response, windowReference) => new Promise(() => {
+  openFile(response, windowReference)
+})
+
+export const downloadNativeFile = docId => (dispatch, getState) => {
+  const { user: { token } } = getState()
+  const headers = { Authorization: token }
+
+  return (
+    axios({
+      url: `/api/v1/documents/${docId}/download_native_file`,
+      method: 'GET',
+      headers,
+      responseType: 'blob' // important
+    }).then(response => { downloadFile(response) })
+      .catch(() => { dispatch(errorNotify('Problem')) })
+  )
+}
+
+export const openNativeFile = docId => (dispatch, getState) => {
   const { user: { token } } = getState()
   const headers = { Authorization: token }
   // Safari is blocking any call to window.open() which is made inside an async call.
@@ -426,7 +457,11 @@ export const downloadNativeFile = (docId, open) => (dispatch, getState) => {
       headers,
       responseType: 'blob' // important
     }).then(response => {
-      downloadFile(response, open, windowReference)
+      tryOpen(response, windowReference)
+        .catch(() => {
+          windowReference.close()
+          downloadFile(response)
+        })
     })
       .catch(() => {
         dispatch(errorNotify('Problem'))

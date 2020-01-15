@@ -6,6 +6,7 @@ import DMSLayout from '../../../DMSLayout'
 import DocumentsTable from './DocumentsTable'
 import { editPlannedListDocuments } from '../../../../../../actions/plannedListActions'
 import toggleArray from '../../../../../../elements/toggleArray'
+import generateId from '../../../../../../elements/generateId'
 
 function header(title) {
   return (
@@ -37,7 +38,7 @@ function DocumentPlanning() {
     if (editData.document_mains.length < 1) {
       documentMains.push({
         document: editData.new,
-        temp_id: `f${((Math.random() * 1e8)).toString(16)}`
+        temp_id: generateId()
       })
     }
     dispatch(initialize('dms_planned_list', { document_mains: documentMains }))
@@ -46,12 +47,10 @@ function DocumentPlanning() {
   const toggleChecked = useCallback(value => {
     setCheckedDoc(toggleArray(checkedDocs, value))
   }, [checkedDocs])
-  const sidebar = <div />
   const content = <DocumentsTable toggleChecked={toggleChecked} checkedDocs={checkedDocs} />
   return (
     <DMSLayout
       header={header(editData.name)}
-      sidebar={sidebar}
       content={content}
       classNames="with-header"
     />

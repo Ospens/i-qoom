@@ -8,7 +8,7 @@ import {
   Field,
   initialize
 } from 'redux-form'
-import { formvalue } from './user/documentForm/DocumentsAndFiles'
+import formvalue from './user/documentForm/formvalue'
 import NewModal from '../../../elements/Modal'
 import InputField from '../../../elements/InputField'
 import SelectField from '../../../elements/SelectField'
@@ -133,7 +133,6 @@ class DocIdModal extends Component {
       <div className='form-group'>
         <label>Define a Document-ID to add information</label>
         <DocumentIdInputs
-          projectCode={project_code}
           origCompanyValue={origCompanyValue}
           disciplineValue={disciplineValue}
           docTypeValue={docTypeValue}

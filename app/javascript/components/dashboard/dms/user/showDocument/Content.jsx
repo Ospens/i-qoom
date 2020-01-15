@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import { CSSTransition } from 'react-transition-group'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams, Link } from 'react-router-dom'
-import { downloadNativeFile } from '../../../../../actions/documentsActions'
+import { openNativeFile } from '../../../../../actions/documentsActions'
 import FileIcon from '../../../../../elements/FileIcon'
 
 const renderBlock = field => {
@@ -43,7 +43,7 @@ function Content() {
   const document = useSelector(state => state.documents.current) || {}
   const revisionsWithVersions = useSelector(state => state.documents.revisions)
   const openFile = useCallback(() => {
-    dispatch(downloadNativeFile(document_id, true))
+    dispatch(openNativeFile(document_id))
   }, [dispatch, document_id])
   const firstColumn = document.document_fields
     .filter(el => el.column === 1
@@ -64,8 +64,8 @@ function Content() {
   return (
     <div className="show-document bordered">
       <div className="dms-content__header">
-        <div className="d-flex">
-          <h4>Document details</h4>
+        <div className="d-flex align-items-end">
+          <h4 className="m-0">Document details</h4>
           {lastDocID
           && (
             <div className="dms-content__header_links-block">
@@ -92,6 +92,17 @@ function Content() {
               </Link>
             </div>
           )}
+          <div className="dms-content__header__actions">
+            <button type="button" className="dms-content__header__actions_button">
+              <span className="icon-email-action-send-2" />
+            </button>
+            <button type="button" className="dms-content__header__actions_button">
+              <span className="icon-download-button" />
+            </button>
+            <button type="button" className="dms-content__header__actions_button">
+              <span className="icon-printer" />
+            </button>
+          </div>
         </div>
         <div className="dms-content__project-phases">
           <span>Project phases</span>

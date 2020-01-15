@@ -1,0 +1,7 @@
+en:
+  api:
+    v1:
+      document_native_file_downloads:
+        show:
+          enter_password_here: Enter password here
+          download_file: Download file

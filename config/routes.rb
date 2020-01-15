@@ -28,6 +28,9 @@ Rails.application.routes.draw do
           get :revisions
           get :revisions_and_versions
         end
+        get 'download_native_file_protected/:id',
+          action: :download_native_file_protected,
+          on: :collection
         resources :document_review_subjects, only: [:new, :create]
       end
 
@@ -57,6 +60,10 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :document_native_file_downloads, only: [:show] do
+        post :download, on: :member
+      end
+
       resources :projects, except: :new do
         collection do
           get :confirm_member
@@ -65,6 +72,7 @@ Rails.application.routes.draw do
           post :invite
           post :update_project_code
           get :dms_users
+          get :show_dms_teams
         end
         resource :conventions, only: [:edit, :update]
         resources :conventions, only: [] do
@@ -80,6 +88,9 @@ Rails.application.routes.draw do
             get :my_documents
             resources :members, only: :show, module: :documents
             resources :planned, only: :destroy, module: :documents
+          end
+          member do
+            post :send_emails
           end
         end
         resource :dms_settings, only: [:edit, :update]

@@ -1590,11 +1590,17 @@ i.arrow {
     top: -22px;
     right: 6%;
     height: 22px;
-    width: 9%;
+    min-width: 7%;
     background: #475759 0% 0% no-repeat padding-box;
     color: #fff;
     border-radius: 10px 10px 0px 0px;
     font-size: 11px;
+    padding-left: 2%;
+    padding-right: 2%;
+
+    &.blue-bg {
+      background-color: var(--color-blue);
+    }
   }
 
   p {
@@ -1617,10 +1623,21 @@ i.arrow {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    width: 100%;
+
+    .accepted-file__main_block {
+      display: flex;
+      min-width: 100%;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
 
     .accepted-file__text {
+      max-width: 70%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
 
       *:not(.file-name) {
         display: flex;
@@ -1631,17 +1648,13 @@ i.arrow {
     }
 
     .file-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: break-word;
       font-size: 14px;
       color: var(--color-labels);
-      margin-bottom: 5px;
-      white-space: nowrap;
-      overflow: hidden;
     }
 
-    .icon-common-file-text1 {
+    .icon-file {
+      max-width: 30%;
       font-size: 45px;
     }
   }
@@ -2337,6 +2350,10 @@ i.arrow {
     display: block;
     overflow: auto;
 
+    &.overflow-visible {
+      overflow: visible;
+    }
+
     &.collapsible__content-enter {
       max-height: 0;
     }
@@ -2359,7 +2376,7 @@ i.arrow {
   }
 
   &.opened {
-    .collapsible__button {
+    > .collapsible__button {
       .arrow-icon:before {
         content: "\e914" !important;
       }

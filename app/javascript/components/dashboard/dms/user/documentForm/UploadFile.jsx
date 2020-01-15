@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
+import classnames from 'classnames'
+import { CSSTransition } from 'react-transition-group'
 import { useSelector } from 'react-redux'
 import { formValueSelector, Field } from 'redux-form'
 import { Link, useParams } from 'react-router-dom'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import { required } from '../../../../../elements/validations'
+import UploadForm from './UploadForm'
 
 export const changeFile = value => (value || typeof value === 'number'
   ? undefined
@@ -13,6 +16,7 @@ export const changeFile = value => (value || typeof value === 'number'
 const selector = formValueSelector('document_form')
 
 function UploadFile() {
+  const [uploadForm, setUploadForm] = useState(false)
   const { projectId } = useParams()
   const documentFields = useSelector(state => selector(state, 'document_fields'))
   if (!(documentFields && documentFields.length > 0)) return <div />
@@ -29,6 +33,26 @@ function UploadFile() {
       </div>
 
       <div className="content-body bottom-padding">
+        <div className={classnames('collapsible-block', { opened: uploadForm })}>
+          <button
+            type="button"
+            className="collapsible__button mb-4"
+            onClick={() => setUploadForm(!uploadForm)}
+          >
+            <span>Open upload form</span>
+            <span className="arrow-icon icon-arrow-button-down" />
+          </button>
+          <CSSTransition
+            unmountOnExit
+            in={uploadForm}
+            timeout={300}
+            classNames="collapsible__content"
+          >
+            <div className="collapsible__content overflow-visible">
+              <UploadForm editableRevision />
+            </div>
+          </CSSTransition>
+        </div>
         <div className="form-group col-6 pl-0">
           <Field
             component={InputField}
@@ -50,6 +74,7 @@ function UploadFile() {
               component={DropZoneField}
               renameFile
               filename={docFile.filename}
+              revisionPlaceholder
             />
           </div>
         </div>
