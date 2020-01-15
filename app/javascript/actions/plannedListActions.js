@@ -109,6 +109,17 @@ export const editPlannedListDocuments = (projectId, listId) => (dispatch, getSta
     axios.get(`/api/v1/projects/${projectId}/dms_planned_lists/${listId}/edit_documents`,
       headers)
       .then(({ data }) => {
+        data.document_mains.forEach(({ document }) => {
+          document.document_fields.sort((a, b) => {
+            if (a.column === b.column) {
+              if (a.row < b.row) {
+                return -1
+              }
+              return a.row > b.row ? 1 : 0
+            }
+            return (a.column < b.column) ? -1 : 1
+          })
+        })
         data.document_mains = data.document_mains.map(doc => ({
           ...doc,
           temp_id: generateId()
@@ -155,8 +166,9 @@ export const updatePlannedListDocuments = (projectId, listId, request) => (dispa
           throw errors
         }
 
-        // TODO: part if data is valid
+        dispatch({ type: EDIT_PLANNED_LIST, payload: data })
         dispatch(initialize('dms_planned_list', { document_mains: data.document_mains }))
+        return data
       })
       .catch(response => {
         dispatch(errorNotify('Problem'))

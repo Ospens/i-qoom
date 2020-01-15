@@ -76,7 +76,8 @@ const DatePickerField = ({
   meta: { touched, error, dirty },
   className,
   isDirty,
-  infoFeedback
+  infoFeedback,
+  ...props
 }) => {
   const [date, toggleDate] = useState('')
   useEffect(() => {
@@ -97,6 +98,7 @@ const DatePickerField = ({
     <div className={classnames(className, { 'is-invalid': touched && error })}>
       {label && <label>{label}</label>}
       <DatePicker
+        {...props}
         {...input}
         autoComplete="off"
         dateForm="MM/DD/YYYY"

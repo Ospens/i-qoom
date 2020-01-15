@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FieldArray, reduxForm, arrayPush } from 'redux-form'
@@ -60,26 +60,13 @@ function DocumentsTable({
   handleSubmit, pristine, reset, checkedDocs, toggleChecked
 }) {
   const dispatch = useDispatch()
+  const [changedRows, setChangedRows] = useState({})
   const { projectId, listId } = useParams()
-  const editinglist = useSelector(state => state.plannedLists.edit.document_mains)
-  const onSubmit = useCallback(values => {
-    const formIds = values.document_mains.map(f => f.id)
-    const withDestroyedRows = editinglist.map(initRow => {
-      if (formIds.includes(initRow.id)) return initRow
-      return {
-        ...initRow,
-        _destroy: '1'
-      }
+  const onSubmit = useCallback(values => (
+    dispatch(updatePlannedListDocuments(projectId, listId, values)).then(() => {
+      setChangedRows({})
     })
-    const uniqueRows = withDestroyedRows.concat(values.document_mains).reduce((newArray, item) => {
-      if (newArray.map(el => el.id).includes(item.id)) {
-        return newArray
-      }
-      return [...newArray, item]
-    }, [])
-    return dispatch(updatePlannedListDocuments(projectId, listId, { document_mains: uniqueRows }))
-  }, [dispatch, projectId, listId, editinglist])
-
+  ), [dispatch, projectId, listId, setChangedRows])
   const newFields = useSelector(state => state.plannedLists.edit.new)
   const addDocument = useCallback(() => {
     const emptyDoc = {
@@ -87,7 +74,11 @@ function DocumentsTable({
       temp_id: generateId()
     }
     dispatch(arrayPush('dms_planned_list', 'document_mains', emptyDoc))
-  }, [dispatch, newFields],)
+  }, [dispatch, newFields])
+  const resetTable = useCallback(() => {
+    reset()
+    setChangedRows({})
+  }, [reset])
   return (
     <form noValidate className="dms-content bordered" onSubmit={handleSubmit(onSubmit)}>
       <div className="form-body">
@@ -131,10 +122,13 @@ function DocumentsTable({
             component={DocumentTableBody}
             checkedDocs={checkedDocs}
             toggleChecked={toggleChecked}
+            changedRows={changedRows}
+            setChangedRows={setChangedRows}
+            rerenderOnEveryChange
           />
         </Table>
       </div>
-      {tableFooter(pristine, reset, projectId, listId)}
+      {tableFooter(pristine, resetTable, projectId, listId)}
     </form>
   )
 }
