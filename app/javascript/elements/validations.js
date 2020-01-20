@@ -33,3 +33,6 @@ export const maxLength2 = value => (value && value.length > 2 ? 'Must be 2 chara
 
 export const higherThan = condition => value => (
   value && Number(value) <= condition ? `Must be higher than ${condition}` : undefined)
+
+export const nonNegative = value => (
+  value && Number(value) < 0 ? 'Can\'t be less than 0' : undefined)

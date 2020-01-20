@@ -12,7 +12,7 @@ import { Link, useParams } from 'react-router-dom'
 import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import {
-  required, maxLength2, minLength2, higherThan
+  required, maxLength2, minLength2, higherThan, nonNegative
 } from '../../../../../elements/validations'
 import UploadForm from './UploadForm'
 
@@ -32,6 +32,9 @@ function UploadFile() {
   const revIndex = documentFields.findIndex(el => el.codification_kind === 'revision_number')
   const blurPadStart = useCallback(event => {
     event.preventDefault()
+    dispatch(touch('document_form', `document_fields[${revIndex}].value`))
+    if (Number(event.target.value) < 0) return
+
     const newValue = String(event.target.value).padStart(2, 0)
     dispatch(change('document_form', `document_fields[${revIndex}].value`, newValue))
     dispatch(touch('document_form', `document_fields[${revIndex}].value`))
@@ -91,7 +94,7 @@ function UploadFile() {
                 id={`document_fields[${revIndex}].value`}
                 placeholder={revisionField.command}
                 label={`${revisionField.title}*`}
-                validate={[required, maxLength2, minLength2, higherThanInit]}
+                validate={[required, nonNegative, maxLength2, minLength2, higherThanInit]}
                 onBlur={e => blurPadStart(e)}
               />
             </div>

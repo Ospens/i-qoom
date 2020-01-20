@@ -13,7 +13,7 @@ import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import TextAreaField from '../../../../../elements/TextAreaField'
 import {
-  required, maxLength4, maxLength2, minLength2, minLength4, higherThan
+  required, maxLength4, maxLength2, minLength2, minLength4, higherThan, nonNegative
 } from '../../../../../elements/validations'
 
 const codificationString = [
@@ -32,10 +32,10 @@ const validationList = field => {
     list.push(required)
   }
   if (field.codification_kind === 'document_number') {
-    list.push(maxLength4, minLength4)
+    list.push(nonNegative, maxLength4, minLength4)
   }
   if (field.codification_kind === 'revision_number') {
-    list.push(maxLength2, minLength2)
+    list.push(nonNegative, maxLength2, minLength2)
   }
   return list
 }
@@ -52,9 +52,11 @@ function InputByType({
 
   const blurPadStart = useCallback((index, padStart, event) => {
     event.preventDefault()
+    dispatch(touch('document_form', `document_fields[${index}].value`))
+    if (Number(event.target.value) < 0) return
+
     const newValue = String(event.target.value).padStart(padStart, 0)
     dispatch(change('document_form', `document_fields[${index}].value`, newValue))
-    dispatch(touch('document_form', `document_fields[${index}].value`))
   }, [dispatch])
 
   const commonProps = {
