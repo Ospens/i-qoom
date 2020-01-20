@@ -16,11 +16,11 @@ import DocumentsAndFiles from './DocumentsAndFiles'
 import UploadFile from './UploadFile'
 import AccessAndCommunication from './AccessAndCommunication'
 
-function Content({ submitDocument, submitEvent, handleSubmit, step, backStep, revision }) {
+function Content({ submitDocument, submitEvent, handleSubmit, step, backStep, isRevisionForm }) {
   return (
     <form noValidate={true} className='dms-content bordered' onSubmit={handleSubmit}>
       {step === 1
-        ? revision
+        ? isRevisionForm
           ? <UploadFile />
           : <DocumentsAndFiles />
         : <AccessAndCommunication
@@ -37,7 +37,7 @@ function DocumentForm({ initialize, handleSubmit }) {
   const dispatch = useDispatch()
   const history = useHistory()
   const { path } = useRouteMatch()
-  const revision = path.includes('add_revision')
+  const isRevisionForm = path.includes('add_revision')
   const [step, toggleStep] = useState(1)
   const documentFields = useSelector(state => state.documents.current)
 
@@ -48,7 +48,7 @@ function DocumentForm({ initialize, handleSubmit }) {
       values.send_emails = false
     }
 
-    if (revision) {
+    if (isRevisionForm) {
       return dispatch(startCreateRevision(document_id, values))
         .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
     }
@@ -58,7 +58,7 @@ function DocumentForm({ initialize, handleSubmit }) {
         .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
       : dispatch(startCreateDocument(projectId, values))
         .then(() => history.push({ pathname: `/dashboard/projects/${projectId}/documents/` }))
-  }, [dispatch, step, revision])
+  }, [dispatch, step, isRevisionForm])
 
   useEffect(() => {
     document_id
@@ -69,7 +69,16 @@ function DocumentForm({ initialize, handleSubmit }) {
 
   useEffect(() => {
     if (document_id) {
-      initialize({ ...documentFields })
+      if (isRevisionForm) {
+        const revNumberIndex = documentFields.document_fields
+          .findIndex(df => df.codification_kind === 'revision_number')
+        if (revNumberIndex > -1) {
+          const revNumverValue = documentFields.document_fields[revNumberIndex].value
+          documentFields.document_fields[revNumberIndex].value = String(Number(revNumverValue) + 1)
+            .padStart(2, 0)
+        }
+      }
+      initialize(documentFields)
     } else {
       const newFields = documentFields.document_fields.map(df => {
         if (df.codification_kind === 'revision_number') {
@@ -81,7 +90,7 @@ function DocumentForm({ initialize, handleSubmit }) {
       })
       initialize({ ...documentFields, ...newFields })
     }
-  }, [document_id, documentFields])
+  }, [document_id, documentFields, isRevisionForm])
 
   return (
     <DMSLayout
@@ -91,7 +100,7 @@ function DocumentForm({ initialize, handleSubmit }) {
         step={step}
         submitDocument={submitDocument}
         submitEvent={handleSubmit}
-        revision={revision}
+        isRevisionForm={isRevisionForm}
         backStep={() => toggleStep(1)}
       />}
     />

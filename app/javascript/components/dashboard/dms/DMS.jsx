@@ -29,15 +29,11 @@ const documentHeader = (title, doc) => {
     <div className="d-flex">
       <h2>{title}</h2>
       <label className="rounded-label red ml-4">
-        Revision
-
-        {rev ? rev.value : '0'}
+        {`Revision: ${rev ? rev.value : '00'}`}
         <span className="icon-Locked ml-2" />
       </label>
       <label className="rounded-label red ml-4">
-        Version
-
-        {ver ? ver.value : '1'}
+        {`Version: ${ver ? ver.value : '0000'}`}
         <span className="icon-Locked ml-2" />
       </label>
     </div>

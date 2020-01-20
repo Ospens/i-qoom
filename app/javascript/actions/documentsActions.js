@@ -308,8 +308,7 @@ export const startCreateRevision = (documentId, values) => (dispatch, getState) 
   const { user: { token }, documents: { current } } = getState()
   const headers = { Authorization: token, 'Content-Type': 'multipart/form-data' }
   let formData = new FormData()
-  const oldRevNumber = current.document_fields
-    .find(f => f.codification_kind === 'revision_number').value
+  const oldRevNumber = current.currentRevisionNumber
 
   const formValues = {
     document: { ...values }
@@ -360,7 +359,10 @@ export const startEditDocument = documentId => (dispatch, getState) => {
       .then(({ data }) => {
         const additionalField = data.document_fields
           .find(f => f.codification_kind === 'additional_information') || {}
+        const revNumberValue = data.document_fields
+          .find(df => df.codification_kind === 'revision_number').value
         additionalField.value = ''
+        data.currentRevisionNumber = revNumberValue
         const sortedData = fieldByColumn(data)
         dispatch(editDocument(sortedData))
       })

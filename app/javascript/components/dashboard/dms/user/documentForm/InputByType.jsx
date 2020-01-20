@@ -13,7 +13,7 @@ import DropZoneField from '../../../../../elements/DropZoneField'
 import InputField from '../../../../../elements/InputField'
 import TextAreaField from '../../../../../elements/TextAreaField'
 import {
-  required, maxLength4, maxLength2, minLength2, minLength4
+  required, maxLength4, maxLength2, minLength2, minLength4, higherThan
 } from '../../../../../elements/validations'
 
 const codificationString = [
@@ -47,6 +47,8 @@ function InputByType({
   const conventionId = useSelector(state => selector(state, 'convention_id'))
   const uniqName = `document_fields[${fieldIndex}].value`
   const disabled = !editable && conventionId && codificationString.includes(field.codification_kind)
+  const initialRevisionNumber = useSelector(state => state.documents.current.currentRevisionNumber)
+  const higherThanInit = useCallback(higherThan(initialRevisionNumber), [initialRevisionNumber])
 
   const blurPadStart = useCallback((index, padStart, event) => {
     event.preventDefault()
@@ -68,6 +70,9 @@ function InputByType({
   }
   if (field.codification_kind === 'revision_number') {
     commonProps.onBlur = v => blurPadStart(fieldIndex, 2, v)
+    if (editable) {
+      commonProps.validate.push(higherThanInit)
+    }
   }
 
   if (field.kind === 'upload_field' && field.codification_kind === 'document_native_file') {
