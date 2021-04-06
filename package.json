@@ -10,7 +10,7 @@
     "@ckeditor/ckeditor5-editor-classic": "^12.1.0",
     "@ckeditor/ckeditor5-editor-inline": "^12.1.0",
     "@ckeditor/ckeditor5-essentials": "^11.0.1",
-    "@ckeditor/ckeditor5-font": "^11.1.0",
+    "@ckeditor/ckeditor5-font": "^27.0.0",
     "@ckeditor/ckeditor5-heading": "^11.0.1",
     "@ckeditor/ckeditor5-paragraph": "^11.0.1",
     "@ckeditor/ckeditor5-react": "^1.1.3",
